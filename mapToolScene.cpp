@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "mapToolScene.h"
 
-
-HRESULT mapToolScene::init()//잘된다.
-
+<<<<<<< HEAD
+HRESULT mapToolScene::init()
+=======
+HRESULT mapToolScene::init() //되는버전!
+>>>>>>> parent of de2c82e... ?먯씠??..
 {
 	IMAGEMANAGER->addFrameImage("tile", "Images/tile.bmp", 144, 144, 3, 3);
 	IMAGEMANAGER->addImage("tileSet", "Images/tile.bmp", 144, 144, true, RGB(255, 0, 255));
@@ -119,12 +121,14 @@ void mapToolScene::update()
 	//erace mode
 	if (INPUT->GetKeyDown('E'))
 	{
+		//if (state != ERASE)mouse.saveBrush = state;
 		mouse.active = false;
 	}
 
 	//brush mode
 	if (INPUT->GetKeyDown('B'))
 	{
+		//if (mouse.saveBrush != NONE)state = mouse.saveBrush;
 		mouse.active = true;
 	}
 
