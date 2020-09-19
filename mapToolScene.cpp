@@ -1,11 +1,7 @@
 #include "stdafx.h"
 #include "mapToolScene.h"
 
-<<<<<<< HEAD
-HRESULT mapToolScene::init()
-=======
 HRESULT mapToolScene::init() //되는버전!
->>>>>>> parent of de2c82e... ?먯씠??..
 {
 	IMAGEMANAGER->addFrameImage("tile", "Images/tile.bmp", 144, 144, 3, 3);
 	IMAGEMANAGER->addImage("tileSet", "Images/tile.bmp", 144, 144, true, RGB(255, 0, 255));
@@ -281,22 +277,22 @@ void mapToolScene::render()
 
 void mapToolScene::save()
 {
-	//HANDLE file;
-	//DWORD write;
+	HANDLE file;
+	DWORD write;
 
-	//file = CreateFile("mapData/save.map", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	//WriteFile(file, tile, sizeof(tagMap) * MAXTILE, &write, NULL);
-	//CloseHandle(file);
+	file = CreateFile("mapData/save.map", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	WriteFile(file, tile, sizeof(tagMap) * MAXTILE, &write, NULL);
+	CloseHandle(file);
 }
 
 void mapToolScene::load()
 {
-	//HANDLE file;
-	//DWORD read;
-	//
-	//file = CreateFile("mapData/save.map", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	//ReadFile(file, tile, sizeof(tagMap) * MAXTILE, &read, NULL);
-	//CloseHandle(file);
+	HANDLE file;
+	DWORD read;
+	
+	file = CreateFile("mapData/save.map", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	ReadFile(file, tile, sizeof(tagMap) * MAXTILE, &read, NULL);
+	CloseHandle(file);
 }
 
 void mapToolScene::dragTile()
