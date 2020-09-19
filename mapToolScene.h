@@ -6,7 +6,7 @@ class mapToolScene : public gameNode
 {
 private:
 	///TILE///
-	tagMap tile[153]; //기본 맵 타일
+	tagMap tile[MAXTILE]; //기본 맵 타일
 
 	//SINGLE//
 	tagSample sTile[9]; //선택 맵 타일 <단일>
@@ -20,14 +20,13 @@ private:
 	tagMouse mouse;
 	STATE state;
 
-	vector<int> sIndex;
-
 	//button down
 	bool isLeftDown;
 	bool isLeftUp;
 	bool isLeftkey;
 
 	//cam
+	RECT camRC;
 	float camX, camY;
 public:
 	HRESULT init();
@@ -40,9 +39,6 @@ public:
 	void dragTile();
 	void singleTile();
 
-	void saveIndex(int index); // save
-	void UNDO();//ctrl + z
-
 	bool checkPt(POINT pt, POINT _pt);
 
 	//text view
@@ -50,7 +46,4 @@ public:
 
 	//cam
 	RECT moveRC(int x, int y, int width, int height) { return RectMake(x + camX, y + camY, width, height); }
-
-	//test 2
-
 };

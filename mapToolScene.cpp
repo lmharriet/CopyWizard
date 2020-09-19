@@ -1,21 +1,22 @@
 #include "stdafx.h"
 #include "mapToolScene.h"
 
-HRESULT mapToolScene::init()
+HRESULT mapToolScene::init() //되는버전!
 {
 	IMAGEMANAGER->addFrameImage("tile", "Images/tile.bmp", 144, 144, 3, 3);
 	IMAGEMANAGER->addImage("tileSet", "Images/tile.bmp", 144, 144, true, RGB(255, 0, 255));
 
 	//제작할곳
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < MAXTILE_HEIGHT; i++)
 	{
-		for (int j = 0; j < 17; j++)
+		for (int j = 0; j < MAXTILE_WIDTH; j++)
 		{
-			int order = 17 * i + j;
+			int order = MAXTILE_WIDTH * i + j;
 
-			tile[order].rc = RectMake(200 + ((j % 17) * 48), 130 + ((i % 9) * 48), 48, 48);
+			tile[order].rc = RectMake(200 + ((j % MAXTILE_WIDTH) * TILESIZE), 130 + ((i % MAXTILE_HEIGHT) * TILESIZE), TILESIZE, TILESIZE);
 			tile[order].active = false;
 			tile[order].isCol = false;
+			tile[order].isCam = false;
 
 			tile[order].frame = { 0,0 };
 		}
@@ -30,7 +31,7 @@ HRESULT mapToolScene::init()
 
 			sTile[order].frame = { j,i };
 
-			sTile[order].rc = RectMake(1100 + (j * 55), 380+ (i * 55), 48, 48);
+			sTile[order].rc = RectMake(1100 + (j * 55), 380+ (i * 55), TILESIZE, TILESIZE);
 		}
 	}
 
@@ -38,6 +39,7 @@ HRESULT mapToolScene::init()
 	sTile_set.rc = RectMake(1107, 180, 144, 144);
 
 	//mouse
+	state = ERASE;
 	memset(&mouse, 0, sizeof(mouse));
 
 	//button down
@@ -45,6 +47,7 @@ HRESULT mapToolScene::init()
 
 	//cam
 	camX = camY = 0;
+	camRC = RectMake(0, 0, WINSIZEX, WINSIZEY);
 
 	//button
 	dragChangeButton = RectMake(1102, 330, 150, 40);
@@ -64,14 +67,13 @@ void mapToolScene::update()
 	if (INPUT->GetKey(VK_DOWN))camY -= 3;
 
 	//제작할곳
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < MAXTILE_HEIGHT; i++)
 	{
-		for (int j = 0; j < 17; j++)
+		for (int j = 0; j < MAXTILE_WIDTH; j++)
 		{
-			int order = 17 * i + j;
+			int order = MAXTILE_WIDTH * i + j;
 
-			tile[order].rc = moveRC(200 + ((j % 17) * 48), 130 + ((i % 9) * 48), 48, 48);
-			//tile[order].rc = RectMake(200 + ((j % 17) * 48), 130 + ((i % 9) * 48), 48, 48);
+			tile[order].rc = moveRC(200 + ((j % MAXTILE_WIDTH) * TILESIZE), 130 + ((i % MAXTILE_HEIGHT) * TILESIZE), TILESIZE, TILESIZE);
 		}
 	}
 
@@ -82,7 +84,7 @@ void mapToolScene::update()
 	//tile get < SINGLE >
 	if (isLeftDown)
 	{
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < MAXTILE_HEIGHT; i++)
 		{
 			if (PtInRect(&sTile[i].rc, _ptMouse))
 			{
@@ -115,14 +117,14 @@ void mapToolScene::update()
 	//erace mode
 	if (INPUT->GetKeyDown('E'))
 	{
-		if (state != ERASE)mouse.saveBrush = state;
+		//if (state != ERASE)mouse.saveBrush = state;
 		mouse.active = false;
 	}
 
 	//brush mode
 	if (INPUT->GetKeyDown('B'))
 	{
-		if (mouse.saveBrush != NONE)state = mouse.saveBrush;
+		//if (mouse.saveBrush != NONE)state = mouse.saveBrush;
 		mouse.active = true;
 	}
 
@@ -132,8 +134,6 @@ void mapToolScene::update()
 
 	if (INPUT->GetKeyDown('S')) save();
 	if (INPUT->GetKeyDown('L')) load();
-
-	//if (INPUT->GetKeyDown('Z')) UNDO();
 
 	//button
 	if (INPUT->GetKeyDown(VK_LBUTTON)) isLeftDown = true;
@@ -149,25 +149,33 @@ void mapToolScene::update()
 		if(mouse.dragMode) mouse.dragMode = false;
 		else mouse.dragMode = true;
 	}
+
+	//cam col
+	RECT tp;
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (IntersectRect(&tp, &tile[i].rc, &camRC))tile[i].isCam = true;
+		else tile[i].isCam = false;
+	}
 }
 
 void mapToolScene::render()
 {
 	//render
-	for (int i = 0; i < 153; i++)
+	for (int i = 0; i < MAXTILE; i++)
 	{
 		if (!tile[i].active)
 		{
 			if (!tile[i].isCol)
 			{
-				Rectangle(getMemDC(), tile[i].rc);
+				if (tile[i].isCam) Rectangle(getMemDC(), tile[i].rc);
 			}
 			else
 			{
 				HPEN hPen, oPen;
 				hPen = CreatePen(PS_SOLID, 2, GREEN);
 				oPen = (HPEN)SelectObject(getMemDC(), hPen);
-				Rectangle(getMemDC(), tile[i].rc);
+				if (tile[i].isCam) Rectangle(getMemDC(), tile[i].rc);
 				
 				SelectObject(getMemDC(), oPen);
 				DeleteObject(hPen);
@@ -175,27 +183,27 @@ void mapToolScene::render()
 		}
 		else
 		{
-			if (!tile[i].isCol) Rectangle(getMemDC(), tile[i].rc);
+			if (!tile[i].isCol && tile[i].isCam) Rectangle(getMemDC(), tile[i].rc);
 
-			if (tile[i].active && i < 136 && tile[i + 17].active)
+			if (tile[i].active && i < MAXTILE - MAXTILE_WIDTH && tile[i + MAXTILE_WIDTH].active)
 			{
-				if (checkPt(tile[i + 17].frame, { 0,1 }) && checkPt(tile[i].frame, { 1,0 }))
+				if (checkPt(tile[i + MAXTILE_WIDTH].frame, { 0,1 }) && checkPt(tile[i].frame, { 1,0 }))
 				{
 					tile[i].frame = { 0,0 };
 				}
-				else if (checkPt(tile[i + 17].frame, { 2,1 }) && checkPt(tile[i].frame, { 1,0 }))
+				else if (checkPt(tile[i + MAXTILE_WIDTH].frame, { 2,1 }) && checkPt(tile[i].frame, { 1,0 }))
 				{
 					tile[i].frame = { 2,0 };
 				}
 				else IMAGEMANAGER->frameRender("tile", getMemDC(), tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
 			}
-			if (tile[i].active && i > 16 && tile[i - 17].active)
+			if (tile[i].active && i > MAXTILE_WIDTH - 1 && tile[i - MAXTILE_WIDTH].active)
 			{
-				if (checkPt(tile[i - 17].frame, { 0,1 }) && checkPt(tile[i].frame, { 1,2 }))
+				if (checkPt(tile[i - MAXTILE_WIDTH].frame, { 0,1 }) && checkPt(tile[i].frame, { 1,2 }))
 				{
 					tile[i].frame = { 0,2 };
 				}
-				else if (checkPt(tile[i - 17].frame, { 2,1 }) && checkPt(tile[i].frame, { 1,2 }))
+				else if (checkPt(tile[i - MAXTILE_WIDTH].frame, { 2,1 }) && checkPt(tile[i].frame, { 1,2 }))
 				{
 					tile[i].frame = { 2,2 };
 				}
@@ -214,7 +222,7 @@ void mapToolScene::render()
 
 				hPen = CreatePen(PS_SOLID, 4, RED);
 				oPen = (HPEN)SelectObject(getMemDC(), hPen);
-				Rectangle(getMemDC(), tile[i].rc);
+				if (tile[i].isCam) Rectangle(getMemDC(), tile[i].rc);
 
 				SelectObject(getMemDC(), oPen);
 				SelectObject(getMemDC(), oBrush);
@@ -273,7 +281,7 @@ void mapToolScene::save()
 	DWORD write;
 
 	file = CreateFile("mapData/save.map", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	WriteFile(file, tile, sizeof(tagMap) * 17 * 9, &write, NULL);
+	WriteFile(file, tile, sizeof(tagMap) * MAXTILE, &write, NULL);
 	CloseHandle(file);
 }
 
@@ -281,9 +289,9 @@ void mapToolScene::load()
 {
 	HANDLE file;
 	DWORD read;
-
+	
 	file = CreateFile("mapData/save.map", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	ReadFile(file, tile, sizeof(tagMap) * 17 * 9, &read, NULL);
+	ReadFile(file, tile, sizeof(tagMap) * MAXTILE, &read, NULL);
 	CloseHandle(file);
 }
 
@@ -314,19 +322,17 @@ void mapToolScene::dragTile()
 
 	//COL
 	RECT temp;
-	for (int i = 0; i < 153; i++)
+	for (int i = 0; i < MAXTILE; i++)
 	{
 		if (IntersectRect(&temp, &mouse.rc, &tile[i].rc))
 		{
-			sIndex.push_back(i);
-
 			tile[i].isCol = true;
 		}
 		else tile[i].isCol = false;
 	}
 	if (isLeftUp)
 	{
-		for (int i = 0; i < 153; i++)
+		for (int i = 0; i < MAXTILE; i++)
 		{
 			if (IntersectRect(&temp, &mouse.rc, &tile[i].rc))
 			{
@@ -341,14 +347,16 @@ void mapToolScene::dragTile()
 
 					if (!tile[i + 1].isCol)tile[i].frame = RIGHT_TILE;
 					if (!tile[i - 1].isCol)tile[i].frame = LEFT_TILE;
-					if (!tile[i - 17].isCol)tile[i].frame = TOP_TILE;
-					if (!tile[i + 17].isCol)tile[i].frame = BOTTOM_TILE;
+					if (!tile[i - MAXTILE_WIDTH].isCol)tile[i].frame = TOP_TILE;
+					if (!tile[i + MAXTILE_WIDTH].isCol)tile[i].frame = BOTTOM_TILE;
 
 					if (tile[i + 1].isCol && tile[i - 1].isCol &&
-						tile[i - 17].isCol && tile[i + 17].isCol)tile[i].frame = CENTER_TILE;
+						tile[i - MAXTILE_WIDTH].isCol && tile[i + MAXTILE_WIDTH].isCol)tile[i].frame = CENTER_TILE;
 
 					break;
 				case ERASE:
+					if (mouse.active)continue;
+
 					tile[i].active = false;
 					break;
 				}
@@ -359,7 +367,7 @@ void mapToolScene::dragTile()
 
 void mapToolScene::singleTile()
 {
-	for (int i = 0; i < 153; i++)
+	for (int i = 0; i < MAXTILE; i++)
 	{
 		if (PtInRect(&tile[i].rc, _ptMouse))
 		{
@@ -375,45 +383,23 @@ void mapToolScene::singleTile()
 				if (!isLeftDown)continue;
 
 				tile[i].active = tile[i + 1].active = tile[i + 2].active = true;
-				tile[i + 17].active = tile[i + 18].active = tile[i + 19].active = true;
-				tile[i + 34].active = tile[i + 35].active = tile[i + 36].active = true;
+				tile[i + MAXTILE_WIDTH].active = tile[i + MAXTILE_WIDTH+1].active = tile[i + MAXTILE_WIDTH+2].active = true;
+				tile[i + MAXTILE_WIDTH*2].active = tile[i + MAXTILE_WIDTH * 2+1].active = tile[i + MAXTILE_WIDTH * 2+2].active = true;
 
 				tile[i].frame = tile[i + 1].frame = tile[i + 2].frame = TOP_TILE;
-				tile[i + 17].frame = LEFT_TILE;
-				tile[i + 17 + 1].frame = CENTER_TILE;
-				tile[i + 17 + 2].frame = RIGHT_TILE;
-				tile[i + 34].frame = tile[i + 34 + 1].frame = tile[i + 34 + 2].frame = BOTTOM_TILE;
+				tile[i + MAXTILE_WIDTH].frame = LEFT_TILE;
+				tile[i + MAXTILE_WIDTH + 1].frame = CENTER_TILE;
+				tile[i + MAXTILE_WIDTH + 2].frame = RIGHT_TILE;
+				tile[i + MAXTILE_WIDTH * 2].frame = tile[i + MAXTILE_WIDTH * 2 + 1].frame = tile[i + MAXTILE_WIDTH * 2 + 2].frame = BOTTOM_TILE;
 				break;
 			case ERASE:
-				if (!isLeftkey)continue;
+				if (!isLeftkey || mouse.active)continue;
 
 				tile[i].active = false;
 				break;
 			}
 			break;
 		}
-	}
-}
-
-void mapToolScene::saveIndex(int index)
-{
-	if (backup.size() < MAXUNDOSIZE)
-	{
-		backup.push_back(index);
-	}
-	else
-	{
-		backup.pop_front();
-		backup.push_back(index);
-	}
-}
-
-void mapToolScene::UNDO()
-{
-	if (!backup.empty())
-	{
-		tile[backup.back()].active = false;
-		backup.pop_back();
 	}
 }
 
