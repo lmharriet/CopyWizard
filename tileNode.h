@@ -1,10 +1,16 @@
 #pragma once
 #include "gameNode.h"
 
-//MAP SIZE
+///MAP SIZE///
+
+//최대 가로 길이//
 #define MAXTILE_WIDTH 20
+//최대 세로 길이//
 #define MAXTILE_HEIGHT 20
+//모든 타일의 개수//
 #define MAXTILE (MAXTILE_WIDTH * MAXTILE_HEIGHT)
+
+#define TILESIZE 48
 //COLOR
 #define BLACK	 RGB(   0,   0,   0 )
 #define RED		 RGB( 255,   0,   0 )

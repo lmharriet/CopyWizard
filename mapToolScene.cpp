@@ -13,7 +13,7 @@ HRESULT mapToolScene::init()
 		{
 			int order = MAXTILE_WIDTH * i + j;
 
-			tile[order].rc = RectMake(200 + ((j % MAXTILE_WIDTH) * 48), 130 + ((i % MAXTILE_HEIGHT) * 48), 48, 48);
+			tile[order].rc = RectMake(200 + ((j % MAXTILE_WIDTH) * TILESIZE), 130 + ((i % MAXTILE_HEIGHT) * TILESIZE), TILESIZE, TILESIZE);
 			tile[order].active = false;
 			tile[order].isCol = false;
 
@@ -30,7 +30,7 @@ HRESULT mapToolScene::init()
 
 			sTile[order].frame = { j,i };
 
-			sTile[order].rc = RectMake(1100 + (j * 55), 380+ (i * 55), 48, 48);
+			sTile[order].rc = RectMake(1100 + (j * 55), 380+ (i * 55), TILESIZE, TILESIZE);
 		}
 	}
 
@@ -70,8 +70,8 @@ void mapToolScene::update()
 		{
 			int order = MAXTILE_WIDTH * i + j;
 
-			tile[order].rc = moveRC(200 + ((j % MAXTILE_WIDTH) * 48), 130 + ((i % MAXTILE_HEIGHT) * 48), 48, 48);
-			//tile[order].rc = RectMake(200 + ((j % 17) * 48), 130 + ((i % 9) * 48), 48, 48);
+			tile[order].rc = moveRC(200 + ((j % MAXTILE_WIDTH) * TILESIZE), 130 + ((i % MAXTILE_HEIGHT) * TILESIZE), TILESIZE, TILESIZE);
+			//tile[order].rc = RectMake(200 + ((j % 17) * TILESIZE), 130 + ((i % 9) * TILESIZE), TILESIZE, TILESIZE);
 		}
 	}
 
