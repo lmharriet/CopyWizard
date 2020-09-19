@@ -1,7 +1,10 @@
 #pragma once
 #include "gameNode.h"
 
-#define MAXUNDOSIZE 5
+//MAP SIZE
+#define MAXTILE_WIDTH 20
+#define MAXTILE_HEIGHT 20
+#define MAXTILE (MAXTILE_WIDTH * MAXTILE_HEIGHT)
 //COLOR
 #define BLACK	 RGB(   0,   0,   0 )
 #define RED		 RGB( 255,   0,   0 )
@@ -21,6 +24,12 @@ enum STATE
 	DRAW_SET, // ¼¼Æ®
 	ERASE,
 	MOVE
+};
+enum TILEKIND
+{
+	WAY,
+	WALL,
+	OBJECT,
 };
 struct tagMap
 {
