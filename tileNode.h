@@ -4,9 +4,9 @@
 ///MAP SIZE///
 
 //최대 가로 길이//
-#define MAXTILE_WIDTH 20
+#define MAXTILE_WIDTH 100
 //최대 세로 길이//
-#define MAXTILE_HEIGHT 20
+#define MAXTILE_HEIGHT 100
 //모든 타일의 개수//
 #define MAXTILE (MAXTILE_WIDTH * MAXTILE_HEIGHT)
 
@@ -43,8 +43,10 @@ struct tagMap
 
 	POINT frame;
 
-	bool active;
-	bool isCol;
+	bool active;//활성화 되었냐?
+	bool isCol; //드래그에 포함되었냐?
+
+	bool isCam; //카메라 안에 들어와 있냐?
 };
 struct tagSample
 {

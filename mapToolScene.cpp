@@ -16,6 +16,7 @@ HRESULT mapToolScene::init()
 			tile[order].rc = RectMake(200 + ((j % MAXTILE_WIDTH) * TILESIZE), 130 + ((i % MAXTILE_HEIGHT) * TILESIZE), TILESIZE, TILESIZE);
 			tile[order].active = false;
 			tile[order].isCol = false;
+			tile[order].isCam = false;
 
 			tile[order].frame = { 0,0 };
 		}
@@ -38,6 +39,7 @@ HRESULT mapToolScene::init()
 	sTile_set.rc = RectMake(1107, 180, 144, 144);
 
 	//mouse
+	state = ERASE;
 	memset(&mouse, 0, sizeof(mouse));
 
 	//button down
@@ -45,6 +47,7 @@ HRESULT mapToolScene::init()
 
 	//cam
 	camX = camY = 0;
+	camRC = RectMake(0, 0, WINSIZEX, WINSIZEY);
 
 	//button
 	dragChangeButton = RectMake(1102, 330, 150, 40);
@@ -147,6 +150,14 @@ void mapToolScene::update()
 		if(mouse.dragMode) mouse.dragMode = false;
 		else mouse.dragMode = true;
 	}
+
+	//cam col
+	RECT tp;
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (IntersectRect(&tp, &tile[i].rc, &camRC))tile[i].isCam = true;
+		else tile[i].isCam = false;
+	}
 }
 
 void mapToolScene::render()
@@ -158,14 +169,14 @@ void mapToolScene::render()
 		{
 			if (!tile[i].isCol)
 			{
-				Rectangle(getMemDC(), tile[i].rc);
+				if (tile[i].isCam) Rectangle(getMemDC(), tile[i].rc);
 			}
 			else
 			{
 				HPEN hPen, oPen;
 				hPen = CreatePen(PS_SOLID, 2, GREEN);
 				oPen = (HPEN)SelectObject(getMemDC(), hPen);
-				Rectangle(getMemDC(), tile[i].rc);
+				if (tile[i].isCam) Rectangle(getMemDC(), tile[i].rc);
 				
 				SelectObject(getMemDC(), oPen);
 				DeleteObject(hPen);
@@ -173,7 +184,7 @@ void mapToolScene::render()
 		}
 		else
 		{
-			if (!tile[i].isCol) Rectangle(getMemDC(), tile[i].rc);
+			if (!tile[i].isCol && tile[i].isCam) Rectangle(getMemDC(), tile[i].rc);
 
 			if (tile[i].active && i < MAXTILE - MAXTILE_WIDTH && tile[i + MAXTILE_WIDTH].active)
 			{
@@ -212,7 +223,7 @@ void mapToolScene::render()
 
 				hPen = CreatePen(PS_SOLID, 4, RED);
 				oPen = (HPEN)SelectObject(getMemDC(), hPen);
-				Rectangle(getMemDC(), tile[i].rc);
+				if (tile[i].isCam) Rectangle(getMemDC(), tile[i].rc);
 
 				SelectObject(getMemDC(), oPen);
 				SelectObject(getMemDC(), oBrush);
@@ -316,8 +327,6 @@ void mapToolScene::dragTile()
 	{
 		if (IntersectRect(&temp, &mouse.rc, &tile[i].rc))
 		{
-			sIndex.push_back(i);
-
 			tile[i].isCol = true;
 		}
 		else tile[i].isCol = false;
@@ -383,7 +392,7 @@ void mapToolScene::singleTile()
 				tile[i + MAXTILE_WIDTH * 2].frame = tile[i + MAXTILE_WIDTH * 2 + 1].frame = tile[i + MAXTILE_WIDTH * 2 + 2].frame = BOTTOM_TILE;
 				break;
 			case ERASE:
-				if (!isLeftkey)continue;
+				if (!isLeftkey || mouse.active)continue;
 
 				tile[i].active = false;
 				break;

@@ -20,14 +20,13 @@ private:
 	tagMouse mouse;
 	STATE state;
 
-	vector<int> sIndex;
-
 	//button down
 	bool isLeftDown;
 	bool isLeftUp;
 	bool isLeftkey;
 
 	//cam
+	RECT camRC;
 	float camX, camY;
 public:
 	HRESULT init();
