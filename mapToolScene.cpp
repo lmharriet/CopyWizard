@@ -18,8 +18,8 @@ HRESULT mapToolScene::init()
 		icon[i].rc = RectMake(928, 88 + (i * 50), 50, 48);
 		icon[i].isCol = false;
 	}
-	//option = OPTION::MENU;
-	option = OPTION::TILE;
+	option = OPTION::MENU;
+
 	isLeftDown = isLeft = isLeftUp = false;
 	return S_OK;
 }
@@ -34,7 +34,7 @@ void mapToolScene::update()
 
 	buttonCheck();
 
-	iconCheck();
+	if(option !=OPTION::MENU) iconCheck();
 }
 
 void mapToolScene::render()
@@ -135,7 +135,7 @@ void mapToolScene::iconCheck()
 {
 	///option != menu///
 
-	//맵툴 아이콘을 누르면 기능 실행
+	//여기는 아이콘 입력만 처리
 
 	switch (option)
 	{
