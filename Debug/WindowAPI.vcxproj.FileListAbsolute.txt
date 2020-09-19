@@ -1,0 +1,2 @@
+C:\Users\dkdlf\Desktop\yellowCarrot\.vs\CopyWizard\Debug\GameFramework2D.exe
+C:\Users\dkdlf\Desktop\yellowCarrot\.vs\CopyWizard\Debug\GameFramework2D.pdb

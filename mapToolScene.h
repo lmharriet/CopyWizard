@@ -50,4 +50,7 @@ public:
 
 	//cam
 	RECT moveRC(int x, int y, int width, int height) { return RectMake(x + camX, y + camY, width, height); }
+
+	//test 2
+
 };
