@@ -69,3 +69,10 @@ inline void textOut(HDC hdc, int x, int y, const char* text, COLORREF color = RG
 	SetTextColor(hdc, color);
 	TextOut(hdc, x, y, text, strlen(text));
 }
+
+inline void ptOut(HDC hdc, POINT pos, POINT pt)
+{
+	char str[126];
+	wsprintf(str, "%d %d", pt.x, pt.y);
+	TextOut(hdc, pos.x, pos.y, str, strlen(str));
+}

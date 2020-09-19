@@ -21,7 +21,7 @@ HRESULT mainGame::init()
 	SCENEMANAGER->addScene("맵툴제작", new mapToolScene);
 
 	/*현재씬*/
-	SCENEMANAGER->loadScene("시작화면");
+	SCENEMANAGER->loadScene("맵툴제작");
 
 	ShowCursor(false);
 	return S_OK;
