@@ -1,0 +1,14 @@
+//보스사운드
+Bossbackground
+IceBossHurt
+IceBossLaugh
+IceShakeLong
+
+//애너미
+goul
+KnightAttack
+
+//플레이어는 스킬이름그대로
+
+chainLighting1,2
+(1정상,2빠른버전)
