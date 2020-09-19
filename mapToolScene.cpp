@@ -74,7 +74,6 @@ void mapToolScene::update()
 			int order = MAXTILE_WIDTH * i + j;
 
 			tile[order].rc = moveRC(200 + ((j % MAXTILE_WIDTH) * TILESIZE), 130 + ((i % MAXTILE_HEIGHT) * TILESIZE), TILESIZE, TILESIZE);
-			//tile[order].rc = RectMake(200 + ((j % 17) * TILESIZE), 130 + ((i % 9) * TILESIZE), TILESIZE, TILESIZE);
 		}
 	}
 
@@ -118,14 +117,12 @@ void mapToolScene::update()
 	//erace mode
 	if (INPUT->GetKeyDown('E'))
 	{
-		if (state != ERASE)mouse.saveBrush = state;
 		mouse.active = false;
 	}
 
 	//brush mode
 	if (INPUT->GetKeyDown('B'))
 	{
-		if (mouse.saveBrush != NONE)state = mouse.saveBrush;
 		mouse.active = true;
 	}
 
@@ -356,6 +353,8 @@ void mapToolScene::dragTile()
 
 					break;
 				case ERASE:
+					if (mouse.active)continue;
+
 					tile[i].active = false;
 					break;
 				}
