@@ -11,10 +11,11 @@ enum class OPTION
 	MENU
 };
 
-//struct tagButton
-//{
-//	RECT rc;
-//};
+struct tagIcon
+{
+	RECT rc;
+	bool isCol;
+};
 
 class mapToolScene : public gameNode
 {
@@ -23,6 +24,8 @@ private:
 	
 	/// BUTTON ///
 	RECT SAVE, LOAD, BACK;
+
+	tagIcon icon[5];
 
 	OPTION option;
 	//vk_down
@@ -33,10 +36,16 @@ public:
 	void update();
 	void render();
 
-	void imageRender(string keyName, POINT pt);
+	void buttonCheck();
+	void iconCheck();
 
+	//image
+	void addImage();
+
+	//render
+	void imageRender(string keyName, POINT pt);
 	void textRender();
-	//don't touch
 	void buttonRender();
+	//don't touch
 	void vkCheck();
 };
