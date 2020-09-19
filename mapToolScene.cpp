@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "mapToolScene.h"
 
-HRESULT mapToolScene::init()//되네 기대한다 제발.. 밥먹자
+HRESULT mapToolScene::init()//되네 기대한다 제발.. 밥먹자 가냐?
 {
 	IMAGEMANAGER->addFrameImage("tile", "Images/tile.bmp", 144, 144, 3, 3);
 	IMAGEMANAGER->addImage("tileSet", "Images/tile.bmp", 144, 144, true, RGB(255, 0, 255));
