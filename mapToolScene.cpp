@@ -49,12 +49,8 @@ void mapToolScene::update()
 
 void mapToolScene::render()
 {
-	//tile
-	for (int i = 0; i < MAXTILE; i++)
-	{
-		if (colCheck(tile[i].rc, cam.rc))
-			FrameRect(getMemDC(), tile[i].rc, DARKGREEN);
-	}
+	//타일 그리기
+	tileRender();
 
 	//옵션의 상태에 따른 UI이미지 변경
 	UIRender();
@@ -134,6 +130,20 @@ void mapToolScene::iconCheck()
 	switch (option)
 	{
 	case OPTION::WALL_MENU:
+		for (int i = 0; i < 4; i++)
+		{
+			if (PtInRect(&icon[i].rc, _ptMouse) && isLeftDown)
+			{
+				for (int j = 0; j < 4; j++)icon[j].isCol = false;
+
+				icon[i].isCol = true;
+			}
+		}
+		if (PtInRect(&drag.rc, _ptMouse) && isLeftDown)
+		{
+			if (!drag.isCol) drag.isCol = true;
+			else drag.isCol = false;
+		}
 		break;
 	case OPTION::TILE_MENU:
 		for (int i = 0; i < 4; i++)
@@ -152,6 +162,20 @@ void mapToolScene::iconCheck()
 		}
 		break;
 	case OPTION::OBJECT_MENU:
+		for (int i = 0; i < 4; i++)
+		{
+			if (PtInRect(&icon[i].rc, _ptMouse) && isLeftDown)
+			{
+				for (int j = 0; j < 4; j++)icon[j].isCol = false;
+
+				icon[i].isCol = true;
+			}
+		}
+		if (PtInRect(&drag.rc, _ptMouse) && isLeftDown)
+		{
+			if (!drag.isCol) drag.isCol = true;
+			else drag.isCol = false;
+		}
 		break;
 	}
 }
@@ -187,6 +211,14 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addImage("tileMenu", "maptool/ui/tilemenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("objectMenu", "maptool/ui/objectmenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("checkIcon", "maptool/ui/check.bmp", 36, 36, true, RGB(255, 0, 255));
+}
+void mapToolScene::tileRender()
+{
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (colCheck(tile[i].rc, cam.rc))
+			FrameRect(getMemDC(), tile[i].rc, DARKGREEN);
+	}
 }
 /// RENDER ///
 void mapToolScene::UIRender()

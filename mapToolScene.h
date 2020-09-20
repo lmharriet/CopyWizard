@@ -44,6 +44,7 @@ public:
 	void addImage();
 
 	//render
+	void tileRender();
 	void UIRender();
 	void textRender();
 	void buttonRender();
