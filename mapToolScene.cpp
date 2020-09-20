@@ -13,11 +13,14 @@ HRESULT mapToolScene::init()
 	LOAD = RectMake(955, 613, 100, 45);
 	BACK = RectMake(955, 663, 100, 45);
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 4; i++)
 	{
-		icon[i].rc = RectMake(928, 88 + (i * 50), 50, 48);
+		icon[i].rc = RectMake(928, 138 + (i * 50), 50, 48);
 		icon[i].isCol = false;
 	}
+	drag.rc = RectMake(928, 87, 50, 48);
+	drag.isCol = false;
+
 	option = OPTION::MENU;
 
 	isLeftDown = isLeft = isLeftUp = false;
@@ -35,7 +38,10 @@ void mapToolScene::update()
 	buttonCheck();
 
 	//메뉴에는 아이콘이 없습니당
-	if(option !=OPTION::MENU) iconCheck();
+	if (option != OPTION::MENU) iconCheck();
+
+
+
 }
 
 void mapToolScene::render()
@@ -44,7 +50,7 @@ void mapToolScene::render()
 	UIRender();
 
 	//탭 스위치가 'ON'이면 rc를 보여준다
-	if (INPUT->GetToggleKey(VK_TAB) == false) //처음에 비활성화, 한번 누르면 렌더가 활성화
+	if (INPUT->GetToggleKey(VK_TAB))
 	{
 		rcRender();
 	}
@@ -53,10 +59,11 @@ void mapToolScene::render()
 	//메뉴에는 옵션버튼이 없다
 	if (option != OPTION::MENU)
 	{
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			if (icon[i].isCol) imageRender("checkIcon", { icon[i].rc.left,icon[i].rc.top });
 		}
+		if (drag.isCol) imageRender("checkIcon", { drag.rc.left,drag.rc.top });
 	}
 	textRender();
 }
@@ -89,21 +96,24 @@ void mapToolScene::buttonCheck()
 		{
 			option = OPTION::MENU;
 			//다시 들어왔을 때 icon이 미리 활성화 되어있음을 방지
-			for (int i = 0; i < 5; i++) icon[i].isCol = false;
+			for (int i = 0; i < 4; i++) icon[i].isCol = false;
+			drag.isCol = false;
 		}
 		break;
 	case OPTION::TILE:
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown)
 		{
 			option = OPTION::MENU;
-			for (int i = 0; i < 5; i++) icon[i].isCol = false;
+			for (int i = 0; i < 4; i++) icon[i].isCol = false;
+			drag.isCol = false;
 		}
 		break;
 	case OPTION::OBJECT:
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown)
 		{
 			option = OPTION::MENU;
-			for (int i = 0; i < 5; i++) icon[i].isCol = false;
+			for (int i = 0; i < 4; i++) icon[i].isCol = false;
+			drag.isCol = false;
 		}
 		break;
 	}
@@ -120,13 +130,19 @@ void mapToolScene::iconCheck()
 	case OPTION::WALL:
 		break;
 	case OPTION::TILE:
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			if (PtInRect(&icon[i].rc, _ptMouse) && isLeftDown)
 			{
-				if (!icon[i].isCol) icon[i].isCol = true;
-				else icon[i].isCol = false;
+				for (int j = 0; j < 4; j++)icon[j].isCol = false;
+
+				icon[i].isCol = true;
 			}
+		}
+		if (PtInRect(&drag.rc, _ptMouse) && isLeftDown)
+		{
+			if (!drag.isCol) drag.isCol = true;
+			else drag.isCol = false;
 		}
 		break;
 	case OPTION::OBJECT:
@@ -183,7 +199,8 @@ void mapToolScene::rcRender()
 	case OPTION::WALL:
 		break;
 	case OPTION::TILE:
-		for (int i = 0; i < 5; i++) Rectangle(getMemDC(), icon[i].rc);
+		for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i].rc);
+		Rectangle(getMemDC(), drag.rc);
 		break;
 	case OPTION::OBJECT:
 		break;

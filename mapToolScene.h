@@ -25,7 +25,8 @@ private:
 	/// BUTTON ///
 	RECT SAVE, LOAD, BACK;
 
-	tagIcon icon[5];
+	tagIcon icon[4];
+	tagIcon drag;
 
 	OPTION option;
 	//vk_down
