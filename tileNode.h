@@ -37,6 +37,8 @@ struct tagTile
 	RECT rc;
 	TERRAIN kind;
 	string keyName;
+
+	POINT frame;
 };
 
 struct tagUser

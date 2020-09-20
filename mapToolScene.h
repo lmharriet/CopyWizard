@@ -39,9 +39,12 @@ public:
 	void buttonCheck();
 	void iconCheck();
 
+	//reset
+	void resetIcon();
+
 	//init
 	void initTile();
-	void initSelecTile();
+	void initSelectTile();
 	void initCam();
 	//camera
 	void moveRect();
@@ -59,6 +62,7 @@ public:
 
 	void imageRender(string keyName, POINT pt);
 	void imageAlphaRender(string keyName, POINT pt, int alpha = 150);
+	void imageFrameRender(string keyName, POINT pt, int frameX, int frameY);
 
 	//don't touch
 	void controller();

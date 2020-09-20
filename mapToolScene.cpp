@@ -6,7 +6,7 @@ HRESULT mapToolScene::init()
 	addImage();
 
 	initTile();
-	initSelecTile();
+	initSelectTile();
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -68,7 +68,10 @@ void mapToolScene::render()
 
 
 	//userRender
-	if (user.kind != TERRAIN::NONE) imageAlphaRender(user.KeyName, { _ptMouse.x - TILESIZE / 2,_ptMouse.y - TILESIZE / 2 }, 200);
+	if (user.kind != TERRAIN::NONE)
+	{
+		imageAlphaRender(user.KeyName, { _ptMouse.x - TILESIZE / 2,_ptMouse.y - TILESIZE / 2 }, 200);
+	}
 
 	textRender();
 }
@@ -99,25 +102,33 @@ void mapToolScene::buttonCheck()
 	case OPTION::WALL_MENU:
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown)
 		{
+			//유저가 가지고있는 데이터 초기화
+			user.KeyName = "";
+			user.kind = TERRAIN::NONE;
+
 			option = OPTION::SELECT_MENU;
 			//다시 들어왔을 때 icon이 미리 활성화 되어있음을 방지
-			for (int i = 0; i < 4; i++) icon[i].isCol = false;
+			resetIcon();
 			drag.isCol = false;
 		}
 		break;
 	case OPTION::TILE_MENU:
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown)
 		{
+			user.KeyName = "";
+			user.kind = TERRAIN::NONE;
 			option = OPTION::SELECT_MENU;
-			for (int i = 0; i < 4; i++) icon[i].isCol = false;
+			resetIcon();
 			drag.isCol = false;
 		}
 		break;
 	case OPTION::OBJECT_MENU:
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown)
 		{
+			user.KeyName = "";
+			user.kind = TERRAIN::NONE;
 			option = OPTION::SELECT_MENU;
-			for (int i = 0; i < 4; i++) icon[i].isCol = false;
+			resetIcon();
 			drag.isCol = false;
 		}
 		break;
@@ -137,8 +148,7 @@ void mapToolScene::iconCheck()
 		{
 			if (PtInRect(&icon[i].rc, _ptMouse) && isLeftDown)
 			{
-				for (int j = 0; j < 4; j++)icon[j].isCol = false;
-
+				resetIcon();
 				icon[i].isCol = true;
 			}
 		}
@@ -153,8 +163,7 @@ void mapToolScene::iconCheck()
 		{
 			if (PtInRect(&icon[i].rc, _ptMouse) && isLeftDown)
 			{
-				for (int j = 0; j < 4; j++)icon[j].isCol = false;
-
+				resetIcon();
 				icon[i].isCol = true;
 			}
 		}
@@ -169,8 +178,7 @@ void mapToolScene::iconCheck()
 		{
 			if (PtInRect(&icon[i].rc, _ptMouse) && isLeftDown)
 			{
-				for (int j = 0; j < 4; j++)icon[j].isCol = false;
-
+				resetIcon();
 				icon[i].isCol = true;
 			}
 		}
@@ -183,6 +191,11 @@ void mapToolScene::iconCheck()
 	}
 }
 
+void mapToolScene::resetIcon()
+{
+	for (int i = 0; i < 4; i++) icon[i].isCol = false;
+}
+
 void mapToolScene::initTile()
 {
 	for (int i = 0; i < MAXTILE; i++)
@@ -190,10 +203,11 @@ void mapToolScene::initTile()
 		tile[i].rc = RectMake((i % MAXTILE_WIDTH * TILESIZE), (i / MAXTILE_HEIGHT) * TILESIZE, TILESIZE, TILESIZE);
 		tile[i].kind = TERRAIN::NONE;
 		tile[i].keyName = "";
+		tile[i].frame = { 0,0 };
 	}
 }
 
-void mapToolScene::initSelecTile()
+void mapToolScene::initSelectTile()
 {
 	string str[2] = { "grass0","ground0" };
 	for (int i = 0; i < 2; i++)
@@ -221,28 +235,42 @@ void mapToolScene::moveRect()
 /// IMAGE ///
 void mapToolScene::addImage()
 {
+	//UI//
 	IMAGEMANAGER->addImage("mapMenu", "maptool/ui/maptoolmenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("wallMenu", "maptool/ui/wallmenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("tileMenu", "maptool/ui/tilemenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("objectMenu", "maptool/ui/objectmenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("checkIcon", "maptool/ui/check.bmp", 36, 36, true, RGB(255, 0, 255));
 
-	IMAGEMANAGER->addImage("grass0", "maptool/tile/grass0.bmp", TILESIZE * 3, TILESIZE * 3);
-	IMAGEMANAGER->addImage("ground0", "maptool/tile/ground0.bmp", TILESIZE * 3, TILESIZE * 3);
+	//TILE//
+	IMAGEMANAGER->addFrameImage("grass0", "maptool/tile/grass0.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
+	IMAGEMANAGER->addFrameImage("ground0", "maptool/tile/ground0.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
 }
 
+/// RENDER ///
 void mapToolScene::tileRender()
 {
 	for (int i = 0; i < MAXTILE; i++)
 	{
 		if (colCheck(tile[i].rc, cam.rc))
 		{
-			FrameRect(getMemDC(), tile[i].rc, DARKGREEN);
+			//타일에 정보가 없을 때 초록색 도형 출력
+			if (tile[i].kind == TERRAIN::NONE)
+			{
+				FrameRect(getMemDC(), tile[i].rc, DARKGREEN);
+				//char num[10];
+				//textOut(getMemDC(), tile[i].rc.left, tile[i].rc.top, itoa(i, num, 10), GREEN);
+			}
+			else
+			{
+				imageFrameRender(tile[i].keyName, { tile[i].rc.left,tile[i].rc.top }, tile[i].frame.x, tile[i].frame.y);
+				FrameRect(getMemDC(), tile[i].rc, YELLOW);
+			}
 		}
 	}
 
 }
-/// RENDER ///
+
 void mapToolScene::UIRender()
 {
 	switch (option)
@@ -331,6 +359,11 @@ void mapToolScene::imageAlphaRender(string keyName, POINT pt, int alpha)
 	IMAGEMANAGER->findImage(keyName)->alphaRender(getMemDC(), pt.x, pt.y, alpha);
 }
 
+void mapToolScene::imageFrameRender(string keyName, POINT pt, int frameX, int frameY)
+{
+	IMAGEMANAGER->findImage(keyName)->frameRender(getMemDC(),pt.x,pt.y,frameX, frameY);
+}
+
 void mapToolScene::controller()
 {
 	if (INPUT->GetKey('W') && abs(cam.pt.y) > 0)
@@ -354,20 +387,66 @@ void mapToolScene::controller()
 		moveRect();
 	}
 
-	if (isLeftDown)
+	if (isLeftDown) // 타일의 정보를 가져오는 기능만 수행
 	{
-		for (int i = 0; i < 2; i++)
+		switch (option)
 		{
-			if (PtInRect(&bigTile[i].rc, _ptMouse))
+		case OPTION::WALL_MENU:
+			break;
+		case OPTION::TILE_MENU:
+			//get tile
+			for (int i = 0; i < 2; i++)
 			{
-				user.KeyName = bigTile[i].keyName;
-				user.kind = bigTile[i].kind;
+				if (PtInRect(&bigTile[i].rc, _ptMouse))
+				{
+					user.KeyName = bigTile[i].keyName;
+					user.kind = bigTile[i].kind;
+					// 브러쉬 아이콘에 check 표시
+					resetIcon();
+					icon[1].isCol = true;
+				}
 			}
+			for (int i = 0; i < MAXTILE; i++)
+			{
+				if (PtInRect(&tile[i].rc, _ptMouse))
+				{
+					//tile[i].keyName = user.KeyName;
+					//tile[i].kind = user.kind;
+
+					//tile[i+1].keyName = user.keyName;
+					//tile[i+1].kind = user.kind;....
+					//여기서 tile[i+1..i+maxtile_width * 2 + 2] 까지 초기화를 해줘야한다.
+
+					////첫번째 줄
+					//tile[i].frame = { 0,0 };
+					//tile[i + 1].frame = { 1,0 };
+					//tile[i + 2].frame = { 2,0 };
+					////두번째 줄
+					//tile[i + MAXTILE_WIDTH].frame = { 0,1 };
+					//tile[i + MAXTILE_WIDTH + 1].frame = { 1,1 };
+					//tile[i + MAXTILE_WIDTH + 2].frame = { 2,1 };
+					////세번째 줄
+					//tile[i + MAXTILE_WIDTH * 2].frame = { 0,2 };
+					//tile[i + MAXTILE_WIDTH * 2 + 1].frame = { 1,2 };
+					//tile[i + MAXTILE_WIDTH * 2 + 2].frame = { 2,2 };
+
+					for (int j = 0; j < 3; j++)
+					{
+						for (int k = 0; k < 3; k++)
+						{
+							tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
+							tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
+							tile[i + (MAXTILE_WIDTH * j) + k].frame = { k,j };
+						}
+					}
+				}
+			}
+			break;
+		case OPTION::OBJECT_MENU:
+			break;
 		}
+
 	}
-
-
-
 }
 
 void mapToolScene::vkCheck()
