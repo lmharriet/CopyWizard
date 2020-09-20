@@ -39,6 +39,17 @@ HRESULT mapToolScene::init()
 	option = OPTION::SELECT_MENU;
 
 
+
+	//저장 & 불러오기 창 
+	for (int i = 0; i < 3; i++)
+	{
+		fileWin[i] = RectMake(125 + i * 250, 228, 200, 300);
+	}
+
+	isSave = isLoad = false;
+
+
+
 	isLeftDown = isLeft = isLeftUp = false;
 
 	initCam();
@@ -95,6 +106,32 @@ void mapToolScene::update()
 	{
 		drag.start = drag.end = { 0,0 };
 	}
+
+	// 세이브 
+
+	if (isSave)
+		for (int i = 0; i < 3; i++)
+		{
+			if (PtInRect(&fileWin[i], _ptMouse) && isLeftDown)
+			{
+				mapSave(i);
+				isSave = false;
+			}
+		}
+
+	// 로드
+	if (isLoad)
+		for (int i = 0; i < 3; i++)
+		{
+			if (PtInRect(&fileWin[i], _ptMouse) && isLeftDown)
+			{
+				mapLoad(i);
+				isLoad = false;
+			}
+		}
+
+
+
 }
 
 void mapToolScene::render()
@@ -119,6 +156,18 @@ void mapToolScene::render()
 	textRender();
 
 	FrameRect(getMemDC(), drag.rc, WHITE);
+
+
+	//세이브 & 로드 렌더
+	if (isSave || isLoad)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			Rectangle(getMemDC(), fileWin[i]);
+			textOut(getMemDC(), fileWin[i].left, fileWin[i].top, "저장카드", RGB(0, 0, 0));
+		}
+	}
+
 }
 
 void mapToolScene::buttonCheck()
@@ -144,6 +193,8 @@ void mapToolScene::buttonCheck()
 			}
 		}
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown) SCENEMANAGER->loadScene("시작화면");
+		this->saveCheck();
+		this->loadCheck();
 		break;
 	case OPTION::WALL_MENU:
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown)
@@ -157,6 +208,8 @@ void mapToolScene::buttonCheck()
 			tool = TOOL::NONE;
 			dragButton.isCol = false;
 		}
+		this->saveCheck();
+		this->loadCheck();
 		break;
 	case OPTION::TILE_MENU:
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown)
@@ -168,6 +221,8 @@ void mapToolScene::buttonCheck()
 			tool = TOOL::NONE;
 			dragButton.isCol = false;
 		}
+		this->saveCheck();
+		this->loadCheck();
 		break;
 	case OPTION::OBJECT_MENU:
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown)
@@ -179,6 +234,8 @@ void mapToolScene::buttonCheck()
 			tool = TOOL::NONE;
 			dragButton.isCol = false;
 		}
+		this->saveCheck();
+		this->loadCheck();
 		break;
 	}
 }
@@ -364,6 +421,57 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addFrameImage("ground0", "maptool/tile/ground0.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
 	IMAGEMANAGER->addFrameImage("tile7", "maptool/tile/tile7.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
 	IMAGEMANAGER->addFrameImage("tile9", "maptool/tile/tile9.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
+}
+
+void mapToolScene::mapSave(int index)
+{
+	char str[50];
+	sprintf(str, "mapData/map%d.map", index);
+
+	HANDLE file;
+	DWORD write;
+
+	file = CreateFile(str, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	WriteFile(file, tile, sizeof(tagTile) * MAXTILE, &write, NULL);
+	CloseHandle(file);
+
+}
+
+void mapToolScene::mapLoad(int index)
+{
+	char str[50];
+	sprintf(str, "mapData/map%d.map", index);
+
+	HANDLE file;
+	DWORD read;
+
+	file = CreateFile(str, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	ReadFile(file, tile, sizeof(tagTile) * MAXTILE, &read, NULL);
+	CloseHandle(file);
+
+}
+
+void mapToolScene::saveCheck()
+{
+	if (PtInRect(&SAVE, _ptMouse) && isLeftDown)
+	{
+		if (!isSave)
+			isSave = true;
+		else
+			isSave = false;
+	}
+
+}
+
+void mapToolScene::loadCheck()
+{
+	if (PtInRect(&LOAD, _ptMouse) && isLeftDown)
+	{
+		if (!isLoad)
+			isLoad = true;
+		else
+			isLoad = false;
+	}
 }
 
 /// RENDER ///

@@ -35,6 +35,12 @@ private:
 	/// CAMERA ///
 	tagCam cam;
 
+	//저장&불러오기 창
+	RECT fileWin[3];
+	bool isSave;
+	bool isLoad;
+
+
 	//vk_down
 	bool isLeftDown, isLeft, isLeftUp;
 public:
@@ -58,6 +64,12 @@ public:
 
 	//image
 	void addImage();
+
+	//save&load
+	void mapSave(int index);
+	void mapLoad(int index);
+	void saveCheck();
+	void loadCheck();
 
 	//render
 	void tileRender();
