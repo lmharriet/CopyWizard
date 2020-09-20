@@ -77,3 +77,11 @@ inline void ptOut(HDC hdc, POINT pos, POINT pt, COLORREF color = RGB(0, 0, 0))
 	wsprintf(str, "%d %d", pt.x, pt.y);
 	TextOut(hdc, pos.x, pos.y, str, strlen(str));
 }
+
+//편하게 충돌비교하기
+inline bool colCheck(RECT rc, RECT _rc)
+{
+	RECT temp;
+	if (IntersectRect(&temp, &rc, &_rc)) return true;
+	return false;
+}

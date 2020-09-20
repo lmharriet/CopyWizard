@@ -2,9 +2,9 @@
 ///MAP SIZE///
 
 //최대 가로 길이//
-#define MAXTILE_WIDTH 35
+#define MAXTILE_WIDTH 100
 //최대 세로 길이//
-#define MAXTILE_HEIGHT 35
+#define MAXTILE_HEIGHT 100
 //모든 타일의 개수//
 #define MAXTILE (MAXTILE_WIDTH * MAXTILE_HEIGHT)
 
@@ -46,5 +46,5 @@ struct tagTile
 struct tagCam
 {
 	RECT rc;
-	int x, y;
+	POINT pt;
 };

@@ -33,8 +33,12 @@ public:
 	void buttonCheck();
 	void iconCheck();
 
-	//tile
+	//init
 	void initTile();
+	void initCam();
+
+	//camera
+	void moveRect();
 
 	//image
 	void addImage();
@@ -45,6 +49,8 @@ public:
 	void buttonRender();
 	void rcRender();
 	void imageRender(string keyName, POINT pt);
+
 	//don't touch
+	void controller();
 	void vkCheck();
 };

@@ -26,6 +26,8 @@ HRESULT mapToolScene::init()
 	option = OPTION::SELECT_MENU;
 
 	isLeftDown = isLeft = isLeftUp = false;
+
+	initCam();
 	return S_OK;
 }
 
@@ -35,21 +37,24 @@ void mapToolScene::release()
 
 void mapToolScene::update()
 {
+	controller();
+
 	vkCheck();
 
 	buttonCheck();
 
 	//SELECT MENU에는 아이콘(펜, 지우개 등등..)이 없습니당
 	if (option != OPTION::SELECT_MENU) iconCheck();
-
-
-
 }
 
 void mapToolScene::render()
 {
 	//tile
-	for (int i = 0; i < MAXTILE; i++) FrameRect(getMemDC(), tile[i].rc, DARKGREEN);
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (colCheck(tile[i].rc, cam.rc))
+			FrameRect(getMemDC(), tile[i].rc, DARKGREEN);
+	}
 
 	//옵션의 상태에 따른 UI이미지 변경
 	UIRender();
@@ -65,6 +70,7 @@ void mapToolScene::render()
 		}
 		if (drag.isCol) imageRender("checkIcon", { drag.rc.left,drag.rc.top });
 	}
+
 	textRender();
 }
 
@@ -158,6 +164,21 @@ void mapToolScene::initTile()
 	}
 }
 
+void mapToolScene::initCam()
+{
+	cam.rc = RectMake(0, 0, 920, WINSIZEY);
+	cam.pt = { 0,0 };
+}
+
+void mapToolScene::moveRect()
+{
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		tile[i].rc = RectMake((i % MAXTILE_WIDTH * TILESIZE) + cam.pt.x,
+			(i / MAXTILE_HEIGHT) * TILESIZE + cam.pt.y, TILESIZE, TILESIZE);
+	}
+}
+
 /// IMAGE ///
 void mapToolScene::addImage()
 {
@@ -190,6 +211,7 @@ void mapToolScene::UIRender()
 void mapToolScene::textRender()
 {
 	ptOut(getMemDC(), { 10,30 }, _ptMouse, WHITE);
+	ptOut(getMemDC(), { 10,50 }, cam.pt, ORANGE);
 }
 
 void mapToolScene::buttonRender()
@@ -212,12 +234,16 @@ void mapToolScene::rcRender()
 			for (int i = 0; i < 3; i++) Rectangle(getMemDC(), mapOption[i]);
 			break;
 		case OPTION::WALL_MENU:
+			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i].rc);
+			Rectangle(getMemDC(), drag.rc);
 			break;
 		case OPTION::TILE_MENU:
 			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i].rc);
 			Rectangle(getMemDC(), drag.rc);
 			break;
 		case OPTION::OBJECT_MENU:
+			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i].rc);
+			Rectangle(getMemDC(), drag.rc);
 			break;
 		}
 	}
@@ -226,6 +252,30 @@ void mapToolScene::rcRender()
 void mapToolScene::imageRender(string keyName, POINT pt)
 {
 	IMAGEMANAGER->findImage(keyName)->render(getMemDC(), pt.x, pt.y);
+}
+
+void mapToolScene::controller()
+{
+	if (INPUT->GetKey('W') && abs(cam.pt.y) > 0)
+	{
+		cam.pt.y += 5;
+		moveRect();
+	}
+	if (INPUT->GetKey('A') && abs(cam.pt.x) > 0)
+	{
+		cam.pt.x += 5;
+		moveRect();
+	}
+	if (INPUT->GetKey('S') && abs(cam.pt.y) < MAXTILE_HEIGHT * TILESIZE - WINSIZEY)
+	{
+		cam.pt.y -= 5;
+		moveRect();
+	}
+	if (INPUT->GetKey('D') && abs(cam.pt.x) < MAXTILE_WIDTH * TILESIZE - 920)
+	{
+		cam.pt.x -= 5;
+		moveRect();
+	}
 }
 
 void mapToolScene::vkCheck()
