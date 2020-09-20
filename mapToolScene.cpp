@@ -34,7 +34,7 @@ HRESULT mapToolScene::init()
 	user.delay = 0;
 	tool = TOOL::NONE;
 
-	option = OPTION::WALL_MENU;
+	option = OPTION::SELECT_MENU;
 
 
 	isLeftDown = isLeft = isLeftUp = false;
