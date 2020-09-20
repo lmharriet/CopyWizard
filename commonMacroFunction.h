@@ -85,3 +85,14 @@ inline bool colCheck(RECT rc, RECT _rc)
 	if (IntersectRect(&temp, &rc, &_rc)) return true;
 	return false;
 }
+
+//렉트 가로(중앙값) 쉽게 가져오기
+inline int getRcCenterX(RECT rc)
+{
+	return rc.left + (rc.right - rc.left) / 2;
+}
+//렉트 세로(중앙값) 쉽게 가져오기
+inline int getRcCenterY(RECT rc)
+{
+	return rc.top + (rc.bottom - rc.top) / 2;
+}

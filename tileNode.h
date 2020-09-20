@@ -28,15 +28,22 @@ enum class TERRAIN
 {
 	WALL,
 	TILE,
-	OBJECT
+	OBJECT,
+
+	NONE
 };
 struct tagTile
 {
 	RECT rc;
 	TERRAIN kind;
+	string keyName;
 };
 
-
+struct tagUser
+{
+	TERRAIN kind;
+	string KeyName;
+};
 
 
 

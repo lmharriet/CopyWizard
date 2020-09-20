@@ -6,6 +6,9 @@
 class mapToolScene : public gameNode
 {
 private:
+	/// USER ///
+	tagUser user;
+
 	/// TILE ///
 	tagTile tile[MAXTILE];
 
@@ -18,6 +21,9 @@ private:
 	///  ICON  ///
 	tagIcon icon[4];
 	tagIcon drag;
+
+	tagTile bigTile[4];
+	tagTile miniTile[4];
 
 	/// CAMERA ///
 	tagCam cam;
@@ -35,8 +41,8 @@ public:
 
 	//init
 	void initTile();
+	void initSelecTile();
 	void initCam();
-
 	//camera
 	void moveRect();
 
@@ -49,7 +55,10 @@ public:
 	void textRender();
 	void buttonRender();
 	void rcRender();
+	void checkRender();
+
 	void imageRender(string keyName, POINT pt);
+	void imageAlphaRender(string keyName, POINT pt, int alpha = 150);
 
 	//don't touch
 	void controller();

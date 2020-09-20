@@ -6,6 +6,7 @@ HRESULT mapToolScene::init()
 	addImage();
 
 	initTile();
+	initSelecTile();
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -20,8 +21,14 @@ HRESULT mapToolScene::init()
 		icon[i].rc = RectMake(928, 138 + (i * 50), 50, 48);
 		icon[i].isCol = false;
 	}
+
+
 	drag.rc = RectMake(928, 87, 50, 48);
 	drag.isCol = false;
+
+	user.KeyName = "";
+	user.kind = TERRAIN::NONE;
+
 
 	option = OPTION::SELECT_MENU;
 
@@ -57,15 +64,11 @@ void mapToolScene::render()
 
 	rcRender();
 
-	//메뉴에는 옵션버튼이 없다
-	if (option != OPTION::SELECT_MENU)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			if (icon[i].isCol) imageRender("checkIcon", { icon[i].rc.left,icon[i].rc.top });
-		}
-		if (drag.isCol) imageRender("checkIcon", { drag.rc.left,drag.rc.top });
-	}
+	checkRender();
+
+
+	//userRender
+	if (user.kind != TERRAIN::NONE) imageAlphaRender(user.KeyName, { _ptMouse.x - TILESIZE / 2,_ptMouse.y - TILESIZE / 2 }, 200);
 
 	textRender();
 }
@@ -185,6 +188,19 @@ void mapToolScene::initTile()
 	for (int i = 0; i < MAXTILE; i++)
 	{
 		tile[i].rc = RectMake((i % MAXTILE_WIDTH * TILESIZE), (i / MAXTILE_HEIGHT) * TILESIZE, TILESIZE, TILESIZE);
+		tile[i].kind = TERRAIN::NONE;
+		tile[i].keyName = "";
+	}
+}
+
+void mapToolScene::initSelecTile()
+{
+	string str[2] = { "grass0","ground0" };
+	for (int i = 0; i < 2; i++)
+	{
+		bigTile[i].rc = RectMake(990 + (i % 2) * 140, 97 + (i / 2) * 135, 130, 130);
+		bigTile[i].kind = TERRAIN::TILE;
+		bigTile[i].keyName = str[i];
 	}
 }
 
@@ -202,7 +218,6 @@ void mapToolScene::moveRect()
 			(i / MAXTILE_HEIGHT) * TILESIZE + cam.pt.y, TILESIZE, TILESIZE);
 	}
 }
-
 /// IMAGE ///
 void mapToolScene::addImage()
 {
@@ -211,14 +226,21 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addImage("tileMenu", "maptool/ui/tilemenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("objectMenu", "maptool/ui/objectmenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("checkIcon", "maptool/ui/check.bmp", 36, 36, true, RGB(255, 0, 255));
+
+	IMAGEMANAGER->addImage("grass0", "maptool/tile/grass0.bmp", TILESIZE * 3, TILESIZE * 3);
+	IMAGEMANAGER->addImage("ground0", "maptool/tile/ground0.bmp", TILESIZE * 3, TILESIZE * 3);
 }
+
 void mapToolScene::tileRender()
 {
 	for (int i = 0; i < MAXTILE; i++)
 	{
 		if (colCheck(tile[i].rc, cam.rc))
+		{
 			FrameRect(getMemDC(), tile[i].rc, DARKGREEN);
+		}
 	}
+
 }
 /// RENDER ///
 void mapToolScene::UIRender()
@@ -270,7 +292,12 @@ void mapToolScene::rcRender()
 			Rectangle(getMemDC(), drag.rc);
 			break;
 		case OPTION::TILE_MENU:
-			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i].rc);
+			for (int i = 0; i < 4; i++)
+			{
+				Rectangle(getMemDC(), icon[i].rc);
+				Rectangle(getMemDC(), bigTile[i].rc);
+			}
+
 			Rectangle(getMemDC(), drag.rc);
 			break;
 		case OPTION::OBJECT_MENU:
@@ -281,9 +308,27 @@ void mapToolScene::rcRender()
 	}
 }
 
+void mapToolScene::checkRender()
+{
+	//메뉴에는 옵션버튼이 없다
+	if (option != OPTION::SELECT_MENU)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			if (icon[i].isCol) imageRender("checkIcon", { icon[i].rc.left,icon[i].rc.top });
+		}
+		if (drag.isCol) imageRender("checkIcon", { drag.rc.left,drag.rc.top });
+	}
+}
+
 void mapToolScene::imageRender(string keyName, POINT pt)
 {
 	IMAGEMANAGER->findImage(keyName)->render(getMemDC(), pt.x, pt.y);
+}
+
+void mapToolScene::imageAlphaRender(string keyName, POINT pt, int alpha)
+{
+	IMAGEMANAGER->findImage(keyName)->alphaRender(getMemDC(), pt.x, pt.y, alpha);
 }
 
 void mapToolScene::controller()
@@ -308,6 +353,21 @@ void mapToolScene::controller()
 		cam.pt.x -= 5;
 		moveRect();
 	}
+
+	if (isLeftDown)
+	{
+		for (int i = 0; i < 2; i++)
+		{
+			if (PtInRect(&bigTile[i].rc, _ptMouse))
+			{
+				user.KeyName = bigTile[i].keyName;
+				user.kind = bigTile[i].kind;
+			}
+		}
+	}
+
+
+
 }
 
 void mapToolScene::vkCheck()
