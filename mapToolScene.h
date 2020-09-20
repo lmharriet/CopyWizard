@@ -43,9 +43,11 @@ public:
 	void addImage();
 
 	//render
-	void imageRender(string keyName, POINT pt);
+	void UIRender();
 	void textRender();
 	void buttonRender();
+	void rcRender();
+	void imageRender(string keyName, POINT pt);
 	//don't touch
 	void vkCheck();
 };

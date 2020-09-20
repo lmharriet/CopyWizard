@@ -34,45 +34,23 @@ void mapToolScene::update()
 
 	buttonCheck();
 
+	//메뉴에는 아이콘이 없습니당
 	if(option !=OPTION::MENU) iconCheck();
 }
 
 void mapToolScene::render()
 {
-	switch (option)
-	{
-	case OPTION::WALL:
-		break;
-	case OPTION::TILE:
-		imageRender("tileMenu", { 920,0 });
-		break;
-	case OPTION::OBJECT:
-		break;
-	case OPTION::MENU:
+	//옵션의 상태에 따른 UI이미지 변경
+	UIRender();
 
-		imageRender("mapMenu", { 920,0 });
-		break;
+	//탭 스위치가 'ON'이면 rc를 보여준다
+	if (INPUT->GetToggleKey(VK_TAB) == false) //처음에 비활성화, 한번 누르면 렌더가 활성화
+	{
+		rcRender();
 	}
 
-	if (INPUT->GetToggleKey(VK_TAB))
-	{
-		buttonRender();
 
-		switch (option)
-		{
-		case OPTION::MENU:
-			for (int i = 0; i < 3; i++) Rectangle(getMemDC(), mapOption[i]);
-			break;
-		case OPTION::WALL:
-			break;
-		case OPTION::TILE:
-			for (int i = 0; i < 5; i++) Rectangle(getMemDC(), icon[i].rc);
-			break;
-		case OPTION::OBJECT:
-			break;
-		}
-	}
-
+	//메뉴에는 옵션버튼이 없다
 	if (option != OPTION::MENU)
 	{
 		for (int i = 0; i < 5; i++)
@@ -153,14 +131,32 @@ void mapToolScene::iconCheck()
 		break;
 	case OPTION::OBJECT:
 		break;
-		//case OPTION::MENU:
-		//	break;
 	}
 }
 
-void mapToolScene::imageRender(string keyName, POINT pt)
+/// IMAGE ///
+void mapToolScene::addImage()
 {
-	IMAGEMANAGER->findImage(keyName)->render(getMemDC(), pt.x, pt.y);
+	IMAGEMANAGER->addImage("mapMenu", "maptool/ui/maptoolmenu.bmp", 360, 720);
+	IMAGEMANAGER->addImage("tileMenu", "maptool/ui/tilemenu.bmp", 360, 720);
+	IMAGEMANAGER->addImage("checkIcon", "maptool/ui/check.bmp", 36, 36, true, RGB(255, 0, 255));
+}
+/// RENDER ///
+void mapToolScene::UIRender()
+{
+	switch (option)
+	{
+	case OPTION::WALL:
+		break;
+	case OPTION::TILE:
+		imageRender("tileMenu", { 920,0 });
+		break;
+	case OPTION::OBJECT:
+		break;
+	case OPTION::MENU:
+		imageRender("mapMenu", { 920,0 });
+		break;
+	}
 }
 
 void mapToolScene::textRender()
@@ -168,18 +164,35 @@ void mapToolScene::textRender()
 	ptOut(getMemDC(), { 10,30 }, _ptMouse);
 }
 
-void mapToolScene::addImage()
-{
-	IMAGEMANAGER->addImage("mapMenu", "maptool/ui/maptoolmenu.bmp", 360, 720);
-	IMAGEMANAGER->addImage("tileMenu", "maptool/ui/tilemenu.bmp", 360, 720);
-	IMAGEMANAGER->addImage("checkIcon", "maptool/ui/check.bmp", 36, 36, true, RGB(255, 0, 255));
-}
-
 void mapToolScene::buttonRender()
 {
 	Rectangle(getMemDC(), SAVE);
 	Rectangle(getMemDC(), LOAD);
 	Rectangle(getMemDC(), BACK);
+}
+
+void mapToolScene::rcRender()
+{
+	buttonRender();
+
+	switch (option)
+	{
+	case OPTION::MENU:
+		for (int i = 0; i < 3; i++) Rectangle(getMemDC(), mapOption[i]);
+		break;
+	case OPTION::WALL:
+		break;
+	case OPTION::TILE:
+		for (int i = 0; i < 5; i++) Rectangle(getMemDC(), icon[i].rc);
+		break;
+	case OPTION::OBJECT:
+		break;
+	}
+}
+
+void mapToolScene::imageRender(string keyName, POINT pt)
+{
+	IMAGEMANAGER->findImage(keyName)->render(getMemDC(), pt.x, pt.y);
 }
 
 void mapToolScene::vkCheck()

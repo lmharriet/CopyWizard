@@ -9,7 +9,7 @@
 class imageManager : public singletonBase <imageManager>
 {
 private:
-	typedef unordered_map<string, image*> mapImageList;			//맵으로 만든 이미지목록
+	typedef unordered_map<string, image*> mapImageList;				//맵으로 만든 이미지목록
 	typedef unordered_map<string, image*>::iterator mapImageIter;	//맵으로 만든 이미지목록의 반복자
 
 private:
