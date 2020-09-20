@@ -18,6 +18,7 @@ enum class OPTION
 
 	SELECT_MENU
 };
+
 struct tagIcon
 {
 	RECT rc;
@@ -41,15 +42,22 @@ struct tagTile
 	POINT frame;
 };
 
+
+enum class TOOL
+{
+	DRAW,
+	ERASE,
+	SPOID,
+
+	NONE
+};
 struct tagUser
 {
 	TERRAIN kind;
 	string KeyName;
+
+	int delay;
 };
-
-
-
-
 
 
 struct tagCam

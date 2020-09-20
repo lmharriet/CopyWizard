@@ -18,19 +18,21 @@ HRESULT mapToolScene::init()
 
 	for (int i = 0; i < 4; i++)
 	{
-		icon[i].rc = RectMake(928, 138 + (i * 50), 50, 48);
-		icon[i].isCol = false;
+		icon[i] = RectMake(928, 138 + (i * 50), 50, 48);
 	}
 
 
 	drag.rc = RectMake(928, 87, 50, 48);
 	drag.isCol = false;
 
+	//user init
 	user.KeyName = "";
 	user.kind = TERRAIN::NONE;
-
+	user.delay = 0;
+	tool = TOOL::NONE;
 
 	option = OPTION::SELECT_MENU;
+
 
 	isLeftDown = isLeft = isLeftUp = false;
 
@@ -52,6 +54,9 @@ void mapToolScene::update()
 
 	//SELECT MENU에는 아이콘(펜, 지우개 등등..)이 없습니당
 	if (option != OPTION::SELECT_MENU) iconCheck();
+
+	//delay를 주어 메뉴가 바뀔 때 바로 선택 되는 것을 방지
+	if (user.delay < 10) user.delay++;
 }
 
 void mapToolScene::render()
@@ -94,6 +99,7 @@ void mapToolScene::buttonCheck()
 		{
 			if (PtInRect(&mapOption[i], _ptMouse) && isLeftDown)
 			{
+				user.delay = 0;
 				option = (OPTION)i;
 			}
 		}
@@ -105,10 +111,10 @@ void mapToolScene::buttonCheck()
 			//유저가 가지고있는 데이터 초기화
 			user.KeyName = "";
 			user.kind = TERRAIN::NONE;
-
 			option = OPTION::SELECT_MENU;
+
 			//다시 들어왔을 때 icon이 미리 활성화 되어있음을 방지
-			resetIcon();
+			tool = TOOL::NONE;
 			drag.isCol = false;
 		}
 		break;
@@ -118,7 +124,8 @@ void mapToolScene::buttonCheck()
 			user.KeyName = "";
 			user.kind = TERRAIN::NONE;
 			option = OPTION::SELECT_MENU;
-			resetIcon();
+
+			tool = TOOL::NONE;
 			drag.isCol = false;
 		}
 		break;
@@ -128,7 +135,8 @@ void mapToolScene::buttonCheck()
 			user.KeyName = "";
 			user.kind = TERRAIN::NONE;
 			option = OPTION::SELECT_MENU;
-			resetIcon();
+
+			tool = TOOL::NONE;
 			drag.isCol = false;
 		}
 		break;
@@ -146,10 +154,26 @@ void mapToolScene::iconCheck()
 	case OPTION::WALL_MENU:
 		for (int i = 0; i < 4; i++)
 		{
-			if (PtInRect(&icon[i].rc, _ptMouse) && isLeftDown)
+			if (PtInRect(&icon[i], _ptMouse) && isLeftDown)
 			{
-				resetIcon();
-				icon[i].isCol = true;
+				switch (i)
+				{
+				case 0:
+					tool = TOOL::NONE;
+					resetUserData();
+					break;
+				case 1:
+					tool = TOOL::DRAW;
+					break;
+				case 2:
+					tool = TOOL::ERASE;
+					resetUserData();
+					break;
+				case 3:
+					tool = TOOL::SPOID;
+					resetUserData();
+					break;
+				}
 			}
 		}
 		if (PtInRect(&drag.rc, _ptMouse) && isLeftDown)
@@ -161,10 +185,26 @@ void mapToolScene::iconCheck()
 	case OPTION::TILE_MENU:
 		for (int i = 0; i < 4; i++)
 		{
-			if (PtInRect(&icon[i].rc, _ptMouse) && isLeftDown)
+			if (PtInRect(&icon[i], _ptMouse) && isLeftDown)
 			{
-				resetIcon();
-				icon[i].isCol = true;
+				switch (i)
+				{
+				case 0:
+					tool = TOOL::NONE;
+					resetUserData();
+					break;
+				case 1:
+					tool = TOOL::DRAW;
+					break;
+				case 2:
+					tool = TOOL::ERASE;
+					resetUserData();
+					break;
+				case 3:
+					tool = TOOL::SPOID;
+					resetUserData();
+					break;
+				}
 			}
 		}
 		if (PtInRect(&drag.rc, _ptMouse) && isLeftDown)
@@ -176,10 +216,26 @@ void mapToolScene::iconCheck()
 	case OPTION::OBJECT_MENU:
 		for (int i = 0; i < 4; i++)
 		{
-			if (PtInRect(&icon[i].rc, _ptMouse) && isLeftDown)
+			if (PtInRect(&icon[i], _ptMouse) && isLeftDown)
 			{
-				resetIcon();
-				icon[i].isCol = true;
+				switch (i)
+				{
+				case 0:
+					tool = TOOL::NONE;
+					resetUserData();
+					break;
+				case 1:
+					tool = TOOL::DRAW;
+					break;
+				case 2:
+					tool = TOOL::ERASE;
+					resetUserData();
+					break;
+				case 3:
+					tool = TOOL::SPOID;
+					resetUserData();
+					break;
+				}
 			}
 		}
 		if (PtInRect(&drag.rc, _ptMouse) && isLeftDown)
@@ -191,9 +247,11 @@ void mapToolScene::iconCheck()
 	}
 }
 
-void mapToolScene::resetIcon()
+void mapToolScene::resetUserData()
 {
-	for (int i = 0; i < 4; i++) icon[i].isCol = false;
+	user.KeyName = "";
+	user.kind = TERRAIN::NONE;
+	user.delay = 0;
 }
 
 void mapToolScene::initTile()
@@ -296,6 +354,10 @@ void mapToolScene::textRender()
 {
 	ptOut(getMemDC(), { 10,30 }, _ptMouse, WHITE);
 	ptOut(getMemDC(), { 10,50 }, cam.pt, ORANGE);
+
+	char str[126];
+	wsprintf(str, "delay : %d", user.delay);
+	TextOut(getMemDC(), 10, 70, str, strlen(str));
 }
 
 void mapToolScene::buttonRender()
@@ -318,20 +380,20 @@ void mapToolScene::rcRender()
 			for (int i = 0; i < 3; i++) Rectangle(getMemDC(), mapOption[i]);
 			break;
 		case OPTION::WALL_MENU:
-			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i].rc);
+			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i]);
 			Rectangle(getMemDC(), drag.rc);
 			break;
 		case OPTION::TILE_MENU:
 			for (int i = 0; i < 4; i++)
 			{
-				Rectangle(getMemDC(), icon[i].rc);
+				Rectangle(getMemDC(), icon[i]);
 				Rectangle(getMemDC(), bigTile[i].rc);
 			}
 
 			Rectangle(getMemDC(), drag.rc);
 			break;
 		case OPTION::OBJECT_MENU:
-			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i].rc);
+			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i]);
 			Rectangle(getMemDC(), drag.rc);
 			break;
 		}
@@ -343,10 +405,22 @@ void mapToolScene::checkRender()
 	//메뉴에는 옵션버튼이 없다
 	if (option != OPTION::SELECT_MENU)
 	{
-		for (int i = 0; i < 4; i++)
+		switch (tool)
 		{
-			if (icon[i].isCol) imageRender("checkIcon", { icon[i].rc.left,icon[i].rc.top });
+		case TOOL::NONE:
+			imageRender("checkIcon", { icon[0].left,icon[0].top });
+			break;
+		case TOOL::DRAW:
+			imageRender("checkIcon", { icon[1].left,icon[1].top });
+			break;
+		case TOOL::ERASE:
+			imageRender("checkIcon", { icon[2].left,icon[2].top });
+			break;
+		case TOOL::SPOID:
+			imageRender("checkIcon", { icon[3].left,icon[3].top });
+			break;
 		}
+
 		if (drag.isCol) imageRender("checkIcon", { drag.rc.left,drag.rc.top });
 	}
 }
@@ -399,55 +473,99 @@ void mapToolScene::controller()
 			//get tile
 			for (int i = 0; i < 4; i++)
 			{
-				if (PtInRect(&bigTile[i].rc, _ptMouse))
+				if (PtInRect(&bigTile[i].rc, _ptMouse) && user.delay == 10)
 				{
+					user.delay = 0;
+
 					user.KeyName = bigTile[i].keyName;
 					user.kind = bigTile[i].kind;
 					// 브러쉬 아이콘에 check 표시
-					resetIcon();
-					icon[1].isCol = true;
+					tool = TOOL::DRAW;
 				}
 			}
-			for (int i = 0; i < MAXTILE; i++)
+			//set tile
+			switch (tool)
 			{
-				if (PtInRect(&tile[i].rc, _ptMouse))
+			case TOOL::DRAW:
+				for (int i = 0; i < MAXTILE; i++)
 				{
-					//tile[i].keyName = user.KeyName;
-					//tile[i].kind = user.kind;
-
-					//tile[i+1].keyName = user.keyName;
-					//tile[i+1].kind = user.kind;....
-					//여기서 tile[i+1..i+maxtile_width * 2 + 2] 까지 초기화를 해줘야한다.
-
-					////첫번째 줄
-					//tile[i].frame = { 0,0 };
-					//tile[i + 1].frame = { 1,0 };
-					//tile[i + 2].frame = { 2,0 };
-					////두번째 줄
-					//tile[i + MAXTILE_WIDTH].frame = { 0,1 };
-					//tile[i + MAXTILE_WIDTH + 1].frame = { 1,1 };
-					//tile[i + MAXTILE_WIDTH + 2].frame = { 2,1 };
-					////세번째 줄
-					//tile[i + MAXTILE_WIDTH * 2].frame = { 0,2 };
-					//tile[i + MAXTILE_WIDTH * 2 + 1].frame = { 1,2 };
-					//tile[i + MAXTILE_WIDTH * 2 + 2].frame = { 2,2 };
-
-					for (int j = 0; j < 3; j++)
+					if (PtInRect(&tile[i].rc, _ptMouse))
 					{
-						for (int k = 0; k < 3; k++)
+						//tile[i].keyName = user.KeyName;
+						//tile[i].kind = user.kind;
+
+						//tile[i+1].keyName = user.keyName;
+						//tile[i+1].kind = user.kind;....
+						//여기서 tile[i+1..i+maxtile_width * 2 + 2] 까지 초기화를 해줘야한다.
+
+						////첫번째 줄
+						//tile[i].frame = { 0,0 };
+						//tile[i + 1].frame = { 1,0 };
+						//tile[i + 2].frame = { 2,0 };
+						////두번째 줄
+						//tile[i + MAXTILE_WIDTH].frame = { 0,1 };
+						//tile[i + MAXTILE_WIDTH + 1].frame = { 1,1 };
+						//tile[i + MAXTILE_WIDTH + 2].frame = { 2,1 };
+						////세번째 줄
+						//tile[i + MAXTILE_WIDTH * 2].frame = { 0,2 };
+						//tile[i + MAXTILE_WIDTH * 2 + 1].frame = { 1,2 };
+						//tile[i + MAXTILE_WIDTH * 2 + 2].frame = { 2,2 };
+
+						for (int j = 0; j < 3; j++)
 						{
-							tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
-							tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
-							tile[i + (MAXTILE_WIDTH * j) + k].frame = { k,j };
+							for (int k = 0; k < 3; k++)
+							{
+								tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
+								tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
+								tile[i + (MAXTILE_WIDTH * j) + k].frame = { k,j };
+							}
 						}
 					}
 				}
+				break;
+			case TOOL::ERASE: // 아래에 isLeft 일 때 처리
+				break;
+			case TOOL::SPOID:
+				if (!drag.isCol)
+				{
+					for (int i = 0; i < MAXTILE; i++)
+					{
+						if (tile[i].kind == TERRAIN::NONE)continue;
+
+						if (PtInRect(&tile[i].rc, _ptMouse))
+						{
+							user.KeyName = tile[i].keyName;
+							user.kind = tile[i].kind;
+						}
+					}
+				}
+				break;
+			default:
+				break;
 			}
 			break;
 		case OPTION::OBJECT_MENU:
 			break;
 		}
+	}
+	if (isLeft && option != OPTION::SELECT_MENU)
+	{
+		switch (tool)
+		{
+		case TOOL::ERASE:
+			for (int i = 0; i < MAXTILE; i++)
+			{
+				if (PtInRect(&tile[i].rc, _ptMouse))
+				{
+					if (tile[i].kind == TERRAIN::NONE)continue;
 
+					tile[i].keyName = "";
+					tile[i].kind = TERRAIN::NONE;
+					tile[i].frame = { -1,-1 };
+				}
+			}
+			break;
+		}
 	}
 }
 

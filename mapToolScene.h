@@ -8,6 +8,7 @@ class mapToolScene : public gameNode
 private:
 	/// USER ///
 	tagUser user;
+	TOOL tool;
 
 	/// TILE ///
 	tagTile tile[MAXTILE];
@@ -19,7 +20,7 @@ private:
 	/// BUTTON ///
 	RECT SAVE, LOAD, BACK;
 	///  ICON  ///
-	tagIcon icon[4];
+	RECT icon[4];
 	tagIcon drag;
 
 	tagTile bigTile[4];
@@ -40,7 +41,7 @@ public:
 	void iconCheck();
 
 	//reset
-	void resetIcon();
+	void resetUserData();
 
 	//init
 	void initTile();
