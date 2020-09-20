@@ -19,7 +19,7 @@ enum class OPTION
 	SELECT_MENU
 };
 
-struct tagIcon
+struct tagRC
 {
 	RECT rc;
 	bool isCol;

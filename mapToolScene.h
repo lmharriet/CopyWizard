@@ -6,6 +6,8 @@
 class mapToolScene : public gameNode
 {
 private:
+
+	tagRC maptool;
 	/// USER ///
 	tagUser user;
 	TOOL tool;
@@ -21,10 +23,12 @@ private:
 	RECT SAVE, LOAD, BACK;
 	///  ICON  ///
 	RECT icon[4];
-	tagIcon drag;
+	tagRC drag;
 
 	tagTile bigTile[4];
-	tagTile miniTile[4];
+	//tagTile miniTile[4];
+	
+	tagTile wall[6];
 
 	/// CAMERA ///
 	tagCam cam;
@@ -45,7 +49,7 @@ public:
 
 	//init
 	void initTile();
-	void initSelectTile();
+	void initSelectTerrain();
 	void initCam();
 	//camera
 	void moveRect();

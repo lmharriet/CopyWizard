@@ -6,8 +6,11 @@ HRESULT mapToolScene::init()
 	addImage();
 
 	initTile();
-	initSelectTile();
+	initSelectTerrain();
 
+	maptool.rc = RectMake(920, 0, WINSIZEX - 920, WINSIZEY);
+	maptool.isCol = false;
+		
 	for (int i = 0; i < 3; i++)
 	{
 		mapOption[i] = RectMake(1020, 197 + (i * 83), 160, 60);
@@ -31,7 +34,7 @@ HRESULT mapToolScene::init()
 	user.delay = 0;
 	tool = TOOL::NONE;
 
-	option = OPTION::SELECT_MENU;
+	option = OPTION::WALL_MENU;
 
 
 	isLeftDown = isLeft = isLeftUp = false;
@@ -57,6 +60,10 @@ void mapToolScene::update()
 
 	//delay를 주어 메뉴가 바뀔 때 바로 선택 되는 것을 방지
 	if (user.delay < 10) user.delay++;
+
+	//마우스가 맵툴ui에 들어오면 draw,erase 등 작업이 비활성화
+	if (PtInRect(&maptool.rc, _ptMouse)) maptool.isCol = true;
+	else maptool.isCol = false;
 }
 
 void mapToolScene::render()
@@ -265,8 +272,18 @@ void mapToolScene::initTile()
 	}
 }
 
-void mapToolScene::initSelectTile()
+void mapToolScene::initSelectTerrain() 
 {
+	//WALL//
+	string wallName[6] = { "wall0","wall1","wall2","wall3","wall4","wallTile" };
+	for (int i = 0; i < 6; i++)
+	{
+		wall[i].rc = RectMake(993 + (i % 2) * 135, 124 + (i / 2) * 135, 125, 100);
+		wall[i].kind = TERRAIN::WALL;
+		wall[i].keyName = wallName[i];
+	}
+
+	//TILE//
 	string str[4] = { "grass0","ground0","tile7","tile9" };
 	for (int i = 0; i < 4; i++)
 	{
@@ -274,6 +291,7 @@ void mapToolScene::initSelectTile()
 		bigTile[i].kind = TERRAIN::TILE;
 		bigTile[i].keyName = str[i];
 	}
+	
 }
 
 void mapToolScene::initCam()
@@ -300,6 +318,14 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addImage("objectMenu", "maptool/ui/objectmenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("checkIcon", "maptool/ui/check.bmp", 36, 36, true, RGB(255, 0, 255));
 
+	//WALL//
+	IMAGEMANAGER->addFrameImage("wall0", "maptool/wall/wall0.bmp", 160, 128, 5, 4,false);
+	IMAGEMANAGER->addFrameImage("wall1", "maptool/wall/wall1.bmp", 160, 128, 5, 4, false);
+	IMAGEMANAGER->addFrameImage("wall2", "maptool/wall/wall2.bmp", 160, 128, 5, 4, false);
+	IMAGEMANAGER->addFrameImage("wall3", "maptool/wall/wall3.bmp", 160, 128, 5, 4, false);
+	IMAGEMANAGER->addFrameImage("wall4", "maptool/wall/wall4.bmp", 160, 128, 5, 4, false);
+	IMAGEMANAGER->addFrameImage("wallTile", "maptool/wall/wallTile.bmp", 32, 32, 1, 1, false);
+
 	//TILE//
 	IMAGEMANAGER->addFrameImage("grass0", "maptool/tile/grass0.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
 	IMAGEMANAGER->addFrameImage("ground0", "maptool/tile/ground0.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
@@ -321,10 +347,13 @@ void mapToolScene::tileRender()
 				//char num[10];
 				//textOut(getMemDC(), tile[i].rc.left, tile[i].rc.top, itoa(i, num, 10), GREEN);
 			}
-			else
+
+			if (tile[i].keyName != "") imageFrameRender(tile[i].keyName, { tile[i].rc.left,tile[i].rc.top }, tile[i].frame.x, tile[i].frame.y);
+
+			if (tile[i].kind != TERRAIN::NONE)
 			{
-				imageFrameRender(tile[i].keyName, { tile[i].rc.left,tile[i].rc.top }, tile[i].frame.x, tile[i].frame.y);
-				FrameRect(getMemDC(), tile[i].rc, YELLOW);
+				if (tile[i].kind == TERRAIN::TILE) FrameRect(getMemDC(), tile[i].rc, SKYBLUE);
+				else FrameRect(getMemDC(), tile[i].rc, YELLOW);
 			}
 		}
 	}
@@ -373,6 +402,7 @@ void mapToolScene::rcRender()
 	if (INPUT->GetToggleKey(VK_TAB)) // 렉트를 껏다 켯다 할 수 있음
 	{
 		buttonRender();
+		Rectangle(getMemDC(), maptool.rc);
 
 		switch (option)
 		{
@@ -382,6 +412,7 @@ void mapToolScene::rcRender()
 		case OPTION::WALL_MENU:
 			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i]);
 			Rectangle(getMemDC(), drag.rc);
+			for (int i = 0; i < 6; i++) Rectangle(getMemDC(), wall[i].rc);
 			break;
 		case OPTION::TILE_MENU:
 			for (int i = 0; i < 4; i++)
@@ -468,6 +499,50 @@ void mapToolScene::controller()
 		switch (option)
 		{
 		case OPTION::WALL_MENU:
+			//get wall
+			for (int i = 0; i < 6; i++)
+			{
+				if (PtInRect(&wall[i].rc, _ptMouse) && user.delay == 10)
+				{
+					user.delay = 0;
+
+					user.KeyName = wall[i].keyName;
+					user.kind = wall[i].kind;
+					tool = TOOL::DRAW;
+				}
+			}
+			//set wall
+			switch (tool)
+			{
+			case TOOL::DRAW:
+				for (int i = 0; i < MAXTILE; i++)
+				{
+					if (maptool.isCol)continue;
+
+					if (PtInRect(&tile[i].rc, _ptMouse))
+					{
+						if (user.KeyName != "wallTile")
+						{
+							for (int j = 0; j < 4; j++)
+							{
+								for (int k = 0; k < 5; k++)
+								{
+									tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
+									tile[i + (MAXTILE_WIDTH * j) + k].frame = { k,j };
+
+									if (j == 3) tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
+								}
+							}
+						}
+						else
+						{
+							tile[i].keyName = user.KeyName;
+							tile[i].kind = user.kind;
+						}
+					}
+				}
+				break;
+			}
 			break;
 		case OPTION::TILE_MENU:
 			//get tile
@@ -489,6 +564,8 @@ void mapToolScene::controller()
 			case TOOL::DRAW:
 				for (int i = 0; i < MAXTILE; i++)
 				{
+					if (maptool.isCol)continue;
+
 					if (PtInRect(&tile[i].rc, _ptMouse))
 					{
 						//tile[i].keyName = user.KeyName;
@@ -526,7 +603,7 @@ void mapToolScene::controller()
 			case TOOL::ERASE: // 아래에 isLeft 일 때 처리
 				break;
 			case TOOL::SPOID:
-				if (!drag.isCol)
+				if (!drag.isCol && !maptool.isCol)
 				{
 					for (int i = 0; i < MAXTILE; i++)
 					{
@@ -555,13 +632,15 @@ void mapToolScene::controller()
 		case TOOL::ERASE:
 			for (int i = 0; i < MAXTILE; i++)
 			{
+				if (maptool.isCol)continue;
+
 				if (PtInRect(&tile[i].rc, _ptMouse))
 				{
-					if (tile[i].kind == TERRAIN::NONE)continue;
+					if (tile[i].kind == TERRAIN::NONE && tile[i].keyName == "")continue;
 
 					tile[i].keyName = "";
 					tile[i].kind = TERRAIN::NONE;
-					tile[i].frame = { -1,-1 };
+					tile[i].frame = { 0,0 };
 				}
 			}
 			break;
