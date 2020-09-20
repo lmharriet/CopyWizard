@@ -154,7 +154,9 @@ void mapToolScene::iconCheck()
 void mapToolScene::addImage()
 {
 	IMAGEMANAGER->addImage("mapMenu", "maptool/ui/maptoolmenu.bmp", 360, 720);
+	IMAGEMANAGER->addImage("wallMenu", "maptool/ui/wallmenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("tileMenu", "maptool/ui/tilemenu.bmp", 360, 720);
+	IMAGEMANAGER->addImage("objectMenu", "maptool/ui/objectmenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("checkIcon", "maptool/ui/check.bmp", 36, 36, true, RGB(255, 0, 255));
 }
 /// RENDER ///
@@ -163,11 +165,13 @@ void mapToolScene::UIRender()
 	switch (option)
 	{
 	case OPTION::WALL:
+		imageRender("wallMenu", { 920,0 });
 		break;
 	case OPTION::TILE:
 		imageRender("tileMenu", { 920,0 });
 		break;
 	case OPTION::OBJECT:
+		imageRender("objectMenu", { 920,0 });
 		break;
 	case OPTION::MENU:
 		imageRender("mapMenu", { 920,0 });
