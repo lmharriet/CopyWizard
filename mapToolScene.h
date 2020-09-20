@@ -1,34 +1,27 @@
 #pragma once
 #include "gameNode.h"
 #include "tileNode.h"
-
-enum class OPTION
-{
-	WALL,
-	TILE,
-	OBJECT,
-
-	MENU
-};
-
-struct tagIcon
-{
-	RECT rc;
-	bool isCol;
-};
+#include "colorNode.h"
 
 class mapToolScene : public gameNode
 {
 private:
+	/// TILE ///
+	tagTile tile[MAXTILE];
+
+	/// OPTION ///
 	RECT mapOption[3];
+	OPTION option;
 	
 	/// BUTTON ///
 	RECT SAVE, LOAD, BACK;
-
+	///  ICON  ///
 	tagIcon icon[4];
 	tagIcon drag;
 
-	OPTION option;
+	/// CAMERA ///
+	tagCam cam;
+
 	//vk_down
 	bool isLeftDown, isLeft, isLeftUp;
 public:
@@ -39,6 +32,9 @@ public:
 
 	void buttonCheck();
 	void iconCheck();
+
+	//tile
+	void initTile();
 
 	//image
 	void addImage();

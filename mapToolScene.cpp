@@ -5,6 +5,8 @@ HRESULT mapToolScene::init()
 {
 	addImage();
 
+	initTile();
+
 	for (int i = 0; i < 3; i++)
 	{
 		mapOption[i] = RectMake(1020, 197 + (i * 83), 160, 60);
@@ -21,7 +23,7 @@ HRESULT mapToolScene::init()
 	drag.rc = RectMake(928, 87, 50, 48);
 	drag.isCol = false;
 
-	option = OPTION::MENU;
+	option = OPTION::SELECT_MENU;
 
 	isLeftDown = isLeft = isLeftUp = false;
 	return S_OK;
@@ -37,8 +39,8 @@ void mapToolScene::update()
 
 	buttonCheck();
 
-	//메뉴에는 아이콘이 없습니당
-	if (option != OPTION::MENU) iconCheck();
+	//SELECT MENU에는 아이콘(펜, 지우개 등등..)이 없습니당
+	if (option != OPTION::SELECT_MENU) iconCheck();
 
 
 
@@ -46,18 +48,16 @@ void mapToolScene::update()
 
 void mapToolScene::render()
 {
+	//tile
+	for (int i = 0; i < MAXTILE; i++) FrameRect(getMemDC(), tile[i].rc, DARKGREEN);
+
 	//옵션의 상태에 따른 UI이미지 변경
 	UIRender();
 
-	//탭 스위치가 'ON'이면 rc를 보여준다
-	if (INPUT->GetToggleKey(VK_TAB))
-	{
-		rcRender();
-	}
-
+	rcRender();
 
 	//메뉴에는 옵션버튼이 없다
-	if (option != OPTION::MENU)
+	if (option != OPTION::SELECT_MENU)
 	{
 		for (int i = 0; i < 4; i++)
 		{
@@ -81,7 +81,7 @@ void mapToolScene::buttonCheck()
 	/// button setting ///
 	switch (option)
 	{
-	case OPTION::MENU:
+	case OPTION::SELECT_MENU:
 		for (int i = 0; i < 3; i++)
 		{
 			if (PtInRect(&mapOption[i], _ptMouse) && isLeftDown)
@@ -91,27 +91,27 @@ void mapToolScene::buttonCheck()
 		}
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown) SCENEMANAGER->loadScene("시작화면");
 		break;
-	case OPTION::WALL:
+	case OPTION::WALL_MENU:
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown)
 		{
-			option = OPTION::MENU;
+			option = OPTION::SELECT_MENU;
 			//다시 들어왔을 때 icon이 미리 활성화 되어있음을 방지
 			for (int i = 0; i < 4; i++) icon[i].isCol = false;
 			drag.isCol = false;
 		}
 		break;
-	case OPTION::TILE:
+	case OPTION::TILE_MENU:
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown)
 		{
-			option = OPTION::MENU;
+			option = OPTION::SELECT_MENU;
 			for (int i = 0; i < 4; i++) icon[i].isCol = false;
 			drag.isCol = false;
 		}
 		break;
-	case OPTION::OBJECT:
+	case OPTION::OBJECT_MENU:
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown)
 		{
-			option = OPTION::MENU;
+			option = OPTION::SELECT_MENU;
 			for (int i = 0; i < 4; i++) icon[i].isCol = false;
 			drag.isCol = false;
 		}
@@ -127,9 +127,9 @@ void mapToolScene::iconCheck()
 
 	switch (option)
 	{
-	case OPTION::WALL:
+	case OPTION::WALL_MENU:
 		break;
-	case OPTION::TILE:
+	case OPTION::TILE_MENU:
 		for (int i = 0; i < 4; i++)
 		{
 			if (PtInRect(&icon[i].rc, _ptMouse) && isLeftDown)
@@ -145,8 +145,16 @@ void mapToolScene::iconCheck()
 			else drag.isCol = false;
 		}
 		break;
-	case OPTION::OBJECT:
+	case OPTION::OBJECT_MENU:
 		break;
+	}
+}
+
+void mapToolScene::initTile()
+{
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		tile[i].rc = RectMake((i % MAXTILE_WIDTH * TILESIZE), (i / MAXTILE_HEIGHT) * TILESIZE, TILESIZE, TILESIZE);
 	}
 }
 
@@ -164,16 +172,16 @@ void mapToolScene::UIRender()
 {
 	switch (option)
 	{
-	case OPTION::WALL:
+	case OPTION::WALL_MENU:
 		imageRender("wallMenu", { 920,0 });
 		break;
-	case OPTION::TILE:
+	case OPTION::TILE_MENU:
 		imageRender("tileMenu", { 920,0 });
 		break;
-	case OPTION::OBJECT:
+	case OPTION::OBJECT_MENU:
 		imageRender("objectMenu", { 920,0 });
 		break;
-	case OPTION::MENU:
+	case OPTION::SELECT_MENU:
 		imageRender("mapMenu", { 920,0 });
 		break;
 	}
@@ -181,7 +189,7 @@ void mapToolScene::UIRender()
 
 void mapToolScene::textRender()
 {
-	ptOut(getMemDC(), { 10,30 }, _ptMouse);
+	ptOut(getMemDC(), { 10,30 }, _ptMouse, WHITE);
 }
 
 void mapToolScene::buttonRender()
@@ -193,21 +201,25 @@ void mapToolScene::buttonRender()
 
 void mapToolScene::rcRender()
 {
-	buttonRender();
-
-	switch (option)
+	//button
+	if (INPUT->GetToggleKey(VK_TAB)) // 렉트를 껏다 켯다 할 수 있음
 	{
-	case OPTION::MENU:
-		for (int i = 0; i < 3; i++) Rectangle(getMemDC(), mapOption[i]);
-		break;
-	case OPTION::WALL:
-		break;
-	case OPTION::TILE:
-		for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i].rc);
-		Rectangle(getMemDC(), drag.rc);
-		break;
-	case OPTION::OBJECT:
-		break;
+		buttonRender();
+
+		switch (option)
+		{
+		case OPTION::SELECT_MENU:
+			for (int i = 0; i < 3; i++) Rectangle(getMemDC(), mapOption[i]);
+			break;
+		case OPTION::WALL_MENU:
+			break;
+		case OPTION::TILE_MENU:
+			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i].rc);
+			Rectangle(getMemDC(), drag.rc);
+			break;
+		case OPTION::OBJECT_MENU:
+			break;
+		}
 	}
 }
 
