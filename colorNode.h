@@ -6,7 +6,7 @@
 #define YELLOW		RGB(255,255,0)
 
 
-#define DARKGREEN	RGB(0,183,0)
+#define DARKGREEN	RGB(0,60,0)
 #define SKYBLUE		RGB(153,217,234)
 #define ORANGE		RGB(255,127,39)
 #define GRAY		RGB(100,100,100)

@@ -11,6 +11,9 @@ private:
 	/// USER ///
 	tagUser user;
 	TOOL tool;
+	//DRAG//
+	tagDrag drag;
+	tagRC dragButton;
 
 	/// TILE ///
 	tagTile tile[MAXTILE];
@@ -23,7 +26,6 @@ private:
 	RECT SAVE, LOAD, BACK;
 	///  ICON  ///
 	RECT icon[4];
-	tagRC drag;
 
 	tagTile bigTile[4];
 	//tagTile miniTile[4];

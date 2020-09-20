@@ -30,6 +30,7 @@ enum class TERRAIN
 	WALL,
 	TILE,
 	OBJECT,
+	IMG,
 
 	NONE
 };
@@ -57,6 +58,11 @@ struct tagUser
 	string KeyName;
 
 	int delay;
+};
+struct tagDrag
+{
+	RECT rc;
+	POINT start, end;
 };
 
 
