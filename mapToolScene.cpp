@@ -209,8 +209,8 @@ void mapToolScene::initTile()
 
 void mapToolScene::initSelectTile()
 {
-	string str[2] = { "grass0","ground0" };
-	for (int i = 0; i < 2; i++)
+	string str[4] = { "grass0","ground0","tile7","tile9" };
+	for (int i = 0; i < 4; i++)
 	{
 		bigTile[i].rc = RectMake(990 + (i % 2) * 140, 97 + (i / 2) * 135, 130, 130);
 		bigTile[i].kind = TERRAIN::TILE;
@@ -245,6 +245,8 @@ void mapToolScene::addImage()
 	//TILE//
 	IMAGEMANAGER->addFrameImage("grass0", "maptool/tile/grass0.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
 	IMAGEMANAGER->addFrameImage("ground0", "maptool/tile/ground0.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
+	IMAGEMANAGER->addFrameImage("tile7", "maptool/tile/tile7.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
+	IMAGEMANAGER->addFrameImage("tile9", "maptool/tile/tile9.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
 }
 
 /// RENDER ///
@@ -395,7 +397,7 @@ void mapToolScene::controller()
 			break;
 		case OPTION::TILE_MENU:
 			//get tile
-			for (int i = 0; i < 2; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				if (PtInRect(&bigTile[i].rc, _ptMouse))
 				{

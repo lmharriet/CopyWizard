@@ -1,4 +1,0 @@
-C:\Users\dkdlf\Desktop\yellowCarrot\.vs\CopyWizard\Debug\GameFramework2D.exe
-C:\Users\dkdlf\Desktop\yellowCarrot\.vs\CopyWizard\Debug\GameFramework2D.pdb
-C:\Users\user\Desktop\copyWizardofLegend\Debug\GameFramework2D.exe
-C:\Users\user\Desktop\copyWizardofLegend\Debug\GameFramework2D.pdb
