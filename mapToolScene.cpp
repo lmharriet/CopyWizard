@@ -158,15 +158,27 @@ void mapToolScene::render()
 	FrameRect(getMemDC(), drag.rc, WHITE);
 
 
-	//세이브 & 로드 렌더
-	if (isSave || isLoad)
+	//세이브 & 로드 렌더 & image 렌더
+	if (isSave )
 	{
 		for (int i = 0; i < 3; i++)
 		{
 			Rectangle(getMemDC(), fileWin[i]);
 			textOut(getMemDC(), fileWin[i].left, fileWin[i].top, "저장카드", RGB(0, 0, 0));
+			IMAGEMANAGER->findImage("saveimg")->render(getMemDC(), fileWin[i].left, fileWin[i].top);
 		}
 	}
+	if ( isLoad)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			Rectangle(getMemDC(), fileWin[i]);
+			textOut(getMemDC(), fileWin[i].left, fileWin[i].top, "저장카드", RGB(0, 0, 0));
+			IMAGEMANAGER->findImage("loadimg")->render(getMemDC(), fileWin[i].left, fileWin[i].top);
+		}
+	}
+
+
 
 }
 
@@ -407,6 +419,8 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addImage("tileMenu", "maptool/ui/tilemenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("objectMenu", "maptool/ui/objectmenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("checkIcon", "maptool/ui/check.bmp", 36, 36, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("saveimg", "maptool/save.bmp", 200, 300,false);
+	IMAGEMANAGER->addImage("loadimg", "maptool/load.bmp", 200, 300,false);
 
 	//WALL//
 	IMAGEMANAGER->addFrameImage("wall0", "maptool/wall/wall0.bmp", 160, 128, 5, 4,false);

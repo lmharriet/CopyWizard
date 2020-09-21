@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="bullet.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="colorNode.h" />
     <ClInclude Include="commonMacroFunction.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="enemyManager.h" />
