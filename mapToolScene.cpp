@@ -6,49 +6,20 @@ HRESULT mapToolScene::init()
 	addImage();
 
 	initTile();
+
 	initSelectTerrain();
 
-	maptool.rc = RectMake(920, 0, WINSIZEX - 920, WINSIZEY);
-	maptool.isCol = false;
-		
-	for (int i = 0; i < 3; i++)
-	{
-		mapOption[i] = RectMake(1020, 197 + (i * 83), 160, 60);
-	}
-	SAVE = RectMake(955, 563, 100, 45);
-	LOAD = RectMake(955, 613, 100, 45);
-	BACK = RectMake(955, 663, 100, 45);
+	initMaptool();
 
-	for (int i = 0; i < 4; i++)
-	{
-		icon[i] = RectMake(928, 138 + (i * 50), 50, 48);
-	}
+	initButton();
 
-	//drag
-	drag.start = drag.end = { 0,0 };
+	initDrag();
 
-	dragButton.rc = RectMake(928, 87, 50, 48);
-	dragButton.isCol = false;
+	initUser();
 
-	//user init
-	user.KeyName = "";
-	user.kind = TERRAIN::NONE;
-	user.delay = 0;
-	tool = TOOL::NONE;
+	initSaveAndLoad();
 
 	option = OPTION::SELECT_MENU;
-
-
-
-	//저장 & 불러오기 창 
-	for (int i = 0; i < 3; i++)
-	{
-		fileWin[i] = RectMake(125 + i * 250, 228, 200, 300);
-	}
-
-	isSave = isLoad = false;
-
-
 
 	isLeftDown = isLeft = isLeftUp = false;
 
@@ -108,7 +79,6 @@ void mapToolScene::update()
 	}
 
 	// 세이브 
-
 	if (isSave)
 		for (int i = 0; i < 3; i++)
 		{
@@ -129,9 +99,6 @@ void mapToolScene::update()
 				isLoad = false;
 			}
 		}
-
-
-
 }
 
 void mapToolScene::render()
@@ -146,6 +113,9 @@ void mapToolScene::render()
 
 	checkRender();
 
+	//메뉴 화면 아니고 user에 정보가 없으면 브러쉬 비활성화
+	if (option != OPTION::SELECT_MENU && user.KeyName == "" && user.kind == TERRAIN::NONE) 
+		imageAlphaRender("active", { icon[1].left,icon[1].top });
 
 	//userRender
 	if (user.kind != TERRAIN::NONE)
@@ -157,28 +127,21 @@ void mapToolScene::render()
 
 	FrameRect(getMemDC(), drag.rc, WHITE);
 
-
 	//세이브 & 로드 렌더 & image 렌더
-	if (isSave )
+	if (isSave)
 	{
 		for (int i = 0; i < 3; i++)
 		{
-			Rectangle(getMemDC(), fileWin[i]);
-			textOut(getMemDC(), fileWin[i].left, fileWin[i].top, "저장카드", RGB(0, 0, 0));
 			IMAGEMANAGER->findImage("saveimg")->render(getMemDC(), fileWin[i].left, fileWin[i].top);
 		}
 	}
-	if ( isLoad)
+	if (isLoad)
 	{
 		for (int i = 0; i < 3; i++)
 		{
-			Rectangle(getMemDC(), fileWin[i]);
-			textOut(getMemDC(), fileWin[i].left, fileWin[i].top, "저장카드", RGB(0, 0, 0));
 			IMAGEMANAGER->findImage("loadimg")->render(getMemDC(), fileWin[i].left, fileWin[i].top);
 		}
 	}
-
-
 
 }
 
@@ -272,7 +235,8 @@ void mapToolScene::iconCheck()
 					resetUserData();
 					break;
 				case 1:
-					//tool = TOOL::DRAW;
+					if (user.KeyName != "" && user.kind != TERRAIN::NONE)
+						tool = TOOL::DRAW;
 					break;
 				case 2:
 					tool = TOOL::ERASE;
@@ -303,7 +267,8 @@ void mapToolScene::iconCheck()
 					resetUserData();
 					break;
 				case 1:
-					//tool = TOOL::DRAW;
+					if (user.KeyName != "" && user.kind != TERRAIN::NONE)
+						tool = TOOL::DRAW;
 					break;
 				case 2:
 					tool = TOOL::ERASE;
@@ -334,7 +299,8 @@ void mapToolScene::iconCheck()
 					resetUserData();
 					break;
 				case 1:
-					//tool = TOOL::DRAW;
+					if (user.KeyName != "" && user.kind != TERRAIN::NONE)
+						tool = TOOL::DRAW;
 					break;
 				case 2:
 					tool = TOOL::ERASE;
@@ -374,7 +340,50 @@ void mapToolScene::initTile()
 	}
 }
 
-void mapToolScene::initSelectTerrain() 
+void mapToolScene::initMaptool()
+{
+	maptool.rc = RectMake(920, 0, WINSIZEX - 920, WINSIZEY);
+	maptool.isCol = false;
+}
+
+void mapToolScene::initButton()
+{
+	//initButton
+	for (int i = 0; i < 3; i++) mapOption[i] = RectMake(1020, 197 + (i * 83), 160, 60);
+
+	for (int i = 0; i < 4; i++) icon[i] = RectMake(928, 138 + (i * 50), 50, 48);
+}
+
+void mapToolScene::initDrag()
+{
+	//initDrag
+	drag.start = drag.end = { 0,0 };
+
+	dragButton.rc = RectMake(928, 87, 50, 48);
+	dragButton.isCol = false;
+}
+
+void mapToolScene::initUser()
+{
+	//initUser
+	user.KeyName = "";
+	user.kind = TERRAIN::NONE;
+	user.delay = 0;
+	tool = TOOL::NONE;
+}
+
+void mapToolScene::initSaveAndLoad()
+{
+	//initSaveAndLoad
+	for (int i = 0; i < 3; i++) fileWin[i] = RectMake(125 + i * 250, 228, 200, 300);
+
+	isSave = isLoad = false;
+	SAVE = RectMake(955, 563, 100, 45);
+	LOAD = RectMake(955, 613, 100, 45);
+	BACK = RectMake(955, 663, 100, 45);
+}
+
+void mapToolScene::initSelectTerrain()
 {
 	//WALL//
 	string wallName[6] = { "wall0","wall1","wall2","wall3","wall4","wallTile" };
@@ -393,7 +402,7 @@ void mapToolScene::initSelectTerrain()
 		bigTile[i].kind = TERRAIN::TILE;
 		bigTile[i].keyName = str[i];
 	}
-	
+
 }
 
 void mapToolScene::initCam()
@@ -419,11 +428,12 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addImage("tileMenu", "maptool/ui/tilemenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("objectMenu", "maptool/ui/objectmenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("checkIcon", "maptool/ui/check.bmp", 36, 36, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("saveimg", "maptool/save.bmp", 200, 300,false);
-	IMAGEMANAGER->addImage("loadimg", "maptool/load.bmp", 200, 300,false);
+	IMAGEMANAGER->addImage("saveimg", "maptool/save.bmp", 200, 300, false);
+	IMAGEMANAGER->addImage("loadimg", "maptool/load.bmp", 200, 300, false);
+	IMAGEMANAGER->addImage("active", "maptool/ui/active.bmp", 49, 47);
 
 	//WALL//
-	IMAGEMANAGER->addFrameImage("wall0", "maptool/wall/wall0.bmp", 160, 128, 5, 4,false);
+	IMAGEMANAGER->addFrameImage("wall0", "maptool/wall/wall0.bmp", 160, 128, 5, 4, false);
 	IMAGEMANAGER->addFrameImage("wall1", "maptool/wall/wall1.bmp", 160, 128, 5, 4, false);
 	IMAGEMANAGER->addFrameImage("wall2", "maptool/wall/wall2.bmp", 160, 128, 5, 4, false);
 	IMAGEMANAGER->addFrameImage("wall3", "maptool/wall/wall3.bmp", 160, 128, 5, 4, false);
@@ -448,7 +458,6 @@ void mapToolScene::mapSave(int index)
 	file = CreateFile(str, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	WriteFile(file, tile, sizeof(tagTile) * MAXTILE, &write, NULL);
 	CloseHandle(file);
-
 }
 
 void mapToolScene::mapLoad(int index)
@@ -462,7 +471,6 @@ void mapToolScene::mapLoad(int index)
 	file = CreateFile(str, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	ReadFile(file, tile, sizeof(tagTile) * MAXTILE, &read, NULL);
 	CloseHandle(file);
-
 }
 
 void mapToolScene::saveCheck()
@@ -624,7 +632,7 @@ void mapToolScene::imageAlphaRender(string keyName, POINT pt, int alpha)
 
 void mapToolScene::imageFrameRender(string keyName, POINT pt, int frameX, int frameY)
 {
-	IMAGEMANAGER->findImage(keyName)->frameRender(getMemDC(),pt.x,pt.y,frameX, frameY);
+	IMAGEMANAGER->findImage(keyName)->frameRender(getMemDC(), pt.x, pt.y, frameX, frameY);
 }
 
 void mapToolScene::controller()

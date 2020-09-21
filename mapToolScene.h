@@ -57,8 +57,14 @@ public:
 
 	//init
 	void initTile();
+	void initMaptool();
+	void initButton();
+	void initDrag();
+	void initUser();
+	void initSaveAndLoad();
 	void initSelectTerrain();
 	void initCam();
+
 	//camera
 	void moveRect();
 
