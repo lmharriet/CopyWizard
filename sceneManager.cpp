@@ -32,15 +32,22 @@ void sceneManager::release()
 
 	//C++ 고오급 문법
 	//for(auto scene in _mSceneList) => 지금은 사용불가
+	
+	///////// 21 SEP 20 릴리즈 기능 off//////////////
+
 	for (auto scene : _mSceneList)
 	{
+		cout << scene.second << endl;
 		scene.second->release();
-		SAFE_DELETE(scene.second);
+		//SAFE_DELETE(scene.second);
 	}
-
+	// SAFE_DELETE만 일단 off 해둠
+	/////////////////////////////////////////////
+	
 	//int a = 10;
 	//auto b = 100.5f;
-	//var c = 10; //유니티에서
+	//var c = 10; //유니티에서 잠깐만....
+	
 }
 
 void sceneManager::update()
