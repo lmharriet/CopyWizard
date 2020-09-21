@@ -46,7 +46,18 @@ void mapToolScene::update()
 	if (user.delay < 10) user.delay++;
 
 	//마우스가 맵툴ui에 들어오면 draw,erase 등 작업이 비활성화
-	if (PtInRect(&maptool.rc, _ptMouse)) maptool.isCol = true;
+	if (PtInRect(&maptool.rc, _ptMouse))
+	{
+		maptool.isCol = true;
+
+		//user가 ui안에 들어오면 드래그 비활성화
+		if (drag.start.x != drag.end.x ||
+			drag.start.y != drag.end.y)
+		{
+			drag.start = drag.end = { 0,0 };
+			drag.rc = RectMake(drag.end.x, drag.start.y, drag.start.x - drag.end.x, drag.end.y - drag.start.y);
+		}
+	}
 	else maptool.isCol = false;
 
 	//drag function
@@ -666,6 +677,7 @@ void mapToolScene::controller()
 		if (dragButton.isCol && isLeft)drag.start.x -= 5;
 	}
 
+	//none drag draw
 	if (isLeftDown) // 타일의 정보를 가져오는 기능만 수행
 	{
 		switch (option)
@@ -712,6 +724,19 @@ void mapToolScene::controller()
 							tile[i].keyName = user.KeyName;
 							tile[i].kind = user.kind;
 						}
+					}
+				}
+				break;
+			case TOOL::SPOID:
+				for (int i = 0; i < MAXTILE; i++)
+				{
+					//user가 ui 안에 있거나, 타일 정보가 없으면 스포이드 기능 비활성화
+					if (maptool.isCol || tile[i].kind == TERRAIN::NONE)continue;
+
+					if (PtInRect(&tile[i].rc, _ptMouse))
+					{
+						user.KeyName = tile[i].keyName;
+						user.kind = TERRAIN::WALL;
 					}
 				}
 				break;
@@ -767,6 +792,10 @@ void mapToolScene::controller()
 							{
 								for (int k = 0; k < 3; k++)
 								{
+									//생성하려는 지형의 타입이 IMG이거나, WALL일 때 생성되지 않도록 CONTINUE
+									if (tile[i + (MAXTILE_WIDTH * j) + k].kind == TERRAIN::IMG ||
+										tile[i + (MAXTILE_WIDTH * j) + k].kind == TERRAIN::WALL)continue;
+
 									tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
 									tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
 									tile[i + (MAXTILE_WIDTH * j) + k].frame = { k,j };
@@ -782,7 +811,7 @@ void mapToolScene::controller()
 					{
 						for (int i = 0; i < MAXTILE; i++)
 						{
-							if (tile[i].kind == TERRAIN::NONE)continue;
+							if (maptool.isCol || tile[i].kind == TERRAIN::NONE)continue;
 
 							if (PtInRect(&tile[i].rc, _ptMouse))
 							{
@@ -826,6 +855,7 @@ void mapToolScene::controller()
 		}
 	}
 
+	//drag draw function
 	if (isLeftUp)
 	{
 		if (dragButton.isCol)
@@ -843,9 +873,52 @@ void mapToolScene::controller()
 					{
 						tile[i].keyName = user.KeyName;
 						tile[i].kind = user.kind;
-						tile[i].frame = { 0,0 };
+
+						//첫좌표 위치 tile[i], drag.start
+						//마지막좌표 위치 tile[i], drag.end
+
+						//cout << "충돌된 부분 : " << i << '\n';
+						cul.push_back(i);
+
+						tile[i].frame = { 1,1 };
 					}
 				}
+				if (cul.size() > 4)
+				{
+					//가로, 세로 구하기
+					int height = abs((cul.back() / 100) - (cul.front() / 100)) + 1; // 가로 x칸
+					int width = (cul.back() - ((height - 1) * 100)) - cul.front() + 1; // 세로 y칸
+
+					tile[cul.front()].frame = { 0,0 }; // 왼쪽 위
+
+					for (int i = 1; i < width - 1; i++)
+					{
+						tile[cul.front() + i].frame = { 1,0 }; // 위
+					}
+
+					tile[cul.front() + (width - 1)].frame = { 2,0 }; // 오른쪽 위
+
+					for (int i = 1; i < height - 1; i++)
+					{
+						tile[cul.back() - (MAXTILE_HEIGHT * i)].frame = { 2,1 }; // 오른쪽
+					}
+
+					tile[cul.back()].frame = { 2,2 }; // 오른쪽 아래
+
+					for (int i = 1; i < width - 1; i++)
+					{
+						tile[cul.back() - i].frame = { 1,2 }; // 아래
+					}
+
+					tile[cul.back() - (width - 1)].frame = { 0,2 }; // 왼쪽 아래
+
+					for (int i = 1; i < height - 1; i++)
+					{
+						tile[cul.front() + (MAXTILE_HEIGHT * i)].frame = { 0,1 }; // 왼쪽
+					}
+
+				}
+				cul.clear();
 				break;
 			case TOOL::ERASE:
 				for (int i = 0; i < MAXTILE; i++)

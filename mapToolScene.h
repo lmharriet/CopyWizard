@@ -40,6 +40,8 @@ private:
 	bool isSave;
 	bool isLoad;
 
+	//calculator
+	vector<int> cul;
 
 	//vk_down
 	bool isLeftDown, isLeft, isLeftUp;
