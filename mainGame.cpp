@@ -14,9 +14,9 @@ HRESULT mainGame::init()
 
 	//BGM_Sound
 	SOUNDMANAGER->addSound("titleBGM", "Sound/TitleScreen.mp3", true, true);
-	SOUNDMANAGER->play("titleBGM");
+	volume = 0.5f;
+	SOUNDMANAGER->play("titleBGM",volume);
 
-	volume = 1.f;
 
 	/*씬추가*/
 	SCENEMANAGER->addScene("시작화면", new startScene);
@@ -56,19 +56,19 @@ void mainGame::update()
 	//사운드매니져 업데이트 (이게 없으면 사운드매니져 제대로 동작하지 않는다!!!)
 	SOUNDMANAGER->update();
 
-	if (INPUT->GetKeyDown(VK_OEM_PLUS))
+	if (INPUT->GetKeyDown(VK_ADD))
 	{
 		if (volume < 1.f)
 		{
-			volume += .1f;
+			volume += .05f;
 			SOUNDMANAGER->setBackGroundVolume("titleBGM", volume);
 		}
 	}
-	if (INPUT->GetKeyDown(VK_OEM_MINUS))
+	if (INPUT->GetKeyDown(VK_SUBTRACT))
 	{
 		if (volume > .0f)
 		{
-			volume -= .1f;
+			volume -= .05f;
 			SOUNDMANAGER->setBackGroundVolume("titleBGM", volume);
 		}
 	}
