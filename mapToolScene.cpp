@@ -148,7 +148,7 @@ void mapToolScene::render()
 	}
 	if (isLoad)
 	{
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 3; i++)	
 		{
 			IMAGEMANAGER->findImage("loadimg")->render(getMemDC(), fileWin[i].left, fileWin[i].top);
 		}
@@ -436,19 +436,19 @@ void mapToolScene::initSaveAndLoad()
 void mapToolScene::initSelectTerrain()
 {
 	//WALL//
-	string wallName[6] = { "wall0","wall1","wall2","wall3","wall4","wallTile" };
-	for (int i = 0; i < 6; i++)
+	string wallName[4] = { "wall0","wall1","wall2","wall3" };
+	for (int i = 0; i < 4; i++)
 	{
-		wall[i].rc = RectMake(993 + (i % 2) * 135, 124 + (i / 2) * 135, 125, 100);
+		wall[i].rc = RectMake(929 + (i % 2) * 175, 140 + (i / 2) * 162, 165, 117);
 		wall[i].kind = TERRAIN::WALL;
 		wall[i].keyName = wallName[i];
 	}
 
 	//TILE//
-	string str[6] = { "grass0","grass1","grass2","ground0","ground1","ground2" };
+	string str[6] = { "grass0","grass1","ground0","grass2","ground1","ground2" };
 	for (int i = 0; i < 6; i++)
 	{
-		bigTile[i].rc = RectMake(990 + (i % 3) * 140, 97 + (i / 3) * 135, 96, 96);
+		bigTile[i].rc = RectMake(932 + (i % 3) * 116, 136 + (i / 3) * 115, 100, 100);
 		bigTile[i].kind = TERRAIN::TILE;
 		bigTile[i].keyName = str[i];
 	}
@@ -457,7 +457,7 @@ void mapToolScene::initSelectTerrain()
 	string objectName[5] = { "flowerbed1", };
 	for (int i = 0; i < 5; i++)
 	{
-		object[i].rc = RectMake(1184, 453, 70, 70);
+		object[i].rc = RectMake(1139, 135, 96, 110);
 		object[i].kind = TERRAIN::OBJECT;
 		object[i].keyName = objectName[i];
 	}
@@ -654,7 +654,7 @@ void mapToolScene::rcRender()
 		case OPTION::WALL_MENU:
 			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i]);
 			Rectangle(getMemDC(), dragButton.rc);
-			for (int i = 0; i < 6; i++) Rectangle(getMemDC(), wall[i].rc);
+			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), wall[i].rc);
 			break;
 		case OPTION::TILE_MENU:
 			for (int i = 0; i < 4; i++)	Rectangle(getMemDC(), icon[i]);
@@ -750,7 +750,7 @@ void mapToolScene::controller()
 		{
 		case OPTION::WALL_MENU:
 			//get wall
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				if (PtInRect(&wall[i].rc, _ptMouse) && user.delay == 10)
 				{
