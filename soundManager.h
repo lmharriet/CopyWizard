@@ -46,4 +46,17 @@ public:
 	//일시정지 중이냐?
 	bool isPauseSound(string keyName);
 
+	void setBackGroundVolume(string keyName ,float volume) 
+	{ 
+		int count = 0;
+		arrSoundIter iter = _mTotalSound.begin();
+		for (iter; iter != _mTotalSound.end(); ++iter, count++)
+		{
+			if (keyName == iter->first)
+			{
+				//볼륨세팅
+				_channel[count]->setVolume(volume);
+			}
+		}
+	}
 };

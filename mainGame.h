@@ -11,6 +11,8 @@
 
 class mainGame : public gameNode
 {
+private:
+	float volume;
 public:
 	HRESULT init();
 	void release();

@@ -170,7 +170,28 @@ void mapToolScene::render()
 			tile[i + MAXTILE_WIDTH].keyName == key &&
 			tile[i + MAXTILE_WIDTH + 1].keyName == key)) continue;
 
-		IMAGEMANAGER->findImage("tree0")->render(getMemDC(), tile[i].rc.left - (2*TILESIZE), tile[i].rc.top - (4*TILESIZE));
+
+		int width, height;
+		if (tile[i].keyName == "flowerbed1")
+		{
+			key = "tree0";
+			width = 2 * TILESIZE;
+			height = 4 * TILESIZE;
+			//if (num == 0)
+			//{
+			//	key = "tree0";
+			//	width = 2 * TILESIZE;
+			//	height = 4 * TILESIZE;
+			//}
+			//else
+			//{
+			//	key = "tree1";
+			//	width = 2 * TILESIZE;
+			//	height = 5 * TILESIZE;
+			//}
+
+			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
+		}
 	}
 }
 
@@ -486,6 +507,7 @@ void mapToolScene::addImage()
 	//OBJECT//
 	IMAGEMANAGER->addFrameImage("flowerbed1", "maptool/object/flowerbed1.bmp", TILESIZE * 2, TILESIZE * 2, 2, 2, false);
 	IMAGEMANAGER->addImage("tree0", "maptool/object/tree0.bmp", TILESIZE * 6, TILESIZE * 6, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("tree1", "maptool/object/tree1.bmp", TILESIZE * 6, TILESIZE * 7, true, RGB(255, 0, 255));
 
 }
 
