@@ -4,6 +4,8 @@
 
 HRESULT startScene::init()
 {
+
+	
 	//렉트 위치 초기화
 	//_rc = RectMakeCenter(WINSIZEX / 2, WINSIZEY - 200, 200, 100);
 
@@ -46,6 +48,7 @@ void startScene::update()
 			{
 			case 0:
 				SCENEMANAGER->loadScene("픽셀충돌");
+				SOUNDMANAGER->stop("titleBGM");
 				break;
 			case 1:
 				SCENEMANAGER->loadScene("맵툴제작");
