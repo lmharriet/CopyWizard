@@ -27,7 +27,7 @@ private:
 	///  ICON  ///
 	RECT icon[4];
 
-	tagTile bigTile[4];
+	tagTile bigTile[6];
 	//tagTile miniTile[4];
 	
 	tagTile wall[6];

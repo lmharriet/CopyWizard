@@ -445,10 +445,10 @@ void mapToolScene::initSelectTerrain()
 	}
 
 	//TILE//
-	string str[4] = { "grass0","ground0","tile7","tile9" };
-	for (int i = 0; i < 4; i++)
+	string str[6] = { "grass0","grass1","grass2","ground0","ground1","ground2" };
+	for (int i = 0; i < 6; i++)
 	{
-		bigTile[i].rc = RectMake(990 + (i % 2) * 140, 97 + (i / 2) * 135, 130, 130);
+		bigTile[i].rc = RectMake(990 + (i % 3) * 140, 97 + (i / 3) * 135, 96, 96);
 		bigTile[i].kind = TERRAIN::TILE;
 		bigTile[i].keyName = str[i];
 	}
@@ -500,9 +500,11 @@ void mapToolScene::addImage()
 
 	//TILE//
 	IMAGEMANAGER->addFrameImage("grass0", "maptool/tile/grass0.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
+	IMAGEMANAGER->addFrameImage("grass1", "maptool/tile/grass1.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
+	IMAGEMANAGER->addFrameImage("grass2", "maptool/tile/grass2.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
 	IMAGEMANAGER->addFrameImage("ground0", "maptool/tile/ground0.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
-	IMAGEMANAGER->addFrameImage("tile7", "maptool/tile/tile7.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
-	IMAGEMANAGER->addFrameImage("tile9", "maptool/tile/tile9.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
+	IMAGEMANAGER->addFrameImage("ground1", "maptool/tile/ground1.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
+	IMAGEMANAGER->addFrameImage("ground2", "maptool/tile/ground2.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
 
 	//OBJECT//
 	IMAGEMANAGER->addFrameImage("flowerbed1", "maptool/object/flowerbed1.bmp", TILESIZE * 2, TILESIZE * 2, 2, 2, false);
@@ -655,11 +657,9 @@ void mapToolScene::rcRender()
 			for (int i = 0; i < 6; i++) Rectangle(getMemDC(), wall[i].rc);
 			break;
 		case OPTION::TILE_MENU:
-			for (int i = 0; i < 4; i++)
-			{
-				Rectangle(getMemDC(), icon[i]);
-				Rectangle(getMemDC(), bigTile[i].rc);
-			}
+			for (int i = 0; i < 4; i++)	Rectangle(getMemDC(), icon[i]);
+			for(int i=0;i<6;i++)Rectangle(getMemDC(), bigTile[i].rc);
+			
 
 			Rectangle(getMemDC(), dragButton.rc);
 			break;
@@ -811,7 +811,7 @@ void mapToolScene::controller()
 
 		case OPTION::TILE_MENU:
 			//get tile
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 6; i++)
 			{
 				if (PtInRect(&bigTile[i].rc, _ptMouse) && user.delay == 10)
 				{
