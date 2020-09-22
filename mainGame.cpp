@@ -18,8 +18,10 @@ HRESULT mainGame::init()
 	//SCENEMANAGER->addScene("사운드", new soundTestScene);
 	SCENEMANAGER->addScene("픽셀충돌", new pixelCollisionScene);
 	SCENEMANAGER->addScene("로딩화면", new loadingScene);
-	SCENEMANAGER->addScene("맵툴제작", new mapToolScene);
 
+	mapToolScene* maptool = new mapToolScene;
+	SCENEMANAGER->addScene("맵툴제작", maptool);
+	maptool->addImage();
 	/*현재씬*/
 	SCENEMANAGER->loadScene("시작화면");
 
