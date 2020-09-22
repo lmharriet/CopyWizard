@@ -13,7 +13,6 @@ private:
 
 	//∏ ≈∏¿œ ¡§∫∏
 	tagTile tile[MAXTILE];
-
 public:
 	HRESULT init();
 	void release();
@@ -23,4 +22,3 @@ public:
 	//∏  ∑ŒµÂ
 	void loadMap(const char* mapFileName);
 };
-

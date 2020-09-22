@@ -26,7 +26,6 @@ HRESULT pixelCollisionScene::init()
 	sprintf(str, "mapData/map%d.map", RANDOM->range(3));
 	loadMap(str);
 
-
 	return S_OK;
 }
 
@@ -43,6 +42,14 @@ void pixelCollisionScene::update()
 	if (INPUT->GetKey(VK_RIGHT))
 	{
 		_x += 3.0f;
+	}
+	if (INPUT->GetKey(VK_DOWN))
+	{
+		_y += 3.0f;
+	}
+	if (INPUT->GetKey(VK_UP))
+	{
+		_y -= 3.0f;
 	}
 	//공의 렉트 움직이기
 	_rc = RectMakeCenter(_x, _y, 60, 60);
@@ -73,18 +80,37 @@ void pixelCollisionScene::update()
 
 void pixelCollisionScene::render()
 {
+	//sRender.push_back()
 	//백그라운드 렌더
 	//_mountain->render(getMemDC());
 	
+	//공 이미지 렌더
+	_ball->render(getMemDC(), _rc.left, _rc.top);
 
 	//로드된 타일 렌더
 	for (int i = 0; i < MAXTILE; i++)
 	{
 		IMAGEMANAGER->frameRender(tile[i].keyName, getMemDC(), tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
 	}
+
+	//objcet img render
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (tile[i].kind != TERRAIN::OBJECT)continue;
+
+		//i object, i+1 object, i+w object, i+w+1 object
+		if (!(tile[i + 1].kind == TERRAIN::OBJECT && tile[i + MAXTILE_WIDTH].kind == TERRAIN::OBJECT &&
+			tile[i + MAXTILE_WIDTH + 1].kind == TERRAIN::OBJECT)) continue;
+
+		string key = tile[i].keyName;
+
+		if (!(tile[i + 1].keyName == key &&
+			tile[i + MAXTILE_WIDTH].keyName == key &&
+			tile[i + MAXTILE_WIDTH + 1].keyName == key)) continue;
+
+		IMAGEMANAGER->findImage("tree0")->render(getMemDC(), tile[i].rc.left - (2 * TILESIZE), tile[i].rc.top - (4 * TILESIZE));
+	}
 	
-	//공 이미지 렌더
-	_ball->render(getMemDC(), _rc.left, _rc.top);
 
 	//디버깅용
 	if (INPUT->GetToggleKey('A'))
