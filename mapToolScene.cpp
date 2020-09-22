@@ -17,8 +17,10 @@ HRESULT mapToolScene::init()
 
 	initSaveAndLoad();
 
-	option = OPTION::SELECT_MENU;
 
+
+	//option = OPTION::SELECT_MENU;
+	option = OPTION::OBJECT_MENU;
 	isLeftDown = isLeft = isLeftUp = false;
 
 	initCam();
@@ -123,8 +125,8 @@ void mapToolScene::render()
 	checkRender();
 
 	//메뉴 화면 아니고 user에 정보가 없으면 브러쉬 비활성화
-	if (option != OPTION::SELECT_MENU && user.KeyName == "" && user.kind == TERRAIN::NONE) 
-		imageAlphaRender("active", { icon[1].left,icon[1].top });
+	if (option != OPTION::SELECT_MENU && user.KeyName == "" && user.kind == TERRAIN::NONE)
+		imageAlphaRender("active", { icon[1].left,icon[1].top + 5 });
 
 	//userRender
 	if (user.kind != TERRAIN::NONE)
@@ -360,7 +362,7 @@ void mapToolScene::initButton()
 	//initButton
 	for (int i = 0; i < 3; i++) mapOption[i] = RectMake(1020, 197 + (i * 83), 160, 60);
 
-	for (int i = 0; i < 4; i++) icon[i] = RectMake(928, 138 + (i * 50), 50, 48);
+	for (int i = 0; i < 4; i++) icon[i] = RectMake(1005 + (i * 70), 70, 50, 48);
 }
 
 void mapToolScene::initDrag()
@@ -368,7 +370,7 @@ void mapToolScene::initDrag()
 	//initDrag
 	drag.start = drag.end = { 0,0 };
 
-	dragButton.rc = RectMake(928, 87, 50, 48);
+	dragButton.rc = RectMake(933, 70, 50, 48);
 	dragButton.isCol = false;
 }
 
@@ -412,6 +414,14 @@ void mapToolScene::initSelectTerrain()
 		bigTile[i].keyName = str[i];
 	}
 
+	//OBJECT//
+	string objectName[5] = { "flowerbed1", };
+	for (int i = 0; i < 5; i++)
+	{
+		object[i].rc = RectMake(1184, 453, 70, 70);
+		object[i].kind = TERRAIN::OBJECT;
+		object[i].keyName = objectName[i];
+	}
 }
 
 void mapToolScene::initCam()
@@ -433,13 +443,13 @@ void mapToolScene::addImage()
 {
 	//UI//
 	IMAGEMANAGER->addImage("mapMenu", "maptool/ui/maptoolmenu.bmp", 360, 720);
-	IMAGEMANAGER->addImage("wallMenu", "maptool/ui/wallmenu.bmp", 360, 720);
-	IMAGEMANAGER->addImage("tileMenu", "maptool/ui/tilemenu.bmp", 360, 720);
-	IMAGEMANAGER->addImage("objectMenu", "maptool/ui/objectmenu.bmp", 360, 720);
+	IMAGEMANAGER->addImage("wallMenu", "maptool/ui/wallmenu1.bmp", 360, 720);
+	IMAGEMANAGER->addImage("tileMenu", "maptool/ui/tilemenu1.bmp", 360, 720);
+	IMAGEMANAGER->addImage("objectMenu", "maptool/ui/objectmenu1.bmp", 360, 720);
 	IMAGEMANAGER->addImage("checkIcon", "maptool/ui/check.bmp", 36, 36, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("saveimg", "maptool/save.bmp", 200, 300, false);
 	IMAGEMANAGER->addImage("loadimg", "maptool/load.bmp", 200, 300, false);
-	IMAGEMANAGER->addImage("active", "maptool/ui/active.bmp", 49, 47);
+	IMAGEMANAGER->addImage("active", "maptool/ui/active.bmp", 40, 40);
 
 	//WALL//
 	IMAGEMANAGER->addFrameImage("wall0", "maptool/wall/wall0.bmp", 160, 128, 5, 4, false);
@@ -454,6 +464,10 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addFrameImage("ground0", "maptool/tile/ground0.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
 	IMAGEMANAGER->addFrameImage("tile7", "maptool/tile/tile7.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
 	IMAGEMANAGER->addFrameImage("tile9", "maptool/tile/tile9.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
+
+	//OBJECT//
+	IMAGEMANAGER->addFrameImage("flowerbed1", "maptool/object/flowerbed1.bmp", TILESIZE * 2, TILESIZE * 2, 2, 2, false);
+
 }
 
 void mapToolScene::mapSave(int index)
@@ -524,9 +538,21 @@ void mapToolScene::tileRender()
 
 			if (tile[i].kind != TERRAIN::NONE)
 			{
-				if (tile[i].kind == TERRAIN::TILE) FrameRect(getMemDC(), tile[i].rc, SKYBLUE);
-				else if (tile[i].kind == TERRAIN::WALL)FrameRect(getMemDC(), tile[i].rc, YELLOW);
-				else if (tile[i].kind == TERRAIN::IMG)FrameRect(getMemDC(), tile[i].rc, ORANGE);
+				switch (tile[i].kind)
+				{
+				case TERRAIN::TILE:
+					FrameRect(getMemDC(), tile[i].rc, SKYBLUE);
+					break;
+				case TERRAIN::WALL:
+					FrameRect(getMemDC(), tile[i].rc, YELLOW);
+					break;
+				case TERRAIN::IMG:
+					FrameRect(getMemDC(), tile[i].rc, ORANGE);
+					break;
+				case TERRAIN ::OBJECT:
+					FrameRect(getMemDC(), tile[i].rc, PINK);
+					break;
+				}
 			}
 		}
 	}
@@ -575,7 +601,7 @@ void mapToolScene::rcRender()
 	if (INPUT->GetToggleKey(VK_TAB)) // 렉트를 껏다 켯다 할 수 있음
 	{
 		buttonRender();
-		Rectangle(getMemDC(), maptool.rc);
+		FrameRect(getMemDC(), maptool.rc, WHITE);
 
 		switch (option)
 		{
@@ -597,6 +623,7 @@ void mapToolScene::rcRender()
 			Rectangle(getMemDC(), dragButton.rc);
 			break;
 		case OPTION::OBJECT_MENU:
+			for (int i = 0; i < 5; i++) Rectangle(getMemDC(), object[i].rc);
 			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i]);
 			Rectangle(getMemDC(), dragButton.rc);
 			break;
@@ -825,111 +852,145 @@ void mapToolScene::controller()
 			}
 			break;
 		case OPTION::OBJECT_MENU:
-			break;
-		}
-	}
-	if (isLeft && option != OPTION::SELECT_MENU)
-	{
-		switch (tool)
-		{
-		case TOOL::ERASE:
-			if (!dragButton.isCol)
+			for (int i = 0; i < 5; i++)
 			{
+				if (PtInRect(&object[i].rc, _ptMouse) && user.delay == 10)
+				{
+					user.delay = 0;
+
+					user.KeyName = object[i].keyName;
+					user.kind = object[i].kind;
+					// 브러쉬 아이콘에 check 표시
+					tool = TOOL::DRAW;
+				}
+			}
+			switch (tool)
+			{
+			case TOOL::DRAW:
 				for (int i = 0; i < MAXTILE; i++)
 				{
 					if (maptool.isCol)continue;
 
 					if (PtInRect(&tile[i].rc, _ptMouse))
 					{
-						if (tile[i].kind == TERRAIN::NONE && tile[i].keyName == "")continue;
-
-						tile[i].keyName = "";
-						tile[i].kind = TERRAIN::NONE;
-						tile[i].frame = { 0,0 };
+						//2,2 일 때
+						for (int j = 0; j < 2; j++)
+						{
+							for (int k = 0; k < 2; k++)
+							{
+								tile[i + (MAXTILE_HEIGHT * j) + k].kind = user.kind;
+								tile[i + (MAXTILE_HEIGHT * j) + k].keyName = user.KeyName;
+								tile[i + (MAXTILE_HEIGHT * j) + k].frame = {k,j};
+							}
+						}
 					}
 				}
+				break;
 			}
-			break;
 		}
-	}
-
-	//drag draw function
-	if (isLeftUp)
-	{
-		if (dragButton.isCol)
+		if (isLeft && option != OPTION::SELECT_MENU)
 		{
 			switch (tool)
 			{
-			case TOOL::DRAW:
-				for (int i = 0; i < MAXTILE; i++)
-				{
-					if (user.kind == TERRAIN::WALL && user.KeyName != "wallTile")continue;
-
-					if (tile[i].kind == TERRAIN::OBJECT || tile[i].kind == TERRAIN::WALL || tile[i].kind == TERRAIN::IMG)continue;
-
-					if (colCheck(tile[i].rc, drag.rc))
-					{
-						tile[i].keyName = user.KeyName;
-						tile[i].kind = user.kind;
-
-						//첫좌표 위치 tile[i], drag.start
-						//마지막좌표 위치 tile[i], drag.end
-
-						//cout << "충돌된 부분 : " << i << '\n';
-						cul.push_back(i);
-
-						tile[i].frame = { 1,1 };
-					}
-				}
-				if (cul.size() > 4)
-				{
-					//가로, 세로 구하기
-					int height = abs((cul.back() / 100) - (cul.front() / 100)) + 1; // 가로 x칸
-					int width = (cul.back() - ((height - 1) * 100)) - cul.front() + 1; // 세로 y칸
-
-					tile[cul.front()].frame = { 0,0 }; // 왼쪽 위
-
-					for (int i = 1; i < width - 1; i++)
-					{
-						tile[cul.front() + i].frame = { 1,0 }; // 위
-					}
-
-					tile[cul.front() + (width - 1)].frame = { 2,0 }; // 오른쪽 위
-
-					for (int i = 1; i < height - 1; i++)
-					{
-						tile[cul.back() - (MAXTILE_HEIGHT * i)].frame = { 2,1 }; // 오른쪽
-					}
-
-					tile[cul.back()].frame = { 2,2 }; // 오른쪽 아래
-
-					for (int i = 1; i < width - 1; i++)
-					{
-						tile[cul.back() - i].frame = { 1,2 }; // 아래
-					}
-
-					tile[cul.back() - (width - 1)].frame = { 0,2 }; // 왼쪽 아래
-
-					for (int i = 1; i < height - 1; i++)
-					{
-						tile[cul.front() + (MAXTILE_HEIGHT * i)].frame = { 0,1 }; // 왼쪽
-					}
-
-				}
-				cul.clear();
-				break;
 			case TOOL::ERASE:
-				for (int i = 0; i < MAXTILE; i++)
+				if (!dragButton.isCol)
 				{
-					if (colCheck(tile[i].rc, drag.rc))
+					for (int i = 0; i < MAXTILE; i++)
 					{
-						tile[i].keyName = "";
-						tile[i].kind = TERRAIN::NONE;
-						tile[i].frame = { 0,0 };
+						if (maptool.isCol)continue;
+
+						if (PtInRect(&tile[i].rc, _ptMouse))
+						{
+							if (tile[i].kind == TERRAIN::NONE && tile[i].keyName == "")continue;
+
+							tile[i].keyName = "";
+							tile[i].kind = TERRAIN::NONE;
+							tile[i].frame = { 0,0 };
+						}
 					}
 				}
-				drag.start = drag.end = { 0,0 };
 				break;
+			}
+		}
+
+		//drag draw function
+		if (isLeftUp)
+		{
+			if (dragButton.isCol)
+			{
+				switch (tool)
+				{
+				case TOOL::DRAW:
+					for (int i = 0; i < MAXTILE; i++)
+					{
+						if (user.kind == TERRAIN::WALL && user.KeyName != "wallTile")continue;
+
+						if (tile[i].kind == TERRAIN::OBJECT || tile[i].kind == TERRAIN::WALL || tile[i].kind == TERRAIN::IMG)continue;
+
+						if (colCheck(tile[i].rc, drag.rc))
+						{
+							tile[i].keyName = user.KeyName;
+							tile[i].kind = user.kind;
+
+							//첫좌표 위치 tile[i], drag.start
+							//마지막좌표 위치 tile[i], drag.end
+
+							//cout << "충돌된 부분 : " << i << '\n';
+							cul.push_back(i);
+
+							tile[i].frame = { 1,1 };
+						}
+					}
+					if (cul.size() > 4)
+					{
+						//가로, 세로 구하기
+						int height = abs((cul.back() / 100) - (cul.front() / 100)) + 1; // 가로 x칸
+						int width = (cul.back() - ((height - 1) * 100)) - cul.front() + 1; // 세로 y칸
+
+						tile[cul.front()].frame = { 0,0 }; // 왼쪽 위
+
+						for (int i = 1; i < width - 1; i++)
+						{
+							tile[cul.front() + i].frame = { 1,0 }; // 위
+						}
+
+						tile[cul.front() + (width - 1)].frame = { 2,0 }; // 오른쪽 위
+
+						for (int i = 1; i < height - 1; i++)
+						{
+							tile[cul.back() - (MAXTILE_HEIGHT * i)].frame = { 2,1 }; // 오른쪽
+						}
+
+						tile[cul.back()].frame = { 2,2 }; // 오른쪽 아래
+
+						for (int i = 1; i < width - 1; i++)
+						{
+							tile[cul.back() - i].frame = { 1,2 }; // 아래
+						}
+
+						tile[cul.back() - (width - 1)].frame = { 0,2 }; // 왼쪽 아래
+
+						for (int i = 1; i < height - 1; i++)
+						{
+							tile[cul.front() + (MAXTILE_HEIGHT * i)].frame = { 0,1 }; // 왼쪽
+						}
+
+					}
+					cul.clear();
+					break;
+				case TOOL::ERASE:
+					for (int i = 0; i < MAXTILE; i++)
+					{
+						if (colCheck(tile[i].rc, drag.rc))
+						{
+							tile[i].keyName = "";
+							tile[i].kind = TERRAIN::NONE;
+							tile[i].frame = { 0,0 };
+						}
+					}
+					drag.start = drag.end = { 0,0 };
+					break;
+				}
 			}
 		}
 	}
