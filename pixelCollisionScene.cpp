@@ -5,7 +5,7 @@
 HRESULT pixelCollisionScene::init()
 {
 	//백그라운드, 공이미지 초기화
-	_mountain = IMAGEMANAGER->addImage("mountain", "Images/mountain.bmp", WINSIZEX, WINSIZEY,true,RGB(255,0,255));
+	//_mountain = IMAGEMANAGER->addImage("mountain", "Images/mountain.bmp", WINSIZEX, WINSIZEY,true,RGB(255,0,255));
 	_ball = IMAGEMANAGER->addImage("ball", "Images/ball.bmp", 60, 60,true, RGB(255, 0, 255));
 
 	/*_mountain = IMAGEMANAGER->findImage("mountain");
@@ -19,6 +19,11 @@ HRESULT pixelCollisionScene::init()
 
 	//Y축으로 탐지(공의 하단에서 검사함)
 	_probeY = _y + _ball->getHeight() / 2;
+
+	char str[50];
+	sprintf(str, "mapData/map%d.map", RANDOM->range(3));
+	loadMap(str);
+
 
 	return S_OK;
 }
@@ -42,24 +47,24 @@ void pixelCollisionScene::update()
 	_probeY = _y + _ball->getHeight() / 2;
 
 	/*이부분이 픽셀충돌의 핵심*/
-	for (int i = _probeY - 50; i < _probeY + 50; i++)
-	{
-		COLORREF color = GetPixel(_mountain->getMemDC(), _x, i);
-		int r = GetRValue(color);
-		int g = GetGValue(color);
-		int b = GetBValue(color);
+	//for (int i = _probeY - 50; i < _probeY + 50; i++)
+	//{
+	//	COLORREF color = GetPixel(_mountain->getMemDC(), _x, i);
+	//	int r = GetRValue(color);
+	//	int g = GetGValue(color);
+	//	int b = GetBValue(color);
 
-		//if (r == 255 && g == 0 && b == 255)
-		//{
-		//
-		//}
+	//	//if (r == 255 && g == 0 && b == 255)
+	//	//{
+	//	//
+	//	//}
 
-		if (!(r == 255 && g == 0 && b == 255))
-		{
-			_y = i - _ball->getHeight() / 2;
-			break;
-		}
-	}
+	//	if (!(r == 255 && g == 0 && b == 255))
+	//	{
+	//		_y = i - _ball->getHeight() / 2;
+	//		break;
+	//	}
+	//}
 
 
 }
@@ -67,8 +72,14 @@ void pixelCollisionScene::update()
 void pixelCollisionScene::render()
 {
 	//백그라운드 렌더
-	_mountain->render(getMemDC());
+	//_mountain->render(getMemDC());
 	//공 이미지 렌더
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		IMAGEMANAGER->frameRender(tile[i].keyName, getMemDC(), tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
+	}
+	
+	
 	_ball->render(getMemDC(), _rc.left, _rc.top);
 
 	//디버깅용
@@ -79,5 +90,15 @@ void pixelCollisionScene::render()
 		Rectangle(getMemDC(), rc);
 	}
 
-	textOut(getMemDC(), 10, 10, "픽셀충돌");
+	textOut(getMemDC(), 10, 10, "Ingame");
+}
+
+void pixelCollisionScene::loadMap(const char* mapFileName)
+{
+	HANDLE file;
+	DWORD read;
+
+	file = CreateFile(mapFileName,GENERIC_READ,0,NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	ReadFile(file, tile, sizeof(tagTile) * MAXTILE, &read, NULL);
+	CloseHandle(file);
 }
