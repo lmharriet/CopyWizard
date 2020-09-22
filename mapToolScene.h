@@ -21,7 +21,12 @@ private:
 	/// OPTION ///
 	RECT mapOption[3];
 	OPTION option;
-	
+
+	// PAGEBUTTON //
+	int pageNum;
+	RECT pageButton[2];
+
+
 	/// BUTTON ///
 	RECT SAVE, LOAD, BACK;
 	///  ICON  ///
@@ -47,6 +52,8 @@ private:
 
 	//vk_down
 	bool isLeftDown, isLeft, isLeftUp;
+	
+
 public:
 	HRESULT init();
 	void release();

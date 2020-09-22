@@ -18,7 +18,7 @@ HRESULT mapToolScene::init()
 	initSaveAndLoad();
 
 
-
+	pageNum = 0;
 	//option = OPTION::SELECT_MENU;
 	option = OPTION::OBJECT_MENU;
 	isLeftDown = isLeft = isLeftUp = false;
@@ -33,6 +33,7 @@ void mapToolScene::release()
 
 void mapToolScene::update()
 {
+
 	controller();
 
 	vkCheck();
@@ -148,7 +149,7 @@ void mapToolScene::render()
 	}
 	if (isLoad)
 	{
-		for (int i = 0; i < 3; i++)	
+		for (int i = 0; i < 3; i++)
 		{
 			IMAGEMANAGER->findImage("loadimg")->render(getMemDC(), fileWin[i].left, fileWin[i].top);
 		}
@@ -177,18 +178,14 @@ void mapToolScene::render()
 			key = "tree0";
 			width = 2 * TILESIZE;
 			height = 4 * TILESIZE;
-			//if (num == 0)
-			//{
-			//	key = "tree0";
-			//	width = 2 * TILESIZE;
-			//	height = 4 * TILESIZE;
-			//}
-			//else
-			//{
-			//	key = "tree1";
-			//	width = 2 * TILESIZE;
-			//	height = 5 * TILESIZE;
-			//}
+
+			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
+		}
+		else if (tile[i].keyName == "flowerbed2")
+		{
+			key = "tree1";
+			width = 2 * TILESIZE;
+			height = 5 * TILESIZE;
 
 			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
 		}
@@ -402,6 +399,8 @@ void mapToolScene::initButton()
 	for (int i = 0; i < 3; i++) mapOption[i] = RectMake(1020, 197 + (i * 83), 160, 60);
 
 	for (int i = 0; i < 4; i++) icon[i] = RectMake(1005 + (i * 70), 70, 50, 48);
+
+	for (int i = 0; i < 2; i++) pageButton[i] = RectMake(1115 + (i * 85), 567, 32, 30);
 }
 
 void mapToolScene::initDrag()
@@ -436,7 +435,7 @@ void mapToolScene::initSaveAndLoad()
 void mapToolScene::initSelectTerrain()
 {
 	//WALL//
-	string wallName[4] = { "wall0","wall1","wall2","wall3" };
+	string wallName[4] = { "wall0","wall1","wall2","wallTile" };
 	for (int i = 0; i < 4; i++)
 	{
 		wall[i].rc = RectMake(929 + (i % 2) * 175, 140 + (i / 2) * 162, 165, 117);
@@ -454,13 +453,17 @@ void mapToolScene::initSelectTerrain()
 	}
 
 	//OBJECT//
-	string objectName[5] = { "flowerbed1", };
-	for (int i = 0; i < 5; i++)
-	{
-		object[i].rc = RectMake(1139, 135, 96, 110);
-		object[i].kind = TERRAIN::OBJECT;
-		object[i].keyName = objectName[i];
-	}
+	string objectName[5] = { "flowerbed1","flowerbed2" };
+
+
+	object[0].rc = RectMake(1139, 135, 96, 110);
+	object[0].kind = TERRAIN::OBJECT;
+	object[0].keyName = objectName[0];
+
+	object[1].rc = RectMake(976, 135, 96, 110);
+	object[1].kind = TERRAIN::OBJECT;
+	object[1].keyName = objectName[1];
+
 }
 
 void mapToolScene::initCam()
@@ -485,6 +488,8 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addImage("wallMenu", "maptool/ui/wallmenu1.bmp", 360, 720);
 	IMAGEMANAGER->addImage("tileMenu", "maptool/ui/tilemenu1.bmp", 360, 720);
 	IMAGEMANAGER->addImage("objectMenu", "maptool/ui/objectmenu1.bmp", 360, 720);
+	IMAGEMANAGER->addImage("objectMenu2", "maptool/ui/objectmenu2.bmp", 360, 720);
+	IMAGEMANAGER->addImage("objectMenu3", "maptool/ui/objectmenu3.bmp", 360, 720);
 	IMAGEMANAGER->addImage("checkIcon", "maptool/ui/check.bmp", 36, 36, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("saveimg", "maptool/save.bmp", 200, 300, false);
 	IMAGEMANAGER->addImage("loadimg", "maptool/load.bmp", 200, 300, false);
@@ -494,8 +499,6 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addFrameImage("wall0", "maptool/wall/wall0.bmp", 160, 128, 5, 4, false);
 	IMAGEMANAGER->addFrameImage("wall1", "maptool/wall/wall1.bmp", 160, 128, 5, 4, false);
 	IMAGEMANAGER->addFrameImage("wall2", "maptool/wall/wall2.bmp", 160, 128, 5, 4, false);
-	IMAGEMANAGER->addFrameImage("wall3", "maptool/wall/wall3.bmp", 160, 128, 5, 4, false);
-	IMAGEMANAGER->addFrameImage("wall4", "maptool/wall/wall4.bmp", 160, 128, 5, 4, false);
 	IMAGEMANAGER->addFrameImage("wallTile", "maptool/wall/wallTile.bmp", 32, 32, 1, 1, false);
 
 	//TILE//
@@ -508,6 +511,7 @@ void mapToolScene::addImage()
 
 	//OBJECT//
 	IMAGEMANAGER->addFrameImage("flowerbed1", "maptool/object/flowerbed1.bmp", TILESIZE * 2, TILESIZE * 2, 2, 2, false);
+	IMAGEMANAGER->addFrameImage("flowerbed2", "maptool/object/flowerbed1.bmp", TILESIZE * 2, TILESIZE * 2, 2, 2, false);
 	IMAGEMANAGER->addImage("tree0", "maptool/object/tree0.bmp", TILESIZE * 6, TILESIZE * 6, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("tree1", "maptool/object/tree1.bmp", TILESIZE * 6, TILESIZE * 7, true, RGB(255, 0, 255));
 
@@ -592,7 +596,7 @@ void mapToolScene::tileRender()
 				case TERRAIN::IMG:
 					FrameRect(getMemDC(), tile[i].rc, ORANGE);
 					break;
-				case TERRAIN ::OBJECT:
+				case TERRAIN::OBJECT:
 					FrameRect(getMemDC(), tile[i].rc, PINK);
 					break;
 				}
@@ -604,6 +608,8 @@ void mapToolScene::tileRender()
 
 void mapToolScene::UIRender()
 {
+	string page[3] = { "objectMenu","objectMenu2","objectMenu3" };
+
 	switch (option)
 	{
 	case OPTION::WALL_MENU:
@@ -613,7 +619,24 @@ void mapToolScene::UIRender()
 		imageRender("tileMenu", { 920,0 });
 		break;
 	case OPTION::OBJECT_MENU:
-		imageRender("objectMenu", { 920,0 });
+
+		for (int i = 0; i < 3; i++)
+		{
+			if (PtInRect(&pageButton[0], _ptMouse) && isLeftDown)
+			{
+				pageNum--;
+
+				if (pageNum < 0) pageNum = 0;
+				break;
+			}
+			else if (PtInRect(&pageButton[1], _ptMouse) && isLeftDown)
+			{
+				pageNum++;
+				if (pageNum > 2) pageNum = 2;
+				break;
+			}
+		}
+		imageRender(page[pageNum], { 920,0 });
 		break;
 	case OPTION::SELECT_MENU:
 		imageRender("mapMenu", { 920,0 });
@@ -636,6 +659,11 @@ void mapToolScene::buttonRender()
 	Rectangle(getMemDC(), SAVE);
 	Rectangle(getMemDC(), LOAD);
 	Rectangle(getMemDC(), BACK);
+
+	if (option != OPTION::SELECT_MENU)
+	{
+		for (int i = 0; i < 2; i++)Rectangle(getMemDC(), pageButton[i]);
+	}
 }
 
 void mapToolScene::rcRender()
@@ -658,8 +686,8 @@ void mapToolScene::rcRender()
 			break;
 		case OPTION::TILE_MENU:
 			for (int i = 0; i < 4; i++)	Rectangle(getMemDC(), icon[i]);
-			for(int i=0;i<6;i++)Rectangle(getMemDC(), bigTile[i].rc);
-			
+			for (int i = 0; i < 6; i++)Rectangle(getMemDC(), bigTile[i].rc);
+
 
 			Rectangle(getMemDC(), dragButton.rc);
 			break;
@@ -842,7 +870,7 @@ void mapToolScene::controller()
 									//생성하려는 지형의 타입이 IMG이거나, WALL일 때 생성되지 않도록 CONTINUE
 									if (tile[i + (MAXTILE_WIDTH * j) + k].kind == TERRAIN::IMG ||
 										tile[i + (MAXTILE_WIDTH * j) + k].kind == TERRAIN::WALL ||
-										tile[i + (MAXTILE_WIDTH	* j) + k].kind == TERRAIN::OBJECT)continue;
+										tile[i + (MAXTILE_WIDTH * j) + k].kind == TERRAIN::OBJECT)continue;
 
 									tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
 									tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
@@ -903,7 +931,7 @@ void mapToolScene::controller()
 							{
 								tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
 								tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
-								tile[i + (MAXTILE_WIDTH * j) + k].frame = {k,j};
+								tile[i + (MAXTILE_WIDTH * j) + k].frame = { k,j };
 							}
 						}
 					}
