@@ -3,8 +3,6 @@
 
 HRESULT mapToolScene::init()
 {
-	addImage();
-
 	initTile();
 
 	initSelectTerrain();
