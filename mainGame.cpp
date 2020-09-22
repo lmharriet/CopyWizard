@@ -56,7 +56,7 @@ void mainGame::update()
 	//사운드매니져 업데이트 (이게 없으면 사운드매니져 제대로 동작하지 않는다!!!)
 	SOUNDMANAGER->update();
 
-	if (INPUT->GetKeyDown(VK_ADD))
+	if (INPUT->GetKeyDown(VK_ADD)|| INPUT->GetKeyDown(VK_OEM_PLUS))
 	{
 		if (volume < 1.f)
 		{
@@ -64,7 +64,7 @@ void mainGame::update()
 			SOUNDMANAGER->setBackGroundVolume("titleBGM", volume);
 		}
 	}
-	if (INPUT->GetKeyDown(VK_SUBTRACT))
+	if (INPUT->GetKeyDown(VK_SUBTRACT) || INPUT->GetKeyDown(VK_OEM_MINUS))
 	{
 		if (volume > .0f)
 		{
