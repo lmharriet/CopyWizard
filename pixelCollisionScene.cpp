@@ -20,6 +20,8 @@ HRESULT pixelCollisionScene::init()
 	//Y축으로 탐지(공의 하단에서 검사함)
 	_probeY = _y + _ball->getHeight() / 2;
 
+
+	//타일_로드 맵
 	char str[50];
 	sprintf(str, "mapData/map%d.map", RANDOM->range(3));
 	loadMap(str);
@@ -73,13 +75,15 @@ void pixelCollisionScene::render()
 {
 	//백그라운드 렌더
 	//_mountain->render(getMemDC());
-	//공 이미지 렌더
+	
+
+	//로드된 타일 렌더
 	for (int i = 0; i < MAXTILE; i++)
 	{
 		IMAGEMANAGER->frameRender(tile[i].keyName, getMemDC(), tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
 	}
 	
-	
+	//공 이미지 렌더
 	_ball->render(getMemDC(), _rc.left, _rc.top);
 
 	//디버깅용
