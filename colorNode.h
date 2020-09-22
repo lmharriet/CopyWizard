@@ -11,6 +11,7 @@
 #define GRAY		RGB(100,100,100)
 #define PINK		RGB(255,128,192)
 #define VIVIDRED	RGB(255,30,64)
+#define CLOUDYBLUE  RGB(50,54,112)
 
 #define BLACK		RGB(0,0,0)
 #define WHITE		RGB(255,255,255)

@@ -18,10 +18,12 @@ HRESULT mapToolScene::init()
 	initSaveAndLoad();
 
 
-	pageNum = 0;
 	//option = OPTION::SELECT_MENU;
 	option = OPTION::OBJECT_MENU;
 	isLeftDown = isLeft = isLeftUp = false;
+
+	pageNum = 0;
+
 
 	initCam();
 	return S_OK;
@@ -33,6 +35,7 @@ void mapToolScene::release()
 
 void mapToolScene::update()
 {
+
 
 	controller();
 
@@ -115,9 +118,16 @@ void mapToolScene::update()
 
 void mapToolScene::render()
 {
+	//타일 이미지 그리기
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (!colCheck(tile[i].rc, cam.rc) || tile[i].kind == TERRAIN::NONE)continue;
+
+		if (tile[i].keyName != "") imageFrameRender(tile[i].keyName, { tile[i].rc.left,tile[i].rc.top }, tile[i].frame.x, tile[i].frame.y);
+	}
+	objectImgRender();
 	//타일 그리기
 	tileRender();
-
 	//옵션의 상태에 따른 UI이미지 변경
 	UIRender();
 
@@ -155,41 +165,6 @@ void mapToolScene::render()
 		}
 	}
 
-
-	//object image render
-	for (int i = 0; i < MAXTILE; i++)
-	{
-		if (tile[i].kind != TERRAIN::OBJECT)continue;
-
-		//i object, i+1 object, i+w object, i+w+1 object
-		if (!(tile[i + 1].kind == TERRAIN::OBJECT && tile[i + MAXTILE_WIDTH].kind == TERRAIN::OBJECT &&
-			tile[i + MAXTILE_WIDTH + 1].kind == TERRAIN::OBJECT)) continue;
-
-		string key = tile[i].keyName;
-
-		if (!(tile[i + 1].keyName == key &&
-			tile[i + MAXTILE_WIDTH].keyName == key &&
-			tile[i + MAXTILE_WIDTH + 1].keyName == key)) continue;
-
-
-		int width, height;
-		if (tile[i].keyName == "flowerbed1")
-		{
-			key = "tree0";
-			width = 2 * TILESIZE;
-			height = 4 * TILESIZE;
-
-			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
-		}
-		else if (tile[i].keyName == "flowerbed2")
-		{
-			key = "tree1";
-			width = 2 * TILESIZE;
-			height = 5 * TILESIZE;
-
-			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
-		}
-	}
 }
 
 void mapToolScene::buttonCheck()
@@ -453,17 +428,19 @@ void mapToolScene::initSelectTerrain()
 	}
 
 	//OBJECT//
-	string objectName[5] = { "flowerbed1","flowerbed2" };
-
-
-	object[0].rc = RectMake(1139, 135, 96, 110);
-	object[0].kind = TERRAIN::OBJECT;
-	object[0].keyName = objectName[0];
-
-	object[1].rc = RectMake(976, 135, 96, 110);
-	object[1].kind = TERRAIN::OBJECT;
-	object[1].keyName = objectName[1];
-
+	//page1//
+	string objectName[5] = { "flowerbed1","flowerbed2","bossDoor","pillar0","pillar1" };
+	object[0].rc = RectMake(1139, 175, 96, 110);
+	object[1].rc = RectMake(976, 175, 96, 110);
+	object[2].rc = RectMake(944, 335, 120, 150);
+	object[3].rc = RectMake(1114, 337, 30, 130);
+	object[4].rc = RectMake(1203, 340, 60, 130);
+	
+	for (int i = 0; i < 5; i++)
+	{
+		object[i].kind = TERRAIN::OBJECT;
+		object[i].keyName = objectName[i];
+	}
 }
 
 void mapToolScene::initCam()
@@ -514,6 +491,9 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addFrameImage("flowerbed2", "maptool/object/flowerbed1.bmp", TILESIZE * 2, TILESIZE * 2, 2, 2, false);
 	IMAGEMANAGER->addImage("tree0", "maptool/object/tree0.bmp", TILESIZE * 6, TILESIZE * 6, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("tree1", "maptool/object/tree1.bmp", TILESIZE * 6, TILESIZE * 7, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("bossDoor", "maptool/object/bossDoor.bmp", TILESIZE * 6, TILESIZE * 8, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("pillar0", "maptool/object/pillar0.bmp", TILESIZE * 1, TILESIZE * 4, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("pillar1", "maptool/object/pillar1.bmp", TILESIZE * 2, TILESIZE * 5, true, RGB(255, 0, 255));
 
 }
 
@@ -581,14 +561,14 @@ void mapToolScene::tileRender()
 				//textOut(getMemDC(), tile[i].rc.left, tile[i].rc.top, itoa(i, num, 10), GREEN);
 			}
 
-			if (tile[i].keyName != "") imageFrameRender(tile[i].keyName, { tile[i].rc.left,tile[i].rc.top }, tile[i].frame.x, tile[i].frame.y);
+			//if (tile[i].keyName != "") imageFrameRender(tile[i].keyName, { tile[i].rc.left,tile[i].rc.top }, tile[i].frame.x, tile[i].frame.y);
 
 			if (tile[i].kind != TERRAIN::NONE)
 			{
 				switch (tile[i].kind)
 				{
 				case TERRAIN::TILE:
-					FrameRect(getMemDC(), tile[i].rc, SKYBLUE);
+					FrameRect(getMemDC(), tile[i].rc, CLOUDYBLUE);
 					break;
 				case TERRAIN::WALL:
 					FrameRect(getMemDC(), tile[i].rc, YELLOW);
@@ -603,12 +583,10 @@ void mapToolScene::tileRender()
 			}
 		}
 	}
-
 }
 
 void mapToolScene::UIRender()
 {
-	string page[3] = { "objectMenu","objectMenu2","objectMenu3" };
 
 	switch (option)
 	{
@@ -620,6 +598,7 @@ void mapToolScene::UIRender()
 		break;
 	case OPTION::OBJECT_MENU:
 
+		//obeject page 넘기기
 		for (int i = 0; i < 3; i++)
 		{
 			if (PtInRect(&pageButton[0], _ptMouse) && isLeftDown)
@@ -688,7 +667,6 @@ void mapToolScene::rcRender()
 			for (int i = 0; i < 4; i++)	Rectangle(getMemDC(), icon[i]);
 			for (int i = 0; i < 6; i++)Rectangle(getMemDC(), bigTile[i].rc);
 
-
 			Rectangle(getMemDC(), dragButton.rc);
 			break;
 		case OPTION::OBJECT_MENU:
@@ -722,6 +700,71 @@ void mapToolScene::checkRender()
 		}
 
 		if (dragButton.isCol) imageRender("checkIcon", { dragButton.rc.left,dragButton.rc.top });
+	}
+}
+
+void mapToolScene::objectImgRender()
+{
+	//object image render
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (!colCheck(tile[i].rc,cam.rc) || tile[i].kind != TERRAIN::OBJECT)continue;
+
+		// 2X2인 오브젝트만 처리
+
+		//i object, i+1 object, i+w object, i+w+1 object
+		if (!(tile[i + 1].kind == TERRAIN::OBJECT && tile[i + MAXTILE_WIDTH].kind == TERRAIN::OBJECT &&
+			tile[i + MAXTILE_WIDTH + 1].kind == TERRAIN::OBJECT)) continue;
+
+		string key = tile[i].keyName;
+
+		if (!(tile[i + 1].keyName == key &&
+			tile[i + MAXTILE_WIDTH].keyName == key &&
+			tile[i + MAXTILE_WIDTH + 1].keyName == key)) continue;
+
+		int width, height;
+		if (tile[i].keyName == "flowerbed1")
+		{
+			key = "tree0";
+			width = 2 * TILESIZE;
+			height = 4 * TILESIZE;
+
+			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
+		}
+		else if (tile[i].keyName == "flowerbed2")
+		{
+			key = "tree1";
+			width = 2 * TILESIZE;
+			height = 5 * TILESIZE;
+
+			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
+		}
+		else if (tile[i].keyName == "pillar1")
+		{
+			key = "pillar1";
+
+			height = 3 * TILESIZE;
+
+			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
+		}
+	}
+
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (tile[i].kind != TERRAIN::OBJECT) continue;
+
+		// 1x? 이거나 다른 특수한 오브젝트 처리
+
+		string key;
+		int height;
+		if (tile[i].keyName == "pillar0") // 가로 : 1
+		{
+			key = "pillar0";
+
+			height = 3 * TILESIZE;
+
+			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
+		}
 	}
 }
 
@@ -903,35 +946,56 @@ void mapToolScene::controller()
 			}
 			break;
 		case OPTION::OBJECT_MENU:
-			for (int i = 0; i < 5; i++)
+			switch (pageNum)
 			{
-				if (PtInRect(&object[i].rc, _ptMouse) && user.delay == 10)
+			case 0:
+				for (int i = 0; i < 5; i++)
 				{
-					user.delay = 0;
+					if (PtInRect(&object[i].rc, _ptMouse) && user.delay == 10)
+					{
+						if (pageNum != 0)break;
 
-					user.KeyName = object[i].keyName;
-					user.kind = object[i].kind;
-					// 브러쉬 아이콘에 check 표시
-					tool = TOOL::DRAW;
+						user.delay = 0;
+
+						user.KeyName = object[i].keyName;
+						user.kind = object[i].kind;
+						// 브러쉬 아이콘에 check 표시
+						tool = TOOL::DRAW;
+					}
 				}
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
 			}
+
 			switch (tool)
 			{
 			case TOOL::DRAW:
 				for (int i = 0; i < MAXTILE; i++)
 				{
 					if (maptool.isCol)continue;
-
+					
 					if (PtInRect(&tile[i].rc, _ptMouse))
 					{
-						//2,2 일 때
-						for (int j = 0; j < 2; j++)
+
+						if (user.KeyName == "pillar0") //가로가 1
 						{
-							for (int k = 0; k < 2; k++)
+							tile[i].kind = user.kind;
+							tile[i].keyName = user.KeyName;
+						}
+						else
+						{
+							//2,2 일 때
+							for (int j = 0; j < 2; j++)
 							{
-								tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
-								tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
-								tile[i + (MAXTILE_WIDTH * j) + k].frame = { k,j };
+								for (int k = 0; k < 2; k++)
+								{
+									tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
+									tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
+									tile[i + (MAXTILE_WIDTH * j) + k].frame = { k,j };
+								}
 							}
 						}
 					}

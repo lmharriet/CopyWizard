@@ -25,7 +25,7 @@ private:
 	// PAGEBUTTON //
 	int pageNum;
 	RECT pageButton[2];
-
+	string page[3] = {"objectMenu","objectMenu2" ,"objectMenu3"};
 
 	/// BUTTON ///
 	RECT SAVE, LOAD, BACK;
@@ -95,6 +95,9 @@ public:
 	void buttonRender();
 	void rcRender();
 	void checkRender();
+
+	//0922
+	void objectImgRender();
 
 	void imageRender(string keyName, POINT pt);
 	void imageAlphaRender(string keyName, POINT pt, int alpha = 150);
