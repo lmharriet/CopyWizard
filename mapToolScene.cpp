@@ -154,6 +154,24 @@ void mapToolScene::render()
 		}
 	}
 
+
+	//object image render
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (tile[i].kind != TERRAIN::OBJECT)continue;
+
+		//i object, i+1 object, i+w object, i+w+1 object
+		if (!(tile[i + 1].kind == TERRAIN::OBJECT && tile[i + MAXTILE_WIDTH].kind == TERRAIN::OBJECT &&
+			tile[i + MAXTILE_WIDTH + 1].kind == TERRAIN::OBJECT)) continue;
+
+		string key = tile[i].keyName;
+
+		if (!(tile[i + 1].keyName == key &&
+			tile[i + MAXTILE_WIDTH].keyName == key &&
+			tile[i + MAXTILE_WIDTH + 1].keyName == key)) continue;
+
+		IMAGEMANAGER->findImage("tree0")->render(getMemDC(), tile[i].rc.left - (2*TILESIZE), tile[i].rc.top - (4*TILESIZE));
+	}
 }
 
 void mapToolScene::buttonCheck()
@@ -467,6 +485,7 @@ void mapToolScene::addImage()
 
 	//OBJECT//
 	IMAGEMANAGER->addFrameImage("flowerbed1", "maptool/object/flowerbed1.bmp", TILESIZE * 2, TILESIZE * 2, 2, 2, false);
+	IMAGEMANAGER->addImage("tree0", "maptool/object/tree0.bmp", TILESIZE * 6, TILESIZE * 6, true, RGB(255, 0, 255));
 
 }
 
@@ -767,6 +786,7 @@ void mapToolScene::controller()
 				break;
 			}
 			break;
+
 		case OPTION::TILE_MENU:
 			//get tile
 			for (int i = 0; i < 4; i++)
@@ -793,33 +813,14 @@ void mapToolScene::controller()
 
 						if (PtInRect(&tile[i].rc, _ptMouse))
 						{
-							//tile[i].keyName = user.KeyName;
-							//tile[i].kind = user.kind;
-
-							//tile[i+1].keyName = user.keyName;
-							//tile[i+1].kind = user.kind;....
-							//여기서 tile[i+1..i+maxtile_width * 2 + 2] 까지 초기화를 해줘야한다.
-
-							////첫번째 줄
-							//tile[i].frame = { 0,0 };
-							//tile[i + 1].frame = { 1,0 };
-							//tile[i + 2].frame = { 2,0 };
-							////두번째 줄
-							//tile[i + MAXTILE_WIDTH].frame = { 0,1 };
-							//tile[i + MAXTILE_WIDTH + 1].frame = { 1,1 };
-							//tile[i + MAXTILE_WIDTH + 2].frame = { 2,1 };
-							////세번째 줄
-							//tile[i + MAXTILE_WIDTH * 2].frame = { 0,2 };
-							//tile[i + MAXTILE_WIDTH * 2 + 1].frame = { 1,2 };
-							//tile[i + MAXTILE_WIDTH * 2 + 2].frame = { 2,2 };
-
 							for (int j = 0; j < 3; j++)
 							{
 								for (int k = 0; k < 3; k++)
 								{
 									//생성하려는 지형의 타입이 IMG이거나, WALL일 때 생성되지 않도록 CONTINUE
 									if (tile[i + (MAXTILE_WIDTH * j) + k].kind == TERRAIN::IMG ||
-										tile[i + (MAXTILE_WIDTH * j) + k].kind == TERRAIN::WALL)continue;
+										tile[i + (MAXTILE_WIDTH * j) + k].kind == TERRAIN::WALL ||
+										tile[i + (MAXTILE_WIDTH	* j) + k].kind == TERRAIN::OBJECT)continue;
 
 									tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
 									tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
@@ -878,9 +879,9 @@ void mapToolScene::controller()
 						{
 							for (int k = 0; k < 2; k++)
 							{
-								tile[i + (MAXTILE_HEIGHT * j) + k].kind = user.kind;
-								tile[i + (MAXTILE_HEIGHT * j) + k].keyName = user.KeyName;
-								tile[i + (MAXTILE_HEIGHT * j) + k].frame = {k,j};
+								tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
+								tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
+								tile[i + (MAXTILE_WIDTH * j) + k].frame = {k,j};
 							}
 						}
 					}
@@ -888,109 +889,125 @@ void mapToolScene::controller()
 				break;
 			}
 		}
-		if (isLeft && option != OPTION::SELECT_MENU)
+	}
+	if (isLeft && option != OPTION::SELECT_MENU)
+	{
+		switch (tool)
+		{
+		case TOOL::ERASE:
+			if (!dragButton.isCol)
+			{
+				for (int i = 0; i < MAXTILE; i++)
+				{
+					if (maptool.isCol)continue;
+
+					if (PtInRect(&tile[i].rc, _ptMouse))
+					{
+						if (tile[i].kind == TERRAIN::NONE && tile[i].keyName == "")continue;
+
+						tile[i].keyName = "";
+						tile[i].kind = TERRAIN::NONE;
+						tile[i].frame = { 0,0 };
+					}
+				}
+			}
+			break;
+		}
+	}
+	//drag draw function
+	if (isLeftUp)
+	{
+		if (dragButton.isCol)
 		{
 			switch (tool)
 			{
-			case TOOL::ERASE:
-				if (!dragButton.isCol)
+			case TOOL::DRAW:
+				for (int i = 0; i < MAXTILE; i++)
 				{
-					for (int i = 0; i < MAXTILE; i++)
+					if (user.kind == TERRAIN::WALL && user.KeyName != "wallTile")continue;
+
+					if (tile[i].kind == TERRAIN::OBJECT || tile[i].kind == TERRAIN::WALL || tile[i].kind == TERRAIN::IMG)continue;
+
+					if (colCheck(tile[i].rc, drag.rc))
 					{
-						if (maptool.isCol)continue;
+						tile[i].keyName = user.KeyName;
+						tile[i].kind = user.kind;
 
-						if (PtInRect(&tile[i].rc, _ptMouse))
-						{
-							if (tile[i].kind == TERRAIN::NONE && tile[i].keyName == "")continue;
+						//첫좌표 위치 tile[i], drag.start
+						//마지막좌표 위치 tile[i], drag.end
 
-							tile[i].keyName = "";
-							tile[i].kind = TERRAIN::NONE;
-							tile[i].frame = { 0,0 };
-						}
+						//cout << "충돌된 부분 : " << i << '\n';
+						cul.push_back(i);
+
+						tile[i].frame = { 1,1 };
 					}
 				}
-				break;
-			}
-		}
-
-		//drag draw function
-		if (isLeftUp)
-		{
-			if (dragButton.isCol)
-			{
-				switch (tool)
+				if (cul.size() > 4)
 				{
-				case TOOL::DRAW:
-					for (int i = 0; i < MAXTILE; i++)
+					//가로, 세로 구하기
+					int height = abs((cul.back() / 100) - (cul.front() / 100)) + 1; // 가로 x칸
+					int width = (cul.back() - ((height - 1) * 100)) - cul.front() + 1; // 세로 y칸
+
+					if (tile[cul.front()].kind != TERRAIN::OBJECT)
 					{
-						if (user.kind == TERRAIN::WALL && user.KeyName != "wallTile")continue;
-
-						if (tile[i].kind == TERRAIN::OBJECT || tile[i].kind == TERRAIN::WALL || tile[i].kind == TERRAIN::IMG)continue;
-
-						if (colCheck(tile[i].rc, drag.rc))
-						{
-							tile[i].keyName = user.KeyName;
-							tile[i].kind = user.kind;
-
-							//첫좌표 위치 tile[i], drag.start
-							//마지막좌표 위치 tile[i], drag.end
-
-							//cout << "충돌된 부분 : " << i << '\n';
-							cul.push_back(i);
-
-							tile[i].frame = { 1,1 };
-						}
-					}
-					if (cul.size() > 4)
-					{
-						//가로, 세로 구하기
-						int height = abs((cul.back() / 100) - (cul.front() / 100)) + 1; // 가로 x칸
-						int width = (cul.back() - ((height - 1) * 100)) - cul.front() + 1; // 세로 y칸
-
 						tile[cul.front()].frame = { 0,0 }; // 왼쪽 위
-
-						for (int i = 1; i < width - 1; i++)
-						{
-							tile[cul.front() + i].frame = { 1,0 }; // 위
-						}
-
-						tile[cul.front() + (width - 1)].frame = { 2,0 }; // 오른쪽 위
-
-						for (int i = 1; i < height - 1; i++)
-						{
-							tile[cul.back() - (MAXTILE_HEIGHT * i)].frame = { 2,1 }; // 오른쪽
-						}
-
-						tile[cul.back()].frame = { 2,2 }; // 오른쪽 아래
-
-						for (int i = 1; i < width - 1; i++)
-						{
-							tile[cul.back() - i].frame = { 1,2 }; // 아래
-						}
-
-						tile[cul.back() - (width - 1)].frame = { 0,2 }; // 왼쪽 아래
-
-						for (int i = 1; i < height - 1; i++)
-						{
-							tile[cul.front() + (MAXTILE_HEIGHT * i)].frame = { 0,1 }; // 왼쪽
-						}
-
 					}
-					cul.clear();
-					break;
-				case TOOL::ERASE:
-					for (int i = 0; i < MAXTILE; i++)
+
+					for (int i = 1; i < width - 1; i++)
 					{
-						if (colCheck(tile[i].rc, drag.rc))
-						{
-							tile[i].keyName = "";
-							tile[i].kind = TERRAIN::NONE;
-							tile[i].frame = { 0,0 };
-						}
+						if (tile[cul.front() + i].kind == TERRAIN::OBJECT)continue;
+
+						tile[cul.front() + i].frame = { 1,0 }; // 위
 					}
-					drag.start = drag.end = { 0,0 };
-					break;
+
+					if (tile[cul.front() + (width - 1)].kind != TERRAIN::OBJECT)
+					{
+						tile[cul.front() + (width - 1)].frame = { 2,0 }; // 오른쪽 위
+					}
+
+					for (int i = 1; i < height - 1; i++)
+					{
+						if (tile[cul.back() - (MAXTILE_HEIGHT * i)].kind == TERRAIN::OBJECT)continue;
+
+						tile[cul.back() - (MAXTILE_HEIGHT * i)].frame = { 2,1 }; // 오른쪽
+					}
+
+					if (tile[cul.back()].kind != TERRAIN::OBJECT)
+					{
+						tile[cul.back()].frame = { 2,2 }; // 오른쪽 아래
+					}
+
+					for (int i = 1; i < width - 1; i++)
+					{
+						if (tile[cul.back() - i].kind == TERRAIN::OBJECT)continue;
+
+						tile[cul.back() - i].frame = { 1,2 }; // 아래
+					}
+
+					tile[cul.back() - (width - 1)].frame = { 0,2 }; // 왼쪽 아래
+
+					for (int i = 1; i < height - 1; i++)
+					{
+						if (tile[cul.front() + MAXTILE_HEIGHT * i].kind == TERRAIN::OBJECT)continue;
+
+						tile[cul.front() + (MAXTILE_HEIGHT * i)].frame = { 0,1 }; // 왼쪽
+					}
+
 				}
+				cul.clear();
+				break;
+			case TOOL::ERASE:
+				for (int i = 0; i < MAXTILE; i++)
+				{
+					if (colCheck(tile[i].rc, drag.rc))
+					{
+						tile[i].keyName = "";
+						tile[i].kind = TERRAIN::NONE;
+						tile[i].frame = { 0,0 };
+					}
+				}
+				drag.start = drag.end = { 0,0 };
+				break;
 			}
 		}
 	}
