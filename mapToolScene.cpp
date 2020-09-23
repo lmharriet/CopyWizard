@@ -3,6 +3,10 @@
 
 HRESULT mapToolScene::init()
 {
+	//sound init
+	fadeIn = 0.0f;
+	isMapToolBGM = true;
+
 	initTile();
 
 	initSelectTerrain();
@@ -35,7 +39,14 @@ void mapToolScene::release()
 
 void mapToolScene::update()
 {
-
+	//maptoolBGM fade-in
+	if (isMapToolBGM)
+	{
+		SOUNDMANAGER->fadeIn("mapToolBGM", fadeIn);
+		fadeIn += 0.01f;
+		if (fadeIn >= SOUNDMANAGER->getVolumeBGM())
+			isMapToolBGM = false;
+	}
 
 	controller();
 

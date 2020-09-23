@@ -7,6 +7,11 @@ class mapToolScene : public gameNode
 {
 private:
 
+	//sound
+	bool isMapToolBGM;
+	float fadeIn;
+
+
 	tagRC maptool;
 	/// USER ///
 	tagUser user;
