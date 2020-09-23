@@ -4,9 +4,13 @@
 
 HRESULT startScene::init()
 {
-	
+	//사운드
 	SOUNDMANAGER->play("titleBGM",true);
 	SOUNDMANAGER->stop("mapToolBGM");
+	isTitleBGM = true;
+	
+	
+	fadeIn = 0.f;
 	
 	
 	//렉트 위치 초기화
@@ -37,6 +41,14 @@ void startScene::release()
 
 void startScene::update()
 {
+	if (isTitleBGM)
+	{
+		SOUNDMANAGER->fadeIn("titleBGM", fadeIn);
+		fadeIn += 0.2f;
+		if (fadeIn >= SOUNDMANAGER->getVolumeBGM())
+			isTitleBGM = false;
+	}
+
 	x = _ptMouse.x;
 	y = _ptMouse.y;
 

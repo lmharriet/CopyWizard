@@ -99,8 +99,9 @@ void soundManager::play(string keyName, bool isBGM, float volume)
 			//사운드 플레이
 			_system->playSound(FMOD_CHANNEL_FREE, *iter->second, false, &_channel[count]);
 			//볼륨세팅
-			if(isBGM)
-				_channel[count]->setVolume(_volumeBGM);
+			if (isBGM)
+				_channel[count]->setVolume(0);
+
 			else
 				_channel[count]->setVolume(volume);
 		}
@@ -195,6 +196,19 @@ void soundManager::setBackGroundVolume(string keyName, float volume)
 			_volumeBGM = volume;
 			_channel[count]->setVolume(_volumeBGM);
 
+		}
+	}
+}
+
+void soundManager::fadeIn(string keyName,float volume)
+{
+	int count = 0;
+	arrSoundIter iter = _mTotalSound.begin();
+	for (iter; iter != _mTotalSound.end(); ++iter, count++)
+	{
+		if (keyName == iter->first)
+		{
+			_channel[count]->setVolume(volume);
 		}
 	}
 }

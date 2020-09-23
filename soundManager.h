@@ -49,4 +49,6 @@ public:
 	bool isPauseSound(string keyName);
 
 	void setBackGroundVolume(string keyName, float volume);
+	void fadeIn(string keyName, float voulme);
+	inline float getVolumeBGM(){ return _volumeBGM; }
 };
