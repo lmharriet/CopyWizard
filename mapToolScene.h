@@ -59,6 +59,11 @@ private:
 	//vk_down
 	bool isLeftDown, isLeft, isLeftUp;
 	
+	//ZOOM IN, OUT
+	int _tileSize;
+	int _imageSize;
+	//MINIMAP
+	int curTileSize;
 
 public:
 	HRESULT init();
@@ -108,6 +113,8 @@ public:
 	void imageRender(string keyName, POINT pt);
 	void imageAlphaRender(string keyName, POINT pt, int alpha = 150);
 	void imageFrameRender(string keyName, POINT pt, int frameX, int frameY);
+	//이미지 크기변경용 함수
+	void imageStretchRender(string keyName, POINT pt, int frameX, int frameY, RECT scale);
 
 	//don't touch
 	void controller();

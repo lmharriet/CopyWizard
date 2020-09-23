@@ -94,6 +94,14 @@ LRESULT gameNode::MainProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam
 			break;
 		}
 		break;
+	case WM_MOUSEWHEEL:
+		if ((SHORT)HIWORD(wParam) > 0) {
+			_mouseWheel = 1;
+		}
+		else if ((SHORT)HIWORD(wParam) < 0) {
+			_mouseWheel = -1;
+		}
+		break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;

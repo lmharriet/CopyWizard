@@ -78,6 +78,7 @@ public:
 
 	//렌더(내가 원하는 좌표에 출력해라, 일반적으로 우리는 RECT의 LT좌표에 이미지를 붙인다)
 	void render(HDC hdc, int destX = 0, int destY = 0);
+	void render(HDC hdc, int destX, int destY, int scale);
 	//렌더(원하는 좌표에 이미지를 잘라서 붙이기)
 	void render(HDC hdc, int destX, int destY, int sourX, int sourY, int sourWidth, int sourHeight);
 	//알파렌더(이미지를 알파값만큼 투명화 시켜준다)
@@ -87,6 +88,7 @@ public:
 	//프레임렌더
 	void frameRender(HDC hdc, int destX, int destY);
 	void frameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY);
+	void frameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, RECT scale);
 
 	//루프렌더
 	void loopRender(HDC hdc, const LPRECT drawArea, int offsetX, int offsetY);

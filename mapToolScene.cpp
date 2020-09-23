@@ -4,6 +4,10 @@
 HRESULT mapToolScene::init()
 {
 	//sound init
+
+	_tileSize = TILESIZE;
+	_imageSize = 0;
+
 	fadeIn = 0.0f;
 	isMapToolBGM = true;
 
@@ -28,6 +32,7 @@ HRESULT mapToolScene::init()
 
 	pageNum = 0;
 
+	curTileSize = 0;
 
 	initCam();
 	return S_OK;
@@ -134,7 +139,7 @@ void mapToolScene::render()
 	{
 		if (!colCheck(tile[i].rc, cam.rc) || tile[i].kind == TERRAIN::NONE)continue;
 
-		if (tile[i].keyName != "") imageFrameRender(tile[i].keyName, { tile[i].rc.left,tile[i].rc.top }, tile[i].frame.x, tile[i].frame.y);
+		if (tile[i].keyName != "") imageStretchRender(tile[i].keyName, { tile[i].rc.left,tile[i].rc.top }, tile[i].frame.x, tile[i].frame.y, tile[i].rc);
 	}
 	objectImgRender();
 	//타일 그리기
@@ -366,7 +371,7 @@ void mapToolScene::initTile()
 {
 	for (int i = 0; i < MAXTILE; i++)
 	{
-		tile[i].rc = RectMake((i % MAXTILE_WIDTH * TILESIZE), (i / MAXTILE_HEIGHT) * TILESIZE, TILESIZE, TILESIZE);
+		tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
 		tile[i].kind = TERRAIN::NONE;
 		tile[i].keyName = "";
 		tile[i].frame = { 0,0 };
@@ -473,8 +478,8 @@ void mapToolScene::moveRect()
 {
 	for (int i = 0; i < MAXTILE; i++)
 	{
-		tile[i].rc = RectMake((i % MAXTILE_WIDTH * TILESIZE) + cam.pt.x,
-			(i / MAXTILE_HEIGHT) * TILESIZE + cam.pt.y, TILESIZE, TILESIZE);
+		tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize) + cam.pt.x,
+			(i / MAXTILE_HEIGHT) * _tileSize + cam.pt.y, _tileSize, _tileSize);
 	}
 }
 /// IMAGE ///
@@ -493,27 +498,27 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addImage("active", "maptool/ui/active.bmp", 40, 40);
 
 	//WALL//
-	IMAGEMANAGER->addFrameImage("wall0", "maptool/wall/wall0.bmp", 160, 128, 5, 4, false);
-	IMAGEMANAGER->addFrameImage("wall1", "maptool/wall/wall1.bmp", 160, 128, 5, 4, false);
-	IMAGEMANAGER->addFrameImage("wall2", "maptool/wall/wall2.bmp", 160, 128, 5, 4, false);
-	IMAGEMANAGER->addFrameImage("wallTile", "maptool/wall/wallTile.bmp", 32, 32, 1, 1, false);
+	IMAGEMANAGER->addFrameImage("wall0", "maptool/wall/wall0.bmp", 160, 128, 5, 4, true);
+	IMAGEMANAGER->addFrameImage("wall1", "maptool/wall/wall1.bmp", 160, 128, 5, 4, true);
+	IMAGEMANAGER->addFrameImage("wall2", "maptool/wall/wall2.bmp", 160, 128, 5, 4, true);
+	IMAGEMANAGER->addFrameImage("wallTile", "maptool/wall/wallTile.bmp", 32, 32, 1, 1, true);
 
 	//TILE//
-	IMAGEMANAGER->addFrameImage("grass0", "maptool/tile/grass0.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
-	IMAGEMANAGER->addFrameImage("grass1", "maptool/tile/grass1.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
-	IMAGEMANAGER->addFrameImage("grass2", "maptool/tile/grass2.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
-	IMAGEMANAGER->addFrameImage("ground0", "maptool/tile/ground0.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
-	IMAGEMANAGER->addFrameImage("ground1", "maptool/tile/ground1.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
-	IMAGEMANAGER->addFrameImage("ground2", "maptool/tile/ground2.bmp", TILESIZE * 3, TILESIZE * 3, 3, 3, false);
+	IMAGEMANAGER->addFrameImage("grass0", "maptool/tile/grass0.bmp", _tileSize * 3, _tileSize * 3, 3, 3, true);
+	IMAGEMANAGER->addFrameImage("grass1", "maptool/tile/grass1.bmp", _tileSize * 3, _tileSize * 3, 3, 3, true);
+	IMAGEMANAGER->addFrameImage("grass2", "maptool/tile/grass2.bmp", _tileSize * 3, _tileSize * 3, 3, 3, true);
+	IMAGEMANAGER->addFrameImage("ground0", "maptool/tile/ground0.bmp", _tileSize * 3, _tileSize * 3, 3, 3, true);
+	IMAGEMANAGER->addFrameImage("ground1", "maptool/tile/ground1.bmp", _tileSize * 3, _tileSize * 3, 3, 3, true);
+	IMAGEMANAGER->addFrameImage("ground2", "maptool/tile/ground2.bmp", _tileSize * 3, _tileSize * 3, 3, 3, true);
 
 	//OBJECT//
-	IMAGEMANAGER->addFrameImage("flowerbed1", "maptool/object/flowerbed1.bmp", TILESIZE * 2, TILESIZE * 2, 2, 2, false);
-	IMAGEMANAGER->addFrameImage("flowerbed2", "maptool/object/flowerbed1.bmp", TILESIZE * 2, TILESIZE * 2, 2, 2, false);
-	IMAGEMANAGER->addImage("tree0", "maptool/object/tree0.bmp", TILESIZE * 6, TILESIZE * 6, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("tree1", "maptool/object/tree1.bmp", TILESIZE * 6, TILESIZE * 7, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("bossDoor", "maptool/object/bossDoor-col.bmp", TILESIZE * 6, TILESIZE * 8, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("pillar0", "maptool/object/pillar0.bmp", TILESIZE * 1, TILESIZE * 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("pillar1", "maptool/object/pillar1.bmp", TILESIZE * 2, TILESIZE * 5, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("flowerbed1", "maptool/object/flowerbed1.bmp", _tileSize * 2, _tileSize * 2, 2, 2, true);
+	IMAGEMANAGER->addFrameImage("flowerbed2", "maptool/object/flowerbed1.bmp", _tileSize * 2, _tileSize * 2, 2, 2, true);
+	IMAGEMANAGER->addImage("tree0", "maptool/object/tree0.bmp", _tileSize * 6, _tileSize * 6, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("tree1", "maptool/object/tree1.bmp", _tileSize * 6, _tileSize * 7, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("bossDoor", "maptool/object/bossDoor-col.bmp", _tileSize * 6, _tileSize * 8, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("pillar0", "maptool/object/pillar0.bmp", _tileSize * 1, _tileSize * 4, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("pillar1", "maptool/object/pillar1.bmp", _tileSize * 2, _tileSize * 5, true, RGB(255, 0, 255));
 
 
 	//DECO//
@@ -762,26 +767,26 @@ void mapToolScene::objectImgRender()
 		if (tile[i].keyName == "flowerbed1")
 		{
 			key = "tree0";
-			width = 2 * TILESIZE;
-			height = 4 * TILESIZE;
+			width = 2 * _tileSize;
+			height = 4 * _tileSize;
 
-			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
+			if (_tileSize == TILESIZE) IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
 		}
 		else if (tile[i].keyName == "flowerbed2")
 		{
 			key = "tree1";
-			width = 2 * TILESIZE;
-			height = 5 * TILESIZE;
+			width = 2 * _tileSize;
+			height = 5 * _tileSize;
 
-			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
+			if (_tileSize == TILESIZE) IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
 		}
 		else if (tile[i].keyName == "pillar1")
 		{
 			key = "pillar1";
 
-			height = 3 * TILESIZE;
+			height = 3 * _tileSize;
 
-			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
+		if (_tileSize == TILESIZE) IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
 		}
 	}
 
@@ -797,9 +802,9 @@ void mapToolScene::objectImgRender()
 		{
 			key = "pillar0";
 
-			height = 3 * TILESIZE;
+			height = 3 * _tileSize;
 
-			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
+			if (_tileSize == TILESIZE) IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
 		}
 		else if (tile[i].keyName == "bossDoor")
 		{
@@ -808,9 +813,9 @@ void mapToolScene::objectImgRender()
 
 			key = "bossDoor";
 
-			height = 7 * TILESIZE;
+			height = 7 * _tileSize;
 
-			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
+			if (_tileSize == TILESIZE) IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
 		}
 	}
 }
@@ -828,6 +833,11 @@ void mapToolScene::imageAlphaRender(string keyName, POINT pt, int alpha)
 void mapToolScene::imageFrameRender(string keyName, POINT pt, int frameX, int frameY)
 {
 	IMAGEMANAGER->findImage(keyName)->frameRender(getMemDC(), pt.x, pt.y, frameX, frameY);
+}
+
+void mapToolScene::imageStretchRender(string keyName, POINT pt, int frameX, int frameY, RECT scale)
+{
+	IMAGEMANAGER->findImage(keyName)->frameRender(getMemDC(), pt.x, pt.y, frameX, frameY, scale);
 }
 
 void mapToolScene::controller()
@@ -859,6 +869,43 @@ void mapToolScene::controller()
 		moveRect();
 
 		if (dragButton.isCol && isLeft)drag.start.x -= 5;
+	}
+
+	if (_mouseWheel == 1 && _tileSize < 32) {
+		_tileSize += 2;
+		_imageSize += 2;
+		for (int i = 0; i < MAXTILE; i++)
+		{
+			tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+		}
+		_mouseWheel = 0;
+	}
+	else if (_mouseWheel == -1 && _tileSize > 10) {
+		_tileSize -= 2;
+		_imageSize -= 2;
+		for (int i = 0; i < MAXTILE; i++)
+		{
+			tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+		}
+		_mouseWheel = 0;
+	}
+
+	if (INPUT->GetKeyDown('M')) {
+		curTileSize = _tileSize;
+		_tileSize = 6;
+		_mouseWheel = 0;
+		for (int i = 0; i < MAXTILE; i++)
+		{
+			tile[i].rc = RectMake(150 + (i % MAXTILE_WIDTH * _tileSize), 60 + (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+		}
+	}
+
+	if (INPUT->GetKeyUp('M')) {
+		_tileSize = curTileSize;
+		for (int i = 0; i < MAXTILE; i++)
+		{
+			tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+		}
 	}
 
 	//none drag draw

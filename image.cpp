@@ -300,6 +300,32 @@ void image::render(HDC hdc, int destX, int destY)
 	}
 }
 
+void image::render(HDC hdc, int destX, int destY, int scale)
+{
+	if (_isTrans)//배경색 없애고 출력
+	{
+		//GdiTransparentBlt : 비트맵 이미지의 특정색상을 제외하고 복사 해주는 함수
+		GdiTransparentBlt(
+			hdc,				//복사할 장소의 DC
+			destX,				//복사할 좌표 시작X
+			destY,				//복사할 좌표 시작Y
+			_imageInfo->width,	//복사할 이미지 가로크기
+			_imageInfo->height,	//복사할 이미지 세로크기
+			_imageInfo->hMemDC,	//복사될 대상 DC
+			0, 0,				//복사될 대상의 시작지점
+			_imageInfo->width += scale,	//복사 영역 가로크기
+			_imageInfo->height += scale,	//복사 영역 세로크기
+			_transColor);		//복사할때 제외할 색상 (일반적으로 마젠타 색상을 사용함)
+	}
+	else//원본 이미지 그대로 출력
+	{
+		//BitBlt : DC간의 영역끼리 고속복사 해주는 함수
+		//메모리DC => 화면DC로 복사한다
+		BitBlt(hdc, destX, destY, _imageInfo->width, _imageInfo->height,
+			_imageInfo->hMemDC, 0, 0, SRCCOPY);
+	}
+}
+
 //렌더(원하는 좌표에 이미지를 잘라서 붙이기)
 void image::render(HDC hdc, int destX, int destY, int sourX, int sourY, int sourWidth, int sourHeight)
 {
@@ -487,6 +513,46 @@ void image::frameRender(HDC hdc, int destX, int destY, int currentFrameX, int cu
 			_imageInfo->currentFrameY * _imageInfo->frameHeight,	//복사될 대상의 시작지점			
 			_imageInfo->frameWidth,		//복사 영역 가로크기
 			_imageInfo->frameHeight,	//복사 영역 세로크기
+			_transColor);				//복사할때 제외할 색상 (일반적으로 마젠타 색상을 사용함)
+	}
+	else//원본 이미지 그대로 출력
+	{
+		BitBlt(hdc, destX, destY, _imageInfo->frameWidth, _imageInfo->frameHeight,
+			_imageInfo->hMemDC,
+			_imageInfo->currentFrameX * _imageInfo->frameWidth,
+			_imageInfo->currentFrameY * _imageInfo->frameHeight, SRCCOPY);
+	}
+}
+
+void image::frameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, RECT scale)
+{
+	//if (!_stretchImage) this->initForStretchBlend();
+
+	//이미지 예외처리
+	_imageInfo->currentFrameX = currentFrameX;
+	_imageInfo->currentFrameY = currentFrameY;
+	if (currentFrameX > _imageInfo->maxFrameX)
+	{
+		_imageInfo->currentFrameX = _imageInfo->maxFrameX;
+	}
+	if (currentFrameY > _imageInfo->maxFrameY)
+	{
+		_imageInfo->currentFrameY = _imageInfo->maxFrameX;
+	}
+
+	if (_isTrans)//배경색 없애고 출력
+	{
+		GdiTransparentBlt(
+			hdc,						//복사할 장소의 DC
+			destX,						//복사할 좌표 시작X
+			destY,						//복사할 좌표 시작Y
+			_imageInfo->frameWidth,		//복사할 이미지 가로크기
+			_imageInfo->frameHeight,	//복사할 이미지 세로크기
+			_imageInfo->hMemDC,			//복사될 대상 DC
+			_imageInfo->currentFrameX * _imageInfo->frameWidth,		//복사될 대상의 시작지점
+			_imageInfo->currentFrameY * _imageInfo->frameHeight,	//복사될 대상의 시작지점			
+			_imageInfo->frameWidth = (scale.right - scale.left),		//복사 영역 가로크기
+			_imageInfo->frameHeight = (scale.bottom - scale.top),	//복사 영역 세로크기
 			_transColor);				//복사할때 제외할 색상 (일반적으로 마젠타 색상을 사용함)
 	}
 	else//원본 이미지 그대로 출력

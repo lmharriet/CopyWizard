@@ -29,6 +29,7 @@ HRESULT mainGame::init()
 
 	mapToolScene* maptool = new mapToolScene;
 	SCENEMANAGER->addScene("맵툴제작", maptool);
+	maptool->init();
 	maptool->addImage();
 	/*현재씬*/
 	SCENEMANAGER->loadScene("시작화면");
