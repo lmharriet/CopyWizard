@@ -24,6 +24,8 @@ private:
 
 	arrSound _mTotalSound;	//맵에 담아둘 사운드들
 
+	float _volumeBGM;
+
 public:
 	HRESULT init();
 	void release();
@@ -33,7 +35,7 @@ public:
 	void addSound(string keyName, string soundName, bool bgm = false, bool loop = false);
 
 	//사운드 재생
-	void play(string keyName, float volume = 1.0f); //0.0f(min) ~ 1.0f(max)
+	void play(string keyName, bool isBGM,float volume = 0.5f); //0.0f(min) ~ 1.0f(max)
 	//사운드 정지
 	void stop(string keyName);
 	//사운드 일시정지
@@ -46,17 +48,5 @@ public:
 	//일시정지 중이냐?
 	bool isPauseSound(string keyName);
 
-	void setBackGroundVolume(string keyName ,float volume) 
-	{ 
-		int count = 0;
-		arrSoundIter iter = _mTotalSound.begin();
-		for (iter; iter != _mTotalSound.end(); ++iter, count++)
-		{
-			if (keyName == iter->first)
-			{
-				//볼륨세팅
-				_channel[count]->setVolume(volume);
-			}
-		}
-	}
+	void setBackGroundVolume(string keyName, float volume);
 };

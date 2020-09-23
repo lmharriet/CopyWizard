@@ -4,7 +4,10 @@
 
 HRESULT startScene::init()
 {
-
+	
+	SOUNDMANAGER->play("titleBGM",true);
+	SOUNDMANAGER->stop("mapToolBGM");
+	
 	
 	//렉트 위치 초기화
 	//_rc = RectMakeCenter(WINSIZEX / 2, WINSIZEY - 200, 200, 100);
@@ -47,10 +50,12 @@ void startScene::update()
 			switch (i)
 			{
 			case 0:
-				SCENEMANAGER->loadScene("픽셀충돌");
 				SOUNDMANAGER->stop("titleBGM");
+				SCENEMANAGER->loadScene("픽셀충돌");
 				break;
 			case 1:
+				SOUNDMANAGER->stop("titleBGM");
+				SOUNDMANAGER->play("mapToolBGM",true);
 				SCENEMANAGER->loadScene("맵툴제작");
 				break;
 			case 2:

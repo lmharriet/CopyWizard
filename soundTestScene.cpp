@@ -29,14 +29,14 @@ void soundTestScene::update()
 	//효과음은 그냥 충돌될때 플레이만 하면 된다
 	//브금은 현재 플레이중인지 체크해서 정지후 플레이를 해야 한다
 	//그렇지 않을경우 돌림노래처럼 사운드가 나오게 된다
-	if (INPUT->GetKeyDown(VK_LBUTTON))
-	{
-		if (SOUNDMANAGER->isPlaySound("사운드1"))
-		{
-			SOUNDMANAGER->stop("사운드1");
-		}
-		SOUNDMANAGER->play("사운드2");
-	}
+	//if (INPUT->GetKeyDown(VK_LBUTTON))
+	//{
+	//	if (SOUNDMANAGER->isPlaySound("사운드1"))
+	//	{
+	//		SOUNDMANAGER->stop("사운드1");
+	//	}
+	//	SOUNDMANAGER->play("사운드2");
+	//}
 }
 
 void soundTestScene::render()

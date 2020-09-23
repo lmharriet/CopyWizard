@@ -14,8 +14,10 @@ HRESULT mainGame::init()
 
 	//BGM_Sound
 	SOUNDMANAGER->addSound("titleBGM", "Sound/TitleScreen.mp3", true, true);
+	SOUNDMANAGER->addSound("mapToolBGM", "Sound/MapToolBGM.mp3", true, true);
 	volume = 0.5f;
-	SOUNDMANAGER->play("titleBGM",volume);
+	
+	
 
 
 	/*씬추가*/
@@ -40,6 +42,7 @@ HRESULT mainGame::init()
 //=============================================================
 void mainGame::release()
 {
+	
 	gameNode::release();
 }
 
@@ -49,29 +52,16 @@ void mainGame::release()
 void mainGame::update()
 {
 	gameNode::update();
-	
+
+	//볼륨 컨트롤 
+	this->volumeControl();
 	//씬매니져 업데이트
 	SCENEMANAGER->update();
 
 	//사운드매니져 업데이트 (이게 없으면 사운드매니져 제대로 동작하지 않는다!!!)
 	SOUNDMANAGER->update();
 
-	if (INPUT->GetKeyDown(VK_ADD)|| INPUT->GetKeyDown(VK_OEM_PLUS))
-	{
-		if (volume < 1.f)
-		{
-			volume += .05f;
-			SOUNDMANAGER->setBackGroundVolume("titleBGM", volume);
-		}
-	}
-	if (INPUT->GetKeyDown(VK_SUBTRACT) || INPUT->GetKeyDown(VK_OEM_MINUS))
-	{
-		if (volume > .0f)
-		{
-			volume -= .05f;
-			SOUNDMANAGER->setBackGroundVolume("titleBGM", volume);
-		}
-	}
+	
 }
 
 //=============================================================
@@ -94,4 +84,26 @@ void mainGame::render()
 //=============================================================
 	//백버퍼의 내용을 화면DC에 그린다 (이것도 렌더에 그냥 두기)
 	this->getBackBuffer()->render(getHDC());
+}
+
+void mainGame::volumeControl()
+{
+	if (INPUT->GetKeyDown(VK_ADD) || INPUT->GetKeyDown(VK_OEM_PLUS))
+	{
+		if (volume < 1.f)
+		{
+			volume += .05f;
+			SOUNDMANAGER->setBackGroundVolume("titleBGM", volume);
+			SOUNDMANAGER->setBackGroundVolume("mapToolBGM", volume);
+		}
+	}
+	if (INPUT->GetKeyDown(VK_SUBTRACT) || INPUT->GetKeyDown(VK_OEM_MINUS))
+	{
+		if (volume > .0f)
+		{
+			volume -= .05f;
+			SOUNDMANAGER->setBackGroundVolume("titleBGM", volume);
+			SOUNDMANAGER->setBackGroundVolume("mapToolBGM", volume);
+		}
+	}
 }
