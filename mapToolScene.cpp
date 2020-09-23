@@ -435,12 +435,21 @@ void mapToolScene::initSelectTerrain()
 	object[2].rc = RectMake(944, 335, 120, 150);
 	object[3].rc = RectMake(1114, 337, 30, 130);
 	object[4].rc = RectMake(1203, 340, 60, 130);
-	
+
 	for (int i = 0; i < 5; i++)
 	{
 		object[i].kind = TERRAIN::OBJECT;
 		object[i].keyName = objectName[i];
 	}
+	//page2//
+	string decoName[9] = { "grass4","grass3","grass2","tomb0","tomb1","flower","window0","window1", "flag0" };
+	for (int i = 0; i < 9; i++)
+	{
+		deco[i].rc = RectMake(941 + (i % 3)* 120, 170 + (i / 3) * 105, 90, 75);
+		deco[i].keyName = decoName[i];
+		deco[i].kind = TERRAIN::IMG;
+	}
+
 }
 
 void mapToolScene::initCam()
@@ -494,6 +503,19 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addImage("bossDoor", "maptool/object/bossDoor-col.bmp", TILESIZE * 6, TILESIZE * 8, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("pillar0", "maptool/object/pillar0.bmp", TILESIZE * 1, TILESIZE * 4, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("pillar1", "maptool/object/pillar1.bmp", TILESIZE * 2, TILESIZE * 5, true, RGB(255, 0, 255));
+
+
+	//DECO//
+	IMAGEMANAGER->addImage("grass4", "maptool/deco/grass4.bmp", 50, 26, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("grass3", "maptool/deco/grass3.bmp", 56, 44, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("grass2", "maptool/deco/grass2.bmp", 64, 40, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("tomb0", "maptool/deco/tomb0.bmp", 116, 84, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("tomb1", "maptool/deco/tomb1.bmp", 116, 80, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("flower", "maptool/deco/flower.bmp", 70, 50, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("window0", "maptool/deco/window0.bmp", 82, 74, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("window1", "maptool/deco/window1.bmp", 82, 74, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("flag0", "maptool/deco/flag0.bmp", 82, 74, true, RGB(255, 0, 255));
+
 
 }
 
@@ -670,8 +692,11 @@ void mapToolScene::rcRender()
 			Rectangle(getMemDC(), dragButton.rc);
 			break;
 		case OPTION::OBJECT_MENU:
-			for (int i = 0; i < 5; i++) Rectangle(getMemDC(), object[i].rc);
 			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i]);
+
+			for (int i = 0; i < 5; i++) Rectangle(getMemDC(), object[i].rc);
+
+			for (int i = 0; i < 9; i++) Rectangle(getMemDC(), deco[i].rc);
 			Rectangle(getMemDC(), dragButton.rc);
 			break;
 		}
@@ -708,7 +733,7 @@ void mapToolScene::objectImgRender()
 	//object image render
 	for (int i = 0; i < MAXTILE; i++)
 	{
-		if (!colCheck(tile[i].rc,cam.rc) || tile[i].kind != TERRAIN::OBJECT)continue;
+		if (!colCheck(tile[i].rc, cam.rc) || tile[i].kind != TERRAIN::OBJECT)continue;
 
 		// 2X2인 오브젝트만 처리
 
@@ -959,7 +984,7 @@ void mapToolScene::controller()
 		case OPTION::OBJECT_MENU:
 			switch (pageNum)
 			{
-			case 0:
+			case 0: //page1
 				for (int i = 0; i < 5; i++)
 				{
 					if (PtInRect(&object[i].rc, _ptMouse) && user.delay == 10)
@@ -975,7 +1000,17 @@ void mapToolScene::controller()
 					}
 				}
 				break;
-			case 1:
+			case 1: //page2
+				for (int i = 0; i < 9; i++)
+				{
+					if (PtInRect(&deco[i].rc, _ptMouse) && user.delay == 10)
+					{
+						user.delay = 0;
+						user.KeyName = deco[i].keyName;
+						user.kind = deco[i].kind;
+						tool = TOOL::DRAW;
+					}
+				}
 				break;
 			case 2:
 				break;
@@ -987,7 +1022,7 @@ void mapToolScene::controller()
 				for (int i = 0; i < MAXTILE; i++)
 				{
 					if (maptool.isCol)continue;
-					
+
 					if (PtInRect(&tile[i].rc, _ptMouse))
 					{
 
@@ -1002,7 +1037,7 @@ void mapToolScene::controller()
 							tile[i + 5].kind = user.kind;
 
 							tile[i].keyName = user.KeyName;
-							tile[i+5].keyName = user.KeyName;
+							tile[i + 5].keyName = user.KeyName;
 						}
 						else
 						{

@@ -38,6 +38,7 @@ private:
 	tagTile wall[6];
 
 	tagTile object[5];
+	tagTile deco[9];
 
 	/// CAMERA ///
 	tagCam cam;
