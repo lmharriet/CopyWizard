@@ -491,7 +491,7 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addFrameImage("flowerbed2", "maptool/object/flowerbed1.bmp", TILESIZE * 2, TILESIZE * 2, 2, 2, false);
 	IMAGEMANAGER->addImage("tree0", "maptool/object/tree0.bmp", TILESIZE * 6, TILESIZE * 6, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("tree1", "maptool/object/tree1.bmp", TILESIZE * 6, TILESIZE * 7, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("bossDoor", "maptool/object/bossDoor.bmp", TILESIZE * 6, TILESIZE * 8, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("bossDoor", "maptool/object/bossDoor-col.bmp", TILESIZE * 6, TILESIZE * 8, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("pillar0", "maptool/object/pillar0.bmp", TILESIZE * 1, TILESIZE * 4, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("pillar1", "maptool/object/pillar1.bmp", TILESIZE * 2, TILESIZE * 5, true, RGB(255, 0, 255));
 
@@ -765,6 +765,17 @@ void mapToolScene::objectImgRender()
 
 			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
 		}
+		else if (tile[i].keyName == "bossDoor")
+		{
+
+			if (tile[i + 5].keyName != "bossDoor")continue;
+
+			key = "bossDoor";
+
+			height = 7 * TILESIZE;
+
+			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
+		}
 	}
 }
 
@@ -984,6 +995,14 @@ void mapToolScene::controller()
 						{
 							tile[i].kind = user.kind;
 							tile[i].keyName = user.KeyName;
+						}
+						else if (user.KeyName == "bossDoor") // i,i+5
+						{
+							tile[i].kind = user.kind;
+							tile[i + 5].kind = user.kind;
+
+							tile[i].keyName = user.KeyName;
+							tile[i+5].keyName = user.KeyName;
 						}
 						else
 						{

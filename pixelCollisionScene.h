@@ -13,6 +13,9 @@ private:
 
 	//맵타일 정보
 	tagTile tile[MAXTILE];
+
+	//test cam(수정해도됨)
+	RECT cam;
 public:
 	HRESULT init();
 	void release();

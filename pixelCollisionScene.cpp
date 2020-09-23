@@ -26,6 +26,9 @@ HRESULT pixelCollisionScene::init()
 	sprintf(str, "mapData/map%d.map", RANDOM->range(3));
 	loadMap(str);
 
+	//없애도됨
+	cam = RectMake(0, 0, WINSIZEX, WINSIZEY);
+
 	return S_OK;
 }
 
@@ -83,9 +86,6 @@ void pixelCollisionScene::render()
 	//sRender.push_back()
 	//백그라운드 렌더
 	//_mountain->render(getMemDC());
-	
-	//공 이미지 렌더
-	_ball->render(getMemDC(), _rc.left, _rc.top);
 
 	//로드된 타일 렌더
 	for (int i = 0; i < MAXTILE; i++)
@@ -93,10 +93,15 @@ void pixelCollisionScene::render()
 		IMAGEMANAGER->frameRender(tile[i].keyName, getMemDC(), tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
 	}
 
-	//objcet img render
+	//공 이미지 렌더
+	_ball->render(getMemDC(), _rc.left, _rc.top);
+
+	//object image render
 	for (int i = 0; i < MAXTILE; i++)
 	{
-		if (tile[i].kind != TERRAIN::OBJECT)continue;
+		if (!colCheck(tile[i].rc, cam) || tile[i].kind != TERRAIN::OBJECT)continue;
+
+		// 2X2인 오브젝트만 처리
 
 		//i object, i+1 object, i+w object, i+w+1 object
 		if (!(tile[i + 1].kind == TERRAIN::OBJECT && tile[i + MAXTILE_WIDTH].kind == TERRAIN::OBJECT &&
@@ -108,7 +113,60 @@ void pixelCollisionScene::render()
 			tile[i + MAXTILE_WIDTH].keyName == key &&
 			tile[i + MAXTILE_WIDTH + 1].keyName == key)) continue;
 
-		IMAGEMANAGER->findImage("tree0")->render(getMemDC(), tile[i].rc.left - (2 * TILESIZE), tile[i].rc.top - (4 * TILESIZE));
+		int width, height;
+		if (tile[i].keyName == "flowerbed1")
+		{
+			key = "tree0";
+			width = 2 * TILESIZE;
+			height = 4 * TILESIZE;
+
+			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
+		}
+		else if (tile[i].keyName == "flowerbed2")
+		{
+			key = "tree1";
+			width = 2 * TILESIZE;
+			height = 5 * TILESIZE;
+
+			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
+		}
+		else if (tile[i].keyName == "pillar1")
+		{
+			key = "pillar1";
+
+			height = 3 * TILESIZE;
+
+			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
+		}
+	}
+
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (tile[i].kind != TERRAIN::OBJECT) continue;
+
+		// 1x? 이거나 다른 특수한 오브젝트 처리
+
+		string key;
+		int height;
+		if (tile[i].keyName == "pillar0") // 가로 : 1
+		{
+			key = "pillar0";
+
+			height = 3 * TILESIZE;
+
+			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
+		}
+		else if (tile[i].keyName == "bossDoor")
+		{
+
+			if (tile[i + 5].keyName != "bossDoor")continue;
+
+			key = "bossDoor";
+
+			height = 7 * TILESIZE;
+
+			IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
+		}
 	}
 	
 
