@@ -48,7 +48,7 @@ void mapToolScene::update()
 	if (isMapToolBGM)
 	{
 		SOUNDMANAGER->fadeIn("mapToolBGM", fadeIn);
-		fadeIn += 0.01f;
+		fadeIn += 0.001f;
 		if (fadeIn >= SOUNDMANAGER->getVolumeBGM())
 			isMapToolBGM = false;
 	}

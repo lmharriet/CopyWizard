@@ -44,7 +44,7 @@ void startScene::update()
 	if (isTitleBGM)
 	{
 		SOUNDMANAGER->fadeIn("titleBGM", fadeIn);
-		fadeIn += 0.02f;
+		fadeIn += 0.001f;
 		if (fadeIn >= SOUNDMANAGER->getVolumeBGM())
 			isTitleBGM = false;
 	}
