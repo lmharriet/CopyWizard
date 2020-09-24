@@ -565,6 +565,7 @@ void mapToolScene::mapSave(int index)
 
 	file = CreateFile(str, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	WriteFile(file, tile, sizeof(tagTile) * MAXTILE, &write, NULL);
+	WriteFile(file, obTile, sizeof(tagTile) * MAXTILE, &write, NULL);
 	CloseHandle(file);
 }
 
@@ -578,6 +579,7 @@ void mapToolScene::mapLoad(int index)
 
 	file = CreateFile(str, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	ReadFile(file, tile, sizeof(tagTile) * MAXTILE, &read, NULL);
+	ReadFile(file, obTile, sizeof(tagTile) * MAXTILE, &read, NULL);
 	CloseHandle(file);
 }
 
@@ -633,13 +635,13 @@ void mapToolScene::tileRender()
 				switch (tile[i].kind)
 				{
 				case TERRAIN::TILE:
-					FrameRect(getMemDC(), tile[i].rc, CLOUDYBLUE);
+					FrameRect(getMemDC(), tile[i].rc, NAVY);
 					break;
 				case TERRAIN::WALL:
-					FrameRect(getMemDC(), tile[i].rc, YELLOW);
+					FrameRect(getMemDC(), tile[i].rc, SUNLIGHT);
 					break;
 				case TERRAIN::IMG:
-					FrameRect(getMemDC(), tile[i].rc, ORANGE);
+					FrameRect(getMemDC(), tile[i].rc, BROWN);
 					break;
 				case TERRAIN::OBJECT:
 					FrameRect(getMemDC(), tile[i].rc, PINK);
@@ -922,7 +924,9 @@ void mapToolScene::controller()
 		if (dragButton.isCol && isLeft)drag.start.x -= 5;
 	}
 
-	if (_mouseWheel == 1 && _tileSize < 50) {
+	//Zoom in / out
+	if (_mouseWheel == 1 && _tileSize < 50) 
+	{
 		_tileSize += 2;
 		_imageSize += 2;
 		for (int i = 0; i < MAXTILE; i++)
@@ -932,7 +936,8 @@ void mapToolScene::controller()
 		}
 		_mouseWheel = 0;
 	}
-	else if (_mouseWheel == -1 && _tileSize > 10) {
+	else if (_mouseWheel == -1 && _tileSize > 10) 
+	{
 		_tileSize -= 2;
 		_imageSize -= 2;
 		for (int i = 0; i < MAXTILE; i++)
@@ -943,7 +948,8 @@ void mapToolScene::controller()
 		_mouseWheel = 0;
 	}
 
-	if (INPUT->GetKeyDown('M')) {
+	if (INPUT->GetKeyDown('M')) 
+	{
 		curTileSize = _tileSize;
 		_tileSize = 6;
 		_mouseWheel = 0;
@@ -954,7 +960,9 @@ void mapToolScene::controller()
 		}
 	}
 
-	if (INPUT->GetKeyUp('M')) {
+
+	if (INPUT->GetKeyUp('M')) 
+	{
 		_tileSize = curTileSize;
 		for (int i = 0; i < MAXTILE; i++)
 		{
