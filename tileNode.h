@@ -58,6 +58,7 @@ struct tagUser
 	TERRAIN kind;
 	string KeyName;
 
+	int transY;
 	int delay;
 };
 struct tagDrag

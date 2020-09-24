@@ -27,7 +27,7 @@ HRESULT mapToolScene::init()
 
 
 	//option = OPTION::SELECT_MENU;
-	option = OPTION::OBJECT_MENU;
+	option = OPTION::SELECT_MENU;
 	isLeftDown = isLeft = isLeftUp = false;
 
 	pageNum = 0;
@@ -146,7 +146,7 @@ void mapToolScene::render()
 	{
 		if (!colCheck(obTile[i].rc, cam.rc) || obTile[i].kind == TERRAIN::NONE)continue;
 
-		if(tile[i].keyName != "")  imageStretchRender(obTile[i].keyName, { obTile[i].rc.left,obTile[i].rc.top }, obTile[i].frame.x, obTile[i].frame.y, obTile[i].rc);
+		if (tile[i].keyName != "")  imageStretchRender(obTile[i].keyName, { obTile[i].rc.left,obTile[i].rc.top }, obTile[i].frame.x, obTile[i].frame.y, obTile[i].rc);
 	}
 	objectImgRender();
 	//타일 그리기
@@ -162,10 +162,13 @@ void mapToolScene::render()
 	if (option != OPTION::SELECT_MENU && user.KeyName == "" && user.kind == TERRAIN::NONE)
 		imageAlphaRender("active", { icon[1].left,icon[1].top + 5 });
 
+	if (option != OPTION::SELECT_MENU && tool == TOOL::SPOID)
+		imageAlphaRender("active", { dragButton.rc.left,dragButton.rc.top + 5 });
+
 	//userRender
 	if (user.kind != TERRAIN::NONE)
 	{
-		imageAlphaRender(user.KeyName, { _ptMouse.x - TILESIZE / 2,_ptMouse.y - TILESIZE / 2 }, 200);
+		imageAlphaRender(user.KeyName, { _ptMouse.x - TILESIZE / 2,_ptMouse.y - TILESIZE / 2 + user.transY }, 200);
 	}
 
 	textRender();
@@ -249,6 +252,7 @@ void mapToolScene::buttonCheck()
 		{
 			user.KeyName = "";
 			user.kind = TERRAIN::NONE;
+			user.transY = 0;
 			option = OPTION::SELECT_MENU;
 
 			tool = TOOL::NONE;
@@ -289,13 +293,15 @@ void mapToolScene::iconCheck()
 					break;
 				case 3:
 					tool = TOOL::SPOID;
+					dragButton.isCol = false;
 					resetUserData();
 					break;
 				}
 			}
 		}
-		if (PtInRect(&dragButton.rc, _ptMouse) && isLeftDown)
+		if (PtInRect(&dragButton.rc, _ptMouse) && isLeftDown && tool != TOOL::SPOID)
 		{
+
 			if (!dragButton.isCol) dragButton.isCol = true;
 			else dragButton.isCol = false;
 		}
@@ -321,12 +327,13 @@ void mapToolScene::iconCheck()
 					break;
 				case 3:
 					tool = TOOL::SPOID;
+					dragButton.isCol = false;
 					resetUserData();
 					break;
 				}
 			}
 		}
-		if (PtInRect(&dragButton.rc, _ptMouse) && isLeftDown)
+		if (PtInRect(&dragButton.rc, _ptMouse) && isLeftDown && tool != TOOL::SPOID)
 		{
 			if (!dragButton.isCol) dragButton.isCol = true;
 			else dragButton.isCol = false;
@@ -353,12 +360,13 @@ void mapToolScene::iconCheck()
 					break;
 				case 3:
 					tool = TOOL::SPOID;
+					dragButton.isCol = false;
 					resetUserData();
 					break;
 				}
 			}
 		}
-		if (PtInRect(&dragButton.rc, _ptMouse) && isLeftDown)
+		if (PtInRect(&dragButton.rc, _ptMouse) && isLeftDown && tool != TOOL::SPOID)
 		{
 			if (!dragButton.isCol) dragButton.isCol = true;
 			else dragButton.isCol = false;
@@ -420,6 +428,7 @@ void mapToolScene::initUser()
 	user.KeyName = "";
 	user.kind = TERRAIN::NONE;
 	user.delay = 0;
+	user.transY = 0;
 	tool = TOOL::NONE;
 }
 
@@ -472,7 +481,7 @@ void mapToolScene::initSelectTerrain()
 	string decoName[9] = { "decoGrass3","decoGrass2","decoGrass1","tomb0","tomb1","flower","window0","window1", "flag0" };
 	for (int i = 0; i < 9; i++)
 	{
-		deco[i].rc = RectMake(941 + (i % 3)* 120, 170 + (i / 3) * 105, 90, 75);
+		deco[i].rc = RectMake(941 + (i % 3) * 120, 170 + (i / 3) * 105, 90, 75);
 		deco[i].keyName = decoName[i];
 		deco[i].kind = TERRAIN::DECO;
 	}
@@ -577,7 +586,11 @@ void mapToolScene::saveCheck()
 	if (PtInRect(&SAVE, _ptMouse) && isLeftDown)
 	{
 		if (!isSave)
+		{
 			isSave = true;
+			isLoad = false;
+		}
+
 		else
 			isSave = false;
 	}
@@ -589,7 +602,10 @@ void mapToolScene::loadCheck()
 	if (PtInRect(&LOAD, _ptMouse) && isLeftDown)
 	{
 		if (!isLoad)
+		{
 			isLoad = true;
+			isSave = false;
+		}
 		else
 			isLoad = false;
 	}
@@ -635,7 +651,7 @@ void mapToolScene::tileRender()
 		if (colCheck(obTile[i].rc, cam.rc))
 		{
 			if (obTile[i].kind == TERRAIN::DECO)
-			{ 
+			{
 				FrameRect(getMemDC(), obTile[i].rc, WHITE);
 			}
 		}
@@ -759,6 +775,7 @@ void mapToolScene::checkRender()
 			break;
 		}
 
+
 		if (dragButton.isCol) imageRender("checkIcon", { dragButton.rc.left,dragButton.rc.top });
 	}
 }
@@ -766,6 +783,17 @@ void mapToolScene::checkRender()
 void mapToolScene::objectImgRender()
 {
 	//object image render
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (obTile[i].kind != TERRAIN::DECO) continue;
+
+		float scale = (float)(obTile[i].rc.right - obTile[i].rc.left) / TILESIZE;
+
+		image* img = IMAGEMANAGER->findImage(obTile[i].keyName);
+
+		img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
+	}
+
 	for (int i = 0; i < MAXTILE; i++)
 	{
 		if (!colCheck(tile[i].rc, cam.rc) || tile[i].kind != TERRAIN::OBJECT)continue;
@@ -841,17 +869,6 @@ void mapToolScene::objectImgRender()
 			img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
 		}
 	}
-
-	for (int i = 0; i < MAXTILE; i++)
-	{
-		if (obTile[i].kind != TERRAIN::DECO) continue;
-
-		float scale = (float)(obTile[i].rc.right - obTile[i].rc.left) / TILESIZE;
-
-		image* img = IMAGEMANAGER->findImage(obTile[i].keyName);
-		
-		img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
-	}
 }
 
 void mapToolScene::imageRender(string keyName, POINT pt)
@@ -905,7 +922,7 @@ void mapToolScene::controller()
 		if (dragButton.isCol && isLeft)drag.start.x -= 5;
 	}
 
-	if (_mouseWheel == 1 && _tileSize < 32) {
+	if (_mouseWheel == 1 && _tileSize < 50) {
 		_tileSize += 2;
 		_imageSize += 2;
 		for (int i = 0; i < MAXTILE; i++)
@@ -1002,6 +1019,7 @@ void mapToolScene::controller()
 					//user가 ui 안에 있거나, 타일 정보가 없으면 스포이드 기능 비활성화
 					if (maptool.isCol || tile[i].kind == TERRAIN::NONE)continue;
 
+
 					if (PtInRect(&tile[i].rc, _ptMouse))
 					{
 						user.KeyName = tile[i].keyName;
@@ -1062,7 +1080,7 @@ void mapToolScene::controller()
 					{
 						for (int i = 0; i < MAXTILE; i++)
 						{
-							if (maptool.isCol || tile[i].kind == TERRAIN::NONE)continue;
+							if (maptool.isCol  || tile[i].kind !=TERRAIN ::TILE)continue;
 
 							if (PtInRect(&tile[i].rc, _ptMouse))
 							{
@@ -1091,6 +1109,16 @@ void mapToolScene::controller()
 
 						user.KeyName = object[i].keyName;
 						user.kind = object[i].kind;
+
+						if (user.KeyName == "pillar0" || user.KeyName == "pillar1")
+						{
+							user.transY = -(TILESIZE * 3);
+						}
+						else if (user.KeyName == "bossDoor")
+						{
+							user.transY = -(TILESIZE * 7);
+						}
+						else user.transY = 0;
 						// 브러쉬 아이콘에 check 표시
 						tool = TOOL::DRAW;
 					}
