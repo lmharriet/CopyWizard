@@ -63,6 +63,7 @@ private:
 	//ZOOM IN, OUT
 	int _tileSize;
 	int _imageSize;
+	int currentX, currentY;
 	//MINIMAP
 	int curTileSize;
 	bool isMiniMap;

@@ -33,6 +33,7 @@ HRESULT mapToolScene::init()
 	pageNum = 0;
 
 	curTileSize = 32;
+	currentX = currentY = 0;
 	isMiniMap = false;
 	initCam();
 	return S_OK;
@@ -139,7 +140,7 @@ void mapToolScene::render()
 	{
 		if (!colCheck(tile[i].rc, cam.rc) || tile[i].kind == TERRAIN::NONE)continue;
 
-		if (tile[i].keyName != "") imageStretchRender(tile[i].keyName, { tile[i].rc.left,tile[i].rc.top }, tile[i].frame.x, tile[i].frame.y, tile[i].rc);
+		if (tile[i].keyName != "") imageStretchRender(tile[i].keyName, { tile[i].rc.left, tile[i].rc.top }, tile[i].frame.x, tile[i].frame.y, tile[i].rc);
 	}
 
 	for (int i = 0; i < MAXTILE; i++)
@@ -895,33 +896,35 @@ void mapToolScene::imageStretchRender(string keyName, POINT pt, int frameX, int 
 
 void mapToolScene::controller()
 {
-	if (INPUT->GetKey('W') && abs(cam.pt.y) > 0)
-	{
-		cam.pt.y += 5;
-		moveRect();
+	if (!isMiniMap) {
+		if (INPUT->GetKey('W') && abs(cam.pt.y) > 0)
+		{
+			cam.pt.y += 5;
+			moveRect();
 
-		if (dragButton.isCol && isLeft)drag.start.y += 5;
-	}
-	if (INPUT->GetKey('A') && abs(cam.pt.x) > 0)
-	{
-		cam.pt.x += 5;
-		moveRect();
+			if (dragButton.isCol && isLeft)drag.start.y += 5;
+		}
+		if (INPUT->GetKey('A') && abs(cam.pt.x) > 0)
+		{
+			cam.pt.x += 5;
+			moveRect();
 
-		if (dragButton.isCol && isLeft)drag.start.x += 5;
-	}
-	if (INPUT->GetKey('S') && abs(cam.pt.y) < MAXTILE_HEIGHT * TILESIZE - WINSIZEY)
-	{
-		cam.pt.y -= 5;
-		moveRect();
+			if (dragButton.isCol && isLeft)drag.start.x += 5;
+		}
+		if (INPUT->GetKey('S') && abs(cam.pt.y) < MAXTILE_HEIGHT * TILESIZE - WINSIZEY)
+		{
+			cam.pt.y -= 5;
+			moveRect();
 
-		if (dragButton.isCol && isLeft)drag.start.y -= 5;
-	}
-	if (INPUT->GetKey('D') && abs(cam.pt.x) < MAXTILE_WIDTH * TILESIZE - 920)
-	{
-		cam.pt.x -= 5;
-		moveRect();
+			if (dragButton.isCol && isLeft)drag.start.y -= 5;
+		}
+		if (INPUT->GetKey('D') && abs(cam.pt.x) < MAXTILE_WIDTH * TILESIZE - 920)
+		{
+			cam.pt.x -= 5;
+			moveRect();
 
-		if (dragButton.isCol && isLeft)drag.start.x -= 5;
+			if (dragButton.isCol && isLeft)drag.start.x -= 5;
+		}
 	}
 
 	//Zoom in / out
@@ -929,10 +932,12 @@ void mapToolScene::controller()
 	{
 		_tileSize += 2;
 		_imageSize += 2;
+		currentX = tile[0].rc.left;
+		currentY = tile[0].rc.top;
 		for (int i = 0; i < MAXTILE; i++)
 		{
-			tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
-			obTile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+			tile[i].rc = RectMake(currentX + (i % MAXTILE_WIDTH * _tileSize), currentY + (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+			obTile[i].rc = RectMake(currentX + (i % MAXTILE_WIDTH * _tileSize), currentY + (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
 		}
 		_mouseWheel = 0;
 	}
@@ -940,10 +945,12 @@ void mapToolScene::controller()
 	{
 		_tileSize -= 2;
 		_imageSize -= 2;
+		currentX = tile[0].rc.left;
+		currentY = tile[0].rc.top;
 		for (int i = 0; i < MAXTILE; i++)
 		{
-			tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
-			obTile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+			tile[i].rc = RectMake(currentX + (i % MAXTILE_WIDTH * _tileSize), currentY + (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+			obTile[i].rc = RectMake(currentX + (i % MAXTILE_WIDTH * _tileSize), currentY + (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
 		}
 		_mouseWheel = 0;
 	}
@@ -954,36 +961,26 @@ void mapToolScene::controller()
 		if (!isMiniMap)
 		{
 			curTileSize =_tileSize;
+			_tileSize = 6;
+			_mouseWheel = 0;
 			isMiniMap = true;
+			for (int i = 0; i < MAXTILE; i++)
+			{
+				tile[i].rc = RectMake(150 + (i % MAXTILE_WIDTH * _tileSize), 60 + (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+				obTile[i].rc = RectMake(150 + (i % MAXTILE_WIDTH * _tileSize), 60 + (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+			}
 		}
 		else
 		{
 			_tileSize = curTileSize;
 			isMiniMap = false;
+			for (int i = 0; i < MAXTILE; i++)
+			{
+				tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+				obTile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+			}
 		}
 	}
-
-
-	if (isMiniMap)
-	{
-		_tileSize = 6;
-		_mouseWheel = 0;
-		for (int i = 0; i < MAXTILE; i++)
-		{
-			tile[i].rc = RectMake(150 + (i % MAXTILE_WIDTH * _tileSize), 60 + (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
-			obTile[i].rc = RectMake(150 + (i % MAXTILE_WIDTH * _tileSize), 60 + (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
-		}
-	}
-	else
-	{
-		for (int i = 0; i < MAXTILE; i++)
-		{
-			tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
-			obTile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
-		}
-
-	}
-	
 
 	//none drag draw
 	if (isLeftDown) // 타일의 정보를 가져오는 기능만 수행
