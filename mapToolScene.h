@@ -64,6 +64,7 @@ private:
 	int _tileSize;
 	int _imageSize;
 	int currentX, currentY;
+	int camSpeed;
 	//MINIMAP
 	int curTileSize;
 	bool isMiniMap;

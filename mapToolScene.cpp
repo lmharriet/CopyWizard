@@ -34,6 +34,7 @@ HRESULT mapToolScene::init()
 
 	curTileSize = 32;
 	currentX = currentY = 0;
+	camSpeed = 10;
 	isMiniMap = false;
 	initCam();
 	return S_OK;
@@ -899,28 +900,28 @@ void mapToolScene::controller()
 	if (!isMiniMap) {
 		if (INPUT->GetKey('W') && abs(cam.pt.y) > 0)
 		{
-			cam.pt.y += 5;
+			cam.pt.y += camSpeed;
 			moveRect();
 
 			if (dragButton.isCol && isLeft)drag.start.y += 5;
 		}
 		if (INPUT->GetKey('A') && abs(cam.pt.x) > 0)
 		{
-			cam.pt.x += 5;
+			cam.pt.x += camSpeed;
 			moveRect();
 
 			if (dragButton.isCol && isLeft)drag.start.x += 5;
 		}
 		if (INPUT->GetKey('S') && abs(cam.pt.y) < MAXTILE_HEIGHT * TILESIZE - WINSIZEY)
 		{
-			cam.pt.y -= 5;
+			cam.pt.y -= camSpeed;
 			moveRect();
 
 			if (dragButton.isCol && isLeft)drag.start.y -= 5;
 		}
 		if (INPUT->GetKey('D') && abs(cam.pt.x) < MAXTILE_WIDTH * TILESIZE - 920)
 		{
-			cam.pt.x -= 5;
+			cam.pt.x -= camSpeed;
 			moveRect();
 
 			if (dragButton.isCol && isLeft)drag.start.x -= 5;
@@ -932,6 +933,7 @@ void mapToolScene::controller()
 	{
 		_tileSize += 2;
 		_imageSize += 2;
+		camSpeed++;
 		currentX = tile[0].rc.left;
 		currentY = tile[0].rc.top;
 		for (int i = 0; i < MAXTILE; i++)
@@ -945,6 +947,9 @@ void mapToolScene::controller()
 	{
 		_tileSize -= 2;
 		_imageSize -= 2;
+		if (camSpeed > 4) {
+			camSpeed--;
+		}
 		currentX = tile[0].rc.left;
 		currentY = tile[0].rc.top;
 		for (int i = 0; i < MAXTILE; i++)
