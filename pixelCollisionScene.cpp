@@ -5,8 +5,8 @@
 HRESULT pixelCollisionScene::init()
 {
 	//백그라운드, 공이미지 초기화
-	bgImg = IMAGEMANAGER->addImage("mapBlock", "map/mapBlock.bmp", 7820, 4624);
-	_ball = IMAGEMANAGER->addImage("ball", "Images/ball.bmp", 60, 60, true, RGB(255, 0, 255));
+	bgImg = IMAGEMANAGER->addImage("mapBlock", "map/mapBlock.bmp", 5543, 4624);
+	_ball = IMAGEMANAGER->addImage("ball", "Images/player.bmp", 32, 64, true, RGB(255, 0, 255));
 
 	/*_mountain = IMAGEMANAGER->findImage("mountain");
 	_ball = IMAGEMANAGER->findImage("ball");*/
@@ -33,7 +33,7 @@ HRESULT pixelCollisionScene::init()
 	isBottomCol = isTopCol = false;
 
 
-	POINT temp[4] = { {-30,-30},{30,-30},{30,30},{-30,30} };
+	POINT temp[4] = { {-10,0},{10,0},{10,30},{-10,30} };
 	for (int i = 0; i < 4; i++)
 	{
 		pixelCheck[i].pos = temp[i];
@@ -111,7 +111,7 @@ void pixelCollisionScene::render()
 	//}
 
 	////공 이미지 렌더
-	_ball->render(getMemDC(), _rc.left, _rc.top);
+	_ball->render(getMemDC(), _rc.left + 15, _rc.top);
 
 	////object image render
 	//for (int i = 0; i < MAXTILE; i++)
@@ -191,8 +191,8 @@ void pixelCollisionScene::render()
 	if (INPUT->GetToggleKey('A'))
 	{
 		//충돌용 작은 사각형
-		RECT rc = RectMakeCenter(_x, _y, 10, 10);
-		Rectangle(getMemDC(), rc);
+		RECT rc = RectMakeCenter(_x, _y + 15, 10, 10);
+		Ellipse(getMemDC(), rc);
 
 		for (int i = 0; i < 4; i++) Rectangle(getMemDC(), pixelCheck[i].rc);
 	}

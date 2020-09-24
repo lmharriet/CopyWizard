@@ -55,6 +55,12 @@ inline void Rectangle(HDC hdc, RECT rc)
 	Rectangle(hdc, rc.left, rc.top, rc.right, rc.bottom);
 }
 
+//편하쥬?
+inline void Ellipse(HDC hdc, RECT rc)
+{
+	Ellipse(hdc, rc.left, rc.top, rc.right, rc.bottom);
+}
+
 //프레임렉트 함수 오버로딩(비어있는 렉트 만들기)
 inline void FrameRect(HDC hdc, RECT rc, COLORREF color)
 {
