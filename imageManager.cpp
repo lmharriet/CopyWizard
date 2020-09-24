@@ -269,3 +269,32 @@ void imageManager::loopAlphaRender(string strKey, HDC hdc, const LPRECT drawArea
 	image* img = findImage(strKey);
 	if (img) img->loopAlphaRender(hdc, drawArea, offsetX, offsetY, alpha);
 }
+
+void imageManager::MakeRotateImage(string strKey, int frameCount)
+{
+	image* img = findImage(strKey);
+	int x, y;
+	int orig_x, orig_y;
+	int pixel;
+
+	for (int frameX = 1; frameX < frameCount; frameX++)
+	{
+		double radian = (frameX * 360 / frameCount * PI / 180.0);
+		double cc = cos(radian), ss = sin(-radian);
+		double xcenter = (double)img->getFrameWidth() / 2.0, ycenter = (double)img->getFrameHeight() / 2.0;
+
+		for (y = 0; y < img->getFrameHeight(); y++)
+		{
+			for (x = 0; x < img->getFrameWidth(); x++)
+			{
+				orig_x = (int)(xcenter + ((double)y - ycenter) * ss + ((double)x - xcenter) * cc);
+				orig_y = (int)(ycenter + ((double)y - ycenter) * cc - ((double)x - xcenter) * ss);
+				pixel = 0;
+
+				if ((orig_y >= 0 && orig_y < img->getFrameHeight()) && (orig_x >= 0 && orig_x < img->getFrameWidth()))
+					SetPixel(img->getMemDC(), frameX * img->getFrameWidth() + x, y, GetPixel(img->getMemDC(), orig_x, orig_y));
+			}
+
+		}
+	}
+}

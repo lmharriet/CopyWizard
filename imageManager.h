@@ -64,6 +64,12 @@ public:
 	void loopAlphaRender(string strKey, HDC hdc, const LPRECT drawArea, int offsetX, int offsetY, BYTE alpha);
 
 
+//=============================================================
+//	## 회전 이미지 자동초기화 ##
+//=============================================================
+	void MakeRotateImage(string strKey, int frameCount);
+
+
 	imageManager() {}
 	~imageManager() {}
 };
