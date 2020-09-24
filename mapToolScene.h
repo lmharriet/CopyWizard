@@ -65,6 +65,7 @@ private:
 	int _imageSize;
 	//MINIMAP
 	int curTileSize;
+	bool isMiniMap;
 
 public:
 	HRESULT init();

@@ -32,8 +32,8 @@ HRESULT mapToolScene::init()
 
 	pageNum = 0;
 
-	curTileSize = 0;
-
+	curTileSize = 32;
+	isMiniMap = false;
 	initCam();
 	return S_OK;
 }
@@ -699,13 +699,13 @@ void mapToolScene::UIRender()
 }
 
 void mapToolScene::textRender()
-{
+{/*
 	ptOut(getMemDC(), { 10,30 }, _ptMouse, WHITE);
 	ptOut(getMemDC(), { 10,50 }, cam.pt, ORANGE);
 
 	char str[126];
 	wsprintf(str, "delay : %d", user.delay);
-	TextOut(getMemDC(), 10, 70, str, strlen(str));
+	TextOut(getMemDC(), 10, 70, str, strlen(str));*/
 }
 
 void mapToolScene::buttonRender()
@@ -925,7 +925,7 @@ void mapToolScene::controller()
 	}
 
 	//Zoom in / out
-	if (_mouseWheel == 1 && _tileSize < 50) 
+	if (_mouseWheel == 1 && _tileSize < 50)
 	{
 		_tileSize += 2;
 		_imageSize += 2;
@@ -936,7 +936,7 @@ void mapToolScene::controller()
 		}
 		_mouseWheel = 0;
 	}
-	else if (_mouseWheel == -1 && _tileSize > 10) 
+	else if (_mouseWheel == -1 && _tileSize > 10)
 	{
 		_tileSize -= 2;
 		_imageSize -= 2;
@@ -948,9 +948,24 @@ void mapToolScene::controller()
 		_mouseWheel = 0;
 	}
 
-	if (INPUT->GetKeyDown('M')) 
+
+	if (INPUT->GetKeyDown('M'))
 	{
-		curTileSize = _tileSize;
+		if (!isMiniMap)
+		{
+			curTileSize =_tileSize;
+			isMiniMap = true;
+		}
+		else
+		{
+			_tileSize = curTileSize;
+			isMiniMap = false;
+		}
+	}
+
+
+	if (isMiniMap)
+	{
 		_tileSize = 6;
 		_mouseWheel = 0;
 		for (int i = 0; i < MAXTILE; i++)
@@ -959,17 +974,16 @@ void mapToolScene::controller()
 			obTile[i].rc = RectMake(150 + (i % MAXTILE_WIDTH * _tileSize), 60 + (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
 		}
 	}
-
-
-	if (INPUT->GetKeyUp('M')) 
+	else
 	{
-		_tileSize = curTileSize;
 		for (int i = 0; i < MAXTILE; i++)
 		{
 			tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
 			obTile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
 		}
+
 	}
+	
 
 	//none drag draw
 	if (isLeftDown) // 타일의 정보를 가져오는 기능만 수행
@@ -1088,7 +1102,7 @@ void mapToolScene::controller()
 					{
 						for (int i = 0; i < MAXTILE; i++)
 						{
-							if (maptool.isCol  || tile[i].kind !=TERRAIN ::TILE)continue;
+							if (maptool.isCol || tile[i].kind != TERRAIN::TILE)continue;
 
 							if (PtInRect(&tile[i].rc, _ptMouse))
 							{
