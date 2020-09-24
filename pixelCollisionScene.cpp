@@ -6,13 +6,15 @@ HRESULT pixelCollisionScene::init()
 {
 	//백그라운드, 공이미지 초기화
 	bgImg = IMAGEMANAGER->addImage("mapBlock", "map/mapBlock.bmp", 5543, 4624);
+	uiImg = IMAGEMANAGER->addImage("UI", "Images/gameUI.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
+
 	_ball = IMAGEMANAGER->addImage("ball", "Images/player.bmp", 32, 64, true, RGB(255, 0, 255));
 
 	/*_mountain = IMAGEMANAGER->findImage("mountain");
 	_ball = IMAGEMANAGER->findImage("ball");*/
 	//bgImg->getX() - bgImg->getWidth()/2,bgImg->getY() - bgImg->getHeight()/2
-	bgImg->setX(-bgImg->getWidth() / 2 + 500);
-	bgImg->setY(-bgImg->getHeight() / 2);
+	bgImg->setX(-bgImg->getWidth() / 2 + 670);
+	bgImg->setY(-bgImg->getHeight() / 2 + 790);
 
 	//공 위치 초기화
 	_x = WINSIZEX / 2;
@@ -54,25 +56,25 @@ void pixelCollisionScene::update()
 		(!pixelCheck[0].isCol || !pixelCheck[3].isCol))
 	{
 		//_x -= 3.0f;
-		bgImg->setX(bgImg->getX() + 10);
+		bgImg->setX(bgImg->getX() + 5);
 	}
 	if (INPUT->GetKey(VK_RIGHT) &&
 		(!pixelCheck[1].isCol || !pixelCheck[2].isCol))
 	{
 		//_x += 3.0f;
-		bgImg->setX(bgImg->getX() - 10);
+		bgImg->setX(bgImg->getX() - 5);
 	}
 	if (INPUT->GetKey(VK_DOWN) &&
 		(!pixelCheck[2].isCol || !pixelCheck[3].isCol))
 	{
 		//_y += 3.0f;
-		bgImg->setY(bgImg->getY() - 10);
+		bgImg->setY(bgImg->getY() - 5);
 	}
 	if (INPUT->GetKey(VK_UP) &&
 		(!pixelCheck[0].isCol || !pixelCheck[1].isCol))
 	{
 		//_y -= 3.0f;
-		bgImg->setY(bgImg->getY() + 10);
+		bgImg->setY(bgImg->getY() + 5);
 	}
 	//공의 렉트 움직이기
 	_rc = RectMakeCenter(_x, _y, 60, 60);
@@ -104,6 +106,7 @@ void pixelCollisionScene::render()
 	//백그라운드 렌더
 	bgImg->render(getMemDC(), bgImg->getX(), bgImg->getY());
 
+	uiImg->render(getMemDC());
 	////로드된 타일 렌더
 	//for (int i = 0; i < MAXTILE; i++)
 	//{
