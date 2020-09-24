@@ -31,6 +31,7 @@ enum class TERRAIN
 	TILE,
 	OBJECT,
 	IMG,
+	DECO,
 
 	NONE
 };

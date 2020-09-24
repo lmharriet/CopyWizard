@@ -141,6 +141,13 @@ void mapToolScene::render()
 
 		if (tile[i].keyName != "") imageStretchRender(tile[i].keyName, { tile[i].rc.left,tile[i].rc.top }, tile[i].frame.x, tile[i].frame.y, tile[i].rc);
 	}
+
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (!colCheck(obTile[i].rc, cam.rc) || obTile[i].kind == TERRAIN::NONE)continue;
+
+		if(tile[i].keyName != "")  imageStretchRender(obTile[i].keyName, { obTile[i].rc.left,obTile[i].rc.top }, obTile[i].frame.x, obTile[i].frame.y, obTile[i].rc);
+	}
 	objectImgRender();
 	//타일 그리기
 	tileRender();
@@ -375,6 +382,10 @@ void mapToolScene::initTile()
 		tile[i].kind = TERRAIN::NONE;
 		tile[i].keyName = "";
 		tile[i].frame = { 0,0 };
+
+		obTile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+		obTile[i].kind = TERRAIN::NONE;
+		obTile[i].keyName = "";
 	}
 }
 
@@ -458,12 +469,12 @@ void mapToolScene::initSelectTerrain()
 		object[i].keyName = objectName[i];
 	}
 	//page2//
-	string decoName[9] = { "grass4","grass3","grass2","tomb0","tomb1","flower","window0","window1", "flag0" };
+	string decoName[9] = { "decoGrass3","decoGrass2","decoGrass1","tomb0","tomb1","flower","window0","window1", "flag0" };
 	for (int i = 0; i < 9; i++)
 	{
 		deco[i].rc = RectMake(941 + (i % 3)* 120, 170 + (i / 3) * 105, 90, 75);
 		deco[i].keyName = decoName[i];
-		deco[i].kind = TERRAIN::IMG;
+		deco[i].kind = TERRAIN::DECO;
 	}
 
 }
@@ -479,6 +490,9 @@ void mapToolScene::moveRect()
 	for (int i = 0; i < MAXTILE; i++)
 	{
 		tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize) + cam.pt.x,
+			(i / MAXTILE_HEIGHT) * _tileSize + cam.pt.y, _tileSize, _tileSize);
+
+		obTile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize) + cam.pt.x,
 			(i / MAXTILE_HEIGHT) * _tileSize + cam.pt.y, _tileSize, _tileSize);
 	}
 }
@@ -520,19 +534,16 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addImage("pillar0", "maptool/object/pillar0.bmp", _tileSize * 1, _tileSize * 4, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("pillar1", "maptool/object/pillar1.bmp", _tileSize * 2, _tileSize * 5, true, RGB(255, 0, 255));
 
-
 	//DECO//
-	IMAGEMANAGER->addImage("grass4", "maptool/deco/grass4.bmp", 50, 26, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("grass3", "maptool/deco/grass3.bmp", 56, 44, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("grass2", "maptool/deco/grass2.bmp", 64, 40, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("decoGrass3", "maptool/deco/decoGrass3.bmp", 50, 26, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("decoGrass2", "maptool/deco/decoGrass2.bmp", 56, 44, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("decoGrass1", "maptool/deco/decoGrass1.bmp", 64, 40, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("tomb0", "maptool/deco/tomb0.bmp", 116, 84, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("tomb1", "maptool/deco/tomb1.bmp", 116, 80, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("flower", "maptool/deco/flower.bmp", 70, 50, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("window0", "maptool/deco/window0.bmp", 82, 74, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("window1", "maptool/deco/window1.bmp", 82, 74, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("flag0", "maptool/deco/flag0.bmp", 82, 74, true, RGB(255, 0, 255));
-
-
+	IMAGEMANAGER->addImage("flag0", "maptool/deco/flag0.bmp", 68, 96, true, RGB(255, 0, 255));
 }
 
 void mapToolScene::mapSave(int index)
@@ -618,6 +629,14 @@ void mapToolScene::tileRender()
 					FrameRect(getMemDC(), tile[i].rc, PINK);
 					break;
 				}
+			}
+		}
+
+		if (colCheck(obTile[i].rc, cam.rc))
+		{
+			if (obTile[i].kind == TERRAIN::DECO)
+			{ 
+				FrameRect(getMemDC(), obTile[i].rc, WHITE);
 			}
 		}
 	}
@@ -770,7 +789,9 @@ void mapToolScene::objectImgRender()
 			width = 2 * _tileSize;
 			height = 4 * _tileSize;
 
-			if (_tileSize == TILESIZE) IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
+			image* img = IMAGEMANAGER->findImage(key);
+
+			img->renderResize(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
 		}
 		else if (tile[i].keyName == "flowerbed2")
 		{
@@ -778,7 +799,9 @@ void mapToolScene::objectImgRender()
 			width = 2 * _tileSize;
 			height = 5 * _tileSize;
 
-			if (_tileSize == TILESIZE) IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
+			image* img = IMAGEMANAGER->findImage(key);
+
+			img->renderResize(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
 		}
 		else if (tile[i].keyName == "pillar1")
 		{
@@ -786,7 +809,8 @@ void mapToolScene::objectImgRender()
 
 			height = 3 * _tileSize;
 
-		if (_tileSize == TILESIZE) IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
+			image* img = IMAGEMANAGER->findImage(key);
+			img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
 		}
 	}
 
@@ -803,20 +827,30 @@ void mapToolScene::objectImgRender()
 			key = "pillar0";
 
 			height = 3 * _tileSize;
-
-			if (_tileSize == TILESIZE) IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
+			image* img = IMAGEMANAGER->findImage(key);
+			img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
 		}
 		else if (tile[i].keyName == "bossDoor")
 		{
-
 			if (tile[i + 5].keyName != "bossDoor")continue;
 
 			key = "bossDoor";
 
 			height = 7 * _tileSize;
-
-			if (_tileSize == TILESIZE) IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
+			image* img = IMAGEMANAGER->findImage(key);
+			img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
 		}
+	}
+
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (obTile[i].kind != TERRAIN::DECO) continue;
+
+		float scale = (float)(obTile[i].rc.right - obTile[i].rc.left) / TILESIZE;
+
+		image* img = IMAGEMANAGER->findImage(obTile[i].keyName);
+		
+		img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
 	}
 }
 
@@ -877,6 +911,7 @@ void mapToolScene::controller()
 		for (int i = 0; i < MAXTILE; i++)
 		{
 			tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+			obTile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
 		}
 		_mouseWheel = 0;
 	}
@@ -886,6 +921,7 @@ void mapToolScene::controller()
 		for (int i = 0; i < MAXTILE; i++)
 		{
 			tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+			obTile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
 		}
 		_mouseWheel = 0;
 	}
@@ -897,6 +933,7 @@ void mapToolScene::controller()
 		for (int i = 0; i < MAXTILE; i++)
 		{
 			tile[i].rc = RectMake(150 + (i % MAXTILE_WIDTH * _tileSize), 60 + (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+			obTile[i].rc = RectMake(150 + (i % MAXTILE_WIDTH * _tileSize), 60 + (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
 		}
 	}
 
@@ -905,6 +942,7 @@ void mapToolScene::controller()
 		for (int i = 0; i < MAXTILE; i++)
 		{
 			tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
+			obTile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
 		}
 	}
 
@@ -1081,35 +1119,56 @@ void mapToolScene::controller()
 				{
 					if (maptool.isCol)continue;
 
-					if (PtInRect(&tile[i].rc, _ptMouse))
+					if (user.kind == TERRAIN::DECO)
 					{
-
-						if (user.KeyName == "pillar0") //가로가 1
+						if (PtInRect(&obTile[i].rc, _ptMouse))
 						{
-							tile[i].kind = user.kind;
-							tile[i].keyName = user.KeyName;
+							obTile[i].kind = user.kind;
+							obTile[i].keyName = user.KeyName;
 						}
-						else if (user.KeyName == "bossDoor") // i,i+5
+					}
+					else // user.kind == TERRAIN::OBJECT
+					{
+						if (PtInRect(&tile[i].rc, _ptMouse))
 						{
-							tile[i].kind = user.kind;
-							tile[i + 5].kind = user.kind;
 
-							tile[i].keyName = user.KeyName;
-							tile[i + 5].keyName = user.KeyName;
-						}
-						else
-						{
-							//2,2 일 때
-							for (int j = 0; j < 2; j++)
+							if (user.KeyName == "pillar0") //가로가 1
 							{
-								for (int k = 0; k < 2; k++)
+								tile[i].kind = user.kind;
+								tile[i].keyName = user.KeyName;
+							}
+							else if (user.KeyName == "bossDoor") // i,i+5
+							{
+								tile[i].kind = user.kind;
+								tile[i + 5].kind = user.kind;
+
+								tile[i].keyName = user.KeyName;
+								tile[i + 5].keyName = user.KeyName;
+							}
+							else
+							{
+								//2,2 일 때
+								for (int j = 0; j < 2; j++)
 								{
-									tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
-									tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
-									tile[i + (MAXTILE_WIDTH * j) + k].frame = { k,j };
+									for (int k = 0; k < 2; k++)
+									{
+										tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
+										tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
+										tile[i + (MAXTILE_WIDTH * j) + k].frame = { k,j };
+									}
 								}
 							}
 						}
+					}
+				}
+				break;
+			case TOOL::ERASE:
+				for (int i = 0; i < MAXTILE; i++)
+				{
+					if (PtInRect(&obTile[i].rc, _ptMouse))
+					{
+						obTile[i].keyName = "";
+						obTile[i].kind = TERRAIN::NONE;
 					}
 				}
 				break;

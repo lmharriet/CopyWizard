@@ -22,6 +22,7 @@ private:
 
 	/// TILE ///
 	tagTile tile[MAXTILE];
+	tagTile obTile[MAXTILE];
 
 	/// OPTION ///
 	RECT mapOption[3];
