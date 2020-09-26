@@ -20,9 +20,6 @@ HRESULT player::init()
 	_bomb = new bomb;
 	_bomb->init(5, 600);
 
-	//체력바 클래스 초기화
-	_hpBar = new progressBar;
-	_hpBar->init("progressBarFront", "progressBarBack");
 	//체력 초기화
 	_maxHp = _currentHp = 100;
 
@@ -36,8 +33,6 @@ void player::release()
 	SAFE_DELETE(_missile);
 	//폭탄 클래스 해제
 	SAFE_DELETE(_bomb);
-	//체력바 클래스 해제
-	SAFE_DELETE(_hpBar);
 }
 
 void player::update()
@@ -70,11 +65,7 @@ void player::update()
 	//충돌처리
 	this->collision();
 
-	//체력바 업데이트
-	_hpBar->update();
 	//체력바 위치 피통도 업데이트 해줘야 한다
-	_hpBar->setPos(_rocket->getX(), _rocket->getY() - 20);
-	_hpBar->setGauge(_maxHp, _currentHp);
 
 	//플레이어 데이터로 세이브 로드
 	if (INPUT->GetKeyDown(VK_LBUTTON))
@@ -97,9 +88,6 @@ void player::render()
 
 	//폭탄클래스 렌더
 	_bomb->render();
-
-	//체력바 클래스 렌더
-	_hpBar->render();
 
 }
 

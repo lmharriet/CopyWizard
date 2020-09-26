@@ -38,7 +38,6 @@ using namespace std;
 using namespace MY_UTIL;
 #include "playerData.h"
 #include "sceneManager.h"
-#include "iniData.h"
 #include "soundManager.h"
 
 
@@ -50,7 +49,6 @@ using namespace MY_UTIL;
 #define IMAGEMANAGER imageManager::getSingleton()
 #define PLAYERDATA playerData::getSingleton()
 #define SCENEMANAGER sceneManager::getSingleton()
-#define INIDATA iniData::getSingleton()
 #define SOUNDMANAGER soundManager::getSingleton()
 
 //=============================================================

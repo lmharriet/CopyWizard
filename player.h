@@ -1,7 +1,6 @@
 #pragma once
 #include "gameNode.h"
 #include "bullet.h"
-#include "progressBar.h"
 //양쪽 클래스에 서로 헤더를 걸어주면 뻥난다
 //따라서 클래스 전방선언을 해줘야 한다
 //#include "enemyManager.h" 
@@ -20,7 +19,6 @@ private:
 	missile* _missile;				//미사일 클래스
 	bomb* _bomb;					//폭탄 클래스
 
-	progressBar* _hpBar;			//체력바
 	float _currentHp, _maxHp;		//플레이어 현재체력, 최대체력
 	float _x, _y;					//플레이어 위치좌표
 
