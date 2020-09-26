@@ -149,7 +149,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="bullet.h" />
-    <ClInclude Include="camera.h" />
     <ClInclude Include="colorNode.h" />
     <ClInclude Include="commonMacroFunction.h" />
     <ClInclude Include="enemy.h" />
@@ -159,7 +158,6 @@
     <ClInclude Include="image.h" />
     <ClInclude Include="imageManager.h" />
     <ClInclude Include="iniData.h" />
-    <ClInclude Include="iniTestScene.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="loading.h" />
     <ClInclude Include="loadingScene.h" />
@@ -169,12 +167,10 @@
     <ClInclude Include="pixelCollisionScene.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerData.h" />
-    <ClInclude Include="progressBar.h" />
     <ClInclude Include="random.h" />
     <ClInclude Include="sceneManager.h" />
     <ClInclude Include="singletonBase.h" />
     <ClInclude Include="soundManager.h" />
-    <ClInclude Include="soundTestScene.h" />
     <ClInclude Include="startScene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="tileNode.h" />
@@ -182,7 +178,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bullet.cpp" />
-    <ClCompile Include="camera.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="enemyManager.cpp" />
     <ClCompile Include="gameNode.cpp" />
@@ -190,7 +185,6 @@
     <ClCompile Include="image.cpp" />
     <ClCompile Include="imageManager.cpp" />
     <ClCompile Include="iniData.cpp" />
-    <ClCompile Include="iniTestScene.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="loading.cpp" />
     <ClCompile Include="loadingScene.cpp" />
@@ -200,11 +194,9 @@
     <ClCompile Include="pixelCollisionScene.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerData.cpp" />
-    <ClCompile Include="progressBar.cpp" />
     <ClCompile Include="random.cpp" />
     <ClCompile Include="sceneManager.cpp" />
     <ClCompile Include="soundManager.cpp" />
-    <ClCompile Include="soundTestScene.cpp" />
     <ClCompile Include="startScene.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

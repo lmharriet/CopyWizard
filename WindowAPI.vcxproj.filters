@@ -19,26 +19,11 @@
     <Filter Include="GameFramework\이미지">
       <UniqueIdentifier>{1e616e04-3329-41d7-b6ed-02b7d269f51f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework\카메라">
-      <UniqueIdentifier>{aa4ae9bf-5abe-4eee-a0e5-fe3d8d17ea5b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MainGame\슈팅게임">
-      <UniqueIdentifier>{c085af44-2c6f-4769-8527-9f6c78d87154}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameFramework\총알">
       <UniqueIdentifier>{0850c6c3-b3ea-4bbc-818b-2f7be3085366}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameFramework\싱글톤데이터">
       <UniqueIdentifier>{4f9c286a-e4c3-42c7-9fce-71a675503514}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameFramework\체력바">
-      <UniqueIdentifier>{bc1fad6b-64c5-4477-8b5e-8fc16bc693dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MainGame\INI테스트">
-      <UniqueIdentifier>{8e6d480c-fe29-46b8-90ae-1b8ccd219b09}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MainGame\사운드테스트">
-      <UniqueIdentifier>{fddc1305-6e22-4095-a825-8f29605b50ab}</UniqueIdentifier>
     </Filter>
     <Filter Include="MainGame\픽셀충돌">
       <UniqueIdentifier>{7f5178d1-cf30-43b1-ba73-2458127a27d5}</UniqueIdentifier>
@@ -54,6 +39,9 @@
     </Filter>
     <Filter Include="MapTool\WinMain">
       <UniqueIdentifier>{68b7cb8f-01ee-485e-8a9d-54f0e06f6040}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\인게임">
+      <UniqueIdentifier>{c085af44-2c6f-4769-8527-9f6c78d87154}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -81,11 +69,8 @@
     <ClCompile Include="imageManager.cpp">
       <Filter>GameFramework\매니져</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>GameFramework\카메라</Filter>
-    </ClCompile>
     <ClCompile Include="player.cpp">
-      <Filter>MainGame\슈팅게임</Filter>
+      <Filter>MainGame\인게임</Filter>
     </ClCompile>
     <ClCompile Include="bullet.cpp">
       <Filter>GameFramework\총알</Filter>
@@ -94,37 +79,28 @@
       <Filter>GameFramework\유틸</Filter>
     </ClCompile>
     <ClCompile Include="enemy.cpp">
-      <Filter>MainGame\슈팅게임</Filter>
+      <Filter>MainGame\인게임</Filter>
     </ClCompile>
     <ClCompile Include="minion.cpp">
-      <Filter>MainGame\슈팅게임</Filter>
+      <Filter>MainGame\인게임</Filter>
     </ClCompile>
     <ClCompile Include="enemyManager.cpp">
-      <Filter>MainGame\슈팅게임</Filter>
+      <Filter>MainGame\인게임</Filter>
     </ClCompile>
     <ClCompile Include="playerData.cpp">
       <Filter>GameFramework\싱글톤데이터</Filter>
-    </ClCompile>
-    <ClCompile Include="progressBar.cpp">
-      <Filter>GameFramework\체력바</Filter>
     </ClCompile>
     <ClCompile Include="sceneManager.cpp">
       <Filter>GameFramework\매니져</Filter>
     </ClCompile>
     <ClCompile Include="gameScene.cpp">
-      <Filter>MainGame\슈팅게임</Filter>
+      <Filter>MainGame\인게임</Filter>
     </ClCompile>
     <ClCompile Include="iniData.cpp">
       <Filter>GameFramework\매니져</Filter>
     </ClCompile>
-    <ClCompile Include="iniTestScene.cpp">
-      <Filter>MainGame\INI테스트</Filter>
-    </ClCompile>
     <ClCompile Include="soundManager.cpp">
       <Filter>GameFramework\매니져</Filter>
-    </ClCompile>
-    <ClCompile Include="soundTestScene.cpp">
-      <Filter>MainGame\사운드테스트</Filter>
     </ClCompile>
     <ClCompile Include="pixelCollisionScene.cpp">
       <Filter>MainGame\픽셀충돌</Filter>
@@ -168,11 +144,8 @@
     <ClInclude Include="imageManager.h">
       <Filter>GameFramework\매니져</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>GameFramework\카메라</Filter>
-    </ClInclude>
     <ClInclude Include="player.h">
-      <Filter>MainGame\슈팅게임</Filter>
+      <Filter>MainGame\인게임</Filter>
     </ClInclude>
     <ClInclude Include="bullet.h">
       <Filter>GameFramework\총알</Filter>
@@ -181,37 +154,28 @@
       <Filter>GameFramework\유틸</Filter>
     </ClInclude>
     <ClInclude Include="enemy.h">
-      <Filter>MainGame\슈팅게임</Filter>
+      <Filter>MainGame\인게임</Filter>
     </ClInclude>
     <ClInclude Include="minion.h">
-      <Filter>MainGame\슈팅게임</Filter>
+      <Filter>MainGame\인게임</Filter>
     </ClInclude>
     <ClInclude Include="enemyManager.h">
-      <Filter>MainGame\슈팅게임</Filter>
+      <Filter>MainGame\인게임</Filter>
     </ClInclude>
     <ClInclude Include="playerData.h">
       <Filter>GameFramework\싱글톤데이터</Filter>
-    </ClInclude>
-    <ClInclude Include="progressBar.h">
-      <Filter>GameFramework\체력바</Filter>
     </ClInclude>
     <ClInclude Include="sceneManager.h">
       <Filter>GameFramework\매니져</Filter>
     </ClInclude>
     <ClInclude Include="gameScene.h">
-      <Filter>MainGame\슈팅게임</Filter>
+      <Filter>MainGame\인게임</Filter>
     </ClInclude>
     <ClInclude Include="iniData.h">
       <Filter>GameFramework\매니져</Filter>
     </ClInclude>
-    <ClInclude Include="iniTestScene.h">
-      <Filter>MainGame\INI테스트</Filter>
-    </ClInclude>
     <ClInclude Include="soundManager.h">
       <Filter>GameFramework\매니져</Filter>
-    </ClInclude>
-    <ClInclude Include="soundTestScene.h">
-      <Filter>MainGame\사운드테스트</Filter>
     </ClInclude>
     <ClInclude Include="pixelCollisionScene.h">
       <Filter>MainGame\픽셀충돌</Filter>
