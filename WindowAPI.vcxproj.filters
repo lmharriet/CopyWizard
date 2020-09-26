@@ -28,12 +28,6 @@
     <Filter Include="MainGame\픽셀충돌">
       <UniqueIdentifier>{7f5178d1-cf30-43b1-ba73-2458127a27d5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework\로딩">
-      <UniqueIdentifier>{380f7478-b624-45de-aeae-2ccb9055ab48}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MainGame\로딩화면">
-      <UniqueIdentifier>{7e12b8a1-bff7-4c0e-8411-c665eda32360}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MapTool">
       <UniqueIdentifier>{545b4c28-71eb-4d96-9f49-96a6c22af9fa}</UniqueIdentifier>
     </Filter>
@@ -105,12 +99,6 @@
     <ClCompile Include="pixelCollisionScene.cpp">
       <Filter>MainGame\픽셀충돌</Filter>
     </ClCompile>
-    <ClCompile Include="loading.cpp">
-      <Filter>GameFramework\로딩</Filter>
-    </ClCompile>
-    <ClCompile Include="loadingScene.cpp">
-      <Filter>MainGame\로딩화면</Filter>
-    </ClCompile>
     <ClCompile Include="mapToolScene.cpp">
       <Filter>MapTool</Filter>
     </ClCompile>
@@ -179,12 +167,6 @@
     </ClInclude>
     <ClInclude Include="pixelCollisionScene.h">
       <Filter>MainGame\픽셀충돌</Filter>
-    </ClInclude>
-    <ClInclude Include="loading.h">
-      <Filter>GameFramework\로딩</Filter>
-    </ClInclude>
-    <ClInclude Include="loadingScene.h">
-      <Filter>MainGame\로딩화면</Filter>
     </ClInclude>
     <ClInclude Include="mapToolScene.h">
       <Filter>MapTool</Filter>

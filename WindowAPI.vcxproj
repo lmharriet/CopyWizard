@@ -159,8 +159,6 @@
     <ClInclude Include="imageManager.h" />
     <ClInclude Include="iniData.h" />
     <ClInclude Include="input.h" />
-    <ClInclude Include="loading.h" />
-    <ClInclude Include="loadingScene.h" />
     <ClInclude Include="mainGame.h" />
     <ClInclude Include="mapToolScene.h" />
     <ClInclude Include="minion.h" />
@@ -186,8 +184,6 @@
     <ClCompile Include="imageManager.cpp" />
     <ClCompile Include="iniData.cpp" />
     <ClCompile Include="input.cpp" />
-    <ClCompile Include="loading.cpp" />
-    <ClCompile Include="loadingScene.cpp" />
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="mapToolScene.cpp" />
     <ClCompile Include="minion.cpp" />
