@@ -57,9 +57,6 @@
     <ClCompile Include="gameNode.cpp">
       <Filter>MainGame\GameNode</Filter>
     </ClCompile>
-    <ClCompile Include="mainGame.cpp">
-      <Filter>MainGame</Filter>
-    </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>GameFramework\매니져</Filter>
     </ClCompile>
@@ -113,6 +110,9 @@
       <Filter>GameFramework\매니져\사운드</Filter>
     </ClCompile>
     <ClCompile Include="cameraManager.cpp" />
+    <ClCompile Include="mainGame.cpp">
+      <Filter>MainGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">

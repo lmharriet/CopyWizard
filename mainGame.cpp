@@ -22,14 +22,15 @@ HRESULT mainGame::init()
 
 	/*씬추가*/
 	SCENEMANAGER->addScene("시작화면", new startScene);
-	SCENEMANAGER->addScene("픽셀충돌", new pixelCollisionScene);
+	//SCENEMANAGER->addScene("픽셀충돌", new pixelCollisionScene);
+	SCENEMANAGER->addScene("인게임", new gameScene);
 
 	mapToolScene* maptool = new mapToolScene;
 	SCENEMANAGER->addScene("맵툴제작", maptool);
 	maptool->init();
 	maptool->addImage();
 	/*현재씬*/
-	SCENEMANAGER->loadScene("시작화면");
+	SCENEMANAGER->loadScene("인게임");
 
 	ShowCursor(false);
 	return S_OK;

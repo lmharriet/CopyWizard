@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "enemyManager.h"
-#include "player.h"
+
 
 HRESULT enemyManager::init()
 {
@@ -37,9 +37,7 @@ void enemyManager::update()
 
 	//미니언 총알발사
 	this->minionBulletFire();
-
-	//충돌처리
-	this->collision();
+\
 
 	
 }
@@ -87,20 +85,3 @@ void enemyManager::removeMinion(int index)
 	_vMinion.erase(_vMinion.begin() + index);
 }
 
-//충돌처리 (미니언들의 총알, 플레이어)
-void enemyManager::collision()
-{
-	for (int i = 0; i < _bullet->getBullet().size(); i++)
-	{
-		RECT rc;
-		if (IntersectRect(&rc, &_bullet->getBullet()[i].rc,
-			&_player->getPlayerImg()->boundingBox()))
-		{
-			//공용총알 삭제
-			_bullet->removeBullet(i);
-			//플레이어 피통깍기
-			_player->hitDamage(10);
-		}
-	}
-
-}
