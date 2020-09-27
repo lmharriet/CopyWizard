@@ -39,7 +39,7 @@ using namespace MY_UTIL;
 #include "playerData.h"
 #include "sceneManager.h"
 #include "soundManager.h"
-
+#include "cameraManager.h"
 
 //=============================================================
 //	## 싱글톤을 추가한다 ##
@@ -50,6 +50,7 @@ using namespace MY_UTIL;
 #define PLAYERDATA playerData::getSingleton()
 #define SCENEMANAGER sceneManager::getSingleton()
 #define SOUNDMANAGER soundManager::getSingleton()
+#define CAMERAMANAGER cameraManager::getSingleton()
 
 //=============================================================
 //	## 디파인문 ## (윈도우창 초기화)

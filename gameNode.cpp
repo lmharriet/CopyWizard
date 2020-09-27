@@ -43,7 +43,8 @@ void gameNode::release()
 	//사운드매니져 해제
 	SOUNDMANAGER->release();
 	SOUNDMANAGER->releaseSingleton();
-
+	//카메라매니져 해제
+	CAMERAMANAGER->releaseSingleton();
 	//HDC 해제
 	ReleaseDC(_hWnd, _hdc);
 }

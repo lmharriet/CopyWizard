@@ -110,6 +110,8 @@ void pixelCollisionScene::render()
 	//로드된 타일 렌더
 	for (int i = 0; i < MAXTILE; i++)
 	{
+		if (colCheck(cam, tile[i].rc) == false) continue;
+
 		IMAGEMANAGER->frameRender(tile[i].keyName, getMemDC(), tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
 	}
 

@@ -37,6 +37,15 @@
     <Filter Include="MainGame\인게임">
       <UniqueIdentifier>{c085af44-2c6f-4769-8527-9f6c78d87154}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFramework\매니져\사운드">
+      <UniqueIdentifier>{abd3ece1-1e83-49f7-84cf-7b7428ce0461}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\매니져\씬">
+      <UniqueIdentifier>{ba93dddf-42f9-40b0-9d0e-5ab1710381a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\매니져\이미지">
+      <UniqueIdentifier>{bc419726-8763-4a8c-b83b-df504eda4079}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
@@ -60,9 +69,6 @@
     <ClCompile Include="image.cpp">
       <Filter>GameFramework\이미지</Filter>
     </ClCompile>
-    <ClCompile Include="imageManager.cpp">
-      <Filter>GameFramework\매니져</Filter>
-    </ClCompile>
     <ClCompile Include="player.cpp">
       <Filter>MainGame\인게임</Filter>
     </ClCompile>
@@ -84,16 +90,10 @@
     <ClCompile Include="playerData.cpp">
       <Filter>GameFramework\싱글톤데이터</Filter>
     </ClCompile>
-    <ClCompile Include="sceneManager.cpp">
-      <Filter>GameFramework\매니져</Filter>
-    </ClCompile>
     <ClCompile Include="gameScene.cpp">
       <Filter>MainGame\인게임</Filter>
     </ClCompile>
     <ClCompile Include="iniData.cpp">
-      <Filter>GameFramework\매니져</Filter>
-    </ClCompile>
-    <ClCompile Include="soundManager.cpp">
       <Filter>GameFramework\매니져</Filter>
     </ClCompile>
     <ClCompile Include="pixelCollisionScene.cpp">
@@ -103,9 +103,16 @@
       <Filter>MapTool</Filter>
     </ClCompile>
     <ClCompile Include="startScene.cpp" />
-    <ClCompile Include="..\..\..\픽셀충돌_카메라매니저\CameraManager.cpp">
-      <Filter>GameFramework\매니져</Filter>
+    <ClCompile Include="imageManager.cpp">
+      <Filter>GameFramework\매니져\이미지</Filter>
     </ClCompile>
+    <ClCompile Include="sceneManager.cpp">
+      <Filter>GameFramework\매니져\씬</Filter>
+    </ClCompile>
+    <ClCompile Include="soundManager.cpp">
+      <Filter>GameFramework\매니져\사운드</Filter>
+    </ClCompile>
+    <ClCompile Include="cameraManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -132,9 +139,6 @@
     <ClInclude Include="image.h">
       <Filter>GameFramework\이미지</Filter>
     </ClInclude>
-    <ClInclude Include="imageManager.h">
-      <Filter>GameFramework\매니져</Filter>
-    </ClInclude>
     <ClInclude Include="player.h">
       <Filter>MainGame\인게임</Filter>
     </ClInclude>
@@ -156,16 +160,10 @@
     <ClInclude Include="playerData.h">
       <Filter>GameFramework\싱글톤데이터</Filter>
     </ClInclude>
-    <ClInclude Include="sceneManager.h">
-      <Filter>GameFramework\매니져</Filter>
-    </ClInclude>
     <ClInclude Include="gameScene.h">
       <Filter>MainGame\인게임</Filter>
     </ClInclude>
     <ClInclude Include="iniData.h">
-      <Filter>GameFramework\매니져</Filter>
-    </ClInclude>
-    <ClInclude Include="soundManager.h">
       <Filter>GameFramework\매니져</Filter>
     </ClInclude>
     <ClInclude Include="pixelCollisionScene.h">
@@ -181,8 +179,15 @@
     <ClInclude Include="colorNode.h">
       <Filter>MapTool</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\픽셀충돌_카메라매니저\CameraManager.h">
-      <Filter>GameFramework\매니져</Filter>
+    <ClInclude Include="imageManager.h">
+      <Filter>GameFramework\매니져\이미지</Filter>
     </ClInclude>
+    <ClInclude Include="sceneManager.h">
+      <Filter>GameFramework\매니져\씬</Filter>
+    </ClInclude>
+    <ClInclude Include="soundManager.h">
+      <Filter>GameFramework\매니져\사운드</Filter>
+    </ClInclude>
+    <ClInclude Include="cameraManager.h" />
   </ItemGroup>
 </Project>
