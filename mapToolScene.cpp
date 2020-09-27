@@ -304,6 +304,17 @@ void mapToolScene::iconCheck()
 				}
 			}
 		}
+
+		if (INPUT->GetKeyDown('E'))
+		{
+			tool = TOOL::ERASE;
+			resetUserData();
+		}
+		if (INPUT->GetKeyDown('M'))
+		{
+			if (!dragButton.isCol) dragButton.isCol = true;
+			else dragButton.isCol = false;
+		}
 		if (PtInRect(&dragButton.rc, _ptMouse) && isLeftDown && tool != TOOL::SPOID)
 		{
 
@@ -338,6 +349,18 @@ void mapToolScene::iconCheck()
 				}
 			}
 		}
+
+		if (INPUT->GetKeyDown('E'))
+		{
+			tool = TOOL::ERASE;
+			resetUserData();
+		}
+		if (INPUT->GetKeyDown('M'))
+		{
+			if (!dragButton.isCol) dragButton.isCol = true;
+			else dragButton.isCol = false;
+		}
+
 		if (PtInRect(&dragButton.rc, _ptMouse) && isLeftDown && tool != TOOL::SPOID)
 		{
 			if (!dragButton.isCol) dragButton.isCol = true;
@@ -370,6 +393,16 @@ void mapToolScene::iconCheck()
 					break;
 				}
 			}
+		}
+		if (INPUT->GetKeyDown('E'))
+		{
+			tool = TOOL::ERASE;
+			resetUserData();
+		}
+		if (INPUT->GetKeyDown('M'))
+		{
+			if (!dragButton.isCol) dragButton.isCol = true;
+			else dragButton.isCol = false;
 		}
 		if (PtInRect(&dragButton.rc, _ptMouse) && isLeftDown && tool != TOOL::SPOID)
 		{
@@ -728,7 +761,7 @@ void mapToolScene::buttonRender()
 void mapToolScene::rcRender()
 {
 	//button
-	if (INPUT->GetToggleKey(VK_TAB)) // 렉트를 껏다 켯다 할 수 있음
+	if (INPUT->GetToggleKey(VK_F1)) // 렉트를 껏다 켯다 할 수 있음
 	{
 		buttonRender();
 		FrameRect(getMemDC(), maptool.rc, WHITE);
@@ -928,28 +961,28 @@ void mapToolScene::imageStretchRender(string keyName, POINT pt, int frameX, int 
 void mapToolScene::controller()
 {
 	if (!isMiniMap) {
-		if (INPUT->GetKey('W') && abs(cam.pt.y) > 0)
+		if (INPUT->GetKey('W'))
 		{
 			cam.pt.y += camSpeed;
 			moveRect();
 
 			if (dragButton.isCol && isLeft)drag.start.y += 5;
 		}
-		if (INPUT->GetKey('A') && abs(cam.pt.x) > 0)
+		if (INPUT->GetKey('A'))
 		{
 			cam.pt.x += camSpeed;
 			moveRect();
 
 			if (dragButton.isCol && isLeft)drag.start.x += 5;
 		}
-		if (INPUT->GetKey('S') && abs(cam.pt.y) < MAXTILE_HEIGHT * TILESIZE - WINSIZEY)
+		if ((INPUT->GetKey('S')))
 		{
 			cam.pt.y -= camSpeed;
 			moveRect();
 
 			if (dragButton.isCol && isLeft)drag.start.y -= 5;
 		}
-		if (INPUT->GetKey('D') && abs(cam.pt.x) < MAXTILE_WIDTH * TILESIZE - 920)
+		if ((INPUT->GetKey('D')))
 		{
 			cam.pt.x -= camSpeed;
 			moveRect();
@@ -991,7 +1024,7 @@ void mapToolScene::controller()
 	}
 
 
-	if (INPUT->GetKeyDown('M'))
+	if (INPUT->GetKeyDown(VK_TAB))
 	{
 		if (!isMiniMap)
 		{
@@ -1291,9 +1324,9 @@ void mapToolScene::controller()
 			case TOOL::DRAW:
 				for (int i = 0; i < MAXTILE; i++)
 				{
-					if (user.kind == TERRAIN::WALL && user.KeyName != "wallTile")continue;
+					if (user.kind == TERRAIN::WALL)continue;
 
-					if (tile[i].kind == TERRAIN::OBJECT || tile[i].kind == TERRAIN::WALL || tile[i].kind == TERRAIN::IMG)continue;
+					if (tile[i].kind == TERRAIN::OBJECT || tile[i].kind == TERRAIN::WALL)continue;
 
 					if (colCheck(tile[i].rc, drag.rc))
 					{
@@ -1312,8 +1345,8 @@ void mapToolScene::controller()
 				if (cul.size() > 4)
 				{
 					//가로, 세로 구하기
-					int height = abs((cul.back() / 100) - (cul.front() / 100)) + 1; // 가로 x칸
-					int width = (cul.back() - ((height - 1) * 100)) - cul.front() + 1; // 세로 y칸
+					int height = abs((cul.back() / MAXTILE_HEIGHT) - (cul.front() / MAXTILE_HEIGHT)) + 1; // 가로 x칸
+					int width = (cul.back() - ((height - 1) * MAXTILE_WIDTH)) - cul.front() + 1; // 세로 y칸
 
 					if (tile[cul.front()].kind != TERRAIN::OBJECT)
 					{
@@ -1361,6 +1394,7 @@ void mapToolScene::controller()
 					}
 
 				}
+
 				cul.clear();
 				break;
 			case TOOL::ERASE:
