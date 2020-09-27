@@ -73,4 +73,7 @@ public:
 	float getDistanceX() { return _distanceX; }
 	float getDistanceY() { return _distanceY; }
 	RECT getRect() { return _cameraRect; }
+
+	float getMinX() { return _minX; }
+	float getMinY() { return _minY; }
 };

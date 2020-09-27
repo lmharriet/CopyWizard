@@ -34,15 +34,7 @@ HRESULT pixelCollisionScene::init()
 	cam = RectMake(0, 0, WINSIZEX, WINSIZEY);
 	isBottomCol = isTopCol = false;
 
-
-	POINT temp[4] = { {-10,0},{10,0},{10,30},{-10,30} };
-	for (int i = 0; i < 4; i++)
-	{
-		pixelCheck[i].pos = temp[i];
-		pixelCheck[i].rc = RectMakeCenter(_x + temp[i].x, _y + temp[i].y, 10, 10);
-		pixelCheck[i].isCol = false;
-	}
-
+	CAMERAMANAGER->init(_x, _y, 150*150, 150*150, 0, 0, WINSIZEX / 2, WINSIZEY / 2);
 	return S_OK;
 }
 
@@ -52,52 +44,41 @@ void pixelCollisionScene::release()
 
 void pixelCollisionScene::update()
 {
-	if (INPUT->GetKey(VK_LEFT) &&
-		(!pixelCheck[0].isCol || !pixelCheck[3].isCol))
+	if (INPUT->GetKey(VK_LEFT))
 	{
-		//_x -= 3.0f;
+		_x -= 3.0f;
 		//bgImg->setX(bgImg->getX() + 5);
 	}
-	if (INPUT->GetKey(VK_RIGHT) &&
-		(!pixelCheck[1].isCol || !pixelCheck[2].isCol))
+	if (INPUT->GetKey(VK_RIGHT))
 	{
-		//_x += 3.0f;
+		_x += 3.0f;
 		//bgImg->setX(bgImg->getX() - 5);
 	}
-	if (INPUT->GetKey(VK_DOWN) &&
-		(!pixelCheck[2].isCol || !pixelCheck[3].isCol))
+	if (INPUT->GetKey(VK_DOWN))
 	{
-		//_y += 3.0f;
+		_y += 3.0f;
 		//bgImg->setY(bgImg->getY() - 5);
 	}
-	if (INPUT->GetKey(VK_UP) &&
-		(!pixelCheck[0].isCol || !pixelCheck[1].isCol))
+	if (INPUT->GetKey(VK_UP))
 	{
-		//_y -= 3.0f;
+		_y -= 3.0f;
 		//bgImg->setY(bgImg->getY() + 5);
 	}
 	//공의 렉트 움직이기
 	_rc = RectMakeCenter(_x, _y, 60, 60);
 
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	int tempX = abs(bgImg->getX()) + WINSIZEX / 2;
-	//	int tempY = abs(bgImg->getY()) + WINSIZEY / 2;
+	if (CAMERAMANAGER->getRect().left > CAMERAMANAGER->getMinX() &&
+		CAMERAMANAGER->getRect().top > CAMERAMANAGER->getMinY())
+	{
+		cam = RectMakeCenter(_x, _y, WINSIZEX, WINSIZEY);
+	}
 
-	//	COLORREF color = GetPixel(bgImg->getMemDC(), tempX + pixelCheck[i].pos.x, tempY + pixelCheck[i].pos.y);
-	//	int r = GetRValue(color);
-	//	int g = GetGValue(color);
-	//	int b = GetBValue(color);
+	//if (_x - WINSIZEX/2 <= CAMERAMANAGER->getMinX() && _y - WINSIZEY/2 <= CAMERAMANAGER->getMinY()) 
+	//CAMERAMANAGER->RectangleMake(getMemDC(), cam.left, cam.right, WINSIZEX, WINSIZEY);
+	//CAMERAMANAGER->RectangleMake(getMemDC(),_x, _y, 60, 60);
 
-	//	if (r == 255 && g == 0 && b == 255)
-	//	{
-	//		pixelCheck[i].isCol = true;
-	//	}
-	//	else
-	//	{
-	//		pixelCheck[i].isCol = false;
-	//	}
-	//}
+
+	CAMERAMANAGER->MovePivot(_x, _y);
 }
 
 void pixelCollisionScene::render()
@@ -105,92 +86,31 @@ void pixelCollisionScene::render()
 	//sRender.push_back()
 	//백그라운드 렌더
 	//bgImg->render(getMemDC(), bgImg->getX(), bgImg->getY());
+	//Rectangle(getMemDC(), CAMERAMANAGER->getRect());
 
-	uiImg->render(getMemDC());
+	//CAMERAMANAGER->Rectangle(getMemDC(), CAMERAMANAGER->getRect());
 	//로드된 타일 렌더
 	for (int i = 0; i < MAXTILE; i++)
 	{
-		if (colCheck(cam, tile[i].rc) == false) continue;
+		if (colCheck(cam, tile[i].rc) == false || tile[i].keyName == "") continue;
 
-		IMAGEMANAGER->frameRender(tile[i].keyName, getMemDC(), tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
+		image* img = IMAGEMANAGER->findImage(tile[i].keyName);
+		
+		//if (img == nullptr)cout << "null" << '\n';
+		//else cout << "Not Null" << '\n';
+
+		CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
+		//IMAGEMANAGER->frameRender(tile[i].keyName, getMemDC(), tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
 	}
 
+	uiImg->render(getMemDC());
+
 	////공 이미지 렌더
-	_ball->render(getMemDC(), _rc.left + 15, _rc.top);
+	//_ball->render(getMemDC(), _rc.left + 15, _rc.top);
 
-	////object image render
-	//for (int i = 0; i < MAXTILE; i++)
-	//{
-	//	if (!colCheck(tile[i].rc, cam) || tile[i].kind != TERRAIN::OBJECT)continue;
+	CAMERAMANAGER->Render(getMemDC(), _ball, _rc.left, _rc.top);
 
-	//	// 2X2인 오브젝트만 처리
-
-	//	//i object, i+1 object, i+w object, i+w+1 object
-	//	if (!(tile[i + 1].kind == TERRAIN::OBJECT && tile[i + MAXTILE_WIDTH].kind == TERRAIN::OBJECT &&
-	//		tile[i + MAXTILE_WIDTH + 1].kind == TERRAIN::OBJECT)) continue;
-
-	//	string key = tile[i].keyName;
-
-	//	if (!(tile[i + 1].keyName == key &&
-	//		tile[i + MAXTILE_WIDTH].keyName == key &&
-	//		tile[i + MAXTILE_WIDTH + 1].keyName == key)) continue;
-
-	//	int width, height;
-	//	if (tile[i].keyName == "flowerbed1")
-	//	{
-	//		key = "tree0";
-	//		width = 2 * TILESIZE;
-	//		height = 4 * TILESIZE;
-
-	//		IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
-	//	}
-	//	else if (tile[i].keyName == "flowerbed2")
-	//	{
-	//		key = "tree1";
-	//		width = 2 * TILESIZE;
-	//		height = 5 * TILESIZE;
-
-	//		IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height);
-	//	}
-	//	else if (tile[i].keyName == "pillar1")
-	//	{
-	//		key = "pillar1";
-
-	//		height = 3 * TILESIZE;
-
-	//		IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
-	//	}
-	//}
-
-	//for (int i = 0; i < MAXTILE; i++)
-	//{
-	//	if (tile[i].kind != TERRAIN::OBJECT) continue;
-
-	//	// 1x? 이거나 다른 특수한 오브젝트 처리
-
-	//	string key;
-	//	int height;
-	//	if (tile[i].keyName == "pillar0") // 가로 : 1
-	//	{
-	//		key = "pillar0";
-
-	//		height = 3 * TILESIZE;
-
-	//		IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
-	//	}
-	//	else if (tile[i].keyName == "bossDoor")
-	//	{
-
-	//		if (tile[i + 5].keyName != "bossDoor")continue;
-
-	//		key = "bossDoor";
-
-	//		height = 7 * TILESIZE;
-
-	//		IMAGEMANAGER->findImage(key)->render(getMemDC(), tile[i].rc.left, tile[i].rc.top - height);
-	//	}
-	//}
-	//
+	//CAMERAMANAGER->Rectangle(getMemDC(), cam);
 
 	//디버깅용
 	if (INPUT->GetToggleKey('A'))
@@ -206,12 +126,8 @@ void pixelCollisionScene::render()
 
 	textOut(getMemDC(), 10, 20, "", RGB(0, 0, 255));
 	char tmp[126];
-	for (int i = 0; i < 4; i++)
-	{
-		pixelCheck[i].isCol;
-		wsprintf(tmp, "pixelCheck : %d", pixelCheck[i].isCol);
-		TextOut(getMemDC(), 10, 50 + i * 20, tmp, strlen(tmp));
-	}
+	sprintf(tmp, "x : %.0f, y : %.0f", _x, _y);
+	TextOut(getMemDC(), 10, 40, tmp, strlen(tmp));
 }
 
 void pixelCollisionScene::loadMap(const char* mapFileName)
