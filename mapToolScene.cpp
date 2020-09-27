@@ -150,6 +150,9 @@ void mapToolScene::render()
 
 		if (tile[i].keyName != "")  imageStretchRender(obTile[i].keyName, { obTile[i].rc.left,obTile[i].rc.top }, obTile[i].frame.x, obTile[i].frame.y, obTile[i].rc);
 	}
+	
+
+
 	objectImgRender();
 	//타일 그리기
 	tileRender();
@@ -523,9 +526,9 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addImage("active", "maptool/ui/active.bmp", 40, 40);
 
 	//WALL//
-	IMAGEMANAGER->addFrameImage("wall0", "maptool/wall/wall0.bmp", 160, 128, 5, 4, true);
-	IMAGEMANAGER->addFrameImage("wall1", "maptool/wall/wall1.bmp", 160, 128, 5, 4, true);
-	IMAGEMANAGER->addFrameImage("wall2", "maptool/wall/wall2.bmp", 160, 128, 5, 4, true);
+	IMAGEMANAGER->addImage("wall0", "maptool/wall/wall0.bmp", _tileSize * 5, _tileSize * 4, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("wall1", "maptool/wall/wall1.bmp", _tileSize * 5, _tileSize * 4, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("wall2", "maptool/wall/wall2.bmp", _tileSize * 5, _tileSize * 4, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("wallTile", "maptool/wall/wallTile.bmp", 32, 32, 1, 1, true);
 
 	//TILE//
@@ -789,7 +792,7 @@ void mapToolScene::objectImgRender()
 	//object image render
 	for (int i = 0; i < MAXTILE; i++)
 	{
-		if (obTile[i].kind != TERRAIN::DECO) continue;
+		if (!colCheck(tile[i].rc, cam.rc) || obTile[i].kind != TERRAIN::DECO) continue;
 
 		float scale = (float)(obTile[i].rc.right - obTile[i].rc.left) / TILESIZE;
 
@@ -798,51 +801,78 @@ void mapToolScene::objectImgRender()
 		img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
 	}
 
+	string key;
+	image* img;
+	int width, height;
 	for (int i = 0; i < MAXTILE; i++)
 	{
-		if (!colCheck(tile[i].rc, cam.rc) || tile[i].kind != TERRAIN::OBJECT)continue;
+		if (!colCheck(tile[i].rc, cam.rc) ||
+			(tile[i].kind != TERRAIN::WALL && tile[i].kind != TERRAIN::OBJECT))continue;
 
-		// 2X2인 오브젝트만 처리
-
-		//i object, i+1 object, i+w object, i+w+1 object
-		if (!(tile[i + 1].kind == TERRAIN::OBJECT && tile[i + MAXTILE_WIDTH].kind == TERRAIN::OBJECT &&
-			tile[i + MAXTILE_WIDTH + 1].kind == TERRAIN::OBJECT)) continue;
-
-		string key = tile[i].keyName;
-
-		if (!(tile[i + 1].keyName == key &&
-			tile[i + MAXTILE_WIDTH].keyName == key &&
-			tile[i + MAXTILE_WIDTH + 1].keyName == key)) continue;
-
-		int width, height;
-		if (tile[i].keyName == "flowerbed1")
+		switch (tile[i].kind)
 		{
-			key = "tree0";
-			width = 2 * _tileSize;
-			height = 4 * _tileSize;
+		case TERRAIN::WALL:
 
-			image* img = IMAGEMANAGER->findImage(key);
+			if ((tile[i + 1].kind == TERRAIN::WALL && tile[i + 2].kind == TERRAIN::WALL &&
+				tile[i + 3].kind == TERRAIN::WALL && tile[i + 4].kind == TERRAIN::WALL) == false) continue;
+			
+			key = tile[i].keyName;
 
-			img->renderResize(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
-		}
-		else if (tile[i].keyName == "flowerbed2")
-		{
-			key = "tree1";
-			width = 2 * _tileSize;
-			height = 5 * _tileSize;
-
-			image* img = IMAGEMANAGER->findImage(key);
-
-			img->renderResize(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
-		}
-		else if (tile[i].keyName == "pillar1")
-		{
-			key = "pillar1";
-
+			if ((tile[i + 1].keyName == key &&
+				tile[i + 2].keyName == key &&
+				tile[i + 3].keyName == key &&
+				tile[i + 4].keyName == key) == false) continue;
+			
 			height = 3 * _tileSize;
 
-			image* img = IMAGEMANAGER->findImage(key);
+			img = IMAGEMANAGER->findImage(key);
+
 			img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
+
+			break;
+		case TERRAIN::OBJECT:
+			// 2X2인 오브젝트만 처리
+
+			//i object, i+1 object, i+w object, i+w+1 object
+			if (!(tile[i + 1].kind == TERRAIN::OBJECT && tile[i + MAXTILE_WIDTH].kind == TERRAIN::OBJECT &&
+				tile[i + MAXTILE_WIDTH + 1].kind == TERRAIN::OBJECT)) continue;
+
+			key = tile[i].keyName;
+
+			if (!(tile[i + 1].keyName == key &&
+				tile[i + MAXTILE_WIDTH].keyName == key &&
+				tile[i + MAXTILE_WIDTH + 1].keyName == key)) continue;
+
+			if (tile[i].keyName == "flowerbed1")
+			{
+				key = "tree0";
+				width = 2 * _tileSize;
+				height = 4 * _tileSize;
+
+				img = IMAGEMANAGER->findImage(key);
+
+				img->renderResize(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
+			}
+			else if (tile[i].keyName == "flowerbed2")
+			{
+				key = "tree1";
+				width = 2 * _tileSize;
+				height = 5 * _tileSize;
+
+				img = IMAGEMANAGER->findImage(key);
+
+				img->renderResize(getMemDC(), tile[i].rc.left - width, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
+			}
+			else if (tile[i].keyName == "pillar1")
+			{
+				key = "pillar1";
+
+				height = 3 * _tileSize;
+
+				img = IMAGEMANAGER->findImage(key);
+				img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
+			}
+			break;
 		}
 	}
 
@@ -1021,11 +1051,11 @@ void mapToolScene::controller()
 							{
 								for (int k = 0; k < 5; k++)
 								{
-									tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
-									tile[i + (MAXTILE_WIDTH * j) + k].frame = { k,j };
-
-									if (j == 3) tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
-									else tile[i + (MAXTILE_WIDTH * j) + k].kind = TERRAIN::IMG;
+									if (j == 3)
+									{
+										tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
+										tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
+									}
 								}
 							}
 						}
