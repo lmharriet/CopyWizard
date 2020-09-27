@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\픽셀충돌_카메라매니저\CameraManager.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="colorNode.h" />
     <ClInclude Include="commonMacroFunction.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\픽셀충돌_카메라매니저\CameraManager.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="enemyManager.cpp" />

@@ -103,6 +103,9 @@
       <Filter>MapTool</Filter>
     </ClCompile>
     <ClCompile Include="startScene.cpp" />
+    <ClCompile Include="..\..\..\픽셀충돌_카메라매니저\CameraManager.cpp">
+      <Filter>GameFramework\매니져</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -177,6 +180,9 @@
     <ClInclude Include="startScene.h" />
     <ClInclude Include="colorNode.h">
       <Filter>MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\픽셀충돌_카메라매니저\CameraManager.h">
+      <Filter>GameFramework\매니져</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
