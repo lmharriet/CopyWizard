@@ -740,10 +740,10 @@ void mapToolScene::textRender()
 {/*
 	ptOut(getMemDC(), { 10,30 }, _ptMouse, WHITE);
 	ptOut(getMemDC(), { 10,50 }, cam.pt, ORANGE);
-
+	*/
 	char str[126];
-	wsprintf(str, "delay : %d", user.delay);
-	TextOut(getMemDC(), 10, 70, str, strlen(str));*/
+	wsprintf(str, "_tileSize : %d", _tileSize);
+	TextOut(getMemDC(), 10, 70, str, strlen(str));
 }
 
 void mapToolScene::buttonRender()
