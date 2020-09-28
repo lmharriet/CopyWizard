@@ -559,9 +559,9 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addImage("active", "maptool/ui/active.bmp", 40, 40);
 
 	//WALL//
-	IMAGEMANAGER->addImage("wall0", "maptool/wall/wall0.bmp", _tileSize * 5, _tileSize * 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("wall1", "maptool/wall/wall1.bmp", _tileSize * 5, _tileSize * 4, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("wall2", "maptool/wall/wall2.bmp", _tileSize * 5, _tileSize * 4, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("wall0", "maptool/wall/wall0.bmp", _tileSize * 5, _tileSize * 4, 5, 1);
+	IMAGEMANAGER->addFrameImage("wall1", "maptool/wall/wall1.bmp", _tileSize * 5, _tileSize * 4, 5, 1);
+	IMAGEMANAGER->addFrameImage("wall2", "maptool/wall/wall2.bmp", _tileSize * 5, _tileSize * 4, 5, 1);
 	IMAGEMANAGER->addFrameImage("wallTile", "maptool/wall/wallTile.bmp", 32, 32, 1, 1, true);
 
 	//TILE//
@@ -778,7 +778,7 @@ void mapToolScene::rcRender()
 			break;
 		case OPTION::TILE_MENU:
 			for (int i = 0; i < 4; i++)	Rectangle(getMemDC(), icon[i]);
-			for (int i = 0; i < 6; i++)Rectangle(getMemDC(), bigTile[i].rc);
+			for (int i = 0; i < 6; i++) Rectangle(getMemDC(), bigTile[i].rc);
 
 			Rectangle(getMemDC(), dragButton.rc);
 			break;
@@ -845,22 +845,12 @@ void mapToolScene::objectImgRender()
 		switch (tile[i].kind)
 		{
 		case TERRAIN::WALL:
-
-			if ((tile[i + 1].kind == TERRAIN::WALL && tile[i + 2].kind == TERRAIN::WALL &&
-				tile[i + 3].kind == TERRAIN::WALL && tile[i + 4].kind == TERRAIN::WALL) == false) continue;
-			
 			key = tile[i].keyName;
 
-			if ((tile[i + 1].keyName == key &&
-				tile[i + 2].keyName == key &&
-				tile[i + 3].keyName == key &&
-				tile[i + 4].keyName == key) == false) continue;
-			
 			height = 3 * _tileSize;
 
 			img = IMAGEMANAGER->findImage(key);
-
-			img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
+			img->frameRender(getMemDC(), tile[i].rc.left, tile[i].rc.top - height, tile[i].frame.x, tile[i].frame.y, tile[i].rc, TILESIZE);
 
 			break;
 		case TERRAIN::OBJECT:
@@ -1065,6 +1055,7 @@ void mapToolScene::controller()
 
 					user.KeyName = wall[i].keyName;
 					user.kind = wall[i].kind;
+
 					tool = TOOL::DRAW;
 				}
 			}
@@ -1078,25 +1069,9 @@ void mapToolScene::controller()
 
 					if (PtInRect(&tile[i].rc, _ptMouse))
 					{
-						if (user.KeyName != "wallTile")
-						{
-							for (int j = 0; j < 4; j++)
-							{
-								for (int k = 0; k < 5; k++)
-								{
-									if (j == 3)
-									{
-										tile[i + (MAXTILE_WIDTH * j) + k].keyName = user.KeyName;
-										tile[i + (MAXTILE_WIDTH * j) + k].kind = user.kind;
-									}
-								}
-							}
-						}
-						else
-						{
-							tile[i].keyName = user.KeyName;
-							tile[i].kind = user.kind;
-						}
+						tile[i].keyName = user.KeyName;
+						tile[i].kind = user.kind;
+						tile[i].frame.x = RANDOM->range(5);
 					}
 				}
 				break;
@@ -1294,6 +1269,26 @@ void mapToolScene::controller()
 	{
 		switch (tool)
 		{
+		case TOOL::DRAW:
+			if (user.kind != TERRAIN::WALL)break;
+
+			if (!dragButton.isCol)
+			{
+				for (int i = 0; i < MAXTILE; i++)
+				{
+					if (maptool.isCol)continue;
+
+					if (PtInRect(&tile[i].rc, _ptMouse))
+					{
+						//if (tile[i].kind == TERRAIN::WALL)continue;
+
+						tile[i].keyName = user.KeyName;
+						tile[i].kind = user.kind;
+						tile[i].frame.x = RANDOM->range(5);
+					}
+				}
+			}
+			break;
 		case TOOL::ERASE:
 			if (!dragButton.isCol)
 			{

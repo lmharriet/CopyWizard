@@ -21,8 +21,8 @@ HRESULT gameScene::init()
 
 void gameScene::release()
 {
-	_player->release();
-	SAFE_DELETE(_player);
+	//_player->release();
+	//SAFE_DELETE(_player);
 }
 
 void gameScene::update()
@@ -52,11 +52,16 @@ void gameScene::render()
 	{
 		if (colCheck(cam, tile[i].rc) == false) continue;
 
-		if (tile[i].keyName != "")
+		if (tile[i].keyName == "") continue;
+		image* img = IMAGEMANAGER->findImage(tile[i].keyName);
+		switch (tile[i].kind)
 		{
-			image* img = IMAGEMANAGER->findImage(tile[i].keyName);
-
+		case TERRAIN::TILE:
 			CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
+			break;
+		case TERRAIN::WALL:
+			CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - (3 * TILESIZE), tile[i].frame.x, tile[i].frame.y);
+			break;
 		}
 	}
 	PARTICLE->active(getMemDC(), CAMERAMANAGER->getRect());

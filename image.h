@@ -91,6 +91,7 @@ public:
 	//«¡∑π¿”∑ª¥ı
 	void frameRender(HDC hdc, int destX, int destY);
 	void frameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY);
+	void frameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, RECT rc, int defaultSize);
 	void frameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, RECT scale);
 
 	//∑Á«¡∑ª¥ı
