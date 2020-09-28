@@ -10,20 +10,25 @@ HRESULT player::init()
 	rc = RectMakeCenter(posX, posY, 100, 100);
 
 	speed = index = count = 0;
-	isLeft = isUp = false;
+	isLeft = isUp = isDash = false;
 
 	state = IDLE;
 
 	for (int i = 0; i < 3; i++)
 	{
-		tileCheck[i].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2 - 30),CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 30 + i * 30) };
-		tileCheck[i + 3].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2 + 30),CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 30 + i * 30) };
+		tileCheck[i].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2 - 50),CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 50 + i * 50) };
+		//tileCheck[i].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2 - 50), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 50 + i * 50), 10, 10);
+		tileCheck[i + 3].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2 + 50),CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 50 + i * 50) };
+		//tileCheck[i + 3].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2 + 50), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 50 + i * 50), 10, 10);
 	}
 
-	tileCheck[6].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 30) };
-	tileCheck[7].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 + 30) };
+	tileCheck[6].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 + 40) };
+	//tileCheck[6].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 50), 10, 10);
+	tileCheck[7].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 + 50) };
+	//tileCheck[7].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 + 50), 10, 10);
 
-	for (int i = 0; i < 8; i++)tileCheck[i].isCol = false;
+	memset(tileCheck, 0, sizeof(tileCheck));
+
 	return S_OK;
 }
 
@@ -35,15 +40,16 @@ void player::release()
 void player::update()
 {
 	controller();
-
+	tileCol();
 	for (int i = 0; i < 3; i++)
 	{
-		tileCheck[i].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2 - 30),CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 30 + i * 30) };
-		tileCheck[i + 3].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2 + 30),CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 30 + i * 30) };
+		tileCheck[i].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2 - 50),CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 50 + i * 50) };
+		tileCheck[i + 3].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2 + 50),CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 50 + i * 50) };
 	}
 
-	tileCheck[6].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 30) };
-	tileCheck[7].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 + 30) };
+	tileCheck[6].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 + 10) };
+	tileCheck[7].pos = { CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 + 70) };
+
 
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
@@ -52,14 +58,13 @@ void player::update()
 
 void player::render()
 {
-
-
-	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), rc.left, rc.top, 0, 0);
+	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX-50, posY-50, 0, 0);
 	//char text[126];
 
 	char str[126];
 	for (int i = 0; i < 8; i++)
 	{
+
 		CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(tileCheck[i].pos.x, tileCheck[i].pos.y, 7, 7));
 		//Rectangle(getMemDC(), tileCheck[i].rc);
 		wsprintf(str, "check %d : %d", i, tileCheck[i].isCol);
@@ -73,42 +78,57 @@ void player::render()
 
 void player::controller()
 {
-	if (INPUT->GetKey(VK_LEFT))
+	if (INPUT->GetKey(VK_LEFT) && !tileCheck[1].isCol 
+		&& (!tileCheck[0].isCol || !tileCheck[2].isCol))
 	{
-		tileCol();
 		posX -= 10;
 		rc = RectMakeCenter(posX, posY, 100, 100);
 		isLeft = true;
-
 	}
-	if (INPUT->GetKey(VK_RIGHT))
+	if (INPUT->GetKey(VK_RIGHT) &&!tileCheck[4].isCol 
+		&&(!tileCheck[3].isCol || !tileCheck[5].isCol))
 	{
-		tileCol();
 		posX += 10;
 		rc = RectMakeCenter(posX, posY, 100, 100);
 		isLeft = false;
-
 	}
-	if (INPUT->GetKey(VK_UP))
+	if (INPUT->GetKey(VK_UP)&&!tileCheck[6].isCol)
 	{
-		tileCol();
+		//tileCol();
 		posY -= 10;
 		rc = RectMakeCenter(posX, posY, 100, 100);
 		isUp = true;
-
 	}
-	if (INPUT->GetKey(VK_DOWN))
+	if (INPUT->GetKey(VK_DOWN) && !tileCheck[7].isCol)
 	{
-		tileCol();
+		//tileCol();
 		posY += 10;
 		rc = RectMakeCenter(posX, posY, 100, 100);
 		isUp = false;
-
 	}
+
+
+
+	if (INPUT->GetKeyDown(VK_SPACE) && !isDash)
+	{
+		speed = 20;
+		isDash = true;
+	}
+	if (speed > 0)
+	{
+		speed--;
+	}
+	if (speed == 0) isDash = false;
+	if (isLeft && checkDirectionX() && isDash) posX -= speed;
+	if (!isLeft && checkDirectionX() && isDash)posX += speed;
+	if (isUp && !checkDirectionX() && isDash)posY -= speed;
+	if (!isUp && !checkDirectionX() && isDash)posY += speed;
+
 }
 
 void player::tileCol()
 {
+
 	for (int i = 0; i < 8; i++)tileCheck[i].isCol = false;
 
 	for (int i = 0; i < MAXTILE; i++)

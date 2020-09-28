@@ -4,6 +4,7 @@
 #include "colorNode.h"
 struct tagCollider
 {
+	RECT rc;
 	POINT pos;
 	bool isCol;
 };
@@ -27,8 +28,7 @@ private:
 
 	float posX, posY;
 	int speed;
-	bool isLeft;
-	bool isUp;
+	bool isLeft, isUp, isDash;
 
 	int count, index;
 public:
@@ -38,17 +38,23 @@ public:
 	void render();
 
 	void controller();
-	void tileCol ();
-	
+	void tileCol();
+	bool checkDirectionX()
+	{
+		if (isLeft || !isLeft) return true;
+		else return false;
+	}
+
+
 	//getter ,setter
 	float getX() { return posX; }
 	float getY() { return posY; }
 	RECT getRect() { return rc; }
-	
+
 	//tile address
 	void setTileAd(tagTile* _tile) { tile = _tile; }
-	
-	
+
+
 	player() {}
 	~player() {}
 };
