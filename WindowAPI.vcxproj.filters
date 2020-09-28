@@ -113,6 +113,9 @@
     <ClCompile Include="mainGame.cpp">
       <Filter>MainGame</Filter>
     </ClCompile>
+    <ClCompile Include="timeManager.cpp">
+      <Filter>GameFramework\매니져</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -189,5 +192,8 @@
       <Filter>GameFramework\매니져\사운드</Filter>
     </ClInclude>
     <ClInclude Include="cameraManager.h" />
+    <ClInclude Include="timeManager.h">
+      <Filter>GameFramework\매니져</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
