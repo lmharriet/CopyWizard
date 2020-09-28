@@ -16,14 +16,12 @@ HRESULT mainGame::init()
 	SOUNDMANAGER->addSound("titleBGM", "Sound/TitleScreen.mp3", true, true);
 	SOUNDMANAGER->addSound("mapToolBGM", "Sound/MapToolBGM.mp3", true, true);
 	volume = 0.5f;
-	
-	
-
 
 	/*씬추가*/
 	SCENEMANAGER->addScene("시작화면", new startScene);
 	//SCENEMANAGER->addScene("픽셀충돌", new pixelCollisionScene);
 	SCENEMANAGER->addScene("인게임", new gameScene);
+	SCENEMANAGER->addScene("에이스타", new astarTestScene);
 
 	mapToolScene* maptool = new mapToolScene;
 	SCENEMANAGER->addScene("맵툴제작", maptool);
@@ -77,6 +75,7 @@ void mainGame::render()
 
 	//씬매니져 렌더
 	SCENEMANAGER->render();
+	TIME->render(getMemDC());
 	IMAGEMANAGER->findImage("cursor")->render(getMemDC(), _ptMouse.x - 32, _ptMouse.y - 32);
 
 	

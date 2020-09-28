@@ -30,8 +30,8 @@ HRESULT gameScene::init()
 
 void gameScene::release()
 {
-	_player->release();
-	SAFE_DELETE(_player);
+	//_player->release();
+	//SAFE_DELETE(_player);
 }
 
 void gameScene::update()

@@ -7,7 +7,6 @@
 HRESULT gameNode::init()
 {
 	_hdc = GetDC(_hWnd);				//HDC 얻기
-	SetTimer(_hWnd, 1, 10, NULL);		//타이머 초기화
 	INPUT->init();						//입력매니져 초기화
 	RANDOM->init();						//랜덤매니져 초기화
 	IMAGEMANAGER->init();				//이미지매니져 초기화
