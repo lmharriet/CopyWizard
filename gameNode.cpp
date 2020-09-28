@@ -14,6 +14,7 @@ HRESULT gameNode::init()
 	PLAYERDATA->init();					//플레이어데이터 초기화
 	SCENEMANAGER->init();				//씬매니져 초기화
 	SOUNDMANAGER->init();				//사운드매니져 초기화
+	TIME->init();						//타임매니져 초기화
 
 	return S_OK;
 }
@@ -45,6 +46,11 @@ void gameNode::release()
 	SOUNDMANAGER->releaseSingleton();
 	//카메라매니져 해제
 	CAMERAMANAGER->releaseSingleton();
+	//타임매니져 해제
+	TIME->release();
+	TIME->releaseSingleton();
+
+
 	//HDC 해제
 	ReleaseDC(_hWnd, _hdc);
 }
