@@ -1,0 +1,38 @@
+[기본공격]
+
+fire = FlameStrike,
+wind
+earth = stoneShot,
+electro
+void
+
+[대시]
+fire = searingRush,
+wind
+earth
+electro
+ice
+void
+
+
+[일반스킬]
+fire
+wind
+earth
+electro = thunderingChain,[lightningAspect],[arcSphere],[magSphere],[thunderDrop], [shockAssault]
+ice
+void
+
+[시그니처가능스킬]
+fire
+wind
+earth = 	
+electro = shockNova
+ice = frostFan, reboundingIcicles
+void
+
+
+
+
+
+

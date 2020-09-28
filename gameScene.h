@@ -3,12 +3,7 @@
 #include "player.h"
 #include "tileNode.h"
 #include "colorNode.h"
-struct tagCollider
-{
-	RECT rc;
-	POINT pos;
-	bool isCol;
-};
+
 
 class gameScene : public gameNode
 {
@@ -19,7 +14,7 @@ private:
 	image* playerImg;			//플레이어이미지
 	image* uiImg;
 
-	tagCollider pixelCheck[4];
+
 
 	//맵타일 정보
 	tagTile tile[MAXTILE];
