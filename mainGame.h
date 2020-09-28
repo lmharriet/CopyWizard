@@ -7,6 +7,7 @@
 #include "soundTestScene.h"
 #include "pixelCollisionScene.h"
 #include "mapToolScene.h"
+#include "astarTestScene.h"
 
 class mainGame : public gameNode
 {

@@ -116,6 +116,7 @@
     <ClCompile Include="timeManager.cpp">
       <Filter>GameFramework\매니져</Filter>
     </ClCompile>
+    <ClCompile Include="astarTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -195,5 +196,6 @@
     <ClInclude Include="timeManager.h">
       <Filter>GameFramework\매니져</Filter>
     </ClInclude>
+    <ClInclude Include="astarTestScene.h" />
   </ItemGroup>
 </Project>
