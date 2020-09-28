@@ -40,6 +40,7 @@ public:
 
 	void controller();
 	void tileCol();
+	void makeCol(int index, int destX, int destY, int rcSize = 7);
 	bool checkDirectionX()
 	{
 		if (isLeft || !isLeft) return true;

@@ -19,6 +19,18 @@ enum class OPTION
 	SELECT_MENU
 };
 
+enum DIRECTION
+{
+	LEFT_TOP,
+	TOP,
+	RIGHT_TOP,
+	LEFT,
+	RIGHT,
+	LEFT_DOWN,
+	DOWN,
+	RIGHT_DOWN
+};
+
 struct tagRC
 {
 	RECT rc;
