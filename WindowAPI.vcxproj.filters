@@ -25,9 +25,6 @@
     <Filter Include="GameFramework\싱글톤데이터">
       <UniqueIdentifier>{4f9c286a-e4c3-42c7-9fce-71a675503514}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MainGame\픽셀충돌">
-      <UniqueIdentifier>{7f5178d1-cf30-43b1-ba73-2458127a27d5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MapTool">
       <UniqueIdentifier>{545b4c28-71eb-4d96-9f49-96a6c22af9fa}</UniqueIdentifier>
     </Filter>
@@ -95,9 +92,6 @@
     </ClCompile>
     <ClCompile Include="iniData.cpp">
       <Filter>GameFramework\매니져</Filter>
-    </ClCompile>
-    <ClCompile Include="pixelCollisionScene.cpp">
-      <Filter>MainGame\픽셀충돌</Filter>
     </ClCompile>
     <ClCompile Include="mapToolScene.cpp">
       <Filter>MapTool</Filter>
@@ -175,9 +169,6 @@
     </ClInclude>
     <ClInclude Include="iniData.h">
       <Filter>GameFramework\매니져</Filter>
-    </ClInclude>
-    <ClInclude Include="pixelCollisionScene.h">
-      <Filter>MainGame\픽셀충돌</Filter>
     </ClInclude>
     <ClInclude Include="mapToolScene.h">
       <Filter>MapTool</Filter>
