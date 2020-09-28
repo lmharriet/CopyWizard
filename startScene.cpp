@@ -63,7 +63,7 @@ void startScene::update()
 			{
 			case 0:
 				SOUNDMANAGER->stop("titleBGM");
-				SCENEMANAGER->loadScene("픽셀충돌");
+				SCENEMANAGER->loadScene("인게임");
 				break;
 			case 1:
 				SOUNDMANAGER->stop("titleBGM");
