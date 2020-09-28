@@ -30,6 +30,7 @@ private:
 	int speed;
 	bool isLeft, isUp, isDash;
 
+
 	int count, index;
 public:
 	HRESULT init();
