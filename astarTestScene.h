@@ -1,8 +1,8 @@
 #pragma once
 #include "gameNode.h"
 
-#define MAX_X 5
-#define MAX_Y 5
+#define MAX_X 20
+#define MAX_Y 13
 
 //노드상태
 enum NODESTATE
@@ -15,6 +15,7 @@ enum NODESTATE
 
 struct tagPlayer
 {
+	RECT rc;
 	float x, y;
 	float speed;
 	float angle;
@@ -59,13 +60,14 @@ private:
 	vector<node*> _closeList;			//길을 찾은 노드들을 담아둘 벡터
 	vector<node*> _finalList;			//클로즈리스트에 담겨있는 노드들을 리버스시켜서 담아둘 벡터
 
-	int _count;							//시작노드, 종료노드를 한번씩만 선택하기 위한 변수
+	//int _count;							//시작노드, 종료노드를 한번씩만 선택하기 위한 변수
 	bool _isFind;						//길 찾았냐?
 
-
+	RECT temp;
 	RECT player;
-	RECT monster;
+	tagPlayer monsterMove;
 	tagPlayer playerMove;
+
 	tagPos endPos;
 	tagPos startPos;
 

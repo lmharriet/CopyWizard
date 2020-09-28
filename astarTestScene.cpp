@@ -3,45 +3,63 @@
 
 HRESULT astarTestScene::init()
 {
+
+	
+
 	//노드 초기화
 	_startNode = NULL;
 	_endNode = NULL;
 	_curNode = NULL;
 
-	//전체노드 초기화
+	//전체타일 노드 초기화
 	for (int y = 0; y < MAX_Y; y++)
 	{
 		for (int x = 0; x < MAX_X; x++)
 		{
 			//새로운 노드와 렉트위치 설정
 			_totalNode[x][y] = new node(x, y);
-			_totalNode[x][y]->rc = RectMake(25 + x * 150, 25 + y * 150, 150, 150);
+			_totalNode[x][y]->rc = RectMake(25 + x * 50, 25 + y * 50, 50, 50);
 		}
 	}
 
-	//첫클릭이 짝수가 되게 하기 위해서 -1로 초기화
-	_count = -1;
 	//길 찾았냐?
 	_isFind = false;
 
-	//리스타트용
+	//벡터 초기화 (리스타트용)
 	_openList.clear();
 	_closeList.clear();
 	_finalList.clear();
-
-	playerMove.x = _totalNode[0][0]->rc.left;
-	playerMove.y = _totalNode[0][0]->rc.top;
-	playerMove.speed = 5.f;
-	
-	
 	
 
-	_totalNode[0][0]->nodeState = NODE_START;
-	_startNode = _totalNode[0][0];
+
+	//몬스터
+	monsterMove.x = _totalNode[0][0]->rc.left+10;
+	monsterMove.y = _totalNode[0][0]->rc.top+10;
+	monsterMove.speed = 1.f;
+	
+	
+	
+	// 스타트 지점 지정
+	startPos.indexX = 0;
+	startPos.indexY = 0;
+
+	_totalNode[startPos.indexX][startPos.indexY]->nodeState = NODE_START;
+	_startNode = _totalNode[startPos.indexX][startPos.indexY];
+
+
+	// 도착지점 지정
+	//endPos.indexX = MAX_X-1;
+	//endPos.indexX = MAX_X-1;
 	endPos.indexX = MAX_X-1;
-	endPos.indexY = MAX_Y-1;
+	endPos.indexY = 0;
 	_totalNode[endPos.indexX][endPos.indexY]->nodeState = NODE_END;
 	_endNode = _totalNode[endPos.indexX][endPos.indexY];
+
+	//플레이어
+	playerMove.x = _totalNode[endPos.indexX][endPos.indexY]->rc.left+10;
+	playerMove.y = _totalNode[endPos.indexX][endPos.indexY]->rc.top+10;
+	playerMove.speed = 9.0f;
+
 
 	//playerMove.angle = getAngle(playerMove.x, playerMove.y, _endNode->rc.left, _endNode->rc.top);
 	return S_OK;
@@ -55,103 +73,47 @@ void astarTestScene::update()
 {
 	if (INPUT->GetKeyDown(VK_UP))
 	{		
+		_totalNode[endPos.indexX][endPos.indexY]->nodeState = NODE_EMPTY;
 		if(endPos.indexY >0) 
 			endPos.indexY -= 1;
-		_openList.clear();
-		_closeList.clear();
-		_finalList.clear();
+		
 	}
 	if (INPUT->GetKeyDown(VK_DOWN))
 	{
-		if (endPos.indexY < 4)
+		_totalNode[endPos.indexX][endPos.indexY]->nodeState = NODE_EMPTY;
+		if (endPos.indexY < MAX_Y-1)
 			endPos.indexY += 1;
-		_openList.clear();
-		_closeList.clear();
-		_finalList.clear();
+		
 	}
 
 	if (INPUT->GetKeyDown(VK_LEFT))
 	{
+		_totalNode[endPos.indexX][endPos.indexY]->nodeState = NODE_EMPTY;
 		if (endPos.indexX > 0)
 			endPos.indexX -= 1;
-		_openList.clear();
-		_closeList.clear();
-		_finalList.clear();
+		
 	}
 	if (INPUT->GetKeyDown(VK_RIGHT))
 	{
-		if (endPos.indexX < 4)
+		_totalNode[endPos.indexX][endPos.indexY]->nodeState = NODE_EMPTY;
+		if (endPos.indexX < MAX_X-1)
 			endPos.indexX += 1;
-		_openList.clear();
-		_closeList.clear();
-		_finalList.clear();
+		
 	}
-
-	
-		
-		this->pathFinding();
-
-		
-		if (!_finalList.empty())
-		{
-			for (int i = 0; i < _finalList.size(); i++)
-			{
-				
-				playerMove.angle = getAngle(playerMove.x, playerMove.y, _finalList[i]->rc.left, _finalList[i]->rc.top);
-				break;
-			}
-			
-		}
-		RECT temp;
-		if (!IntersectRect(&temp, &player, &monster))
-		{
-			playerMove.x += cos(playerMove.angle) * playerMove.speed;
-			playerMove.y += -sin(playerMove.angle) * playerMove.speed;
-		}
-	
-
-	
-
 
 	_totalNode[endPos.indexX][endPos.indexY]->nodeState = NODE_END;
 	_endNode = _totalNode[endPos.indexX][endPos.indexY];
-
-
-		if (!_finalList.empty())
-			_startNode = _finalList[0];
-	/*if (INPUT->GetKeyDown(VK_SPACE))
-	{
-	}*/
-
-	//시작, 종료노드 세팅하기
-	//if (INPUT->GetKeyDown(VK_LBUTTON))
-	//{
-	//	//시작, 종료노드가 이미 세팅되어 있다면 그냥 나가자
-	//	if (_startNode && _endNode) return;
-
-	//	for (int y = 0; y < MAX_Y; y++)
-	//	{
-	//		for (int x = 0; x < MAX_X; x++)
-	//		{
-	//			if (PtInRect(&_totalNode[x][y]->rc, _ptMouse))
-	//			{
-	//				_count++;
-	//				if (_count % 2 == 0)
-	//				{
-	//					_totalNode[x][y]->nodeState = NODE_START;
-	//					_startNode = _totalNode[x][y];
-	//				}
-	//				else
-	//				{
-	//					_totalNode[x][y]->nodeState = NODE_END;
-	//					_endNode = _totalNode[x][y];
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
-
+	playerMove.angle = getAngle(playerMove.x, playerMove.y, _endNode->rc.left, _endNode->rc.top);
 	
+	
+	
+	if (!IntersectRect(&temp, &playerMove.rc, &_endNode->rc))
+	{
+		playerMove.x += cos( playerMove.angle) * playerMove.speed;
+		playerMove.y += -sin(playerMove.angle) * playerMove.speed;
+	}
+
+
 
 	//벽(장애물) 노드 세팅하기 (시작, 종료노드 설정전에 벽세우지 못하게 막기)
 	if (INPUT->GetKeyDown(VK_RBUTTON) && _startNode && _endNode)
@@ -170,6 +132,89 @@ void astarTestScene::update()
 			}
 		}
 	}
+	//if (!_finalList.empty())
+	//{
+	//	//if(MonsterMove.rc)
+	//	//_totalNode[startPos.indexX][startPos.indexY]->nodeState = NODE_EMPTY;
+	//	for (int i = 0; i < MAX_Y; i++)
+	//	{
+	//		for (int k = 0; k < MAX_X; k++)
+	//		{
+	//			if (_totalNode[k][i] == _finalList[0])
+	//			{
+	//				_totalNode[k][i]->nodeState = NODE_START;
+	//				_startNode = _finalList[0];
+	//				startPos.indexX = k;
+	//				startPos.indexY = i;
+	//				break;
+	//			}
+	//			
+	//				
+	//		}
+	//	}
+	//}
+
+	this->pathFinding();
+	
+
+
+
+	if (!_finalList.empty())
+	{
+		monsterMove.angle = getAngle(monsterMove.x, monsterMove.y, _finalList[0]->rc.left, _finalList[0]->rc.top);
+		
+		if (IntersectRect(&temp, &monsterMove.rc, &_finalList[0]->rc))
+		{
+			for (int i = 0; i < MAX_Y; i++)
+			{
+				for (int k = 0; k < MAX_X; k++)
+				{
+					if (_totalNode[k][i] == _finalList[0])
+					{
+						cout << "들어옴" << endl;
+						_totalNode[k][i]->nodeState = NODE_START;
+						_startNode = _totalNode[k][i];
+						break;
+					}
+				}
+			}
+
+			_openList.clear();
+			_closeList.clear();
+			_finalList.clear();
+
+		}
+		
+	}
+
+	
+	if (!_finalList.empty())
+	{
+			cout << "움직임" << endl;
+			monsterMove.x += cos(monsterMove.angle) * monsterMove.speed;
+			monsterMove.y += -sin(monsterMove.angle) * monsterMove.speed;
+		//if (!IntersectRect(&temp, &playerMove.rc, &monsterMove.rc))
+		//{
+		//
+		//}
+	}
+	else
+	{
+		cout << "멈춤" << endl;
+		_openList.clear();
+		_closeList.clear();
+		_finalList.clear();
+	}
+	
+
+	
+
+
+	
+
+
+		
+	
 
 	
 
@@ -180,6 +225,7 @@ void astarTestScene::update()
 	}
 
 }
+
 
 void astarTestScene::render()
 {
@@ -198,10 +244,10 @@ void astarTestScene::render()
 				textOut(getMemDC(), _startNode->rc.left + 100, _startNode->rc.top + 10, "[Start]",RGB(0,0,0));
 			}
 			//종료노드 보여주기
-			if (_totalNode[x][y]->nodeState == NODE_END)
+			if (_totalNode[x][y] ->nodeState == NODE_END)
 			{
 				setNodeColor(_endNode, RGB(0, 0, 255));
-				textOut(getMemDC(), _endNode->rc.left + 100, _endNode->rc.top + 10, "[END]");
+				textOut(getMemDC(), _endNode->rc.left , _endNode->rc.top + 20, "[END]");
 			}
 			//벽노드 보여주기
 			if (_totalNode[x][y]->nodeState == NODE_WALL)
@@ -212,36 +258,37 @@ void astarTestScene::render()
 
 			//전체노드의 인덱스 보여주기(맨마지막에 출력)
 			sprintf(str, "[%d, %d]", _totalNode[x][y]->idx, _totalNode[x][y]->idy);
-			textOut(getMemDC(), _totalNode[x][y]->rc.left + 10, _totalNode[x][y]->rc.top + 10, str);
+			textOut(getMemDC(), _totalNode[x][y]->rc.left + 10, _totalNode[x][y]->rc.top + 10, str,RGB(0,0,0));
 		}
 	}
 
 	//길찾았을때 보여주기
-	if (_isFind)
-	{
-		for (int i = 0; i < _finalList.size(); i++)
-		{
-			setNodeColor(_finalList[0], RGB(255, 255, 0));
-			
-			//_finalList[0]->nodeState = NODE_START;
-			//
-			//
-			//_totalNode[0][0]->nodeState = NODE_EMPTY;
-			//_startNode = _finalList[0];
-			sprintf(str, "[%d, %d]      %d번 노드", _finalList[i]->idx, _finalList[i]->idy, i + 1);
-			textOut(getMemDC(), _finalList[i]->rc.left + 10, _finalList[i]->rc.top + 10, str,RGB(0,0,0));
-			sprintf(str, "G: %d, H: %d, F: %d", _finalList[i]->G, _finalList[i]->H, _finalList[i]->F);
-			textOut(getMemDC(), _finalList[i]->rc.left + 10, _finalList[i]->rc.bottom - 30, str,RGB(0,0,0));
-			break;
-		}
-	}
+	//if (_isFind)
+	//{
+	//	for (int i = 0; i < _finalList.size(); i++)
+	//	{
+	//		//setNodeColor(_finalList[0], RGB(255, 255, 0));
+	//		//_finalList[0]->nodeState = NODE_START;
+	//		//_totalNode[0][0]->nodeState = NODE_EMPTY;
+	//		//_startNode = _finalList[0];
+	//		//sprintf(str, "[%d, %d]      %d번 노드", _finalList[i]->idx, _finalList[i]->idy, i + 1);
+	//		//textOut(getMemDC(), _finalList[i]->rc.left + 10, _finalList[i]->rc.top + 10, str,RGB(0,0,0));
+	//		//sprintf(str, "G: %d, H: %d, F: %d", _finalList[i]->G, _finalList[i]->H, _finalList[i]->F);
+	//		//textOut(getMemDC(), _finalList[i]->rc.left + 10, _finalList[i]->rc.bottom - 30, str,RGB(0,0,0));
+	//		break;
+	//	}
+	//	//setNodeColor(_endNode, RGB(0, 0, 255));
+	//}
 
 
-
-	player = RectMake(playerMove.x, playerMove.y, 50, 50);
-	monster = RectMake(_endNode->rc.left, _endNode->rc.top, 50, 50);
-	Rectangle(getMemDC(), player);
-	Rectangle(getMemDC(), monster);
+	playerMove.rc = RectMake(playerMove.x, playerMove.y, 50, 50);
+	monsterMove.rc = RectMake(monsterMove.x, monsterMove.y, 50, 50);
+	
+	Rectangle(getMemDC(), monsterMove.rc);
+	
+	HBRUSH hbr = CreateSolidBrush(RGB(0, 0, 255));
+	FillRect(getMemDC(), &playerMove.rc,hbr);
+	//Rectangle(getMemDC(), player);
 }
 
 void astarTestScene::pathFinding()
