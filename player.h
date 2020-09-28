@@ -4,7 +4,6 @@
 #include "colorNode.h"
 struct tagCollider
 {
-	RECT rc;
 	POINT pos;
 	bool isCol;
 };
@@ -40,7 +39,6 @@ public:
 
 	void controller();
 	void tileCol ();
-	
 	
 	//getter ,setter
 	float getX() { return posX; }

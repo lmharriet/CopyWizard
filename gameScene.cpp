@@ -6,11 +6,11 @@ HRESULT gameScene::init()
 
 	_player = new player;
 	_player->init();
-	_player->setTileAd(tile);
 	uiImg = IMAGEMANAGER->addImage("UI", "Images/gameUI.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 	playerImg = IMAGEMANAGER->findImage("playerFrame");
 
 	loadMap("mapData/map2.map");
+	_player->setTileAd(tile);
 
 	cam = RectMakeCenter(0, 0, WINSIZEX, WINSIZEY);
 	CAMERAMANAGER->init(_player->getX(), _player->getY(), MAXTILE, MAXTILE, -MAXTILE, -MAXTILE, WINSIZEX / 2, WINSIZEY / 2);
@@ -34,7 +34,7 @@ void gameScene::update()
 
 void gameScene::render()
 {
-	CAMERAMANAGER->Rectangle(getMemDC(), cam);
+	//CAMERAMANAGER->Rectangle(getMemDC(), cam);
 	for (int i = 0; i < MAXTILE; i++)
 	{
 		if (colCheck(cam, tile[i].rc) == false) continue;
