@@ -3,13 +3,17 @@
 #include "player.h"
 #include "tileNode.h"
 #include "colorNode.h"
+#include "golem.h" //테스트중 (몬스터골렘)
 
 
 class gameScene : public gameNode
 {
 private:
+	monster* _golem;  //테스트중.. 몬스터(골렘)
+	
+	
 	player* _player;			//플레이어 클래스
-
+	
 	image* bgImg;				//백그라운드 이미지
 	image* playerImg;			//플레이어이미지
 	image* uiImg;

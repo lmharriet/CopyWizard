@@ -46,6 +46,9 @@
     <Filter Include="GameFramework\매니져\파티클">
       <UniqueIdentifier>{bdee886b-5155-493b-874e-5891704274d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\인게임\monster_test">
+      <UniqueIdentifier>{9d1bf617-7f45-4e7a-9a9e-4392db16c51f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
@@ -116,6 +119,12 @@
     <ClCompile Include="astarTestScene.cpp" />
     <ClCompile Include="particleManager.cpp">
       <Filter>GameFramework\매니져\파티클</Filter>
+    </ClCompile>
+    <ClCompile Include="golem.cpp">
+      <Filter>MainGame\인게임\monster_test</Filter>
+    </ClCompile>
+    <ClCompile Include="monster.cpp">
+      <Filter>MainGame\인게임\monster_test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +205,12 @@
     <ClInclude Include="astarTestScene.h" />
     <ClInclude Include="particleManager.h">
       <Filter>GameFramework\매니져\파티클</Filter>
+    </ClInclude>
+    <ClInclude Include="monster.h">
+      <Filter>MainGame\인게임\monster_test</Filter>
+    </ClInclude>
+    <ClInclude Include="golem.h">
+      <Filter>MainGame\인게임\monster_test</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -16,6 +16,11 @@ HRESULT gameScene::init()
 	CAMERAMANAGER->init(_player->getX(), _player->getY(), MAXTILE, MAXTILE, -MAXTILE, -MAXTILE, WINSIZEX / 2, WINSIZEY / 2);
 	PARTICLE->init();
 
+
+	
+	_golem = new golem; //테스트중 (몬스터골렘)
+	_golem->init(); //테스트중 (몬스터골렘)
+
 	return S_OK;
 }
 
@@ -73,6 +78,8 @@ void gameScene::render()
 
 	viewText();
 
+
+	_golem->render(); //테스트중 (몬스터골렘)
 }
 
 void gameScene::loadMap(const char* mapFileName)
