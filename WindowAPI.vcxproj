@@ -164,6 +164,7 @@
     <ClInclude Include="mainGame.h" />
     <ClInclude Include="mapToolScene.h" />
     <ClInclude Include="minion.h" />
+    <ClInclude Include="particleManager.h" />
     <ClInclude Include="pixelCollisionScene.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playerData.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="mapToolScene.cpp" />
     <ClCompile Include="minion.cpp" />
+    <ClCompile Include="particleManager.cpp" />
     <ClCompile Include="pixelCollisionScene.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerData.cpp" />

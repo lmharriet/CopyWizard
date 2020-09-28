@@ -46,6 +46,9 @@
     <Filter Include="GameFramework\매니져\이미지">
       <UniqueIdentifier>{bc419726-8763-4a8c-b83b-df504eda4079}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFramework\매니져\파티클">
+      <UniqueIdentifier>{bdee886b-5155-493b-874e-5891704274d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
@@ -117,6 +120,9 @@
       <Filter>GameFramework\매니져</Filter>
     </ClCompile>
     <ClCompile Include="astarTestScene.cpp" />
+    <ClCompile Include="particleManager.cpp">
+      <Filter>GameFramework\매니져\파티클</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -197,5 +203,8 @@
       <Filter>GameFramework\매니져</Filter>
     </ClInclude>
     <ClInclude Include="astarTestScene.h" />
+    <ClInclude Include="particleManager.h">
+      <Filter>GameFramework\매니져\파티클</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
