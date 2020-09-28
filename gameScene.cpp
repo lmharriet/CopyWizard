@@ -79,7 +79,7 @@ void gameScene::render()
 	viewText();
 
 
-	_golem->render(); //테스트중 (몬스터골렘)
+	//_golem->render(); //테스트중 (몬스터골렘)
 }
 
 void gameScene::loadMap(const char* mapFileName)
