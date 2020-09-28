@@ -38,6 +38,12 @@ inline void RectangleMake(HDC hdc, int x, int y, int width, int height)
 	Rectangle(hdc, x, y, x + width, y + height);
 }
 
+//Rectangle 함수 이용해서 사각형 그리기
+inline void RectangleMakeCenter(HDC hdc, int x, int y, int width, int height)
+{
+	Rectangle(hdc, x - width / 2, y - height / 2, x + width / 2, y + height / 2);
+}
+
 //Ellipse 함수 이용해서 타원 그리기
 inline void EllipseMake(HDC hdc, int x, int y, int width, int height)
 {

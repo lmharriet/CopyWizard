@@ -14,6 +14,7 @@ HRESULT gameScene::init()
 
 	cam = RectMakeCenter(0, 0, WINSIZEX, WINSIZEY);
 	CAMERAMANAGER->init(_player->getX(), _player->getY(), MAXTILE, MAXTILE, -MAXTILE, -MAXTILE, WINSIZEX / 2, WINSIZEY / 2);
+	PARTICLE->init();
 
 	return S_OK;
 }
@@ -30,6 +31,18 @@ void gameScene::update()
 
 	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX, WINSIZEY);
 
+	//if (INPUT->GetKeyDown(VK_SPACE))PARTICLE->init(
+	//	_player->getX(),
+	//	_player->getY(),
+	//	50);
+
+	if (INPUT->GetKeyDown(VK_SPACE))
+	{
+		PARTICLE->pointInit(_player->getX(), _player->getY(), 0, 0, 0, 5);
+	}
+	PARTICLE->pointActive();
+
+	if (INPUT->GetKeyDown(VK_BACK))PARTICLE->resetPoint();
 }
 
 void gameScene::render()
@@ -46,6 +59,7 @@ void gameScene::render()
 			CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
 		}
 	}
+	PARTICLE->active(getMemDC(), CAMERAMANAGER->getRect());
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), _player->getRect());
 	uiImg->render(getMemDC());

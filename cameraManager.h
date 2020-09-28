@@ -54,6 +54,7 @@ public:
 
 	void Rectangle(HDC hdc, RECT rc);
 	void RectangleMake(HDC hdc, int left, int top, int width, int height);
+	void RectangleMakeCenter(HDC hdc, int x, int y, int width, int height);
 
 	void Render(HDC hdc, image* ig, int destX, int destY);
 	void FrameRender(HDC hdc, image* ig, int destX, int destY, int frameX, int frameY);

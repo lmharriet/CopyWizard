@@ -7,7 +7,7 @@
 #include <SDKDDKVer.h>
 
 //디버깅용 (주석치면 콘솔창이 사라진다)
-//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용은 Windows 헤더에서 제외합니다.
 // Windows 헤더 파일:
@@ -41,6 +41,7 @@ using namespace MY_UTIL;
 #include "soundManager.h"
 #include "cameraManager.h"
 #include "timeManager.h"
+#include "particleManager.h"
 
 //=============================================================
 //	## 싱글톤을 추가한다 ##
@@ -53,6 +54,7 @@ using namespace MY_UTIL;
 #define SOUNDMANAGER soundManager::getSingleton()
 #define CAMERAMANAGER cameraManager::getSingleton()
 #define TIME timeManager::getSingleton()
+#define PARTICLE particleManager::getSingleton()
 
 //=============================================================
 //	## 디파인문 ## (윈도우창 초기화)
