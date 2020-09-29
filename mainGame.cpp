@@ -21,7 +21,7 @@ HRESULT mainGame::init()
 	SCENEMANAGER->addScene("시작화면", new startScene);
 	//SCENEMANAGER->addScene("픽셀충돌", new pixelCollisionScene);
 	SCENEMANAGER->addScene("인게임", new gameScene);
-	//SCENEMANAGER->addScene("에이스타", new astarTestScene);
+	
 
 	mapToolScene* maptool = new mapToolScene;
 	SCENEMANAGER->addScene("맵툴제작", maptool);
