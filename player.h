@@ -9,19 +9,22 @@ struct tagCollider
 	bool isCol;
 };
 
+enum class MOVE
+{
+	LEFT,
+	LEFT_TOP,
+	RIGHT,
+	RIGHT_TOP,
+	UP,
+	DOWN,
+	LEFT_DOWN,
+	RIGHT_DOWN,
+};
 enum class STATE
 {
 	IDLE,
-	LEFT,
-	RIGHT,
-	UP,
-	DOWN,
 	RUN,
-	DASH_LEFT,
-	DASH_RIGHT,
-	DASH_UP,
-	DASH_DOWN,
-	SKILL
+	DASH
 };
 
 class player : public gameNode
@@ -29,16 +32,20 @@ class player : public gameNode
 private:
 	tagTile* tile;
 private:
-	STATE pState;
+	MOVE move;
+	STATE state;
 	RECT rc;
 	tagCollider tileCheck[8];
 
 	float posX, posY;
 	int speed;
-	bool isLeft, isUp, isDash;
-
 
 	int count, index;
+
+	bool dashLeft, dashRight, dashUp, dashDown;
+
+	// 신호 중복 방지
+	bool isLeft, isRight, isUp, isDown;
 public:
 	HRESULT init();
 	void release();
@@ -47,14 +54,15 @@ public:
 
 	void controller();
 	void dashFunction();
+	void animation();
+	//collision detection
 	void tileCol();
 	void makeCol(int index, int destX, int destY, int rcSize = 7);
-	bool checkDirectionX()
-	{
-		if (isLeft || !isLeft) return true;
-		else return false;
-	}
 
+	void resetKey();
+
+	void changeState();
+	void buttonDown();
 
 	//getter ,setter
 	float getX() { return posX; }
