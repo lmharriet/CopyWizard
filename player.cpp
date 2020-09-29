@@ -107,24 +107,24 @@ void player::controller()
 	if (isLeft || INPUT->GetKey('A'))
 	{
 		rc = RectMakeCenter(posX, posY, 100, 100);
-		if (!tileCheck[(int)DIRECTION::LEFT].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol)posX -= 6;
+		if (!tileCheck[(int)DIRECTION::LEFT].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol)posX -= 8;
 	}
 
 	if (isRight || INPUT->GetKey('D'))
 	{
 		rc = RectMakeCenter(posX, posY, 100, 100);
-		if (!tileCheck[(int)DIRECTION::RIGHT].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol) posX += 6;
+		if (!tileCheck[(int)DIRECTION::RIGHT].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol) posX += 8;
 	}
 	if (isUp || INPUT->GetKey('W'))
 	{
 		rc = RectMakeCenter(posX, posY, 100, 100);
-		if (!tileCheck[(int)DIRECTION::TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol) posY -= 6;
+		if (!tileCheck[(int)DIRECTION::TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol) posY -= 8;
 	}
 
 	if (isDown || INPUT->GetKey('S'))
 	{
 		rc = RectMakeCenter(posX, posY, 100, 100);
-		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol) posY += 6;
+		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol) posY += 8;
 	}
 
 
@@ -173,48 +173,6 @@ void player::dashFunction()
 	// enum + switch 사용해서 dash 구현하기
 	// 벽에 닿으면 대쉬 불가능, 게임 내에서 대쉬해서 낭떠러지에 닿으면 떨어짐. 
 	// 벽끼임 예외처리 필요
-
-	/*switch (pState)
-	{
-	case STATE::DASH_LEFT:
-		if (!tileCheck[(int)DIRECTION::LEFT].isCol &&
-			!tileCheck[(int)DIRECTION::LEFT_TOP].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol)
-		{
-			if (speed > 0) speed--;
-			posX -= speed;
-		}
-		else speed = 0;
-
-		break;
-	case STATE::DASH_RIGHT:
-		if (!tileCheck[(int)DIRECTION::RIGHT].isCol &&
-			!tileCheck[(int)DIRECTION::RIGHT_TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol)
-		{
-			if (speed > 0)speed--;
-			posX += speed;
-		}
-		else speed = 0;
-		break;
-	case STATE::DASH_UP:
-		if (!tileCheck[(int)DIRECTION::TOP].isCol
-			&& !tileCheck[(int)DIRECTION::LEFT_TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol)
-		{
-			if (speed > 0) speed--;
-			posY -= speed;
-		}
-		else speed = 0;
-		break;
-	case STATE::DASH_DOWN:
-		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol &&
-			!tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol)
-		{
-			if (speed > 0)speed--;
-			posY += speed;
-		}
-		else speed = 0;
-		break;
-	}*/
-
 	if (dashLeft)
 	{
 		if (dashUp)
@@ -297,54 +255,48 @@ void player::animation()
 		
 		break;
 	case STATE::RUN:
+		if (move == MOVE::LEFT)
+		{
+			if (count % 5 == 0)
+			{
+				index--;
+				if (index < 0)index = 9;
+			}
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, index, 4);
+		}
+		else if (move == MOVE::RIGHT)
+		{
+			if (count %5 == 0)
+			{
+				index++;
+				if (index > 9) index = 0;
+			}
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, index, 3);
+		}
+		else if (move == MOVE::UP)
+		{
+			if (count % 5 == 0)
+			{
+				index++;
+				if (index > 9)index = 0;
+			}
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, index, 2);
+		}
+		else
+		{
+			if (count % 5 == 0)
+			{
+				index++;
+				if (index > 9)index = 0;
+			}
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, index, 1);
+		}
 		break;
 	case STATE::DASH:
 		break;
 	default:
 		break;
 	}
-
-
-	//switch (move)
-	//{
-	//	//case STATE::IDLE:
-	//	//	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, 0, 0);
-	//	//	break;
-	//case MOVE::LEFT:
-	//	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, 3, 0);
-	//	break;
-	//case MOVE::RIGHT:
-	//	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, 2, 0);
-	//	break;
-	//case MOVE::UP:
-	//	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, 1, 0);
-	//	break;
-	//case MOVE::DOWN:
-	//	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, 0, 0);
-	//	break;
-	//	//case STATE::RUN:
-	//	//	if (isLeft)
-	//	//	{
-	//	//		if (count % 5 == 0)
-	//	//		{
-	//	//			index--;
-	//	//			if (index < 0) index = 9;
-	//	//		}
-	//	//		CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, index, 4);
-	//	//	}
-	//	//	else
-	//	//	{
-	//	//		if (count % 5 == 0)
-	//	//		{
-	//	//			index++;
-	//	//			if (index > 9) index = 0;
-	//	//		}
-	//	//		CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, index, 3);
-	//	//	}
-	//	//	break;
-	//default:
-	//	break;
-	//}
 }
 
 void player::tileCol()
@@ -384,6 +336,7 @@ void player::changeState()
 
 	if (isLeft)
 	{
+		state = STATE::RUN;
 		if (isUp)
 		{
 			move = MOVE::LEFT_TOP;
@@ -400,6 +353,7 @@ void player::changeState()
 
 	else if (isRight)
 	{
+		state = STATE::RUN;
 		if (isUp)
 		{
 			move = MOVE::RIGHT_TOP;
@@ -416,12 +370,18 @@ void player::changeState()
 
 	else if (isUp) // 그냥 순수히 UP
 	{
+		state = STATE::RUN;
 		move = MOVE::UP;
 	}
 
 	else if (isDown) // 그냥 순수히 DOWN
 	{
+		state = STATE::RUN;
 		move = MOVE::DOWN;
+	}
+	else
+	{
+		state = STATE::IDLE;
 	}
 }
 
