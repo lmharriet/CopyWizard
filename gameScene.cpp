@@ -34,6 +34,7 @@ void gameScene::release()
 void gameScene::update()
 {
 	_player->update();
+	_golem->update();
 
 	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX, WINSIZEY);
 	//checkArea = RectMakeCenter(_player->getX(), _player->getY(), 400, 400);
@@ -196,7 +197,7 @@ void gameScene::render()
 
 	viewText();
 
-	//_golem->render(); //테스트중 (몬스터골렘)
+	_golem->render(); //테스트중 (몬스터골렘)
 }
 
 void gameScene::loadMap(const char* mapFileName)
