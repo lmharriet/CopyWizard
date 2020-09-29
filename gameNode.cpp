@@ -14,7 +14,7 @@ HRESULT gameNode::init()
 	SCENEMANAGER->init();				//씬매니져 초기화
 	SOUNDMANAGER->init();				//사운드매니져 초기화
 	TIME->init();						//타임매니져 초기화
-	ASTAR->init();
+	
 
 	return S_OK;
 }

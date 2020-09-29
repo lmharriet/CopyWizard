@@ -4,7 +4,7 @@
 HRESULT gameScene::init()
 {
 	UI->init();
-
+	
 	_player = new player;
 	_player->init();
 	uiImg = IMAGEMANAGER->addImage("UI", "Images/gameUI.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
@@ -12,7 +12,8 @@ HRESULT gameScene::init()
 
 	loadMap("mapData/map0.map");
 	_player->setTileAd(tile);
-
+	
+	
 	cam = RectMakeCenter(0, 0, WINSIZEX, WINSIZEY);
 	checkArea = RectMakeCenter(WINSIZEX/2, WINSIZEY/2, 100, 100);
 	CAMERAMANAGER->init(_player->getX(), _player->getY(), MAXTILE, MAXTILE, -MAXTILE, -MAXTILE, WINSIZEX / 2, WINSIZEY / 2);
@@ -22,6 +23,11 @@ HRESULT gameScene::init()
 
 	_golem = new golem; //테스트중 (몬스터골렘)
 	_golem->init(); //테스트중 (몬스터골렘)
+
+
+	ASTAR->setTileNode(tile);
+	
+	ASTAR->init();
 
 	return S_OK;
 }
@@ -36,7 +42,7 @@ void gameScene::update()
 {
 	_player->update();
 	_golem->update();
-
+	ASTAR->update();
 	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX, WINSIZEY);
 	//checkArea = RectMakeCenter(_player->getX(), _player->getY(), 400, 400);
 	checkArea = RectMake(_player->getX() - 100, _player->getY() - WINSIZEY/2 + 420, 200, 500);
@@ -57,6 +63,10 @@ void gameScene::update()
 
 void gameScene::render()
 {
+	ASTAR->setCam(cam);
+	ASTAR->setEndRC(_player->getRect());
+	ASTAR->setStartRC(_golem->getRC());
+	
 	for (int i = 0; i < MAXTILE; i++)
 	{
 		if (colCheck(cam, tile[i].rc) == false || tile[i].keyName == "" || tile[i].kind != TERRAIN::TILE) continue;
@@ -190,16 +200,20 @@ void gameScene::render()
 	}
 	PARTICLE->active(getMemDC(), CAMERAMANAGER->getRect());
 
+	
 	if(!isRender) _player->render();
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), _player->getRect());
 	//uiImg->render(getMemDC());
 
+
+	
+
 	UI->infoRender(getMemDC(), 50, 50);
 	UI->coinRender(getMemDC());
 
 	viewText();
-
+	ASTAR->render(getMemDC());
 	_golem->render(); //테스트중 (몬스터골렘)
 }
 

@@ -7,5 +7,8 @@ public:
 	void release()override ;
 	void update() override;
 	void render() override;
+	inline POINT getPos() { return pos; } 
+	inline RECT getRC() { return rc; }
+
 };
 

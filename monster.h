@@ -74,5 +74,8 @@ public:
 	virtual void release()=0;
 	virtual void update()=0;
 	virtual void render()=0;
+
+	inline virtual POINT getPos() { return pos; }
+	inline virtual RECT getRC() { return rc; }
 };
 
