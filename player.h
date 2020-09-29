@@ -65,6 +65,8 @@ public:
 	void changeState();
 	void buttonDown();
 
+	void viewText();
+
 	//getter ,setter
 	float getX() { return posX; }
 	float getY() { return posY; }

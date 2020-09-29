@@ -9,7 +9,7 @@ HRESULT player::init()
 	posY = WINSIZEY / 2;
 	rc = RectMakeCenter(posX, posY, 100, 100);
 
-	speed = index = dashIndex = count = dashCount= 0;
+	speed = index = dashIndex = count = dashCount = 0;
 	state = STATE::IDLE;
 	move = MOVE::DOWN;
 
@@ -72,35 +72,6 @@ void player::render()
 	animation();
 
 
-	char str[126];
-	for (int i = 0; i < 8; i++)
-	{
-
-		CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i].rc);
-		//CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(tileCheck[i].pos.x, tileCheck[i].pos.y, 7, 7));
-		//Rectangle(getMemDC(), tileCheck[i].rc);
-		/*wsprintf(str, "check %d : %d", i, tileCheck[i].isCol);
-		TextOut(getMemDC(), 10, 120 + (i * 20), str, strlen(str));
-
-		wsprintf(str, " tilecheck pos[%d] : %d", i, tileCheck[i].pos.x);
-		TextOut(getMemDC(), 10, 300 + (i * 20), str, strlen(str));*/
-	}
-
-	wsprintf(str, "player move : %d", move);
-	textOut(getMemDC(), 10, 120, str, WHITE);
-
-	wsprintf(str, "player index : %d", dashIndex);
-	textOut(getMemDC(), 10, 100, str, WHITE);
-
-	wsprintf(str, "speed : %d", speed);
-	textOut(getMemDC(), 10, 150, str, WHITE);
-	int x = _ptMouse.x;
-	int y = _ptMouse.y;
-
-	char text[126];
-
-	wsprintf(text, "mouse.x : %d ,= mouse.y : %d", CAMERAMANAGER->GetAbsoluteX(x), CAMERAMANAGER->GetAbsoluteY(y));
-	textOut(getMemDC(), _ptMouse.x, _ptMouse.y, text, WHITE);
 
 }
 
@@ -112,18 +83,19 @@ void player::controller()
 		rc = RectMakeCenter(posX, posY, 100, 100);
 		if (!tileCheck[(int)DIRECTION::LEFT].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol)posX -= 8;
 	}
-
+	//오른쪽
 	if (isRight || INPUT->GetKey('D'))
 	{
 		rc = RectMakeCenter(posX, posY, 100, 100);
 		if (!tileCheck[(int)DIRECTION::RIGHT].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol) posX += 8;
 	}
+	//위
 	if (isUp || INPUT->GetKey('W'))
 	{
 		rc = RectMakeCenter(posX, posY, 100, 100);
 		if (!tileCheck[(int)DIRECTION::TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol) posY -= 8;
 	}
-
+	//아래
 	if (isDown || INPUT->GetKey('S'))
 	{
 		rc = RectMakeCenter(posX, posY, 100, 100);
@@ -131,6 +103,7 @@ void player::controller()
 	}
 
 
+	//DASH
 	if (INPUT->GetKeyDown(VK_SPACE) && speed == 0)
 	{
 		state = STATE::DASH;
@@ -174,11 +147,12 @@ void player::controller()
 
 void player::dashFunction()
 {
-	if (speed == 0)return;
-	// enum + switch 사용해서 dash 구현하기
 	// 벽에 닿으면 대쉬 불가능, 게임 내에서 대쉬해서 낭떠러지에 닿으면 떨어짐. 
 	// 벽끼임 예외처리 필요
-	if (dashLeft)
+
+	if (speed == 0)return;
+	
+		if (dashLeft)
 	{
 		if (dashUp)
 		{
@@ -277,7 +251,7 @@ void player::animation()
 			}
 			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, index, 3);
 		}
-		else if (move == MOVE::UP ||move==MOVE::LEFT_TOP ||move == MOVE::RIGHT_TOP)
+		else if (move == MOVE::UP || move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
 		{
 			if (count % 5 == 0)
 			{
@@ -286,7 +260,7 @@ void player::animation()
 			}
 			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, index, 2);
 		}
-		else if(move ==MOVE::DOWN ||move == MOVE::LEFT_DOWN ||move == MOVE::RIGHT_DOWN)
+		else if (move == MOVE::DOWN || move == MOVE::LEFT_DOWN || move == MOVE::RIGHT_DOWN)
 		{
 			if (count % 5 == 0)
 			{
@@ -302,7 +276,7 @@ void player::animation()
 			if (dashCount % 5 == 0)
 			{
 				dashIndex--;
-				if (dashIndex < 0 ||speed ==0)dashIndex = 7;
+				if (dashIndex < 0 || speed == 0)dashIndex = 7;
 			}
 			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, dashIndex, 8);
 		}
@@ -311,7 +285,7 @@ void player::animation()
 			if (dashCount % 5 == 0)
 			{
 				dashIndex++;
-				if (dashIndex >7 || speed == 0)dashIndex = 0;
+				if (dashIndex > 7 || speed == 0)dashIndex = 0;
 			}
 			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, dashIndex, 7);
 		}
@@ -435,4 +409,31 @@ void player::buttonDown()
 	else isUp = false;
 	if (INPUT->GetKey(VK_DOWN))isDown = true;
 	else isDown = false;
+}
+
+//del
+void player::viewText()
+{
+
+	char str[126];
+	for (int i = 0; i < 8; i++)
+	{
+		CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i].rc);
+	}
+
+	wsprintf(str, "player move : %d", move);
+	textOut(getMemDC(), 10, 120, str, WHITE);
+
+	wsprintf(str, "player index : %d", dashIndex);
+	textOut(getMemDC(), 10, 100, str, WHITE);
+
+	wsprintf(str, "speed : %d", speed);
+	textOut(getMemDC(), 10, 150, str, WHITE);
+	int x = _ptMouse.x;
+	int y = _ptMouse.y;
+
+	char text[126];
+
+	wsprintf(text, "mouse.x : %d ,= mouse.y : %d", CAMERAMANAGER->GetAbsoluteX(x), CAMERAMANAGER->GetAbsoluteY(y));
+	textOut(getMemDC(), _ptMouse.x, _ptMouse.y, text, WHITE);
 }

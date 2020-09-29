@@ -63,7 +63,7 @@ using namespace MY_UTIL;
 //=============================================================
 //	## 디파인문 ## (윈도우창 초기화)
 //=============================================================
-#define WINNAME (LPTSTR)(TEXT(" Wizard of Legend MAP TOOL - Yellow Carrot "))
+#define WINNAME (LPTSTR)(TEXT(" copy Wizard of Legend - 이혜림 채수현 허재윤 정광희 team Yellow Carrot "))
 #define WINSTARTX	100
 #define WINSTARTY	50
 #define WINSIZEX	1280
