@@ -46,6 +46,14 @@ enum class TERRAIN
 	DECO,
 
 	NONE
+
+};
+enum class NODESTATE
+{
+	NODE_START,
+	NODE_END,
+	NODE_WALL,
+	NODE_EMPTY
 };
 
 typedef struct tagTile
@@ -60,7 +68,7 @@ typedef struct tagTile
 	int idx, idy;			//인덱스
 	int F, G, H;			//F = G + H, G => 시작 to 현재, H = 현재 to 종료
 	tagTile* parentNode;		//부모를 가리킬 노드(이전 노드)
-	//NODESTATE nodeState;	//노드상태 (시작, 종료, 벽, 빈노드)
+	NODESTATE nodeState;	//노드상태 (시작, 종료, 벽, 빈노드)
 
 	//노드 생성자
 	tagTile() {}
@@ -70,7 +78,7 @@ typedef struct tagTile
 		idx = _idx;
 		idy = _idy;
 		F = G = H = 0;
-		kind = TERRAIN::NONE;
+		nodeState = NODESTATE::NODE_EMPTY;
 		parentNode = NULL;
 	}
 
