@@ -9,7 +9,7 @@ HRESULT player::init()
 	posY = WINSIZEY / 2;
 	rc = RectMakeCenter(posX, posY, 100, 100);
 
-	speed = index = count = 0;
+	speed = index = dashIndex = count = dashCount= 0;
 	state = STATE::IDLE;
 	move = MOVE::DOWN;
 
@@ -40,7 +40,7 @@ void player::release()
 void player::update()
 {
 	count++;
-
+	dashCount++;
 	dashFunction();
 
 	if (speed == 0) controller();
@@ -86,8 +86,11 @@ void player::render()
 		TextOut(getMemDC(), 10, 300 + (i * 20), str, strlen(str));*/
 	}
 
-	wsprintf(str, "player state : %d", move);
+	wsprintf(str, "player move : %d", move);
 	textOut(getMemDC(), 10, 120, str, WHITE);
+
+	wsprintf(str, "player index : %d", dashIndex);
+	textOut(getMemDC(), 10, 100, str, WHITE);
 
 	wsprintf(str, "speed : %d", speed);
 	textOut(getMemDC(), 10, 150, str, WHITE);
@@ -130,6 +133,8 @@ void player::controller()
 
 	if (INPUT->GetKeyDown(VK_SPACE) && speed == 0)
 	{
+		state = STATE::DASH;
+
 		switch (move)
 		{
 		case MOVE::LEFT:
@@ -243,16 +248,15 @@ void player::dashFunction()
 
 void player::animation()
 {
-
 	switch (state)
 	{
 	case STATE::IDLE:
 
-		if (move ==MOVE::LEFT) CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, 3, 0);
-		else if (move==MOVE::RIGHT) CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, 2, 0);
-		else if (move ==MOVE::UP) CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, 1, 0);
+		if (move == MOVE::LEFT) CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, 3, 0);
+		else if (move == MOVE::RIGHT) CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, 2, 0);
+		else if (move == MOVE::UP) CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, 1, 0);
 		else CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, 0, 0);
-		
+
 		break;
 	case STATE::RUN:
 		if (move == MOVE::LEFT)
@@ -266,14 +270,14 @@ void player::animation()
 		}
 		else if (move == MOVE::RIGHT)
 		{
-			if (count %5 == 0)
+			if (count % 5 == 0)
 			{
 				index++;
 				if (index > 9) index = 0;
 			}
 			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, index, 3);
 		}
-		else if (move == MOVE::UP)
+		else if (move == MOVE::UP ||move==MOVE::LEFT_TOP ||move == MOVE::RIGHT_TOP)
 		{
 			if (count % 5 == 0)
 			{
@@ -282,7 +286,7 @@ void player::animation()
 			}
 			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, index, 2);
 		}
-		else
+		else if(move ==MOVE::DOWN ||move == MOVE::LEFT_DOWN ||move == MOVE::RIGHT_DOWN)
 		{
 			if (count % 5 == 0)
 			{
@@ -293,6 +297,42 @@ void player::animation()
 		}
 		break;
 	case STATE::DASH:
+		if (dashLeft)
+		{
+			if (dashCount % 5 == 0)
+			{
+				dashIndex--;
+				if (dashIndex < 0 ||speed ==0)dashIndex = 7;
+			}
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, dashIndex, 8);
+		}
+		else if (dashRight)
+		{
+			if (dashCount % 5 == 0)
+			{
+				dashIndex++;
+				if (dashIndex >7 || speed == 0)dashIndex = 0;
+			}
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, dashIndex, 7);
+		}
+		else if (dashUp)
+		{
+			if (dashCount % 5 == 0)
+			{
+				dashIndex++;
+				if (dashIndex > 7 || speed == 0)dashIndex = 0;
+			}
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, dashIndex, 2);
+		}
+		else if (dashDown)
+		{
+			if (dashCount % 5 == 0)
+			{
+				dashIndex++;
+				if (dashIndex > 7 || speed == 0)dashIndex = 0;
+			}
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, dashIndex, 1);
+		}
 		break;
 	default:
 		break;
@@ -301,7 +341,6 @@ void player::animation()
 
 void player::tileCol()
 {
-
 	for (int i = 0; i < 8; i++) tileCheck[i].isCol = false;
 
 	for (int i = 0; i < MAXTILE; i++)
@@ -345,7 +384,7 @@ void player::changeState()
 		{
 			move = MOVE::LEFT_DOWN;
 		}
-		else // 그냥 순수히 LEFT
+		else // 그냥 순수 LEFT
 		{
 			move = MOVE::LEFT;
 		}
@@ -383,6 +422,7 @@ void player::changeState()
 	{
 		state = STATE::IDLE;
 	}
+
 }
 
 void player::buttonDown()

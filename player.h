@@ -41,6 +41,7 @@ private:
 	int speed;
 
 	int count, index;
+	int dashCount,dashIndex;
 
 	bool dashLeft, dashRight, dashUp, dashDown;
 
