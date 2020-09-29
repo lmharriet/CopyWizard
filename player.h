@@ -12,6 +12,10 @@ struct tagCollider
 enum class STATE
 {
 	IDLE,
+	LEFT,
+	RIGHT,
+	UP,
+	DOWN,
 	RUN,
 	DASH_LEFT,
 	DASH_RIGHT,

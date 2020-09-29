@@ -12,26 +12,18 @@ HRESULT player::init()
 	speed = index = count = 0;
 	isLeft = isUp = isDash = false;
 
-
 	pState = STATE::IDLE;
 
 
-	//for (int i = 0; i < 3; i++)
-	//{
-	//	tileCheck[i].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2 - 30), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 30 + i * 30), 7, 7);
-	//	tileCheck[i + 3].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2 + 30), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 30 + i * 30), 7, 7);
-	//}
-	//tileCheck[6].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 30), 7, 7);
-	//tileCheck[7].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 + 50), 7, 7);
-	makeCol((int)DIRECTION::TOP, 0, -30);
-	makeCol((int)DIRECTION::BOTTOM, 0, +30);
-	makeCol((int)DIRECTION::LEFT, -30, 0);
-	makeCol((int)DIRECTION::RIGHT, +30, 0);
+	makeCol((int)DIRECTION::TOP, 0, -55);
+	makeCol((int)DIRECTION::BOTTOM, 0, 60);
+	makeCol((int)DIRECTION::LEFT, -45, 0);
+	makeCol((int)DIRECTION::RIGHT, +45, 0);
 
-	makeCol((int)DIRECTION::LEFT_TOP, -15, -15);
-	makeCol((int)DIRECTION::RIGHT_TOP, 15, -15);
-	makeCol((int)DIRECTION::LEFT_DOWN, -15, 15);
-	makeCol((int)DIRECTION::RIGHT_DOWN, 15, 15);
+	makeCol((int)DIRECTION::LEFT_TOP, -25, -30);
+	makeCol((int)DIRECTION::RIGHT_TOP, 25, -30);
+	makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
+	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
 
 
 	memset(tileCheck, 0, sizeof(tileCheck));
@@ -50,23 +42,16 @@ void player::update()
 	dashFunction();
 	tileCol();
 
-	makeCol((int)DIRECTION::TOP, 0, -50);
-	makeCol((int)DIRECTION::BOTTOM, 0, 50);
+	makeCol((int)DIRECTION::TOP, 0, -60);
+	makeCol((int)DIRECTION::BOTTOM, 0, 60);
 	makeCol((int)DIRECTION::LEFT, -45, 0);
 	makeCol((int)DIRECTION::RIGHT, +45, 0);
 
 	makeCol((int)DIRECTION::LEFT_TOP, -25, -30);
 	makeCol((int)DIRECTION::RIGHT_TOP, 25, -30);
-	makeCol((int)DIRECTION::LEFT_DOWN, -25, 30);
-	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 30);
+	makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
+	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
 
-	/*for (int i = 0; i < 3; i++)
-	{
-		tileCheck[i].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2 - 30), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 -30 + i * 30), 10, 10);
-		tileCheck[i + 3].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2 + 30), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 30 + i * 30), 10, 10);
-	}
-	tileCheck[6].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 - 30), 10, 10);
-	tileCheck[7].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2), CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2 + 50), 10, 10);*/
 
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
@@ -111,9 +96,9 @@ void player::controller()
 	if (INPUT->GetKey(VK_LEFT) || INPUT->GetKey('A'))
 	{
 		if (!tileCheck[(int)DIRECTION::LEFT].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol)posX -= 6;
-
 		isLeft = true;
 		rc = RectMakeCenter(posX, posY, 100, 100);
+		pState = STATE::LEFT;
 
 	}
 	if (INPUT->GetKey(VK_RIGHT) || INPUT->GetKey('D'))
@@ -122,6 +107,7 @@ void player::controller()
 
 		isLeft = false;
 		rc = RectMakeCenter(posX, posY, 100, 100);
+		pState = STATE::RIGHT;
 	}
 
 	if (INPUT->GetKey(VK_UP) || INPUT->GetKey('W'))
@@ -130,8 +116,8 @@ void player::controller()
 
 		isUp = true;
 		rc = RectMakeCenter(posX, posY, 100, 100);
+		pState = STATE::UP;
 	}
-		cout << isUp << '\n';
 
 	if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))
 	{
@@ -139,59 +125,46 @@ void player::controller()
 
 		isUp = false;
 		rc = RectMakeCenter(posX, posY, 100, 100);
+		pState = STATE::DOWN;
 	}
 
-	//dash
-
-	if (INPUT->GetKeyDown(VK_SPACE))
+	////dash
+	/*if (INPUT->GetKeyDown(VK_SPACE))
 	{
-		speed = 20;
-		if (INPUT->GetKey(VK_LEFT)) pState = STATE::DASH_LEFT;
-		if (INPUT->GetKey(VK_RIGHT)) pState = STATE::DASH_RIGHT;
-		if (INPUT->GetKey(VK_UP))pState = STATE::DASH_UP;
-		if (INPUT->GetKey(VK_DOWN)) pState = STATE::DASH_DOWN;
-	}
-
+		speed = 15;
+		if (INPUT->GetKey(VK_LEFT) || INPUT->GetKey('A'))	pState = STATE::DASH_LEFT;
+		if (INPUT->GetKey(VK_RIGHT) || INPUT->GetKey('D'))pState = STATE::DASH_RIGHT;
+		if (INPUT->GetKey(VK_UP) || INPUT->GetKey('W'))	pState = STATE::DASH_UP;
+		if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))pState = STATE::DASH_DOWN;
+	}*/
 
 }
 void player::dashFunction()
 {
 	// enum + switch 사용해서 dash 구현하기
+	// 벽에 닿으면 대쉬 불가능, 게임 내에서 대쉬해서 낭떠러지에 닿으면 떨어짐. 
+	// 벽끼임 예외처리 필요
+	if (speed > 0) speed--;
 
 	switch (pState)
 	{
-	case STATE::DASH_LEFT:
-		if (speed > 0) speed--;
-		posX -= speed;
+	case STATE::LEFT:
+		if (INPUT->GetKeyDown(VK_SPACE))
+		{
+			speed = 20;
+			pState = STATE::DASH_LEFT;
+		}
+		else speed = 0;
+
 		break;
-	case STATE::DASH_RIGHT:
-		if (speed > 0)speed--;
-		posX += speed;
+	case STATE::RIGHT:
 		break;
-	case STATE::DASH_UP:
-		if (speed > 0) speed--;
-		posY -= speed;
+	case STATE::UP:
 		break;
-	case STATE::DASH_DOWN:
-		if (speed > 0)speed--;
-		posY += speed;
+	case STATE::DOWN:
 		break;
 	}
 
-	//if (INPUT->GetKeyDown(VK_SPACE) && !isDash)
-	//{
-	//	speed = 20;
-	//	isDash = true;
-	//}
-	//if (speed > 0)
-	//{
-	//	speed--;
-	//}
-	//if (speed == 0) isDash = false;
-	//if (isLeft && checkDirectionX() && isDash) posX -= speed;
-	//if (!isLeft && checkDirectionX() && isDash)posX += speed;
-	//if (isUp && !checkDirectionX() && isDash)posY -= speed;
-	//if (!isUp && !checkDirectionX() && isDash)posY += speed;
 
 }
 
@@ -202,7 +175,7 @@ void player::tileCol()
 
 	for (int i = 0; i < MAXTILE; i++)
 	{
-		if (tile[i].keyName != "") continue;
+		if (tile[i].keyName != "" && tile[i].kind !=TERRAIN::WALL) continue;
 		for (int j = 0; j < 8; j++)
 		{
 			if (colCheck(tileCheck[j].rc, tile[i].rc))
