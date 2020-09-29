@@ -9,7 +9,7 @@ HRESULT gameScene::init()
 	uiImg = IMAGEMANAGER->addImage("UI", "Images/gameUI.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 	playerImg = IMAGEMANAGER->findImage("playerFrame");
 
-	loadMap("mapData/map2.map");
+	loadMap("mapData/map0.map");
 	_player->setTileAd(tile);
 
 	cam = RectMakeCenter(0, 0, WINSIZEX, WINSIZEY);
