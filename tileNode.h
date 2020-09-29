@@ -47,6 +47,7 @@ enum class TERRAIN
 
 	NONE
 };
+
 struct tagTile
 {
 	RECT rc;
@@ -55,7 +56,6 @@ struct tagTile
 
 	POINT frame;
 };
-
 
 enum class TOOL
 {
@@ -73,6 +73,7 @@ struct tagUser
 	int transY;
 	int delay;
 };
+
 struct tagDrag
 {
 	RECT rc;

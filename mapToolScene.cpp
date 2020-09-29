@@ -1263,6 +1263,7 @@ void mapToolScene::controller()
 							tile[i].keyName = user.KeyName;
 							tile[i].kind = user.kind;
 							tile[i].frame.x = RANDOM->range(5);
+							tile[i].frame.y = 0;
 						}
 
 					}
@@ -1480,6 +1481,7 @@ void mapToolScene::controller()
 						tile[i].keyName = user.KeyName;
 						tile[i].kind = user.kind;
 						tile[i].frame.x = RANDOM->range(5);
+						tile[i].frame.y = 0;
 					}
 				}
 			}

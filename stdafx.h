@@ -42,6 +42,7 @@ using namespace MY_UTIL;
 #include "cameraManager.h"
 #include "timeManager.h"
 #include "particleManager.h"
+#include "uiManager.h"
 
 //=============================================================
 //	## 싱글톤을 추가한다 ##
@@ -55,6 +56,7 @@ using namespace MY_UTIL;
 #define CAMERAMANAGER cameraManager::getSingleton()
 #define TIME timeManager::getSingleton()
 #define PARTICLE particleManager::getSingleton()
+#define UI uiManager::getSingleton()
 
 //=============================================================
 //	## 디파인문 ## (윈도우창 초기화)

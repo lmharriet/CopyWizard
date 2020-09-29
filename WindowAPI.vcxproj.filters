@@ -49,6 +49,9 @@
     <Filter Include="MainGame\인게임\monster_test">
       <UniqueIdentifier>{9d1bf617-7f45-4e7a-9a9e-4392db16c51f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFramework\매니져\UI">
+      <UniqueIdentifier>{a21989a8-ed51-4ccf-9b08-291ec7a11245}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
@@ -125,6 +128,9 @@
     </ClCompile>
     <ClCompile Include="monster.cpp">
       <Filter>MainGame\인게임\monster_test</Filter>
+    </ClCompile>
+    <ClCompile Include="uiManager.cpp">
+      <Filter>GameFramework\매니져\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -211,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="golem.h">
       <Filter>MainGame\인게임\monster_test</Filter>
+    </ClInclude>
+    <ClInclude Include="uiManager.h">
+      <Filter>GameFramework\매니져\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

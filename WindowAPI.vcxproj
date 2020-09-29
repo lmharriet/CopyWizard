@@ -177,6 +177,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="tileNode.h" />
     <ClInclude Include="timeManager.h" />
+    <ClInclude Include="uiManager.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
@@ -210,6 +211,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="timeManager.cpp" />
+    <ClCompile Include="uiManager.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="winMain.cpp" />
   </ItemGroup>
