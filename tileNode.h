@@ -48,14 +48,33 @@ enum class TERRAIN
 	NONE
 };
 
-struct tagTile
+typedef struct tagTile
 {
 	RECT rc;
 	TERRAIN kind;
 	string keyName;
 
 	POINT frame;
-};
+
+	//에이스타 사용을 위한 멤버변수들
+	int idx, idy;			//인덱스
+	int F, G, H;			//F = G + H, G => 시작 to 현재, H = 현재 to 종료
+	tagTile* parentNode;		//부모를 가리킬 노드(이전 노드)
+	//NODESTATE nodeState;	//노드상태 (시작, 종료, 벽, 빈노드)
+
+	//노드 생성자
+	tagTile() {}
+	//노드 생성자 (생성자 오버로딩)
+	tagTile(int _idx, int _idy)
+	{
+		idx = _idx;
+		idy = _idy;
+		F = G = H = 0;
+		kind = TERRAIN::NONE;
+		parentNode = NULL;
+	}
+
+}tileNode;
 
 enum class TOOL
 {

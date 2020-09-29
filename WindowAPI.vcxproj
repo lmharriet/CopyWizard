@@ -148,7 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="astarTestScene.h" />
+    <ClInclude Include="astarManager.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="cameraManager.h" />
     <ClInclude Include="colorNode.h" />
@@ -181,7 +181,7 @@
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="astarTestScene.cpp" />
+    <ClCompile Include="astarManager.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="cameraManager.cpp" />
     <ClCompile Include="enemy.cpp" />

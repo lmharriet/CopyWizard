@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "astarTestScene.h"
 
-HRESULT astarTestScene::init()
+#include "astarManager.h"
+
+HRESULT astarManager::init()
 {
 
 	
@@ -12,12 +13,12 @@ HRESULT astarTestScene::init()
 	_curNode = NULL;
 
 	//전체타일 노드 초기화
-	for (int y = 0; y < MAX_Y; y++)
+	for (int y = 0; y < MAXTILE_HEIGHT; y++)
 	{
-		for (int x = 0; x < MAX_X; x++)
+		for (int x = 0; x < MAXTILE_WIDTH; x++)
 		{
 			//새로운 노드와 렉트위치 설정
-			_totalNode[x][y] = new node(x, y);
+			_totalNode[x][y] = new tileNode(x, y);
 			_totalNode[x][y]->rc = RectMake(25 + x * 50, 25 + y * 50, 50, 50);
 		}
 	}
@@ -29,28 +30,20 @@ HRESULT astarTestScene::init()
 	_openList.clear();
 	_closeList.clear();
 	_finalList.clear();
-	
-
 
 	//몬스터
 	monsterMove.x = _totalNode[0][0]->rc.left+10;
 	monsterMove.y = _totalNode[0][0]->rc.top+10;
 	monsterMove.speed = 1.f;
 	
-	
-	
 	// 스타트 지점 지정
 	startPos.indexX = 0;
 	startPos.indexY = 0;
-
-	_totalNode[startPos.indexX][startPos.indexY]->nodeState = NODE_START;
+	_totalNode[startPos.indexX][startPos.indexY]->kind = NODE_START;
 	_startNode = _totalNode[startPos.indexX][startPos.indexY];
 
-
 	// 도착지점 지정
-	//endPos.indexX = MAX_X-1;
-	//endPos.indexX = MAX_X-1;
-	endPos.indexX = MAX_X-1;
+	endPos.indexX = MAXTILE_WIDTH-1;
 	endPos.indexY = 0;
 	_totalNode[endPos.indexX][endPos.indexY]->nodeState = NODE_END;
 	_endNode = _totalNode[endPos.indexX][endPos.indexY];
@@ -61,15 +54,14 @@ HRESULT astarTestScene::init()
 	playerMove.speed = 9.0f;
 
 
-	//playerMove.angle = getAngle(playerMove.x, playerMove.y, _endNode->rc.left, _endNode->rc.top);
 	return S_OK;
 }
 
-void astarTestScene::release()
+void astarManager::release()
 {
 }
 
-void astarTestScene::update()
+void astarManager::update()
 {
 	if (INPUT->GetKeyDown(VK_UP))
 	{		
@@ -81,7 +73,7 @@ void astarTestScene::update()
 	if (INPUT->GetKeyDown(VK_DOWN))
 	{
 		_totalNode[endPos.indexX][endPos.indexY]->nodeState = NODE_EMPTY;
-		if (endPos.indexY < MAX_Y-1)
+		if (endPos.indexY < MAXTILE_HEIGHT-1)
 			endPos.indexY += 1;
 		
 	}
@@ -96,7 +88,7 @@ void astarTestScene::update()
 	if (INPUT->GetKeyDown(VK_RIGHT))
 	{
 		_totalNode[endPos.indexX][endPos.indexY]->nodeState = NODE_EMPTY;
-		if (endPos.indexX < MAX_X-1)
+		if (endPos.indexX < MAXTILE_WIDTH-1)
 			endPos.indexX += 1;
 		
 	}
@@ -118,9 +110,9 @@ void astarTestScene::update()
 	//벽(장애물) 노드 세팅하기 (시작, 종료노드 설정전에 벽세우지 못하게 막기)
 	if (INPUT->GetKeyDown(VK_RBUTTON) && _startNode && _endNode)
 	{
-		for (int y = 0; y < MAX_Y; y++)
+		for (int y = 0; y < MAXTILE_HEIGHT; y++)
 		{
-			for (int x = 0; x < MAX_X; x++)
+			for (int x = 0; x < MAXTILE_WIDTH; x++)
 			{
 				if (PtInRect(&_totalNode[x][y]->rc, _ptMouse))
 				{
@@ -136,9 +128,9 @@ void astarTestScene::update()
 	//{
 	//	//if(MonsterMove.rc)
 	//	//_totalNode[startPos.indexX][startPos.indexY]->nodeState = NODE_EMPTY;
-	//	for (int i = 0; i < MAX_Y; i++)
+	//	for (int i = 0; i < MAXTILE_HEIGHT; i++)
 	//	{
-	//		for (int k = 0; k < MAX_X; k++)
+	//		for (int k = 0; k < MAXTILE_WIDTH; k++)
 	//		{
 	//			if (_totalNode[k][i] == _finalList[0])
 	//			{
@@ -165,9 +157,9 @@ void astarTestScene::update()
 		
 		if (IntersectRect(&temp, &monsterMove.rc, &_finalList[0]->rc))
 		{
-			for (int i = 0; i < MAX_Y; i++)
+			for (int i = 0; i < MAXTILE_HEIGHT; i++)
 			{
-				for (int k = 0; k < MAX_X; k++)
+				for (int k = 0; k < MAXTILE_WIDTH; k++)
 				{
 					if (_totalNode[k][i] == _finalList[0])
 					{
@@ -227,12 +219,12 @@ void astarTestScene::update()
 }
 
 
-void astarTestScene::render()
+void astarManager::render()
 {
 	char str[128];
-	for (int y = 0; y < MAX_Y; y++)
+	for (int y = 0; y < MAXTILE_HEIGHT; y++)
 	{
-		for (int x = 0; x < MAX_X; x++)
+		for (int x = 0; x < MAXTILE_WIDTH; x++)
 		{
 			//전체노드 렉트 보여주기
 			Rectangle(getMemDC(), _totalNode[x][y]->rc);
@@ -291,7 +283,7 @@ void astarTestScene::render()
 	//Rectangle(getMemDC(), player);
 }
 
-void astarTestScene::pathFinding()
+void astarManager::pathFinding()
 {
 	//종료노드가 없는 경우 길찾기 못함
 	if (!_endNode) return;
@@ -381,10 +373,10 @@ void astarTestScene::pathFinding()
 
 }
 
-void astarTestScene::addOpenList(int idx, int idy)
+void astarManager::addOpenList(int idx, int idy)
 {
 	//예외처리 인덱스 범위안에서 추가할 수 있어야 한다
-	if (idx < 0 || idx >= MAX_X || idy < 0 || idy >= MAX_Y) return;
+	if (idx < 0 || idx >= MAXTILE_WIDTH || idy < 0 || idy >= MAXTILE_HEIGHT) return;
 
 	if (_totalNode[_curNode->idx][idy]->nodeState == NODE_WALL && _totalNode[idx][_curNode->idy]->nodeState == NODE_WALL) return;
 	if (_totalNode[_curNode->idx][idy]->nodeState == NODE_WALL || _totalNode[idx][_curNode->idy]->nodeState == NODE_WALL) return;
@@ -424,13 +416,13 @@ void astarTestScene::addOpenList(int idx, int idy)
 	_openList.push_back(neighborNode);
 }
 
-void astarTestScene::delOpenList(int index)
+void astarManager::delOpenList(int index)
 {
 	_openList.erase(_openList.begin() + index);
 }
 
 //편의를 위한 함수
-void astarTestScene::setNodeColor(node * node, COLORREF color)
+void astarManager::setNodeColor(node * node, COLORREF color)
 {
 	HBRUSH brush = CreateSolidBrush(color);
 	FillRect(getMemDC(), &node->rc, brush);

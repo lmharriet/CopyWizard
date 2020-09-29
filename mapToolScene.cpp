@@ -5,6 +5,10 @@ HRESULT mapToolScene::init()
 {
 	//sound init
 
+	ZeroMemory(&tile, sizeof(tagTile));
+	ZeroMemory(&obTile, sizeof(tagTile));
+
+
 	_tileSize = TILESIZE;
 	_imageSize = 0;
 

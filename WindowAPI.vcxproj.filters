@@ -52,6 +52,9 @@
     <Filter Include="GameFramework\매니져\UI">
       <UniqueIdentifier>{a21989a8-ed51-4ccf-9b08-291ec7a11245}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFramework\매니져\에이스타">
+      <UniqueIdentifier>{606b59af-a850-4a55-9921-7c9f9b1dda16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
@@ -119,7 +122,6 @@
     <ClCompile Include="timeManager.cpp">
       <Filter>GameFramework\매니져</Filter>
     </ClCompile>
-    <ClCompile Include="astarTestScene.cpp" />
     <ClCompile Include="particleManager.cpp">
       <Filter>GameFramework\매니져\파티클</Filter>
     </ClCompile>
@@ -131,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="uiManager.cpp">
       <Filter>GameFramework\매니져\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="astarManager.cpp">
+      <Filter>GameFramework\매니져\에이스타</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -208,7 +213,6 @@
     <ClInclude Include="timeManager.h">
       <Filter>GameFramework\매니져</Filter>
     </ClInclude>
-    <ClInclude Include="astarTestScene.h" />
     <ClInclude Include="particleManager.h">
       <Filter>GameFramework\매니져\파티클</Filter>
     </ClInclude>
@@ -220,6 +224,9 @@
     </ClInclude>
     <ClInclude Include="uiManager.h">
       <Filter>GameFramework\매니져\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="astarManager.h">
+      <Filter>GameFramework\매니져\에이스타</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
