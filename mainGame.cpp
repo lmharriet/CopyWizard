@@ -28,7 +28,7 @@ HRESULT mainGame::init()
 	maptool->init();
 	maptool->addImage();
 	/*현재씬*/
-	SCENEMANAGER->loadScene("인게임");
+	SCENEMANAGER->loadScene("맵툴제작");
 
 	ShowCursor(false);
 	return S_OK;
