@@ -3,6 +3,7 @@
 
 HRESULT gameScene::init()
 {
+	UI->init();
 
 	_player = new player;
 	_player->init();
@@ -192,8 +193,10 @@ void gameScene::render()
 	if(!isRender) _player->render();
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), _player->getRect());
-	uiImg->render(getMemDC());
+	//uiImg->render(getMemDC());
 
+	UI->infoRender(getMemDC(), 50, 50);
+	UI->coinRender(getMemDC());
 
 	viewText();
 
