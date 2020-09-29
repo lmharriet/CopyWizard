@@ -240,6 +240,23 @@ HRESULT image::initForAlphaBlend()
 	return S_OK;
 }
 
+HRESULT image::initForStretchBlend()
+{
+	HDC hdc = GetDC(_hWnd);
+
+	_stretchImage = new IMAGE_INFO;
+	_stretchImage->loadType = LOAD_FILE;
+	_stretchImage->hMemDC = CreateCompatibleDC(hdc);
+	_stretchImage->hBit = (HBITMAP)CreateCompatibleBitmap(hdc, _imageInfo->width, _imageInfo->height);
+	_stretchImage->hOBit = (HBITMAP)SelectObject(_stretchImage->hMemDC, _stretchImage->hBit);
+	_stretchImage->width = WINSIZEX;
+	_stretchImage->height = WINSIZEY;
+
+	ReleaseDC(_hWnd, hdc);
+
+	return S_OK;
+}
+
 //해제
 void image::release()
 {
@@ -370,6 +387,51 @@ void image::renderResize(HDC hdc, int destX, int destY, int sourWidth, int sourH
 			_imageInfo->hMemDC, sourWidth, sourHeight, SRCCOPY);
 	}
 }
+
+void image::stretchRender(HDC hdc, int destX, int destY, float scale)
+{
+	if (!_stretchImage) this->initForStretchBlend();
+
+	if (_isTrans) //배경색 없애고 출력
+	{
+		BitBlt(_stretchImage->hMemDC, 0, 0, _imageInfo->width, _imageInfo->height,
+			hdc, 0, 0, SRCCOPY);
+
+		// 먼저 늘이거나 줄이고
+		StretchBlt(
+			_stretchImage->hMemDC,
+			0,
+			0,
+			_imageInfo->width * scale,
+			_imageInfo->height * scale,
+			_imageInfo->hMemDC,
+			0, 0,
+			_imageInfo->width,
+			_imageInfo->height,
+			SRCCOPY
+		);
+
+		// 그 뒤에 투명화한다
+		GdiTransparentBlt(
+			hdc,
+			destX,
+			destY,
+			_imageInfo->width * scale,
+			_imageInfo->height * scale,
+			_stretchImage->hMemDC,
+			0,
+			0,
+			_imageInfo->width * scale,
+			_imageInfo->height * scale,
+			_transColor);
+	}
+	else//원본 이미지 그대로 출력
+	{
+		StretchBlt(hdc, destX, destY, _imageInfo->width * scale, _imageInfo->height * scale,
+			_imageInfo->hMemDC, 0, 0, _imageInfo->width, _imageInfo->height, SRCCOPY);
+	}
+}
+
 
 void image::alphaRender(HDC hdc, BYTE alpha)
 {
@@ -532,6 +594,57 @@ void image::frameRender(HDC hdc, int destX, int destY, int currentFrameX, int cu
 			_imageInfo->frameWidth,		//복사 영역 가로크기
 			_imageInfo->frameHeight,	//복사 영역 세로크기
 			_transColor);				//복사할때 제외할 색상 (일반적으로 마젠타 색상을 사용함)
+	}
+	else//원본 이미지 그대로 출력
+	{
+		BitBlt(hdc, destX, destY, _imageInfo->frameWidth, _imageInfo->frameHeight,
+			_imageInfo->hMemDC,
+			_imageInfo->currentFrameX * _imageInfo->frameWidth,
+			_imageInfo->currentFrameY * _imageInfo->frameHeight, SRCCOPY);
+	}
+}
+
+void image::alphaFrameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, BYTE alpha)
+{
+	//이미지 예외처리
+	_imageInfo->currentFrameX = currentFrameX;
+	_imageInfo->currentFrameY = currentFrameY;
+	if (currentFrameX > _imageInfo->maxFrameX)
+	{
+		_imageInfo->currentFrameX = _imageInfo->maxFrameX;
+	}
+	if (currentFrameY > _imageInfo->maxFrameY)
+	{
+		_imageInfo->currentFrameY = _imageInfo->maxFrameX;
+	}
+
+	if (!_blendImage) this->initForAlphaBlend();
+	_blendFunc.SourceConstantAlpha = alpha;
+
+	if (_isTrans)//배경색 없애고 출력
+	{
+		//BitBlt(_blendImage->hMemDC, 0, 0, _imageInfo->frameWidth, _imageInfo->frameHeight,
+			//hdc, destX, destY, SRCCOPY);
+		BitBlt(_blendImage->hMemDC, 0, 0, _imageInfo->width + destX, _imageInfo->height + destY,
+			hdc, 0, 0, SRCCOPY);
+
+		GdiTransparentBlt(
+			_blendImage->hMemDC,		//복사할 장소의 DC
+			destX,						//복사할 좌표 시작X
+			destY,						//복사할 좌표 시작Y
+			_imageInfo->frameWidth,		//복사할 이미지 가로크기
+			_imageInfo->frameHeight,	//복사할 이미지 세로크기
+			_imageInfo->hMemDC,			//복사될 대상 DC
+			_imageInfo->currentFrameX * _imageInfo->frameWidth,		//복사될 대상의 시작지점
+			_imageInfo->currentFrameY * _imageInfo->frameHeight,	//복사될 대상의 시작지점			
+			_imageInfo->frameWidth,		//복사 영역 가로크기
+			_imageInfo->frameHeight,	//복사 영역 세로크기
+			_transColor);				//복사할때 제외할 색상 (일반적으로 마젠타 색상을 사용함)
+
+
+		GdiAlphaBlend(hdc, destX, destY, _imageInfo->frameWidth, _imageInfo->frameHeight,
+			_blendImage->hMemDC, destX + _imageInfo->frameWidth * currentFrameX, destY + _imageInfo->frameHeight * currentFrameY,
+			_imageInfo->frameWidth, _imageInfo->frameHeight, _blendFunc);
 	}
 	else//원본 이미지 그대로 출력
 	{
@@ -754,5 +867,73 @@ void image::loopAlphaRender(HDC hdc, const LPRECT drawArea, int offsetX, int off
 			//그려주자(알파렌더-이미지잘라서붙이기)
 			alphaRender(hdc, rcDest.left, rcDest.top, rcSour.left, rcSour.top, sourWidth, sourHeight, alpha);
 		}
+	}
+}
+
+void image::frameStretchAlphaRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float scaleX, float scaleY, BYTE alpha)
+{
+	//이미지 예외처리
+	_imageInfo->currentFrameX = currentFrameX;
+	_imageInfo->currentFrameY = currentFrameY;
+	if (currentFrameX > _imageInfo->maxFrameX)
+	{
+		_imageInfo->currentFrameX = _imageInfo->maxFrameX;
+	}
+	if (currentFrameY > _imageInfo->maxFrameY)
+	{
+		_imageInfo->currentFrameY = _imageInfo->maxFrameX;
+	}
+
+	if (!_stretchImage) this->initForStretchBlend();
+	if (!_blendImage) this->initForAlphaBlend();
+	_blendFunc.SourceConstantAlpha = alpha;
+
+	if (_isTrans) //배경색 없애고 출력
+	{
+		BitBlt(_stretchImage->hMemDC, 0, 0, _imageInfo->width * scaleX + destX, _imageInfo->height * scaleY + destY,
+			hdc, 0, 0, SRCCOPY);
+		BitBlt(_blendImage->hMemDC, 0, 0, _imageInfo->width * scaleX + destX, _imageInfo->height * scaleY + destY,
+			hdc, 0, 0, SRCCOPY);
+
+		// 먼저 늘이거나 줄이고
+		StretchBlt(
+			_stretchImage->hMemDC,
+			destX,
+			destY,
+			_imageInfo->width * scaleX,
+			_imageInfo->height * scaleY,
+			_imageInfo->hMemDC,
+			0, 0,
+			_imageInfo->width,
+			_imageInfo->height,
+			SRCCOPY
+		);
+
+		// 그 뒤에 투명화한다
+		GdiTransparentBlt(
+			_blendImage->hMemDC,
+			destX,
+			destY,
+			_imageInfo->frameWidth * scaleX,
+			_imageInfo->frameHeight * scaleY,
+			_stretchImage->hMemDC,
+			(_imageInfo->frameWidth * currentFrameX * scaleX) + destX,
+			(_imageInfo->frameHeight * currentFrameY * scaleY) + destY,
+			_imageInfo->frameWidth * scaleX,
+			_imageInfo->frameHeight * scaleY,
+			_transColor);
+
+		GdiAlphaBlend(hdc, destX, destY, _imageInfo->frameWidth * scaleX, _imageInfo->frameHeight * scaleY,
+			_blendImage->hMemDC, destX + (_imageInfo->frameWidth * currentFrameX * scaleX), destY + (_imageInfo->frameHeight * currentFrameY * scaleY),
+			_imageInfo->frameWidth * scaleX, _imageInfo->frameHeight * scaleY, _blendFunc);
+	}
+	else // 확대와 알파를 먹인 것 (투명화는 안함)
+	{
+		StretchBlt(_blendImage->hMemDC, destX, destY, _imageInfo->frameWidth * scaleX, _imageInfo->frameHeight * scaleY,
+			_imageInfo->hMemDC, currentFrameX * _imageInfo->frameWidth * scaleX, currentFrameY * _imageInfo->frameHeight * scaleY, _imageInfo->frameWidth * scaleX, _imageInfo->frameHeight * scaleY, SRCCOPY);
+
+		GdiAlphaBlend(hdc, destX, destY, _imageInfo->frameWidth * scaleX, _imageInfo->frameHeight * scaleY,
+			_blendImage->hMemDC, destX + (currentFrameX * _imageInfo->frameWidth * scaleX), destY + (currentFrameY * _imageInfo->frameHeight * scaleY),
+			_imageInfo->frameWidth * scaleX, _imageInfo->frameHeight * scaleY, _blendFunc);
 	}
 }

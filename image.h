@@ -55,6 +55,7 @@ private:
 
 	LPIMAGE_INFO	_blendImage;	//알파블렌드 이미지
 	BLENDFUNCTION	_blendFunc;		//알파블렌드 기능
+	LPIMAGE_INFO    _stretchImage;    //스트레치 이미지
 
 public:
 	image();
@@ -71,7 +72,7 @@ public:
 	
 	//알파블렌드 초기화
 	HRESULT initForAlphaBlend();
-
+	HRESULT initForStretchBlend();
 
 	//해제
 	void release();
@@ -84,6 +85,8 @@ public:
 	
 	void renderResize(HDC hdc, int destX, int destY, int sourWidth, int sourHeight, RECT rc, int defaultSize);
 
+	void stretchRender(HDC hdc, int destX, int destY, float scale);
+
 	//알파렌더(이미지를 알파값만큼 투명화 시켜준다)
 	void alphaRender(HDC hdc, BYTE alpha);
 	void alphaRender(HDC hdc, int destX, int destY, BYTE alpha);
@@ -91,12 +94,15 @@ public:
 	//프레임렌더
 	void frameRender(HDC hdc, int destX, int destY);
 	void frameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY);
+	void alphaFrameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, BYTE alpha);
 	void frameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, RECT rc, int defaultSize);
 	void frameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, RECT scale);
 
 	//루프렌더
 	void loopRender(HDC hdc, const LPRECT drawArea, int offsetX, int offsetY);
 	void loopAlphaRender(HDC hdc, const LPRECT drawArea, int offsetX, int offsetY, BYTE alpha);
+
+	void frameStretchAlphaRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float scaleX, float scaleY, BYTE alpha);
 
 	//DC 얻기
 	inline HDC getMemDC() { return _imageInfo->hMemDC; }

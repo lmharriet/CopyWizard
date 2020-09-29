@@ -5,6 +5,7 @@
 HRESULT player::init()
 {
 	IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small.bmp", 1000, 2400, 10, 24);
+	IMAGEMANAGER->addFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
 	posX = WINSIZEX / 2;
 	posY = WINSIZEY / 2;
 	rc = RectMakeCenter(posX, posY, 100, 100);
@@ -57,6 +58,7 @@ void player::update()
 	makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
 	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
 
+	
 
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
@@ -69,34 +71,39 @@ void player::update()
 
 void player::render()
 {
+	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
+
+	float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
+	int output = (int)(angle * (18 / PI));
+
+	CAMERAMANAGER->FrameRender(getMemDC(), img, posX - 50, posY - 20, output, 0);
+
 	animation();
-
-
-
+	viewText();
 }
 
 void player::controller()
 {
 	//왼쪽
-	if (isLeft || INPUT->GetKey('A'))
+	if (isLeft )
 	{
 		rc = RectMakeCenter(posX, posY, 100, 100);
 		if (!tileCheck[(int)DIRECTION::LEFT].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol)posX -= 8;
 	}
 	//오른쪽
-	if (isRight || INPUT->GetKey('D'))
+	if (isRight )
 	{
 		rc = RectMakeCenter(posX, posY, 100, 100);
 		if (!tileCheck[(int)DIRECTION::RIGHT].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol) posX += 8;
 	}
 	//위
-	if (isUp || INPUT->GetKey('W'))
+	if (isUp )
 	{
 		rc = RectMakeCenter(posX, posY, 100, 100);
 		if (!tileCheck[(int)DIRECTION::TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol) posY -= 8;
 	}
 	//아래
-	if (isDown || INPUT->GetKey('S'))
+	if (isDown )
 	{
 		rc = RectMakeCenter(posX, posY, 100, 100);
 		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol) posY += 8;
@@ -401,13 +408,13 @@ void player::changeState()
 
 void player::buttonDown()
 {
-	if (INPUT->GetKey(VK_LEFT))isLeft = true;
+	if (INPUT->GetKey(VK_LEFT)||INPUT->GetKey('A'))isLeft = true;
 	else isLeft = false;
-	if (INPUT->GetKey(VK_RIGHT))isRight = true;
+	if (INPUT->GetKey(VK_RIGHT) || INPUT->GetKey('D'))isRight = true;
 	else isRight = false;
-	if (INPUT->GetKey(VK_UP))isUp = true;
+	if (INPUT->GetKey(VK_UP) || INPUT->GetKey('W'))isUp = true;
 	else isUp = false;
-	if (INPUT->GetKey(VK_DOWN))isDown = true;
+	if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))isDown = true;
 	else isDown = false;
 }
 
