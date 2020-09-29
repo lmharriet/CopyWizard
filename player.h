@@ -9,11 +9,14 @@ struct tagCollider
 	bool isCol;
 };
 
-enum PLAYERSTATE
+enum class STATE
 {
 	IDLE,
 	RUN,
-	DASH,
+	DASH_LEFT,
+	DASH_RIGHT,
+	DASH_UP,
+	DASH_DOWN,
 	SKILL
 };
 
@@ -22,7 +25,7 @@ class player : public gameNode
 private:
 	tagTile* tile;
 private:
-	PLAYERSTATE state;
+	STATE pState;
 	RECT rc;
 	tagCollider tileCheck[8];
 
@@ -39,6 +42,7 @@ public:
 	void render();
 
 	void controller();
+	void dashFunction();
 	void tileCol();
 	void makeCol(int index, int destX, int destY, int rcSize = 7);
 	bool checkDirectionX()

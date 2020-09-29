@@ -19,7 +19,7 @@ enum class OPTION
 	SELECT_MENU
 };
 
-enum DIRECTION
+enum class DIRECTION
 {
 	LEFT_TOP,
 	TOP,
@@ -27,7 +27,7 @@ enum DIRECTION
 	LEFT,
 	RIGHT,
 	LEFT_DOWN,
-	DOWN,
+	BOTTOM,
 	RIGHT_DOWN
 };
 
