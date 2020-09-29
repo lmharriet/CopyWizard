@@ -93,79 +93,104 @@ void player::render()
 
 void player::controller()
 {
+	//왼쪽
 	if (INPUT->GetKey(VK_LEFT) || INPUT->GetKey('A'))
 	{
-		if (!tileCheck[(int)DIRECTION::LEFT].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol)posX -= 6;
 		isLeft = true;
 		rc = RectMakeCenter(posX, posY, 100, 100);
-		pState = STATE::LEFT;
-
+		if (!tileCheck[(int)DIRECTION::LEFT].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol)posX -= 6;
 	}
+
 	if (INPUT->GetKey(VK_RIGHT) || INPUT->GetKey('D'))
 	{
-		if (!tileCheck[(int)DIRECTION::RIGHT].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol) posX += 6;
-
 		isLeft = false;
 		rc = RectMakeCenter(posX, posY, 100, 100);
-		pState = STATE::RIGHT;
+		if (!tileCheck[(int)DIRECTION::RIGHT].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol) posX += 6;
 	}
-
 	if (INPUT->GetKey(VK_UP) || INPUT->GetKey('W'))
 	{
-		if (!tileCheck[(int)DIRECTION::TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol) posY -= 6;
-
 		isUp = true;
 		rc = RectMakeCenter(posX, posY, 100, 100);
-		pState = STATE::UP;
+		if (!tileCheck[(int)DIRECTION::TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol) posY -= 6;
 	}
 
 	if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))
 	{
-		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol) posY += 6;
-
 		isUp = false;
 		rc = RectMakeCenter(posX, posY, 100, 100);
-		pState = STATE::DOWN;
+		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol) posY += 6;
 	}
 
-	////dash
-	/*if (INPUT->GetKeyDown(VK_SPACE))
+	//state == idle left,right
+	if (INPUT->GetKeyUp(VK_LEFT) || INPUT->GetKeyUp(VK_RIGHT))
 	{
-		speed = 15;
-		if (INPUT->GetKey(VK_LEFT) || INPUT->GetKey('A'))	pState = STATE::DASH_LEFT;
-		if (INPUT->GetKey(VK_RIGHT) || INPUT->GetKey('D'))pState = STATE::DASH_RIGHT;
-		if (INPUT->GetKey(VK_UP) || INPUT->GetKey('W'))	pState = STATE::DASH_UP;
-		if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))pState = STATE::DASH_DOWN;
-	}*/
+		if (isLeft)pState = STATE::LEFT;
+		if (!isLeft)pState = STATE::RIGHT;
+	}
+	//state == idle up, down
 
+	if (INPUT->GetKeyUp(VK_UP) || INPUT->GetKeyUp(VK_DOWN))
+	{
+		if (isUp)pState = STATE::UP;
+		if (!isUp)pState = STATE::DOWN;
+	}
+
+	// state == dash
+	if (INPUT->GetKeyDown(VK_SPACE))
+	{
+		speed = 20;
+		if (INPUT->GetKey(VK_LEFT) || INPUT->GetKey('A') || pState == STATE::LEFT) pState = STATE::DASH_LEFT;
+		if (INPUT->GetKey(VK_RIGHT) || INPUT->GetKey('D') || pState == STATE::RIGHT) pState = STATE::DASH_RIGHT;
+		if (INPUT->GetKey(VK_UP) || INPUT->GetKey('W') || pState == STATE::UP)	pState = STATE::DASH_UP;
+		if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S') || pState == STATE::DOWN) pState = STATE::DASH_DOWN;
+	}
 }
 void player::dashFunction()
 {
 	// enum + switch 사용해서 dash 구현하기
 	// 벽에 닿으면 대쉬 불가능, 게임 내에서 대쉬해서 낭떠러지에 닿으면 떨어짐. 
 	// 벽끼임 예외처리 필요
-	if (speed > 0) speed--;
 
 	switch (pState)
 	{
-	case STATE::LEFT:
-		if (INPUT->GetKeyDown(VK_SPACE))
+	case STATE::DASH_LEFT:
+		if (!tileCheck[(int)DIRECTION::LEFT].isCol &&
+			!tileCheck[(int)DIRECTION::LEFT_TOP].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol)
 		{
-			speed = 20;
-			pState = STATE::DASH_LEFT;
+			if (speed > 0) speed--;
+			posX -= speed;
 		}
 		else speed = 0;
 
 		break;
-	case STATE::RIGHT:
+	case STATE::DASH_RIGHT:
+		if (!tileCheck[(int)DIRECTION::RIGHT].isCol &&
+			!tileCheck[(int)DIRECTION::RIGHT_TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol)
+		{
+			if (speed > 0)speed--;
+			posX += speed;
+		}
+		else speed = 0;
 		break;
-	case STATE::UP:
+	case STATE::DASH_UP:
+		if (!tileCheck[(int)DIRECTION::TOP].isCol
+			&& !tileCheck[(int)DIRECTION::LEFT_TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol)
+		{
+			if (speed > 0) speed--;
+			posY -= speed;
+		}
+		else speed = 0;
 		break;
-	case STATE::DOWN:
+	case STATE::DASH_DOWN:
+		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol &&
+			!tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol)
+		{
+			if (speed > 0)speed--;
+			posY += speed;
+		}
+		else speed = 0;
 		break;
 	}
-
-
 }
 
 void player::tileCol()
@@ -175,7 +200,7 @@ void player::tileCol()
 
 	for (int i = 0; i < MAXTILE; i++)
 	{
-		if (tile[i].keyName != "" && tile[i].kind !=TERRAIN::WALL) continue;
+		if (tile[i].keyName != "" && tile[i].kind != TERRAIN::WALL) continue;
 		for (int j = 0; j < 8; j++)
 		{
 			if (colCheck(tileCheck[j].rc, tile[i].rc))
