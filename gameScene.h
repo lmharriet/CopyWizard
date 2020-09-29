@@ -25,6 +25,7 @@ private:
 
 	//test cam(수정해도됨)
 	RECT cam;
+	RECT checkArea;
 
 public:
 	HRESULT init();
