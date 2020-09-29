@@ -286,8 +286,8 @@ void astarManager::render(HDC hdc)
 			}
 
 			//전체노드의 인덱스 보여주기(맨마지막에 출력)
-			sprintf(str, "[%d,%d]", totalNode[x][y]->idx, totalNode[x][y]->idy);
-			textOut(hdc, totalNode[x][y]->rc.left , totalNode[x][y]->rc.top , str,RGB(0,0,0));
+			//sprintf(str, "[%d,%d]", totalNode[x][y]->idx, totalNode[x][y]->idy);
+			//textOut(hdc, totalNode[x][y]->rc.left , totalNode[x][y]->rc.top , str,RGB(0,0,0));
 		}
 	}
 
@@ -298,10 +298,10 @@ void astarManager::render(HDC hdc)
 		{
 			//cout << finalList.size() << endl;
 			setNodeColor(finalList[i], RGB(255, 255, 0),hdc);
-			sprintf(str, "[%d, %d]      %d번 노드", finalList[i]->idx, finalList[i]->idy, i + 1);
-			textOut(hdc, finalList[i]->rc.left + 10, finalList[i]->rc.top + 10, str,RGB(0,0,0));
-			sprintf(str, "G: %d, H: %d, F: %d", finalList[i]->G, finalList[i]->H, finalList[i]->F);
-			textOut(hdc, finalList[i]->rc.left + 10, finalList[i]->rc.bottom - 30, str,RGB(0,0,0));
+			//sprintf(str, "[%d, %d]      %d번 노드", finalList[i]->idx, finalList[i]->idy, i + 1);
+			//textOut(hdc, finalList[i]->rc.left + 10, finalList[i]->rc.top + 10, str,RGB(0,0,0));
+			//sprintf(str, "G: %d, H: %d, F: %d", finalList[i]->G, finalList[i]->H, finalList[i]->F);
+			//textOut(hdc, finalList[i]->rc.left + 10, finalList[i]->rc.bottom - 30, str,RGB(0,0,0));
 			
 		}
 		//setNodeColor(endNode, RGB(0, 0, 255),hdc);
