@@ -38,7 +38,7 @@ void golem::update()
 
 void golem::render()
 {
-    rc = RectMake(cul.x, cul.y, img->getFrameWidth(), img->getFrameHeight());
+    rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
     FrameRect(getMemDC(), rc, RGB(0, 0, 0));
     img->frameRender(getMemDC(), cul.x, cul.y);
 }
