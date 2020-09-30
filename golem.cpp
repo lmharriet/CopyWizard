@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "golem.h"
 
-HRESULT golem::init()
+HRESULT golem::init(tagTile* tile )
 {
     img = IMAGEMANAGER->addFrameImage("golem", "wizard/Golem.bmp", 720, 700, 6, 5);
     cul = { 0,0 };
@@ -10,15 +10,24 @@ HRESULT golem::init()
     speed = 5.f;
     isFindWayOn = false; //길찾기 온/오프
 
+    astar = new astarManager;
+    //astar->setTileNode(tile);
+    astar->init(tile);
+    //astar->setCam(cam);
+
     return S_OK;
 }
 
 void golem::release()
 {
+    astar->release();
+    SAFE_DELETE(astar);
 }
 
 void golem::update()
 {
+   
+    astar->setCam(camRC);
     cul.x = CAMERAMANAGER->GetRelativeX(pos.x);
     cul.y = CAMERAMANAGER->GetRelativeY(pos.y);
     
@@ -32,13 +41,19 @@ void golem::update()
     //
     //    
     //}
-
+    rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
+    astar->setStartRC(rc);
+    astar->setEndRC(playerRC);
+    astar->update();
+    
 
 }
 
 void golem::render()
 {
-    rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
+    
     FrameRect(getMemDC(), rc, RGB(0, 0, 0));
     img->frameRender(getMemDC(), cul.x, cul.y);
+
+    astar->render(getMemDC());
 }

@@ -22,27 +22,25 @@ HRESULT gameScene::init()
 
 
 	_golem = new golem; //테스트중 (몬스터골렘)
-	_golem->init(); //테스트중 (몬스터골렘)
-
-
-	//ASTAR->setTileNode(tile);
-	
-	//ASTAR->init();
+	_golem->init(tile); //테스트중 (몬스터골렘)
 
 	return S_OK;
 }
 
 void gameScene::release()
 {
-	//_player->release();
-	//SAFE_DELETE(_player);
+	_player->release();
+	SAFE_DELETE(_player);
+
+	_golem->release();
+	SAFE_DELETE(_golem);
 }
 
 void gameScene::update()
 {
 	_player->update();
 	_golem->update();
-	//ASTAR->update();
+
 	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX, WINSIZEY);
 	//checkArea = RectMakeCenter(_player->getX(), _player->getY(), 400, 400);
 	checkArea = RectMake(_player->getX() - 100, _player->getY() - WINSIZEY/2 + 420, 200, 500);
@@ -63,10 +61,8 @@ void gameScene::update()
 
 void gameScene::render()
 {
-	//ASTAR->setCam(cam);
-	//ASTAR->setEndRC(RectMake(_player->getX(),_player->getY(),100,100));
-	//ASTAR->setEndRC(_player->getRect());
-	//ASTAR->setStartRC(_golem->getRC());
+	_golem->setCamRC(cam);
+	_golem->setPlayerRC(RectMake(_player->getX(), _player->getY(), 100, 100));
 	
 	for (int i = 0; i < MAXTILE; i++)
 	{
@@ -214,7 +210,7 @@ void gameScene::render()
 	UI->coinRender(getMemDC());
 
 	viewText();
-	//ASTAR->render(getMemDC());
+	
 	_golem->render(); //테스트중 (몬스터골렘)
 }
 
