@@ -52,13 +52,13 @@ void gameScene::update()
 	//	_player->getY(),
 	//	50);
 
-	if (INPUT->GetKeyDown(VK_SPACE))
+	/*if (INPUT->GetKeyDown(VK_SPACE))
 	{
 		PARTICLE->pointInit(_player->getX(), _player->getY(), 0, 0, 0, 5);
 	}
 	PARTICLE->pointActive();
 
-	if (INPUT->GetKeyDown(VK_BACK))PARTICLE->resetPoint();
+	if (INPUT->GetKeyDown(VK_BACK))PARTICLE->resetPoint();*/
 }
 
 void gameScene::render()
@@ -199,7 +199,7 @@ void gameScene::render()
 			CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - (3 * TILESIZE), tile[i].frame.x, tile[i].frame.y);
 		}
 	}
-	PARTICLE->active(getMemDC(), CAMERAMANAGER->getRect());
+	//PARTICLE->active(getMemDC(), CAMERAMANAGER->getRect());
 
 	
 	if(!isRender) _player->render();
