@@ -22,7 +22,7 @@ HRESULT gameScene::init()
 
 
 	_golem = new golem; //테스트중 (몬스터골렘)
-	_golem->init(tile); //테스트중 (몬스터골렘)
+	_golem->init(tile, { 849,360 }); //테스트중 (몬스터골렘)
 
 	return S_OK;
 }
