@@ -22,7 +22,7 @@ HRESULT gameScene::init()
 
 
 	_golem = new golem; //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
-	_golem->init(tile, { 849,360 }); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
+	_golem->init(tile); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
 
 	return S_OK;
 }
@@ -38,6 +38,7 @@ void gameScene::release()
 
 void gameScene::update()
 {
+	UI->update();
 	_player->update();
 	_golem->update();
 
@@ -205,9 +206,7 @@ void gameScene::render()
 
 
 	
-
-	UI->infoRender(getMemDC(), 50, 50);
-	UI->coinRender(getMemDC());
+	UI->render(getMemDC(), 50, 50);
 
 	viewText();
 	
