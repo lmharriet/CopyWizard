@@ -14,7 +14,7 @@ void imageManager::release()
 image * imageManager::addImage(string strKey, int width, int height)
 {
 	//추가하려는 이미지가 존재하는지 키값으로 확인
-	image* img = findImage(strKey);
+	image* img = findImage(strKey);//
 
 	//추가하려는 이미지가 이미 존재한다면
 	//새로 만들지 않고 해당 이미지만 리턴시킨다
