@@ -32,6 +32,8 @@ HRESULT player::init()
 	//dash, direction
 	dashLeft = dashRight = dashUp = dashDown = false;
 	isLeft = isRight = isUp = isDown = false;
+	//attack type
+	basic = standard = signature = false;
 
 	speed = index = dashIndex = count = dashCount = stateCool = 0;
 
@@ -78,23 +80,27 @@ void player::update()
 	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
 
 
-
-
-	if (stateCool == 0 && INPUT->GetKeyDown(VK_LBUTTON))
+	if (stateCool == 0 && basic)
 	{
+	
 		stateCool = 10;
 		flame->fire(posX - 30, posY, 10, attackAngle, 30);
 	}
 
 	if (stateCool > 0)
 	{
-		stateCool--;
+		stateCool--;		
+		//수정 완전 필요
 		arcana = ARCANA::BASIC;
+
 	}
-	else arcana = ARCANA::READY;
+	else
+	{
+		arcana = ARCANA::READY;
+	}
 
 	flame->update();
-	//ms->update();
+
 
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
@@ -105,11 +111,8 @@ void player::update()
 	buttonDown();
 }
 
-
 void player::render()
 {
-
-
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
 	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, angleTenth, 0, 50);
 
@@ -120,7 +123,6 @@ void player::render()
 	viewText();
 
 	flame->render();
-
 }
 
 void player::controller()
@@ -271,37 +273,28 @@ void player::dashFunction()
 
 void player::arcanaSetting()
 {
-
 	switch (arcana)
 	{
 	case ARCANA::READY:
 		break;
 	case ARCANA::BASIC:
-		if (angleTenth <= 4 || angleTenth>32)
+		if (angleTenth <= 4 || angleTenth > 32)
 		{
-			isRight = true;
+			way = ATTACK_DIRECTION::ATK_RIGHT;
 		}
-		else isRight = false;
-		if (angleTenth > 14 && angleTenth <= 23)
+		else if (angleTenth > 14 && angleTenth <= 23)
 		{
-			isLeft = true;
+			way = ATTACK_DIRECTION::ATK_LEFT;
 		}
-		else isLeft = false;
-		if (angleTenth > 4 && angleTenth <= 14)
+		else if (angleTenth > 4 && angleTenth <= 14)
 		{
-			isUp = true;
+			way = ATTACK_DIRECTION::ATK_UP;
 		}
-		else isUp = false;
-		if (angleTenth > 23 && angleTenth <= 32)
+		else if (angleTenth > 23 && angleTenth <= 32)
 		{
-			isDown = true;
+			way = ATTACK_DIRECTION::ATK_DOWN;
 		}
-		else isDown = false;
 
-	/*	cout << "isRight : " << isRight << '\n';
-		cout << "isLeft : " << isLeft << '\n';
-		cout << "isUp : " << isUp << '\n';
-		cout << "isDown : " << isDown << '\n'<<'\n' ;*/
 		break;
 	case ARCANA::STANDARD:
 		break;
@@ -399,6 +392,37 @@ void player::animation()
 			}
 			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, dashIndex, 1);
 		}
+		break;
+
+	case STATE::ATTACK:
+		break;
+	}
+
+	//수정 완전 필요
+	switch (arcana)
+	{
+	case ARCANA::READY:
+		break;
+	case ARCANA::BASIC:
+		switch (way)
+		{
+		case ATTACK_DIRECTION::ATK_LEFT:
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, 0, 6);
+			break;
+		case ATTACK_DIRECTION::ATK_RIGHT:
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, 0, 5);
+			break;
+		case ATTACK_DIRECTION::ATK_UP:
+			break;
+		case ATTACK_DIRECTION::ATK_DOWN:
+			break;
+		default:
+			break;
+		}
+		break;
+	case ARCANA::STANDARD:
+		break;
+	case ARCANA::SIGNATURE:
 		break;
 	default:
 		break;
@@ -501,6 +525,17 @@ void player::buttonDown()
 	else isUp = false;
 	if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))isDown = true;
 	else isDown = false;
+
+	if (INPUT->GetKeyDown(VK_LBUTTON))
+	{
+
+		basic = true;
+	}
+	else basic = false;
+	if (INPUT->GetKey('Q'))signature = true;
+	else signature = false;
+	if (INPUT->GetKeyDown(MK_RBUTTON))standard = true;
+	else standard = false;
 }
 
 //del

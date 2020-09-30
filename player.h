@@ -11,7 +11,7 @@ struct tagCollider
 };
 enum class STATE
 {
-	IDLE,RUN,DASH
+	IDLE,RUN,DASH,ATTACK
 };
 //Dash,RUN
 enum class MOVE
@@ -35,7 +35,7 @@ enum class ARCANA
 //Skill direction
 enum class ATTACK_DIRECTION
 {
-	LEFT,RIGHT,UP,DOWN
+	ATK_LEFT, ATK_RIGHT, ATK_UP, ATK_DOWN
 };
 class player : public gameNode
 {
@@ -49,7 +49,7 @@ private:
 	MOVE move;
 	STATE state;
 	ARCANA arcana;
-
+	ATTACK_DIRECTION way;
 	RECT rc;
 	tagCollider tileCheck[8];
 
@@ -65,6 +65,7 @@ private:
 	int count, index;
 	
 	bool dashLeft, dashRight, dashUp, dashDown;
+	bool basic, standard, signature;
 	
 	// 신호 중복 방지
 	bool isLeft, isRight, isUp, isDown;
