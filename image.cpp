@@ -604,56 +604,7 @@ void image::frameRender(HDC hdc, int destX, int destY, int currentFrameX, int cu
 	}
 }
 
-void image::alphaFrameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, BYTE alpha)
-{
-	//이미지 예외처리
-	_imageInfo->currentFrameX = currentFrameX;
-	_imageInfo->currentFrameY = currentFrameY;
-	if (currentFrameX > _imageInfo->maxFrameX)
-	{
-		_imageInfo->currentFrameX = _imageInfo->maxFrameX;
-	}
-	if (currentFrameY > _imageInfo->maxFrameY)
-	{
-		_imageInfo->currentFrameY = _imageInfo->maxFrameX;
-	}
 
-	if (!_blendImage) this->initForAlphaBlend();
-	_blendFunc.SourceConstantAlpha = alpha;
-
-	if (_isTrans)//배경색 없애고 출력
-	{
-		//BitBlt(_blendImage->hMemDC, 0, 0, _imageInfo->frameWidth, _imageInfo->frameHeight,
-			//hdc, destX, destY, SRCCOPY);
-		BitBlt(_blendImage->hMemDC, 0, 0, _imageInfo->width + destX, _imageInfo->height + destY,
-			hdc, 0, 0, SRCCOPY);
-
-		GdiTransparentBlt(
-			_blendImage->hMemDC,		//복사할 장소의 DC
-			destX,						//복사할 좌표 시작X
-			destY,						//복사할 좌표 시작Y
-			_imageInfo->frameWidth,		//복사할 이미지 가로크기
-			_imageInfo->frameHeight,	//복사할 이미지 세로크기
-			_imageInfo->hMemDC,			//복사될 대상 DC
-			_imageInfo->currentFrameX * _imageInfo->frameWidth,		//복사될 대상의 시작지점
-			_imageInfo->currentFrameY * _imageInfo->frameHeight,	//복사될 대상의 시작지점			
-			_imageInfo->frameWidth,		//복사 영역 가로크기
-			_imageInfo->frameHeight,	//복사 영역 세로크기
-			_transColor);				//복사할때 제외할 색상 (일반적으로 마젠타 색상을 사용함)
-
-
-		GdiAlphaBlend(hdc, destX, destY, _imageInfo->frameWidth, _imageInfo->frameHeight,
-			_blendImage->hMemDC, destX + _imageInfo->frameWidth * currentFrameX, destY + _imageInfo->frameHeight * currentFrameY,
-			_imageInfo->frameWidth, _imageInfo->frameHeight, _blendFunc);
-	}
-	else//원본 이미지 그대로 출력
-	{
-		BitBlt(hdc, destX, destY, _imageInfo->frameWidth, _imageInfo->frameHeight,
-			_imageInfo->hMemDC,
-			_imageInfo->currentFrameX * _imageInfo->frameWidth,
-			_imageInfo->currentFrameY * _imageInfo->frameHeight, SRCCOPY);
-	}
-}
 
 void image::frameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, RECT rc, int defaultSize)
 {
@@ -733,6 +684,58 @@ void image::frameRender(HDC hdc, int destX, int destY, int currentFrameX, int cu
 			_imageInfo->currentFrameY * _imageInfo->frameHeight, SRCCOPY);
 	}
 }
+
+//알파 프레임렌더
+void image::alphaFrameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, BYTE alpha)
+{
+	//이미지 예외처리
+	_imageInfo->currentFrameX = currentFrameX;
+	_imageInfo->currentFrameY = currentFrameY;
+	if (currentFrameX > _imageInfo->maxFrameX)
+	{
+		_imageInfo->currentFrameX = _imageInfo->maxFrameX;
+	}
+	if (currentFrameY > _imageInfo->maxFrameY)
+	{
+		_imageInfo->currentFrameY = _imageInfo->maxFrameX;
+	}
+
+	if (!_blendImage) this->initForAlphaBlend();
+
+	_blendFunc.SourceConstantAlpha = alpha;
+
+	if (_isTrans)//배경색 없애고 출력
+	{
+		BitBlt(_blendImage->hMemDC, 0, 0, _imageInfo->frameWidth, _imageInfo->frameHeight,
+			hdc, destX, destY, SRCCOPY);
+
+		GdiTransparentBlt(
+			_blendImage->hMemDC,        //복사할 장소의 DC
+			0,                            //복사할 좌표 시작X
+			0,                            //복사할 좌표 시작Y
+			_imageInfo->frameWidth,        //복사할 이미지 가로크기
+			_imageInfo->frameHeight,    //복사할 이미지 세로크기
+			_imageInfo->hMemDC,            //복사될 대상 DC
+			_imageInfo->currentFrameX * _imageInfo->frameWidth,                            //복사될 대상의 시작지점
+			_imageInfo->currentFrameY * _imageInfo->frameHeight,                            //복사될 대상의 시작지점
+			_imageInfo->frameWidth,        //복사 영역 가로크기
+			_imageInfo->frameHeight,    //복사 영역 세로크기
+			_transColor);                //복사할때 제외할 색상 (일반적으로 마젠타 색상을 사용함)
+
+
+		GdiAlphaBlend(hdc, destX, destY, _imageInfo->frameWidth, _imageInfo->frameHeight,
+			_blendImage->hMemDC, 0, 0, _imageInfo->frameWidth, _imageInfo->frameHeight, _blendFunc);
+	}
+	else//원본 이미지 그대로 출력
+	{
+		//아직 수정안함
+		BitBlt(hdc, destX, destY, _imageInfo->frameWidth, _imageInfo->frameHeight,
+			_imageInfo->hMemDC,
+			_imageInfo->currentFrameX * _imageInfo->frameWidth,
+			_imageInfo->currentFrameY * _imageInfo->frameHeight, SRCCOPY);
+	}
+}
+
 
 //루프렌더
 void image::loopRender(HDC hdc, const LPRECT drawArea, int offsetX, int offsetY)

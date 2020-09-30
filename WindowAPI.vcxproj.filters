@@ -55,6 +55,9 @@
     <Filter Include="GameFramework\매니져\에이스타">
       <UniqueIdentifier>{606b59af-a850-4a55-9921-7c9f9b1dda16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFramework\매니져\카메라">
+      <UniqueIdentifier>{1b763da5-aafa-4af1-8f59-4c2e05c74f40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
@@ -115,7 +118,6 @@
     <ClCompile Include="soundManager.cpp">
       <Filter>GameFramework\매니져\사운드</Filter>
     </ClCompile>
-    <ClCompile Include="cameraManager.cpp" />
     <ClCompile Include="mainGame.cpp">
       <Filter>MainGame</Filter>
     </ClCompile>
@@ -136,6 +138,9 @@
     </ClCompile>
     <ClCompile Include="astarManager.cpp">
       <Filter>GameFramework\매니져\에이스타</Filter>
+    </ClCompile>
+    <ClCompile Include="cameraManager.cpp">
+      <Filter>GameFramework\매니져\카메라</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -209,7 +214,6 @@
     <ClInclude Include="soundManager.h">
       <Filter>GameFramework\매니져\사운드</Filter>
     </ClInclude>
-    <ClInclude Include="cameraManager.h" />
     <ClInclude Include="timeManager.h">
       <Filter>GameFramework\매니져</Filter>
     </ClInclude>
@@ -227,6 +231,9 @@
     </ClInclude>
     <ClInclude Include="astarManager.h">
       <Filter>GameFramework\매니져\에이스타</Filter>
+    </ClInclude>
+    <ClInclude Include="cameraManager.h">
+      <Filter>GameFramework\매니져\카메라</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

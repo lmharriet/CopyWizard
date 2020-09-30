@@ -71,12 +71,17 @@ void player::update()
 
 void player::render()
 {
-	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
 
 	float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	int output = (int)(angle * (18 / PI));
 
-	CAMERAMANAGER->FrameRender(getMemDC(), img, posX - 50, posY - 20, output, 0);
+	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
+	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, output, 0, 50);
+
+	
+
+	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
+	//Rectangle(getMemDC(), rc);
 
 	animation();
 	viewText();
