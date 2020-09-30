@@ -61,6 +61,7 @@ HRESULT astarManager::init()
 
 void astarManager::release()
 {
+	
 }
 
 void astarManager::update()
@@ -262,8 +263,8 @@ void astarManager::render(HDC hdc)
 			//  현재렉트만 보여주기
 			if (colCheck(cam, totalNode[x][y]->rc) == false || totalNode[x][y]->keyName == "") continue;
 			
-			//if (totalNode[x][y]->kind == TERRAIN::WALL) setNodeColor(totalNode[x][y], RGB(250, 150, 0), hdc);
-			//else FrameRect(hdc, totalNode[x][y]->rc,RGB(0,0,0));
+			if (totalNode[x][y]->kind == TERRAIN::WALL) setNodeColor(totalNode[x][y], RGB(250, 150, 0), hdc);
+			else FrameRect(hdc, totalNode[x][y]->rc,RGB(0,0,0));
 
 
 			//시작노드 보여주기
@@ -315,7 +316,7 @@ void astarManager::render(HDC hdc)
 	
 	/*HBRUSH hbr = CreateSolidBrush(RGB(0, 0, 255));
 	FillRect(hdc, &playerMove.rc,hbr);*/
-	//FrameRect(hdc, playerMove.rc, RGB(0, 0, 255));
+	FrameRect(hdc, playerMove.rc, RGB(0, 0, 255));
 	//Rectangle(hdc, player);
 }
 
