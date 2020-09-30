@@ -240,6 +240,7 @@ void bomb::render()
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
 		CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, _vBullet[i].rc.left, _vBullet[i].rc.top, index, 0);
+		//Rectangle(getMemDC(), _vBullet[i].rc);
 	}
 }
 
@@ -262,7 +263,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	bullet.speed = speed;
 	bullet.angle = angle;
 	bullet.radius = radius;
-	bullet.rc = RectMakeCenter(bullet.x, bullet.y, bullet.radius * 2, bullet.radius * 2);
+	bullet.rc = RectMakeCenter(bullet.x, bullet.y, radius * 2, radius * 2);
 
 	_vBullet.push_back(bullet);
 }

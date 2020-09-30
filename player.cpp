@@ -11,11 +11,14 @@ HRESULT player::init()
 	posY = WINSIZEY / 2;
 	rc = RectMakeCenter(posX, posY, 100, 100);
 
-	speed = index = dashIndex = count = dashCount = stateCool= 0;
+
+	//enum 초기화
 	state = STATE::IDLE;
 	move = MOVE::DOWN;
 	arcana = ARCANA::READY;
 
+	memset(tileCheck, 0, sizeof(tileCheck));
+	//colision detection Rect
 	makeCol((int)DIRECTION::TOP, 0, -55);
 	makeCol((int)DIRECTION::BOTTOM, 0, 60);
 	makeCol((int)DIRECTION::LEFT, -45, 0);
@@ -26,14 +29,19 @@ HRESULT player::init()
 	makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
 	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
 
+	//dash, direction
+	dashLeft = dashRight = dashUp = dashDown = false;
+	isLeft = isRight = isUp = isDown = false;
 
-	memset(tileCheck, 0, sizeof(tileCheck));
+	speed = index = dashIndex = count = dashCount = stateCool = 0;
 
+	//불렛 클래스
 	flame = new bomb;
 	flame->init(100, 200);
 
-	dashLeft = dashRight = dashUp = dashDown = false;
-	isLeft = isRight = isUp = isDown = false;
+	attackAngle = 0;
+	angleTenth = 0;
+
 	return S_OK;
 }
 
@@ -45,14 +53,20 @@ void player::release()
 
 void player::update()
 {
+	//animation count
 	count++;
 	dashCount++;
+
+	// angle(mouse-player), angleTenth
+	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
+	angleTenth = (int)(attackAngle * (18 / PI));
+
+
 	dashFunction();
 
-	if (speed == 0 && arcana ==ARCANA::READY) controller();
+	if (speed == 0 && arcana == ARCANA::READY) controller();
 
 	tileCol();
-
 	makeCol((int)DIRECTION::TOP, 0, -60);
 	makeCol((int)DIRECTION::BOTTOM, 0, 60);
 	makeCol((int)DIRECTION::LEFT, -45, 0);
@@ -64,14 +78,12 @@ void player::update()
 	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
 
 
-	float attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 
 
-	if (stateCool ==0 &&INPUT->GetKeyDown(VK_LBUTTON))
-	{ 
+	if (stateCool == 0 && INPUT->GetKeyDown(VK_LBUTTON))
+	{
 		stateCool = 10;
 		flame->fire(posX - 30, posY, 10, attackAngle, 30);
-		//ms->fire(posX, posY);
 	}
 
 	if (stateCool > 0)
@@ -88,6 +100,7 @@ void player::update()
 	CAMERAMANAGER->MovePivot(posX, posY);
 
 	changeState();
+	arcanaSetting();
 	//don't touch!
 	buttonDown();
 }
@@ -96,11 +109,9 @@ void player::update()
 void player::render()
 {
 
-	float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
-	int output = (int)(angle * (18 / PI));
 
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
-	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, output, 0, 50);
+	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, angleTenth, 0, 50);
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	//Rectangle(getMemDC(), rc);
@@ -109,7 +120,7 @@ void player::render()
 	viewText();
 
 	flame->render();
-	//ms->render();
+
 }
 
 void player::controller()
@@ -260,11 +271,37 @@ void player::dashFunction()
 
 void player::arcanaSetting()
 {
+
 	switch (arcana)
 	{
 	case ARCANA::READY:
 		break;
 	case ARCANA::BASIC:
+		if (angleTenth <= 4 || angleTenth>32)
+		{
+			isRight = true;
+		}
+		else isRight = false;
+		if (angleTenth > 14 && angleTenth <= 23)
+		{
+			isLeft = true;
+		}
+		else isLeft = false;
+		if (angleTenth > 4 && angleTenth <= 14)
+		{
+			isUp = true;
+		}
+		else isUp = false;
+		if (angleTenth > 23 && angleTenth <= 32)
+		{
+			isDown = true;
+		}
+		else isDown = false;
+
+	/*	cout << "isRight : " << isRight << '\n';
+		cout << "isLeft : " << isLeft << '\n';
+		cout << "isUp : " << isUp << '\n';
+		cout << "isDown : " << isDown << '\n'<<'\n' ;*/
 		break;
 	case ARCANA::STANDARD:
 		break;
@@ -288,25 +325,25 @@ void player::animation()
 
 		break;
 	case STATE::RUN:
-		if (move == MOVE::LEFT)
+		if (move == MOVE::LEFT || move == MOVE::LEFT_TOP || move == MOVE::LEFT_DOWN)
 		{
 			if (count % 6 == 0)
 			{
 				index--;
-				if (index < 0)index = 9;
+				if (index < 0)index = 4;
 			}
 			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, index, 4);
 		}
-		else if (move == MOVE::RIGHT)
+		else if (move == MOVE::RIGHT || move == MOVE::RIGHT_TOP || move == MOVE::RIGHT_DOWN)
 		{
 			if (count % 6 == 0)
 			{
 				index++;
-				if (index > 9) index = 0;
+				if (index > 4) index = 0;
 			}
 			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, index, 3);
 		}
-		else if (move == MOVE::UP || move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
+		else if (move == MOVE::UP)
 		{
 			if (count % 5 == 0)
 			{
@@ -315,7 +352,7 @@ void player::animation()
 			}
 			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, index, 2);
 		}
-		else if (move == MOVE::DOWN || move == MOVE::LEFT_DOWN || move == MOVE::RIGHT_DOWN)
+		else if (move == MOVE::DOWN)
 		{
 			if (count % 5 == 0)
 			{
@@ -477,13 +514,13 @@ void player::viewText()
 	}
 
 	wsprintf(str, "player move : %d", move);
-	textOut(getMemDC(), 10, 120, str, WHITE);
+	textOut(getMemDC(), 10, 200, str, WHITE);
 
-	wsprintf(str, "player index : %d", dashIndex);
-	textOut(getMemDC(), 10, 100, str, WHITE);
+	wsprintf(str, "player basic  : %d", dashIndex);
+	textOut(getMemDC(), 10, 220, str, WHITE);
 
 	wsprintf(str, "player arcana : %d", arcana);
-	textOut(getMemDC(), 10, 150, str, WHITE);
+	textOut(getMemDC(), 10, 250, str, WHITE);
 	int x = _ptMouse.x;
 	int y = _ptMouse.y;
 

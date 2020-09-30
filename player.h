@@ -9,7 +9,11 @@ struct tagCollider
 	POINT pos;
 	bool isCol;
 };
-
+enum class STATE
+{
+	IDLE,RUN,DASH
+};
+//Dash,RUN
 enum class MOVE
 {
 	LEFT,
@@ -21,12 +25,6 @@ enum class MOVE
 	LEFT_DOWN,
 	RIGHT_DOWN,
 };
-enum class STATE
-{
-	IDLE,
-	RUN,
-	DASH,
-};
 enum class ARCANA
 {
 	READY,
@@ -34,12 +32,17 @@ enum class ARCANA
 	STANDARD,
 	SIGNATURE
 };
+//Skill direction
+enum class ATTACK_DIRECTION
+{
+	LEFT,RIGHT,UP,DOWN
+};
 class player : public gameNode
 {
 private:
 	tagTile* tile;
 	bomb* flame;
-	missile* ms;
+
 private:
 	
 	
@@ -51,12 +54,16 @@ private:
 	tagCollider tileCheck[8];
 
 	float posX, posY;
+	float attackAngle;
 	
-	
+	int angleTenth;
+
 	int speed;
-	int count, index;
 	int dashCount,dashIndex;
 	int stateCool;
+	
+	int count, index;
+	
 	bool dashLeft, dashRight, dashUp, dashDown;
 	
 	// 신호 중복 방지
