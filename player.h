@@ -2,6 +2,7 @@
 #include "gameNode.h"
 #include "tileNode.h"
 #include "colorNode.h"
+#include "bullet.h"
 struct tagCollider
 {
 	RECT rc;
@@ -24,27 +25,40 @@ enum class STATE
 {
 	IDLE,
 	RUN,
-	DASH
+	DASH,
 };
-
+enum class ARCANA
+{
+	READY,
+	BASIC,
+	STANDARD,
+	SIGNATURE
+};
 class player : public gameNode
 {
 private:
 	tagTile* tile;
+	bomb* flame;
+	missile* ms;
 private:
+	
+	
 	MOVE move;
 	STATE state;
+	ARCANA arcana;
+
 	RECT rc;
 	tagCollider tileCheck[8];
 
 	float posX, posY;
+	
+	
 	int speed;
-
 	int count, index;
 	int dashCount,dashIndex;
-
+	int stateCool;
 	bool dashLeft, dashRight, dashUp, dashDown;
-
+	
 	// 신호 중복 방지
 	bool isLeft, isRight, isUp, isDown;
 public:
@@ -55,13 +69,14 @@ public:
 
 	void controller();
 	void dashFunction();
-	void animation();
+	void arcanaSetting();
 	//collision detection
 	void tileCol();
 	void makeCol(int index, int destX, int destY, int rcSize = 7);
 
 	void resetKey();
 
+	void animation();
 	void changeState();
 	void buttonDown();
 

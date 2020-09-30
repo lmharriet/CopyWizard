@@ -5,7 +5,7 @@
 //	## bullet ## (공용총알)
 //=============================================================
 
-HRESULT bullet::init(const char * imageName, int bulletMax, float range, bool isFrameImg)
+HRESULT bullet::init(const char* imageName, int bulletMax, float range, bool isFrameImg)
 {
 	//총알 이미지 초기화
 	_imageName = imageName;
@@ -164,7 +164,8 @@ void missile::render()
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
 		if (!_vBullet[i].fire) continue;
-		_vBullet[i].bulletImage->render(getMemDC(), _vBullet[i].rc.left, _vBullet[i].rc.top);
+		//_vBullet[i].bulletImage->render(getMemDC(), _vBullet[i].rc.left, _vBullet[i].rc.top);
+		CAMERAMANAGER->Render(getMemDC(), _vBullet[i].bulletImage, _vBullet[i].rc.left, _vBullet[i].rc.top);
 	}
 }
 //총알발사
@@ -205,6 +206,7 @@ void missile::move()
 	}
 }
 
+//수정 중(player flame strike)
 //=============================================================
 //	## bomb ## (폭탄처럼 한발씩 발사하고 생성하고 자동삭제)
 //=============================================================
@@ -214,6 +216,7 @@ HRESULT bomb::init(int bulletMax, float range)
 	_range = range;
 	_bulletMax = bulletMax;
 
+	count = index = 0;
 	return S_OK;
 }
 
@@ -223,31 +226,25 @@ void bomb::release()
 
 void bomb::update()
 {
+	count++;
+	if (count % 3 == 0)	
+	{
+		index++;
+		if (index > 9)index = 0;
+	}
 	this->move();
 }
 
 void bomb::render()
 {
-	_viBullet = _vBullet.begin();
-	for (_viBullet; _viBullet != _vBullet.end(); ++_viBullet)
+	for (int i = 0; i < _vBullet.size(); i++)
 	{
-		_viBullet->bulletImage->frameRender(getMemDC(), _viBullet->rc.left, _viBullet->rc.top);
-
-		_viBullet->count++;
-		if (_viBullet->count % 3 == 0)
-		{
-			_viBullet->bulletImage->setFrameX(_viBullet->bulletImage->getFrameX() + 1);
-			if (_viBullet->bulletImage->getFrameX() >= _viBullet->bulletImage->getMaxFrameX())
-			{
-				_viBullet->bulletImage->setFrameX(0);
-			}
-			_viBullet->count = 0;
-		}
+		CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, _vBullet[i].rc.left, _vBullet[i].rc.top, index, 0);
 	}
-
 }
 
-void bomb::fire(float x, float y)
+
+void bomb::fire(float x, float y, float speed, float angle, float radius)
 {
 	//총알 벡터에 담는것을 제한한다
 	if (_bulletMax < _vBullet.size() + 1) return;
@@ -257,45 +254,59 @@ void bomb::fire(float x, float y)
 	//총알 구조체 초기화
 	//제로메모리, 멤셋
 	//구조체 변수들의 값을 한번에 0으로 초기화 시켜준다
-	ZeroMemory(&bullet, sizeof(tagBullet));
-	//bullet.bulletImage = IMAGEMANAGER->findImage();
-	bullet.bulletImage = new image;
-	bullet.bulletImage->init("Images/missile1.bmp", 416, 64, 13, 1);
-	bullet.speed = 5.0f;
+
+	
+	bullet.bulletImage = IMAGEMANAGER->addFrameImage("flameStrke", "resource/player/flameStrike1.bmp", 1707 / 1.5, 171 / 1.5, 10, 1);
 	bullet.x = bullet.fireX = x;
 	bullet.y = bullet.fireY = y;
-	bullet.rc = RectMakeCenter(bullet.x, bullet.y,
-		bullet.bulletImage->getFrameWidth(),
-		bullet.bulletImage->getFrameHeight());
-	
-	//벡터에 담기
+	bullet.speed = speed;
+	bullet.angle = angle;
+	bullet.radius = radius;
+	bullet.rc = RectMakeCenter(bullet.x, bullet.y, bullet.radius * 2, bullet.radius * 2);
+
 	_vBullet.push_back(bullet);
 }
 
 void bomb::move()
 {
-	_viBullet = _vBullet.begin();
-	for (; _viBullet != _vBullet.end();)
-	{
-		_viBullet->y -= _viBullet->speed;
-		_viBullet->rc = RectMakeCenter(_viBullet->x, _viBullet->y,
-			_viBullet->bulletImage->getFrameWidth(),
-			_viBullet->bulletImage->getFrameHeight());
 
-		//폭탄이 사거리보다 커졌을때
-		float distance = getDistance(_viBullet->fireX, _viBullet->fireY,
-			_viBullet->x, _viBullet->y);
+	for (int i = 0; i < _vBullet.size(); i++)
+	{
+		_vBullet[i].x += cosf(_vBullet[i].angle) * _vBullet[i].speed;
+		_vBullet[i].y += -sinf(_vBullet[i].angle) * _vBullet[i].speed;
+		_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, _vBullet[i].radius * 2, _vBullet[i].radius * 2);
+
+		float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY, _vBullet[i].x, _vBullet[i].y);
 		if (_range < distance)
 		{
-			_viBullet->bulletImage->release();
-			SAFE_DELETE(_viBullet->bulletImage);
-			_viBullet = _vBullet.erase(_viBullet);
-		}
-		else
-		{
-			++_viBullet;
+			_vBullet.erase(_vBullet.begin() + i);
 		}
 	}
+
+
+	//_viBullet = _vBullet.begin();
+
+	//for (; _viBullet != _vBullet.end();)
+	//{
+	//	_viBullet->y -= _viBullet->speed;
+	//	_viBullet->rc = RectMakeCenter(_viBullet->x, _viBullet->y,
+	//		_viBullet->bulletImage->getFrameWidth(),
+	//		_viBullet->bulletImage->getFrameHeight());
+
+	//	//폭탄이 사거리보다 커졌을때
+	//	float distance = getDistance(_viBullet->fireX, _viBullet->fireY,
+	//		_viBullet->x, _viBullet->y);
+	//	if (_range < distance)
+	//	{
+	//		_viBullet->bulletImage->release();
+	//		SAFE_DELETE(_viBullet->bulletImage);
+	//		_viBullet = _vBullet.erase(_viBullet);
+	//	}
+	//	else
+	//	{
+	//		++_viBullet;
+	//	}
+	//}
 
 }
 //폭탄삭제

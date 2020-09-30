@@ -31,6 +31,7 @@ private:
 	int _bulletMax;			//총알 최대갯수
 	bool _isFrameImg;		//프레임 이미지냐?
 
+	
 public:
 	HRESULT init(const char* imageName, int bulletMax, float range, bool isFrameImg = false);
 	void release();
@@ -77,7 +78,7 @@ public:
 };
 
 //=============================================================
-//	## bomb ## (폭탄처럼 한발씩 발사하고 생성하고 자동삭제)
+//	## bomb ## (폭탄처럼 한발씩 발사하고 생성하고 자동삭제) //수정 중
 //=============================================================
 class bomb : public gameNode
 {
@@ -89,7 +90,7 @@ private:
 private:
 	float _range;			//총알 사거리
 	int _bulletMax;			//총알 최대갯수
-
+	int count, index;
 public:
 	HRESULT init(int bulletMax, float range);
 	void release();
@@ -97,7 +98,7 @@ public:
 	void render();
 
 	//총알발사
-	void fire(float x, float y);
+	void fire(float x, float y, float speed,float angle, float radius);
 	//총알무브
 	void move();
 
@@ -107,5 +108,5 @@ public:
 	//총알벡터 가져오기
 	vector<tagBullet> getBullet() { return _vBullet; }
 
-
 };
+
