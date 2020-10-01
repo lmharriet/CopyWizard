@@ -3,53 +3,19 @@
 #include "tileNode.h"
 #include "colorNode.h"
 #include "bullet.h"
-struct tagCollider
-{
-	RECT rc;
-	POINT pos;
-	bool isCol;
-};
-enum class STATE
-{
-	IDLE,RUN,DASH,ATTACK
-};
-//Dash,RUN
-enum class MOVE
-{
-	LEFT,
-	LEFT_TOP,
-	RIGHT,
-	RIGHT_TOP,
-	UP,
-	DOWN,
-	LEFT_DOWN,
-	RIGHT_DOWN,
-};
-enum class ARCANA
-{
-	READY,
-	BASIC,
-	STANDARD,
-	SIGNATURE
-};
-//Skill direction
-enum class ATTACK_DIRECTION
-{
-	ATK_LEFT, ATK_RIGHT, ATK_UP, ATK_DOWN
-};
+#include "unitNode.h"
+
 class player : public gameNode
 {
 private:
 	tagTile* tile;
-	bomb* flame;
+	bomb* blaze;
 
 private:
-	
-	
+
 	MOVE move;
 	STATE state;
-	ARCANA arcana;
-	ATTACK_DIRECTION way;
+
 	RECT rc;
 	tagCollider tileCheck[8];
 
@@ -77,7 +43,7 @@ public:
 
 	void controller();
 	void dashFunction();
-	void arcanaSetting();
+
 	//collision detection
 	void tileCol();
 	void makeCol(int index, int destX, int destY, int rcSize = 7);
@@ -85,6 +51,7 @@ public:
 	void resetKey();
 
 	void animation();
+	void frameAnimation(int frameX, int frameY);
 	void changeState();
 	void buttonDown();
 

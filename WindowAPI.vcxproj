@@ -177,6 +177,7 @@
     <ClInclude Include="tileNode.h" />
     <ClInclude Include="timeManager.h" />
     <ClInclude Include="uiManager.h" />
+    <ClInclude Include="unitNode.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>

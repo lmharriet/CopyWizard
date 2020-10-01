@@ -219,5 +219,8 @@
     <ClInclude Include="uiManager.h">
       <Filter>GameFramework\매니져\UI</Filter>
     </ClInclude>
+    <ClInclude Include="unitNode.h">
+      <Filter>MainGame\인게임</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

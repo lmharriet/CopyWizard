@@ -227,10 +227,10 @@ void bomb::release()
 void bomb::update()
 {
 	count++;
-	if (count % 3 == 0)	
+	if (count % 2 == 0)	
 	{
 		index++;
-		if (index > 9)index = 0;
+		if (index > 3)index = 0;
 	}
 	this->move();
 }
@@ -257,7 +257,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	//구조체 변수들의 값을 한번에 0으로 초기화 시켜준다
 
 	
-	bullet.bulletImage = IMAGEMANAGER->addFrameImage("flameStrke", "resource/player/flameStrike1.bmp", 1707 / 1.5, 171 / 1.5, 10, 1);
+	bullet.bulletImage = IMAGEMANAGER->addFrameImage("blaze", "resource/player/blaze.bmp", 288, 96, 3, 1, true, RGB(255, 0, 255));
 	bullet.x = bullet.fireX = x;
 	bullet.y = bullet.fireY = y;
 	bullet.speed = speed;
