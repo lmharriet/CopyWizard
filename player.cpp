@@ -16,8 +16,6 @@ HRESULT player::init()
 	state = STATE::IDLE;
 	move = MOVE::DOWN;
 
-	//way = ATTACK_DIRECTION::ATK_LEFT;
-
 	memset(tileCheck, 0, sizeof(tileCheck));
 
 	//colision detection Rect
@@ -42,9 +40,11 @@ HRESULT player::init()
 	//불렛 클래스
 	blaze = new bomb;
 	blaze->init(100, 200);
-
+	
+	flares = new homingFlares;
+	flares->init(100);
 	//angle between mouse & player
-	attackAngle = 0;
+	attackAngle = saveAngle = 0;
 	angleTenth = 0;
 
 	return S_OK;
@@ -59,20 +59,20 @@ void player::release()
 void player::update()
 {
 	blaze->update();
-
+	flares->update();
 	//animation count
 	count++;
 	dashCount++;
 
 	// angle(mouse-player), angleTenth
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
-	angleTenth = (int)(attackAngle * (18 / PI));
+	angleTenth = (int)(saveAngle * (18 / PI));
 
 
-	if (speed == 0 && stateCool==0) controller();
-	
+	if (speed == 0 && stateCool == 0) controller();
 
 	tileCol();
+
 	//dash할 때 direction rect 위치 전체적으로 넓혀주기
 	makeCol((int)DIRECTION::TOP, 0, -60);
 	makeCol((int)DIRECTION::BOTTOM, 0, 60);
@@ -84,20 +84,12 @@ void player::update()
 	makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
 	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
 
+
+
 	dashFunction();
 	changeState();
-
-	if (stateCool == 0 && basic)
-	{
-		stateCool = 15;
-		blaze->fire(posX - 30, posY, 10, attackAngle, 30);
-	}
-
-	if (stateCool > 0)
-	{
-		stateCool--;
-		state = STATE::BASIC;
-	}
+	blazeSetUp();
+	standardSetUp();
 
 
 
@@ -121,6 +113,7 @@ void player::render()
 	viewText();
 
 	blaze->render();
+	flares->render();
 }
 
 void player::controller()
@@ -150,10 +143,11 @@ void player::controller()
 		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol) posY += 8;
 	}
 
-
 	//DASH
 	if (INPUT->GetKeyDown(VK_SPACE) && speed == 0)
 	{
+		//대쉬 이펙트 생성
+		EFFECT->dashEffect(move, { (long)posX,(long)posY });
 		state = STATE::DASH;
 
 		switch (move)
@@ -191,7 +185,6 @@ void player::controller()
 		}
 		speed = 20;
 	}
-
 }
 
 void player::dashFunction()
@@ -218,11 +211,13 @@ void player::dashFunction()
 				posX -= speed;
 				posY += speed;
 			}
+
 		}
 		else // 그냥 순수 LEFT
 		{
 			if (!tileCheck[(int)DIRECTION::LEFT].isCol)
 				posX -= speed;
+
 		}
 	}
 
@@ -269,7 +264,38 @@ void player::dashFunction()
 	if (speed == 0) resetKey();
 }
 
+void player::blazeSetUp()
+{
+	if (stateCool == 0 && basic)
+	{
+		if (basic)
+		{
+			//basic 공격 할 때 앵글을 저장
+			saveAngle = attackAngle;
+		}
+		stateCool = 15;
+		blaze->fire(posX - 30, posY, 10, attackAngle, 30);
+	}
 
+	if (stateCool > 0)
+	{
+		stateCool--;
+		state = STATE::BASIC;
+		// 저장된 앵글 방향으로 움직이기
+		posX += cosf(saveAngle);
+		posY += -sinf(saveAngle);
+	}
+
+}
+
+void player::standardSetUp()
+{
+	if (standard)
+	{
+		flares->fire(posX, posY);
+	}
+	
+}
 void player::animation()
 {
 	switch (state)
@@ -360,9 +386,9 @@ void player::animation()
 		break;
 
 	case STATE::BASIC:
+	{
 		if (angleTenth > 14 && angleTenth <= 23)//left
 		{
-			posX -= 1;
 			if (count % 3 == 0)
 			{
 				index++;
@@ -371,12 +397,10 @@ void player::animation()
 			frameAnimation(index, 5);
 			//왼쪽 공격 끝나면 왼쪽 향하기
 			if (stateCool == 0)
-				isLeft = true;
+				move = MOVE::LEFT;
 		}
 		else if (angleTenth <= 4 || angleTenth > 32) //right
 		{
-			posX += 1;
-			
 			if (count % 3 == 0)
 			{
 				index++;
@@ -386,31 +410,31 @@ void player::animation()
 
 			// 오른쪽 공격 끝나면 오른쪽 향하기
 			if (stateCool == 0)
-				isRight = true;
+				move = MOVE::RIGHT;
 		}
 		else if (angleTenth > 4 && angleTenth <= 14) //up
 		{
-			posY -= 1;
 			if (count % 3 == 0)
 			{
 				index++;
 				if (index > 7)index = 0;
 			}
-			frameAnimation(index,14);
+			frameAnimation(index, 14);
+			//위쪽 공격 끝나면 위쪽 향하기
 			if (stateCool == 0)
-				isUp = true;
+				move = MOVE::UP;
 		}
 		else if (angleTenth > 23 && angleTenth <= 32) //down
 		{
-			posY += 1;
 			if (count % 3 == 0)
 			{
 				index++;
 				if (index > 7)index = 0;
 			}
 			frameAnimation(index, 6);
+			//아래쪽 공격 끝나면 아래쪽 향하기
 			if (stateCool == 0)
-				isDown = true;
+				move = MOVE::DOWN;
 		}
 		break;
 	case STATE::STANDARD:
@@ -419,9 +443,9 @@ void player::animation()
 		break;
 	}
 
-
+	}
 }
-void player::frameAnimation(int frameX,int frameY)
+void player::frameAnimation(int frameX, int frameY)
 {
 	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, frameX, frameY);
 }
@@ -441,6 +465,7 @@ void player::tileCol()
 		}
 	}
 }
+
 
 void player::makeCol(int index, int destX, int destY, int rcSize)
 {
@@ -524,12 +549,13 @@ void player::buttonDown()
 	else isDown = false;
 
 	//Attack
-	if (INPUT->GetKeyDown(VK_LBUTTON))	basic = true;
+	if (INPUT->GetKeyDown(VK_LBUTTON)) basic = true;
 	else basic = false;
-	if (INPUT->GetKey('Q'))signature = true;
-	else signature = false;
-	if (INPUT->GetKeyDown(MK_RBUTTON))standard = true;
+	if (INPUT->GetKeyDown(MK_RBUTTON)) standard = true;
 	else standard = false;
+	if (INPUT->GetKey('Q')) signature = true;
+	else signature = false;
+
 }
 
 //del

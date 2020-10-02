@@ -51,21 +51,21 @@ public:
 };
 
 //=============================================================
-//	## missile ## (missile[0] -> 배열처럼 미리 장전해두고 총알발사)
+//	## homingFlares ## (homingFlares[0] -> 배열처럼 미리 장전해두고 총알발사)
 //=============================================================
-class missile : public gameNode
+class homingFlares : public gameNode
 {
 private:
 	//총알 구조체를 담을 벡터선언
 	vector<tagBullet> _vBullet;
-	vector<tagBullet>::iterator _viBullet;
+//	vector<tagBullet>::iterator _viBullet;
 
 private:
 	float _range;			//총알 사거리
 	int _bulletMax;			//총알 최대갯수
 
 public:
-	HRESULT init(int bulletMax, float range);
+	HRESULT init(float range);
 	void release();
 	void update();
 	void render();

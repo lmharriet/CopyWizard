@@ -10,6 +10,7 @@ class player : public gameNode
 private:
 	tagTile* tile;
 	bomb* blaze;
+	homingFlares* flares;
 
 private:
 
@@ -21,13 +22,14 @@ private:
 
 	float posX, posY;
 	float attackAngle;
-	
-	int angleTenth;
+	float saveAngle ;
 
+	int angleTenth;
 	int speed;
-	int dashCount,dashIndex;
+
+
 	int stateCool;
-	
+	int dashCount,dashIndex;
 	int count, index;
 	
 	bool dashLeft, dashRight, dashUp, dashDown;
@@ -35,6 +37,8 @@ private:
 	
 	// 신호 중복 방지
 	bool isLeft, isRight, isUp, isDown;
+	
+
 public:
 	HRESULT init();
 	void release();
@@ -43,19 +47,23 @@ public:
 
 	void controller();
 	void dashFunction();
+	void resetKey();
+	void blazeSetUp();
+	void standardSetUp();
 
 	//collision detection
 	void tileCol();
 	void makeCol(int index, int destX, int destY, int rcSize = 7);
 
-	void resetKey();
+
 
 	void animation();
 	void frameAnimation(int frameX, int frameY);
 	void changeState();
-	void buttonDown();
 
+	void buttonDown();
 	void viewText();
+
 
 	//getter ,setter
 	float getX() { return posX; }
