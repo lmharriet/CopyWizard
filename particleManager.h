@@ -16,14 +16,15 @@ struct tagParticle
 };
 struct tagParticlePoint
 {
-	tagParticlePoint(int _x, int _y, int _number, float _minAngle, float _maxAngle, int _CreateDelay, int _delay)
-	: x(_x), y(_y), number(_number), minAngle(_minAngle), maxAngle(_maxAngle), CreateDelay(_CreateDelay), delay(_delay) {}
+	tagParticlePoint(int _x, int _y, int _number, float _minAngle, float _maxAngle, int _CreateDelay, int _delay, int _time)
+	: x(_x), y(_y), number(_number), minAngle(_minAngle), maxAngle(_maxAngle), CreateDelay(_CreateDelay), delay(_delay), time(_time) {}
 
 	int x, y;
 	int number;
 	float minAngle, maxAngle;
 	int CreateDelay;
 	int delay;
+	int time;
 };
 class particleManager : public singletonBase <particleManager>
 {
@@ -40,11 +41,11 @@ public:
 	void rtnParticle(tagParticle* ptc);
 
 	HRESULT generate(int x, int y, int size, int gravity, float angle, int delay, int speed); // create rect
-	HRESULT pointInit(int x, int y, int number, float minAngle, float maxAngle, int CreateDelay); // create rects
+	HRESULT pointGenerate(int x, int y, int number, float minAngle, float maxAngle, int CreateDelay, int time); // create rects
 
 	void resetPoint() { particlePoint.clear(); }
 
-	void active(HDC hdc, RECT cam);
+	void render(HDC hdc, RECT cam);
 
 	void pointActive();
 };

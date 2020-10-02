@@ -15,6 +15,7 @@ HRESULT gameNode::init()
 	SOUNDMANAGER->init();				//사운드매니져 초기화
 	TIME->init();						//타임매니져 초기화
 	
+	EFFECT->init();
 
 	return S_OK;
 }
@@ -50,6 +51,8 @@ void gameNode::release()
 	TIME->release();
 	TIME->releaseSingleton();
 
+	EFFECT->release();
+	EFFECT->releaseSingleton();
 
 	//HDC 해제
 	ReleaseDC(_hWnd, _hdc);

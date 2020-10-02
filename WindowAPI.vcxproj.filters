@@ -52,6 +52,9 @@
     <Filter Include="GameFramework\매니져\UI">
       <UniqueIdentifier>{a21989a8-ed51-4ccf-9b08-291ec7a11245}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFramework\매니져\이펙트">
+      <UniqueIdentifier>{aa237418-c4a2-4a5b-8cd7-d2f37372565b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
@@ -130,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="uiManager.cpp">
       <Filter>GameFramework\매니져\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="effectManager.cpp">
+      <Filter>GameFramework\매니져\이펙트</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +227,9 @@
     </ClInclude>
     <ClInclude Include="unitNode.h">
       <Filter>MainGame\인게임</Filter>
+    </ClInclude>
+    <ClInclude Include="effectManager.h">
+      <Filter>GameFramework\매니져\이펙트</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -43,6 +43,7 @@ using namespace MY_UTIL;
 #include "timeManager.h"
 #include "particleManager.h"
 #include "uiManager.h"
+#include "effectManager.h"
 //#include "astarManager.h"
 
 //=============================================================
@@ -58,6 +59,7 @@ using namespace MY_UTIL;
 #define TIME timeManager::getSingleton()
 #define PARTICLE particleManager::getSingleton()
 #define UI uiManager::getSingleton()
+#define EFFECT effectManager::getSingleton()
 //#define ASTAR astarManager::getSingleton()
 
 //=============================================================

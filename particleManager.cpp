@@ -52,15 +52,15 @@ HRESULT particleManager::generate(int x, int y, int size, int gravity, float ang
 	return S_OK;
 }
 
-HRESULT particleManager::pointInit(int x, int y, int number, float minAngle, float maxAngle, int CreateDelay)
+HRESULT particleManager::pointGenerate(int x, int y, int number, float minAngle, float maxAngle, int CreateDelay, int time)
 {
-	tagParticlePoint partiPoint = { x, y, number, minAngle, maxAngle, CreateDelay, 0 };
+	tagParticlePoint partiPoint = { x, y, number, minAngle, maxAngle, CreateDelay, 0, time };
 
 	particlePoint.push_back(partiPoint);
 	return S_OK;
 }
 
-void particleManager::active(HDC hdc, RECT cam)
+void particleManager::render(HDC hdc, RECT cam)
 {
 	for (int i = 0; i < vParticle.size(); i++)
 	{
@@ -94,8 +94,9 @@ void particleManager::active(HDC hdc, RECT cam)
 
 void particleManager::pointActive()
 {
+	int i = 0;
 	vector<tagParticlePoint>::iterator iter;
-	for (iter = particlePoint.begin(); iter != particlePoint.end(); ++iter)
+	for (iter = particlePoint.begin(); iter != particlePoint.end(); ++iter, ++i)
 	{
 		if (iter->delay > 0)
 		{
@@ -111,7 +112,13 @@ void particleManager::pointActive()
 			float ranAngle = RANDOM->range(1.f, 2.1f);
 
 			generate(iter->x + ranX, iter->y + ranY, 10, 0, ranAngle, 5, 1);
-			// cout << "파티클 생성" << '\n';
+		}
+		iter->time--;
+
+		if (iter->time == 0)
+		{
+			particlePoint.erase(particlePoint.begin() + i);
+			break;
 		}
 	}
 }

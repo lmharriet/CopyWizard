@@ -17,9 +17,9 @@ HRESULT gameScene::init()
 	cam = RectMakeCenter(0, 0, WINSIZEX, WINSIZEY);
 	checkArea = RectMakeCenter(WINSIZEX/2, WINSIZEY/2, 100, 100);
 	CAMERAMANAGER->init(_player->getX(), _player->getY(), MAXTILE, MAXTILE, -MAXTILE, -MAXTILE, WINSIZEX / 2, WINSIZEY / 2);
+
 	PARTICLE->init();
-
-
+	EFFECT->init();
 
 	_golem = new golem; //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
 	_golem->init(tile); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
@@ -51,13 +51,13 @@ void gameScene::update()
 	//	_player->getY(),
 	//	50);
 
-	/*if (INPUT->GetKeyDown(VK_SPACE))
+	if (INPUT->GetKeyDown(VK_BACK))
 	{
-		PARTICLE->pointInit(_player->getX(), _player->getY(), 0, 0, 0, 5);
+		PARTICLE->pointGenerate(_player->getX(), _player->getY(), 0, 0, 0, 5, 60);
 	}
 	PARTICLE->pointActive();
 
-	if (INPUT->GetKeyDown(VK_BACK))PARTICLE->resetPoint();*/
+	/*if (INPUT->GetKeyDown(VK_BACK))PARTICLE->resetPoint();*/
 }
 
 void gameScene::render()
@@ -79,6 +79,7 @@ void gameScene::render()
 	//CAMERAMANAGER->Rectangle(getMemDC(), checkArea);
 	//Rectangle(getMemDC(), checkArea);
 	//_player->render();
+	EFFECT->render(getMemDC());
 
 	bool isRender = false;
 
@@ -196,7 +197,8 @@ void gameScene::render()
 			CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - (3 * TILESIZE), tile[i].frame.x, tile[i].frame.y);
 		}
 	}
-	//PARTICLE->active(getMemDC(), CAMERAMANAGER->getRect());
+
+	PARTICLE->render(getMemDC(), CAMERAMANAGER->getRect());
 
 	
 	if(!isRender) _player->render();
