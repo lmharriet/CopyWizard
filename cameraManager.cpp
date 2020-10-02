@@ -185,7 +185,7 @@ void cameraManager::RectangleMake(HDC hdc, int left, int top, int width, int hei
 
 void cameraManager::RectangleMakeCenter(HDC hdc, int x, int y, int width, int height)
 {
-	::RectangleMakeCenter(hdc, x, y, width, height);
+	::RectangleMakeCenter(hdc, GetRelativeX(x), GetRelativeY(y), width, height);
 }
 
 void cameraManager::TextDraw(HDC hdc, int destX, int destY, LPCSTR lpstring, int c)

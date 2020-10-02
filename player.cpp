@@ -17,6 +17,7 @@ HRESULT player::init()
 	move = MOVE::DOWN;
 
 	memset(tileCheck, 0, sizeof(tileCheck));
+	memset(diagonalCheck, 0, sizeof(diagonalCheck));
 
 	//colision detection Rect
 	makeCol((int)DIRECTION::TOP, 0, -55);
@@ -28,6 +29,12 @@ HRESULT player::init()
 	makeCol((int)DIRECTION::RIGHT_TOP, 25, -30);
 	makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
 	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
+
+	//3차..
+	makeCol2(0, -45, -55);
+	makeCol2(1, 45, -55);
+	makeCol2(2, -45, 60);
+	makeCol2(3, 45, 60);
 
 	//dash, direction
 	dashLeft = dashRight = dashUp = dashDown = false;
@@ -73,7 +80,6 @@ void player::update()
 
 	tileCol();
 
-	//dash할 때 direction rect 위치 전체적으로 넓혀주기
 	makeCol((int)DIRECTION::TOP, 0, -60);
 	makeCol((int)DIRECTION::BOTTOM, 0, 60);
 	makeCol((int)DIRECTION::LEFT, -45, 0);
@@ -84,6 +90,10 @@ void player::update()
 	makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
 	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
 
+	makeCol2(0, -45, -55);
+	makeCol2(1, 45, -55);
+	makeCol2(2, -45, 60);
+	makeCol2(3, 45, 60);
 
 
 	dashFunction();
@@ -198,7 +208,8 @@ void player::dashFunction()
 	{
 		if (dashUp)
 		{
-			if (!tileCheck[(int)DIRECTION::LEFT_TOP].isCol)
+			if (!tileCheck[(int)DIRECTION::LEFT_TOP].isCol && 
+				!diagonalCheck[0].isCol)
 			{
 				posX -= speed;
 				posY -= speed;
@@ -206,7 +217,8 @@ void player::dashFunction()
 		}
 		else if (dashDown)
 		{
-			if (!tileCheck[(int)DIRECTION::LEFT_DOWN].isCol)
+			if (!tileCheck[(int)DIRECTION::LEFT_DOWN].isCol &&
+				!diagonalCheck[2].isCol)
 			{
 				posX -= speed;
 				posY += speed;
@@ -225,7 +237,8 @@ void player::dashFunction()
 	{
 		if (dashUp)
 		{
-			if (!tileCheck[(int)DIRECTION::RIGHT_TOP].isCol)
+			if (!tileCheck[(int)DIRECTION::RIGHT_TOP].isCol &&
+				!diagonalCheck[1].isCol)
 			{
 				posX += speed;
 				posY -= speed;
@@ -233,7 +246,8 @@ void player::dashFunction()
 		}
 		else if (dashDown)
 		{
-			if (!tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol)
+			if (!tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol &&
+				!diagonalCheck[3].isCol )
 			{
 				posX += speed;
 				posY += speed;
@@ -294,8 +308,8 @@ void player::standardSetUp()
 	{
 		flares->fire(posX, posY);
 	}
-	
 }
+
 void player::animation()
 {
 	switch (state)
@@ -445,13 +459,19 @@ void player::animation()
 
 	}
 }
+
 void player::frameAnimation(int frameX, int frameY)
 {
 	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, frameX, frameY);
 }
+
 void player::tileCol()
 {
-	for (int i = 0; i < 8; i++) tileCheck[i].isCol = false;
+	for (int i = 0; i < 8; i++)
+	{
+		tileCheck[i].isCol = false;
+		if (i < 4) diagonalCheck[i].isCol = false;
+	}
 
 	for (int i = 0; i < MAXTILE; i++)
 	{
@@ -462,14 +482,23 @@ void player::tileCol()
 			{
 				tileCheck[j].isCol = true;
 			}
+
+			if (j < 4 && colCheck(diagonalCheck[j].rc,tile[i].rc) && state == STATE::DASH)
+			{
+				diagonalCheck[j].isCol = true;
+			}
 		}
 	}
 }
 
-
 void player::makeCol(int index, int destX, int destY, int rcSize)
 {
 	tileCheck[index].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2) + destX, CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2) + destY, rcSize, rcSize);
+}
+
+void player::makeCol2(int index, int destX, int destY, int rcSize)
+{
+	diagonalCheck[index].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2) + destX, CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2) + destY, rcSize, rcSize);
 }
 
 void player::resetKey()
@@ -563,10 +592,15 @@ void player::viewText()
 {
 
 	char str[126];
-	for (int i = 0; i < 8; i++)
-	{
-		CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i].rc);
-	}
+	//for (int i = 0; i < 8; i++)
+	//{
+	//	if (i < 4)
+	//	{
+	//		CAMERAMANAGER->Rectangle(getMemDC(), diagonalCheck[i].rc);
+	//	}
+
+	//	CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i].rc);
+	//}
 
 	wsprintf(str, "player move : %d", move);
 	textOut(getMemDC(), 10, 200, str, WHITE);
@@ -576,11 +610,11 @@ void player::viewText()
 
 	wsprintf(str, "player state: %d \n basic :3", state);
 	textOut(getMemDC(), 10, 250, str, WHITE);
-	int x = _ptMouse.x;
-	int y = _ptMouse.y;
+	//int x = _ptMouse.x;
+	//int y = _ptMouse.y;
 
-	char text[126];
+	//char text[126];
 
-	wsprintf(text, "mouse.x : %d ,= mouse.y : %d", CAMERAMANAGER->GetAbsoluteX(x), CAMERAMANAGER->GetAbsoluteY(y));
-	textOut(getMemDC(), _ptMouse.x, _ptMouse.y, text, WHITE);
+	//wsprintf(text, "mouse.x : %d ,= mouse.y : %d", CAMERAMANAGER->GetAbsoluteX(x), CAMERAMANAGER->GetAbsoluteY(y));
+	//textOut(getMemDC(), _ptMouse.x, _ptMouse.y, text, WHITE);
 }

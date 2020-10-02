@@ -19,6 +19,7 @@ private:
 
 	RECT rc;
 	tagCollider tileCheck[8];
+	tagCollider diagonalCheck[4];
 
 	float posX, posY;
 	float attackAngle;
@@ -54,6 +55,8 @@ public:
 	//collision detection
 	void tileCol();
 	void makeCol(int index, int destX, int destY, int rcSize = 7);
+
+	void makeCol2(int index, int destX, int destY, int rcSize = 10);
 
 
 
