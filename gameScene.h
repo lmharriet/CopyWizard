@@ -4,13 +4,14 @@
 #include "tileNode.h"
 #include "colorNode.h"
 #include "golem.h" //테스트중 (몬스터골렘)
+#include "enemyManager.h"
 
 
 class gameScene : public gameNode
 {
 private:
 	monster* _golem;  //테스트중.. 몬스터(골렘)
-	
+	enemyManager* enemy;
 	
 	player* _player;			//플레이어 클래스
 	
@@ -39,4 +40,3 @@ public:
 	void viewText();
 
 };
-

@@ -9,11 +9,19 @@ HRESULT enemy::init(const char * imageName, POINT position)
 
 	//이미지, 이미지렉트 초기화
 	_image = IMAGEMANAGER->findImage(imageName);
-	_rc = RectMakeCenter(position.x, position.y, _image->getFrameWidth(), _image->getFrameHeight());
+
+	posX = position.x;
+	posY = position.y;
+
+	_rc = RectMakeCenter(posX, posY, _image->getFrameWidth(), _image->getFrameHeight());
+	area = RectMakeCenter(posX, posY, _image->getFrameWidth() * 5, _image->getFrameHeight() * 5);
 
 	//랜덤으로 총알 쿨타임 주는 변수 초기화
 	_fireCount = 0;
 	_rndFireCount = RANDOM->range(1, 1000);
+
+	isDetect = isAttack = false;
+	time = 0;
 
 	return S_OK;
 }
@@ -40,7 +48,7 @@ void enemy::move()
 
 void enemy::draw()
 {
-	_image->frameRender(getMemDC(), _rc.left, _rc.top, _currentFrameX, _currentFrameY);
+	//_image->frameRender(getMemDC(), _rc.left, _rc.top, _currentFrameX, _currentFrameY);
 }
 
 void enemy::animation()

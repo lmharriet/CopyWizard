@@ -3,7 +3,6 @@
 #include "minion.h" //미니언 클래스를 사용하기 위해
 #include "bullet.h" //공용총알 클래스 사용하기 위해
 
-
 class enemyManager : public gameNode
 {
 private:
@@ -14,7 +13,6 @@ private:
 	//vector<enemy*> _vBoss;
 
 	bullet* _bullet; //공용총알
-
 public:
 	HRESULT init();
 	void release();
@@ -25,7 +23,7 @@ public:
 	void setMinion();
 	//void setBoss();
 	//미니언 총알발사
-	void minionBulletFire();
+	void minionBulletFire(float aimX, float aimY);
 	//미니언 삭제
 	void removeMinion(int index);
 
@@ -33,10 +31,8 @@ public:
 	vector<enemy*> getMinion() { return _vMinion; }
 
 	//충돌처리 (미니언들의 총알, 플레이어)
-	void collision();
-
-
+	void collision(RECT player);
+	
 	enemyManager() {}
 	~enemyManager() {}
 };
-

@@ -4,9 +4,13 @@
 //부모클래스 => 이놈을 상속받아서 보스, 일반몬스터를 만든다
 class enemy : public gameNode
 {
-private:
+protected:
 	image* _image;		//에너미 이미지
+	float posX, posY;	//위치
 	RECT _rc;			//충돌용 렉트
+
+	RECT area;			//감지용 렉트
+	bool isDetect, isAttack;
 
 	//프레임 이미지를 돌리기 위한 변수들
 	int _count;
@@ -17,6 +21,8 @@ private:
 	int _fireCount;
 	int _rndFireCount;
 
+
+	int time;
 public:
 	HRESULT init(const char* imageName, POINT position);
 	void release();
@@ -31,8 +37,16 @@ public:
 
 	//충돌용 렉트 가져오기
 	RECT getRect() { return _rc; }
+	RECT getArea() { return area; }
+	float getX() { return posX; }
+	float getY() { return posY; }
+
+	bool getFind() { return isDetect; }
+	void setFind(bool tmp) { isDetect = tmp; }
+
+	bool checkAttack() { return isAttack; }
+	bool setAttack(bool tmp) { return isAttack = tmp; }
 
 	enemy() {}
 	~enemy() {}
 };
-

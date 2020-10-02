@@ -24,6 +24,9 @@ HRESULT gameScene::init()
 	_golem = new golem; //테스트중 (몬스터골렘)
 	_golem->init(tile); //테스트중 (몬스터골렘)
 
+	enemy = new enemyManager;
+	enemy->init();
+
 	return S_OK;
 }
 
@@ -34,6 +37,9 @@ void gameScene::release()
 
 	_golem->release();
 	SAFE_DELETE(_golem);
+
+	enemy->release();
+	SAFE_DELETE(enemy);
 }
 
 void gameScene::update()
@@ -41,6 +47,7 @@ void gameScene::update()
 	UI->update();
 	_player->update();
 	_golem->update();
+	enemy->update();
 
 	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX, WINSIZEY);
 	//checkArea = RectMakeCenter(_player->getX(), _player->getY(), 400, 400);
@@ -58,6 +65,22 @@ void gameScene::update()
 	PARTICLE->pointActive();
 
 	/*if (INPUT->GetKeyDown(VK_BACK))PARTICLE->resetPoint();*/
+
+
+	//col check ( player -> minion )
+	for (int i = 0; i < enemy->getMinion().size(); i++)
+	{
+		if (enemy->getMinion()[i]->getFind() == true)continue;
+
+		if (colCheck(_player->getRect(), enemy->getMinion()[i]->getArea()))
+		{
+			cout << i << "번 째 몬스터가 플레이어를 감지했다 !" << '\n';
+			enemy->getMinion()[i]->setFind(true);
+		}
+	}
+
+	enemy->minionBulletFire(_player->getX(), _player->getY());
+	enemy->collision(_player->getRect());
 }
 
 void gameScene::render()
@@ -79,6 +102,7 @@ void gameScene::render()
 	//CAMERAMANAGER->Rectangle(getMemDC(), checkArea);
 	//Rectangle(getMemDC(), checkArea);
 	//_player->render();
+	enemy->render();
 	EFFECT->render(getMemDC());
 
 	bool isRender = false;
@@ -213,6 +237,8 @@ void gameScene::render()
 	viewText();
 	
 	_golem->render(); //테스트중 (몬스터골렘)
+
+	
 }
 
 void gameScene::loadMap(const char* mapFileName)

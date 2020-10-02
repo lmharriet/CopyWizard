@@ -48,6 +48,8 @@ public:
 
 	//공용총알 벡터 가져오기
 	vector<tagBullet> getBullet() { return _vBullet; }
+	//공용총알 렉트 가져오기
+	RECT getRect(int index) { return _vBullet[index].rc; }
 };
 
 //=============================================================

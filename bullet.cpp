@@ -29,50 +29,31 @@ void bullet::update()
 
 void bullet::render()
 {
-	if (_isFrameImg)
+	for (int i = 0; i < _vBullet.size(); i++)
 	{
-		for (int i = 0; i < _vBullet.size(); i++)
-		{
-			_vBullet[i].bulletImage->frameRender(getMemDC(), _vBullet[i].rc.left, _vBullet[i].rc.top);
-		}
-	}
-	else
-	{
-		for (int i = 0; i < _vBullet.size(); i++)
-		{
-			_vBullet[i].bulletImage->render(getMemDC(), _vBullet[i].rc.left, _vBullet[i].rc.top);
-		}
+		CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
 	}
 }
 
 void bullet::fire(float x, float y, float angle, float speed)
 {
 	//총알 벡터에 담는것을 제한한다
-	if (_bulletMax < _vBullet.size() + 1) return;
+	//if (_bulletMax < _vBullet.size() + 1) return;
 
 	//총알 구조체 선언
 	tagBullet bullet;
 	//총알 구조체 초기화
 	//제로메모리, 멤셋
 	//구조체 변수들의 값을 한번에 0으로 초기화 시켜준다
-	ZeroMemory(&bullet, sizeof(tagBullet));
-	bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
+	//ZeroMemory(&bullet, sizeof(tagBullet));
+	//bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
 	bullet.speed = speed;
 	bullet.angle = angle;
 	bullet.x = bullet.fireX = x;
 	bullet.y = bullet.fireY = y;
-	if (_isFrameImg)
-	{
-		bullet.rc = RectMakeCenter(bullet.x, bullet.y,
-			bullet.bulletImage->getFrameWidth(),
-			bullet.bulletImage->getFrameHeight());
-	}
-	else
-	{
-		bullet.rc = RectMakeCenter(bullet.x, bullet.y,
-			bullet.bulletImage->getWidth(),
-			bullet.bulletImage->getHeight());
-	}
+	bullet.radius = 25;
+	
+	bullet.rc = RectMakeCenter(bullet.x, bullet.y, 50, 50);
 
 	//벡터에 담기
 	_vBullet.push_back(bullet);
@@ -85,26 +66,15 @@ void bullet::move()
 		_vBullet[i].x += cosf(_vBullet[i].angle) * _vBullet[i].speed;
 		_vBullet[i].y += -sinf(_vBullet[i].angle) * _vBullet[i].speed;
 
-		if (_isFrameImg)
-		{
-			_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y,
-				_vBullet[i].bulletImage->getFrameWidth(),
-				_vBullet[i].bulletImage->getFrameHeight());
-		}
-		else
-		{
-			_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y,
-				_vBullet[i].bulletImage->getWidth(),
-				_vBullet[i].bulletImage->getHeight());
-		}
+		_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 50, 50);
 
 		//총알이 사거리 보다 커졌을때
-		float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
-			_vBullet[i].x, _vBullet[i].y);
-		if (_range < distance)
-		{
-			_vBullet.erase(_vBullet.begin() + i);
-		}
+		//float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
+		//	_vBullet[i].x, _vBullet[i].y);
+		//if (_range < distance)
+		//{
+		//	_vBullet.erase(_vBullet.begin() + i);
+		//}
 	}
 }
 //총알삭제
