@@ -49,6 +49,7 @@ void gameScene::update()
 	_golem->update();
 	enemy->update();
 
+
 	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX, WINSIZEY);
 	//checkArea = RectMakeCenter(_player->getX(), _player->getY(), 400, 400);
 	checkArea = RectMake(_player->getX() - 100, _player->getY() - WINSIZEY/2 + 420, 200, 500);
@@ -68,19 +69,32 @@ void gameScene::update()
 
 
 	//col check ( player -> minion )
-	for (int i = 0; i < enemy->getMinion().size(); i++)
-	{
-		if (enemy->getMinion()[i]->getFind() == true)continue;
 
-		if (colCheck(_player->getRect(), enemy->getMinion()[i]->getArea()))
-		{
-			cout << i << "번 째 몬스터가 플레이어를 감지했다 !" << '\n';
-			enemy->getMinion()[i]->setFind(true);
-		}
-	}
+	//for (int i = 0; i < enemy->getMinion().size(); i++)
+	//{
+	//	if (enemy->getMinion()[i]->getFind() == true)continue;
+
+	//	if (colCheck(_player->getRect(), enemy->getMinion()[i]->getArea()))
+	//	{
+	//		cout << i << "번 째 몬스터가 플레이어를 감지했다 !" << '\n';
+	//		enemy->getMinion()[i]->setFind(true);
+	//	}
+	//}
 
 	enemy->minionBulletFire(_player->getX(), _player->getY());
 	enemy->collision(_player->getRect());
+
+	for (int i = 0; i < _player->getBlaze()->getBullet().size(); i++)
+	{
+		for (int j = 0; j < enemy->getMinion().size(); j++)
+		{
+			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRect()))
+			{
+				_player->getBlaze()->removeBomb(i);
+				enemy->removeMinion(j);
+			}
+		}
+	}
 }
 
 void gameScene::render()

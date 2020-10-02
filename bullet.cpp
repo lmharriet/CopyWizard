@@ -208,8 +208,11 @@ void bomb::render()
 {
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
-		CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, _vBullet[i].rc.left, _vBullet[i].rc.top, index, 0);
-		//Rectangle(getMemDC(), _vBullet[i].rc);
+		CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, 
+			_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth()/2), 
+			_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight()/2), index, 0);
+
+		CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 20, 20));
 	}
 }
 

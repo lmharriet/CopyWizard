@@ -73,6 +73,8 @@ public:
 	float getY() { return posY; }
 	RECT getRect() { return rc; }
 
+	bomb* getBlaze() { return blaze; }
+
 	//tile address
 	void setTileAd(tagTile* _tile) { tile = _tile; }
 

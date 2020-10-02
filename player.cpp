@@ -113,8 +113,9 @@ void player::update()
 
 void player::render()
 {
+	int tempAngle = attackAngle * (18 / PI);
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
-	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, angleTenth, 0, 50);
+	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, tempAngle, 0, 50);
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	//Rectangle(getMemDC(), rc);
@@ -288,7 +289,11 @@ void player::blazeSetUp()
 			saveAngle = attackAngle;
 		}
 		stateCool = 15;
-		blaze->fire(posX - 30, posY, 10, attackAngle, 30);
+
+		float x = cosf(attackAngle) * 50.f + posX;
+		float y = -sinf(attackAngle) * 50.f + posY;
+
+		blaze->fire(x, y, 10, attackAngle, 30);
 	}
 
 	if (stateCool > 0)
@@ -612,6 +617,8 @@ void player::viewText()
 	textOut(getMemDC(), 10, 250, str, WHITE);
 	//int x = _ptMouse.x;
 	//int y = _ptMouse.y;
+
+	CAMERAMANAGER->RectangleMakeCenter(getMemDC(), posX, posY, 20, 20);
 
 	//char text[126];
 
