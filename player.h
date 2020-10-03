@@ -31,7 +31,9 @@ private:
 
 
 	int stateCool;
+	int meteorCool;
 	int dashCount,dashIndex;
+	int atkCount, atkIndex;
 	int count, index;
 	
 	bool dashLeft, dashRight, dashUp, dashDown;
@@ -77,16 +79,18 @@ public:
 	float getX() { return posX; }
 	float getY() { return posY; }
 	RECT getRect() { return rc; }
-
 	bomb* getBlaze() { return blaze; }
-
-	//tile address
-	void setTileAd(tagTile* _tile) { tile = _tile; }
+	meteor* getMeteor() { return Meteor; }
 
 	void setX(float x) { posX = x; }
 	void setY(float y) { posY = y; }
 	void reposRect() { rc = RectMakeCenter(posX, posY, 100, 100); }
 	void setStateIDLE() { state = STATE::IDLE; }
+
+	//tile address
+	void setTileAd(tagTile* _tile) { tile = _tile; }
+
+	
 
 	player() {}
 	~player() {}

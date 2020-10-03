@@ -4,7 +4,7 @@
 
 HRESULT player::init()
 {
-	IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small.bmp", 1000, 2400, 10, 24);
+	IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
 	IMAGEMANAGER->addFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
 	IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 2400, 640, 6, 2);
 
@@ -44,17 +44,18 @@ HRESULT player::init()
 	//attack type
 	basic = standard = signature = false;
 
-	speed = index = dashIndex = count = dashCount = stateCool = 0;
-
+	speed = index = dashIndex = count = dashCount =  0;
+	atkCount = atkIndex = 0;
+	stateCool = meteorCool = 0;
 	//불렛 클래스
 	blaze = new bomb;
 	blaze->init(100, 200);
-	
+
 	flares = new homingFlares;
 	flares->init(100);
 
 	Meteor = new meteor;
-	Meteor->init(21, 650);
+	Meteor->init(650);
 
 	//angle between mouse & player
 	attackAngle = saveAngle = 0;
@@ -71,12 +72,11 @@ void player::release()
 	SAFE_DELETE(flares);
 	Meteor->release();
 	SAFE_DELETE(Meteor);
-	
 }
 
 void player::update()
 {
-	
+
 	blaze->update();
 	flares->update();
 	Meteor->update();
@@ -84,13 +84,16 @@ void player::update()
 	//animation count
 	count++;
 	dashCount++;
+	atkCount++;
 
 	// angle(mouse-player), angleTenth
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
 
+	if (signature) state = STATE::SIGNATURE;
 
-	if (speed == 0 && stateCool == 0) controller();
+
+	if (speed == 0 && stateCool == 0 && meteorCool ==0) controller();
 
 	tileCol();
 
@@ -114,10 +117,7 @@ void player::update()
 	changeState();
 	blazeSetUp();
 	standardSetUp();
-	
-
-
-
+	signatureSetUp();
 
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
@@ -134,13 +134,13 @@ void player::other_update()
 	//animation count
 	count++;
 	dashCount++;
-
+	atkCount++;
 	// angle(mouse-player), angleTenth
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
 
 
-	if (speed == 0 && stateCool == 0) controller();
+	if (speed == 0 && stateCool == 0 && meteorCool == 0) controller();
 
 	//tileCol();
 
@@ -164,7 +164,8 @@ void player::other_update()
 	changeState();
 	blazeSetUp();
 	standardSetUp();
-	
+
+	signatureSetUp();
 
 
 	// camera가 따라가는 대상
@@ -184,7 +185,7 @@ void player::render()
 	//Rectangle(getMemDC(), rc);
 
 	animation();
-	//viewText();
+	viewText();
 
 	blaze->render();
 	flares->render();
@@ -273,7 +274,7 @@ void player::dashFunction()
 	{
 		if (dashUp)
 		{
-			if (!tileCheck[(int)DIRECTION::LEFT_TOP].isCol && 
+			if (!tileCheck[(int)DIRECTION::LEFT_TOP].isCol &&
 				!diagonalCheck[0].isCol)
 			{
 				posX -= speed;
@@ -312,7 +313,7 @@ void player::dashFunction()
 		else if (dashDown)
 		{
 			if (!tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol &&
-				!diagonalCheck[3].isCol )
+				!diagonalCheck[3].isCol)
 			{
 				posX += speed;
 				posY += speed;
@@ -380,13 +381,21 @@ void player::standardSetUp()
 }
 void player::signatureSetUp()
 {
-	float dRange = 650.f;
+	if (signature && meteorCool ==0)
+	{
+		meteorCool = 30;
+		float dRange = 650.f;
 
-	//Meteor->meteorFire(posX, posY, 600, move, 55);
-	//Meteor->meteorFire(posX + RANDOM->range(-150, 150), posY + RANDOM->range(-150, 150), 600, move, dRange);
-	//Meteor->meteorFire(posX - RANDOM->range(-150, 150), posY - RANDOM->range(-150, 150), 600, move, dRange);
-	Meteor->meteorUltFire(posX, posY, 600, move, 55);
-	signature = false;
+		//Meteor->meteorFire(posX, posY, 600, move, 55);
+		//Meteor->meteorFire(posX + RANDOM->range(-150, 150), posY + RANDOM->range(-150, 150), 600, move, dRange);
+		//Meteor->meteorFire(posX - RANDOM->range(-150, 150), posY - RANDOM->range(-150, 150), 600, move, dRange);
+		Meteor->meteorUltFire(posX, posY, 600, move, 55);
+	}
+	if (meteorCool > 0)
+	{
+		state = STATE::SIGNATURE;
+		meteorCool--;
+	}
 }
 
 void player::animation()
@@ -440,41 +449,42 @@ void player::animation()
 		}
 		break;
 	case STATE::DASH:
+
 		if (dashLeft)
 		{
-			if (dashCount % 5 == 0)
+			if (dashCount % 3 == 0)
 			{
-				dashIndex--;
-				if (dashIndex < 0 || speed == 0)dashIndex = 7;
+				dashIndex++;
+				if (dashIndex > 9) dashIndex = 0;
 			}
 			frameAnimation(dashIndex, 8);
 		}
 		else if (dashRight)
 		{
-			if (dashCount % 5 == 0)
+			if (dashCount % 3 == 0)
 			{
 				dashIndex++;
-				if (dashIndex > 7 || speed == 0)dashIndex = 0;
+				if (dashIndex > 9 || speed == 0)dashIndex = 0;
 			}
 			frameAnimation(dashIndex, 7);
 		}
 		else if (dashUp)
 		{
-			if (dashCount % 5 == 0)
+			if (dashCount % 3 == 0)
 			{
 				dashIndex++;
-				if (dashIndex > 7 || speed == 0)dashIndex = 0;
+				if (dashIndex > 9 || speed == 0)dashIndex = 0;
 			}
-			frameAnimation(dashIndex, 2);
+			frameAnimation(dashIndex, 18);
 		}
 		else if (dashDown)
 		{
 			if (dashCount % 5 == 0)
 			{
 				dashIndex++;
-				if (dashIndex > 7 || speed == 0)dashIndex = 0;
+				if (dashIndex > 9 || speed == 0)dashIndex = 0;
 			}
-			frameAnimation(dashIndex, 1);
+			frameAnimation(dashIndex, 19);
 		}
 		break;
 
@@ -529,14 +539,51 @@ void player::animation()
 			if (stateCool == 0)
 				move = MOVE::DOWN;
 		}
-		break;
+	}
+	break;
 	case STATE::STANDARD:
 		break;
 	case STATE::SIGNATURE:
+
+		if (move == MOVE::LEFT )
+		{
+			if (atkCount % 10 == 0)
+			{
+				atkIndex++;
+				if (atkIndex > 9)atkIndex = 0;
+			}
+			frameAnimation(atkIndex, 10);
+		}
+		else if (move == MOVE::RIGHT)
+		{
+			if (atkCount % 10 == 0)
+			{
+				atkIndex++;
+				if (atkIndex > 9)atkIndex = 0;
+			}
+			frameAnimation(atkIndex, 20);
+		}
+		else if (move == MOVE::UP|| move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
+		{
+			if (atkCount % 10 == 0)
+			{
+				atkIndex++;
+				if (atkIndex > 9)atkIndex = 0;
+			}
+			frameAnimation(atkIndex, 20);
+		}
+		else if (move == MOVE::DOWN || move == MOVE::LEFT_DOWN || move == MOVE::RIGHT_DOWN)
+		{
+			if (atkCount % 10 == 0)
+			{
+				atkIndex++;
+				if (atkIndex > 9)atkIndex = 0;
+			}
+			frameAnimation(atkIndex, 10);
+		}
 		break;
 	}
 
-	}
 }
 
 void player::frameAnimation(int frameX, int frameY)
@@ -562,7 +609,7 @@ void player::tileCol()
 				tileCheck[j].isCol = true;
 			}
 
-			if (j < 4 && colCheck(diagonalCheck[j].rc,tile[i].rc) && state == STATE::DASH)
+			if (j < 4 && colCheck(diagonalCheck[j].rc, tile[i].rc) && state == STATE::DASH)
 			{
 				diagonalCheck[j].isCol = true;
 			}
@@ -604,7 +651,7 @@ void player::colorCheck(image* img)
 			g = GetGValue(color);
 			b = GetBValue(color);
 
-			if(r == 255 && g == 0 && b == 255) diagonalCheck[i].isCol = true;
+			if (r == 255 && g == 0 && b == 255) diagonalCheck[i].isCol = true;
 		}
 	}
 }
@@ -700,43 +747,40 @@ void player::buttonDown()
 	else basic = false;
 	if (INPUT->GetKeyDown(MK_RBUTTON)) standard = true;
 	else standard = false;
-	if (INPUT->GetKeyDown('Q') && !signature)
-	{
-		signature = true;
-		signatureSetUp();
-	}
+	if (INPUT->GetKeyDown('Q'))	signature = true;
+	else signature = false;
+
+
 }
 
 //del
 void player::viewText()
 {
-
 	char str[126];
-	for (int i = 0; i < 8; i++)
-	{
-		if (i < 4)
-		{
-			CAMERAMANAGER->Rectangle(getMemDC(), diagonalCheck[i].rc);
-		}
+	//for (int i = 0; i < 8; i++)
+	//{
+	//	if (i < 4)
+	//	{
+	//		CAMERAMANAGER->Rectangle(getMemDC(), diagonalCheck[i].rc);
+	//	}
 
-		CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i].rc);
-	}
+	//	CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i].rc);
+	//}
 
-	wsprintf(str, "player move : %d", move);
+	wsprintf(str, "meteorCool : %d", meteorCool);
 	textOut(getMemDC(), 10, 200, str, WHITE);
 
-	wsprintf(str, "player basic  : %d", dashIndex);
+	wsprintf(str, "atkIndex  : %d", atkIndex);
 	textOut(getMemDC(), 10, 220, str, WHITE);
 
-	wsprintf(str, "player state: %d \n basic :3", state);
-	textOut(getMemDC(), 10, 250, str, WHITE);
-	//int x = _ptMouse.x;
+	if (state == STATE::SIGNATURE)
+	{
+		wsprintf(str, "player state: %d ", state);
+		textOut(getMemDC(), 10, 250, str, WHITE);
+
+	}
+			//int x = _ptMouse.x;
 	//int y = _ptMouse.y;
 
-	CAMERAMANAGER->RectangleMakeCenter(getMemDC(), posX, posY, 20, 20);
-
-	//char text[126];
-
-	//wsprintf(text, "mouse.x : %d ,= mouse.y : %d", CAMERAMANAGER->GetAbsoluteX(x), CAMERAMANAGER->GetAbsoluteY(y));
-	//textOut(getMemDC(), _ptMouse.x, _ptMouse.y, text, WHITE);
+//	CAMERAMANAGER->RectangleMakeCenter(getMemDC(), posX, posY, 20, 20);
 }
