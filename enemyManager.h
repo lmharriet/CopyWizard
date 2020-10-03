@@ -1,6 +1,7 @@
 #pragma once
 #include "gameNode.h"
-#include "minion.h" //미니언 클래스를 사용하기 위해
+#include "summoner.h" //미니언 클래스를 사용하기 위해
+#include "golem.h"
 #include "bullet.h" //공용총알 클래스 사용하기 위해
 
 class enemyManager : public gameNode

@@ -165,7 +165,7 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="mainGame.h" />
     <ClInclude Include="mapToolScene.h" />
-    <ClInclude Include="minion.h" />
+    <ClInclude Include="summoner.h" />
     <ClInclude Include="monster.h" />
     <ClInclude Include="particleManager.h" />
     <ClInclude Include="player.h" />
@@ -198,7 +198,7 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="mapToolScene.cpp" />
-    <ClCompile Include="minion.cpp" />
+    <ClCompile Include="summoner.cpp" />
     <ClCompile Include="monster.cpp" />
     <ClCompile Include="particleManager.cpp" />
     <ClCompile Include="player.cpp" />

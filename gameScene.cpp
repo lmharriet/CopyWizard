@@ -21,12 +21,14 @@ HRESULT gameScene::init()
 	PARTICLE->init();
 	EFFECT->init();
 
+	IMAGEMANAGER->addFrameImage("golem", "wizard/Golem.bmp", 720, 700, 6, 5);
+
 	_golem = new golem; //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
-	_golem->init(tile, { 820,320 }); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
+	_golem->init(tile, "golem",{ 820,320 },3.f); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
 
 
 	_golem2 = new golem; //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½2)
-	_golem2->init(tile, { 600,320 }); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½2)
+	_golem2->init(tile, "golem", { 220,320 }, 3.f); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½2)
 
 	enemy = new enemyManager;
 	enemy->init();

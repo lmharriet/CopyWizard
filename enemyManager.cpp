@@ -54,15 +54,7 @@ void enemyManager::render()
 
 void enemyManager::setMinion()
 {
-	//for (int i = 0; i < 3; i++)
-	//{
-	//	for (int j = 0; j < 6; j++)
-	//	{
-	//		enemy* ufo = new minion;
-	//		ufo->init("ufo", PointMake(50 + j * 100, 100 + i * 100));
-	//		_vMinion.push_back(ufo);
-	//	}
-	//}
+	
 
 	enemy* enem = new summoner;
 	enem->init("summoner", { 500,500 });

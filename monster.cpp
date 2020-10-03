@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "monster.h"
 
+
+
+//=============================================
+//에이스타 관련 함수
+//=============================================
 HRESULT astarManager::init(tagTile* _tile)
 {
 	tile = _tile;
@@ -67,6 +72,8 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 
 			if (colCheck(totalNode[x][y]->rc, playerMove.rc)) // player위치 설정
 			{
+				if (totalNode[x][y]->kind == TERRAIN::WALL) continue;
+
 				totalNode[x][y]->nodeState = NODESTATE::NODE_END;
 				endNode = totalNode[x][y];
 				playerMove.x = x;
@@ -75,6 +82,8 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 			}
 			if (colCheck(totalNode[x][y]->rc, monsterMove.rc)) // monster위치 설정
 			{
+				if (totalNode[x][y]->kind == TERRAIN::WALL) continue;
+				
 				totalNode[x][y]->nodeState = NODESTATE::NODE_START;
 				startNode = totalNode[x][y];
 				monsterMove.x = x;
@@ -299,3 +308,48 @@ void astarManager::setNodeColor(tileNode* node, COLORREF color, HDC hdc)
 	DeleteObject(brush);
 	FrameRect(hdc, node->rc, RGB(0, 0, 0));
 }
+
+
+
+
+
+//=============================================
+//몬스터 관련 함수
+//=============================================
+
+HRESULT monster::init(tagTile* tile, const char* fileName , POINT _pos, float _speed)
+{
+	if (!tile)
+	{
+		isAstar = false;
+	}
+	else
+	{
+		isAstar = true;
+		astar = new astarManager;
+		astar->init(tile);
+	}
+
+	img = IMAGEMANAGER->findImage(fileName);
+	
+	cul = { 0,0 };
+	pos.x = _pos.x;
+	pos.y = _pos.y;
+	speed = _speed;
+	frameIndex = { 0,0 };
+
+	addInit();
+	
+
+	return S_OK;
+}
+
+void monster::release()
+{
+	if (isAstar)
+	{
+		astar->release();
+		SAFE_DELETE(astar);
+	}
+}
+

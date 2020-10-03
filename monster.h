@@ -91,7 +91,8 @@ protected:
 	bool isFindWayOn = false;
 	bool isLeft = false;
 	bool isATK = false;
-	const float distanceMax = 750.f;
+	bool isAstar;
+	const float distanceMax = 700.f;
 	astarManager* astar;
 	RECT playerRC;
 	RECT camRC;
@@ -100,13 +101,13 @@ protected:
 	
 
 public:
-	virtual HRESULT init(tagTile* tile, POINT _pos)=0;
-	virtual void release()=0;
+	 
+	HRESULT init(tagTile* tile, const char* fileName, POINT _pos, float _speed);
+	void release();
 	virtual void update()=0;
 	virtual void render()=0;
+	virtual void addInit()=0;
 
-	virtual void stateImageRender() = 0;
-	virtual void stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R) = 0;
 	inline virtual POINT getPos() { return pos; }
 	inline virtual RECT getRC() { return rc; }
 	inline virtual void setPlayerRC(RECT rc) { playerRC = rc; }

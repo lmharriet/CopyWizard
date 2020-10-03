@@ -1,29 +1,35 @@
 #include "stdafx.h"
 #include "golem.h"
 
-HRESULT golem::init(tagTile* tile, POINT _pos )
-{
-    img = IMAGEMANAGER->addFrameImage("golem", "wizard/Golem.bmp", 720, 700, 6, 5);
-    cul = { 0,0 };
-    pos.x = _pos.x;
-    pos.y = _pos.y;
-    speed = 5.f;
-    //state = STATEIMAGE::IDLE;
-    frameIndex = { 0,0 };
-    //count = 0;
-    //isFindWayOn = false; //길찾기 온/오프
-    //isLeft = false;
-    //isATK = false;
-    astar = new astarManager;
-    astar->init(tile);
+//HRESULT golem::init(tagTile* tile, POINT _pos )
+//{
+//    
+//
+//    img = IMAGEMANAGER->addFrameImage("golem", "wizard/Golem.bmp", 720, 700, 6, 5);
+//    cul = { 0,0 };
+//    pos.x = _pos.x;
+//    pos.y = _pos.y;
+//    speed = 3.f;
+//    frameIndex = { 0,0 };
+//
+//
+//    astar = new astarManager;
+//    astar->init(tile);
+//
+//    return S_OK;
+//}
 
-    return S_OK;
-}
+//void golem::release()
+//{
+//   
+//    astar->release();
+//    SAFE_DELETE(astar);
+//    
+//}
 
-void golem::release()
+void golem::addInit()
 {
-    astar->release();
-    SAFE_DELETE(astar);
+    
 }
 
 void golem::update()
@@ -31,6 +37,7 @@ void golem::update()
     
     rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
     
+    //거리 계산해서 일정 거리 넘어가면 에이스타 작동안되게 하기.
     if (distanceMax > getDistance(pos.x, pos.y, playerRC.left + (playerRC.right - playerRC.left) / 2, playerRC.top + (playerRC.bottom - playerRC.top) / 2))
         isFindWayOn = true;
     else
@@ -39,10 +46,11 @@ void golem::update()
    
     if (isFindWayOn) //길찾기 on
     {
-        state = STATEIMAGE::WALK;
+        
         astar->update(camRC, rc, playerRC, &angle);
         if (astar->getFirstTile() && !isATK) // 걸을 때
         {
+            state = STATEIMAGE::WALK;
             pos.x += cos(angle) * speed;
             pos.y += -sin(angle) * speed;
             if (0 < cos(angle) * speed)
@@ -72,7 +80,7 @@ void golem::update()
 void golem::render()
 {
     
-    FrameRect(getMemDC(), rc, RGB(0, 0, 0));
+   // FrameRect(getMemDC(), rc, RGB(0, 0, 0));
     stateImageRender();
   
 
@@ -163,7 +171,7 @@ void golem::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
     {
         frameIndex.y = indexY_L;
         count++;
-        if (count % 5 == 0)
+        if (count % 10 == 0)
         {
             count = 0;
             frameIndex.x--;
@@ -175,7 +183,7 @@ void golem::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
     {
         frameIndex.y = indexY_R;
         count++;
-        if (count % 5 == 0)
+        if (count % 10 == 0)
         {
             count = 0;
             frameIndex.x++;

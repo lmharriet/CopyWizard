@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "minion.h"
+#include "summoner.h"
 
 void summoner::animation()
 {

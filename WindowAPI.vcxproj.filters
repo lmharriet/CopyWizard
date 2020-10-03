@@ -108,9 +108,6 @@
     <ClCompile Include="enemy.cpp">
       <Filter>MainGame\인게임</Filter>
     </ClCompile>
-    <ClCompile Include="minion.cpp">
-      <Filter>MainGame\인게임</Filter>
-    </ClCompile>
     <ClCompile Include="enemyManager.cpp">
       <Filter>MainGame\인게임</Filter>
     </ClCompile>
@@ -166,6 +163,9 @@
     <ClCompile Include="iniData.cpp">
       <Filter>GameFramework\매니져\저장</Filter>
     </ClCompile>
+    <ClCompile Include="summoner.cpp">
+      <Filter>MainGame\인게임</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -199,9 +199,6 @@
       <Filter>GameFramework\유틸</Filter>
     </ClInclude>
     <ClInclude Include="enemy.h">
-      <Filter>MainGame\인게임</Filter>
-    </ClInclude>
-    <ClInclude Include="minion.h">
       <Filter>MainGame\인게임</Filter>
     </ClInclude>
     <ClInclude Include="enemyManager.h">
@@ -264,6 +261,9 @@
     </ClInclude>
     <ClInclude Include="iniData.h">
       <Filter>GameFramework\매니져\저장</Filter>
+    </ClInclude>
+    <ClInclude Include="summoner.h">
+      <Filter>MainGame\인게임</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
