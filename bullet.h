@@ -139,7 +139,7 @@ private:
 	vector<tagArcana> _vMeteor;
 	float angleRange;
 	float _range;
-	int _bulletMax;
+
 
 	//ult
 	int meteorCount;
@@ -151,7 +151,7 @@ private:
 	int count, index;
 	int timer;
 public:
-	HRESULT init(int bulletMax, float range);
+	HRESULT init(float range);
 	void release();
 	void update();
 	void render();

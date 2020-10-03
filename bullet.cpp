@@ -264,9 +264,8 @@ void bomb::removeBomb(int index)
 //=============================================================
 //	## meteor ## (signature)
 //=============================================================
-HRESULT meteor::init(int bulletMax, float range)
+HRESULT meteor::init(float range)
 {
-	_bulletMax = bulletMax;
 	_range = range;
 	angleRange = meteorCount = isUlt = 0;
 	ranCount = 10;
@@ -300,12 +299,12 @@ void meteor::render()
 
 	for (int i = 0; i < _vMeteor.size(); i++)
 	{
-		//CAMERAMANAGER->Ellipse(getMemDC(), _vMeteor[i].rc);
-		CAMERAMANAGER->FrameRender(getMemDC(), _vMeteor[i].img, _vMeteor[i].rc.left, _vMeteor[i].rc.top, index, _vMeteor[i].frameY);
+		CAMERAMANAGER->Ellipse(getMemDC(), _vMeteor[i].rc);
+		//CAMERAMANAGER->FrameRender(getMemDC(), _vMeteor[i].img, _vMeteor[i].rc.left, _vMeteor[i].rc.top, index, _vMeteor[i].frameY);
 	}
 
-	wsprintf(temp, "size : %d", _vMeteor.size());
-	textOut(getMemDC(), 100, 300, temp, RGB(255, 255, 255));
+	/*wsprintf(temp, "size : %d", _vMeteor.size());
+	textOut(getMemDC(), 100, 300, temp, RGB(255, 255, 255));*/
 }
 
 void meteor::meteorFire(float x, float y, float speed, MOVE dir, float range)
