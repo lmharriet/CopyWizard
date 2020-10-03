@@ -46,9 +46,6 @@
     <Filter Include="GameFramework\매니져\파티클">
       <UniqueIdentifier>{bdee886b-5155-493b-874e-5891704274d4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MainGame\인게임\monster_test">
-      <UniqueIdentifier>{9d1bf617-7f45-4e7a-9a9e-4392db16c51f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameFramework\매니져\UI">
       <UniqueIdentifier>{a21989a8-ed51-4ccf-9b08-291ec7a11245}</UniqueIdentifier>
     </Filter>
@@ -79,6 +76,9 @@
     <Filter Include="GameFramework\매니져\저장">
       <UniqueIdentifier>{15582844-be6b-49b2-9fb2-f7037676cf8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\인게임\monster">
+      <UniqueIdentifier>{9d1bf617-7f45-4e7a-9a9e-4392db16c51f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
@@ -105,12 +105,6 @@
     <ClCompile Include="util.cpp">
       <Filter>GameFramework\유틸</Filter>
     </ClCompile>
-    <ClCompile Include="enemy.cpp">
-      <Filter>MainGame\인게임</Filter>
-    </ClCompile>
-    <ClCompile Include="enemyManager.cpp">
-      <Filter>MainGame\인게임</Filter>
-    </ClCompile>
     <ClCompile Include="playerData.cpp">
       <Filter>GameFramework\싱글톤데이터</Filter>
     </ClCompile>
@@ -131,10 +125,10 @@
       <Filter>GameFramework\매니져\파티클</Filter>
     </ClCompile>
     <ClCompile Include="golem.cpp">
-      <Filter>MainGame\인게임\monster_test</Filter>
+      <Filter>MainGame\인게임\monster</Filter>
     </ClCompile>
     <ClCompile Include="monster.cpp">
-      <Filter>MainGame\인게임\monster_test</Filter>
+      <Filter>MainGame\인게임\monster</Filter>
     </ClCompile>
     <ClCompile Include="uiManager.cpp">
       <Filter>GameFramework\매니져\UI</Filter>
@@ -164,6 +158,9 @@
       <Filter>GameFramework\매니져\저장</Filter>
     </ClCompile>
     <ClCompile Include="summoner.cpp">
+      <Filter>MainGame\인게임\monster</Filter>
+    </ClCompile>
+    <ClCompile Include="enemyManager.cpp">
       <Filter>MainGame\인게임</Filter>
     </ClCompile>
   </ItemGroup>
@@ -198,12 +195,6 @@
     <ClInclude Include="util.h">
       <Filter>GameFramework\유틸</Filter>
     </ClInclude>
-    <ClInclude Include="enemy.h">
-      <Filter>MainGame\인게임</Filter>
-    </ClInclude>
-    <ClInclude Include="enemyManager.h">
-      <Filter>MainGame\인게임</Filter>
-    </ClInclude>
     <ClInclude Include="playerData.h">
       <Filter>GameFramework\싱글톤데이터</Filter>
     </ClInclude>
@@ -227,10 +218,10 @@
       <Filter>GameFramework\매니져\파티클</Filter>
     </ClInclude>
     <ClInclude Include="monster.h">
-      <Filter>MainGame\인게임\monster_test</Filter>
+      <Filter>MainGame\인게임\monster</Filter>
     </ClInclude>
     <ClInclude Include="golem.h">
-      <Filter>MainGame\인게임\monster_test</Filter>
+      <Filter>MainGame\인게임\monster</Filter>
     </ClInclude>
     <ClInclude Include="uiManager.h">
       <Filter>GameFramework\매니져\UI</Filter>
@@ -263,6 +254,9 @@
       <Filter>GameFramework\매니져\저장</Filter>
     </ClInclude>
     <ClInclude Include="summoner.h">
+      <Filter>MainGame\인게임\monster</Filter>
+    </ClInclude>
+    <ClInclude Include="enemyManager.h">
       <Filter>MainGame\인게임</Filter>
     </ClInclude>
   </ItemGroup>

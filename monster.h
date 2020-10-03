@@ -109,7 +109,7 @@ public:
 	virtual void addInit()=0;
 
 	inline virtual POINT getPos() { return pos; }
-	inline virtual RECT getRC() { return rc; }
+	inline RECT getRC() { return rc; }
 	inline virtual void setPlayerRC(RECT rc) { playerRC = rc; }
 	inline virtual void setCamRC(RECT rc) { camRC = rc; }
 };

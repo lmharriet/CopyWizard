@@ -2,12 +2,14 @@
 #include "enemyManager.h"
 
 
-HRESULT enemyManager::init()
+HRESULT enemyManager::init(tagTile* _tile)
 {
 	IMAGEMANAGER->addFrameImage("summoner", "resource/enemy/SummonerSource.bmp", 500, 700, 5, 7);
+	IMAGEMANAGER->addFrameImage("golem", "resource/enemy/Golem.bmp", 720, 700, 6, 5);
 	//미니언 생성, 보스, 일반몬스터
 	//따로 함수로 빼서 처리하면 관리가 편하다
 
+	tile = _tile;
 	//미니언 생성
 	this->setMinion();
 
@@ -34,6 +36,7 @@ void enemyManager::update()
 	for (int i = 0; i < _vMinion.size(); i++)
 	{
 		_vMinion[i]->update();
+		
 	}
 
 	//미니언 총알발사
@@ -48,32 +51,41 @@ void enemyManager::render()
 	//벡터에 담긴 미니언들 렌더
 	for (int i = 0; i < _vMinion.size(); i++)
 	{
+		_vMinion[i]->setPlayerRC(playerRC);
 		_vMinion[i]->render();
+		
 	}
 }
 
 void enemyManager::setMinion()
 {
-	
+	monster* _golem1 = new golem;
+	_golem1->init(tile, "golem", { 820,320 }, 3.f);
+	_vMinion.push_back(_golem1);
+	monster* _golem2 = new golem;
+	_golem2->init(tile, "golem", { 220,320 }, 3.f); 
 
-	enemy* enem = new summoner;
-	enem->init("summoner", { 500,500 });
+	_vMinion.push_back(_golem2);
+	monster* enem = new summoner;
+	enem->init(nullptr,"summoner", { 500,500 },0);
+
 	_vMinion.push_back(enem);
+	
 }
 
-void enemyManager::minionBulletFire(float aimX, float aimY)
-{
-	_viMinion = _vMinion.begin();
-	for (_viMinion; _viMinion != _vMinion.end(); ++_viMinion)
-	{
-		if ((*_viMinion)->checkAttack() == false)continue;
-
-		float angle = getAngle((*_viMinion)->getX(), (*_viMinion)->getY(), aimX, aimY);
-
-		_bullet->fire((*_viMinion)->getX(), (*_viMinion)->getY(), angle, 3.0f);
-		(*_viMinion)->setAttack(false);
-	}
-}
+//void enemyManager::minionBulletFire(float aimX, float aimY)
+//{
+//	_viMinion = _vMinion.begin();
+//	for (_viMinion; _viMinion != _vMinion.end(); ++_viMinion)
+//	{
+//		if ((*_viMinion)->checkAttack() == false)continue;
+//
+//		float angle = getAngle((*_viMinion)->getX(), (*_viMinion)->getY(), aimX, aimY);
+//
+//		_bullet->fire((*_viMinion)->getX(), (*_viMinion)->getY(), angle, 3.0f);
+//		(*_viMinion)->setAttack(false);
+//	}
+//}
 
 void enemyManager::removeMinion(int index)
 {

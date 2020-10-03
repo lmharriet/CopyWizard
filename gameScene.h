@@ -3,7 +3,6 @@
 #include "player.h"
 #include "tileNode.h"
 #include "colorNode.h"
-#include "golem.h" //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
 #include "enemyManager.h"
 
 

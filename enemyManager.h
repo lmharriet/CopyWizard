@@ -9,13 +9,15 @@ class enemyManager : public gameNode
 private:
 	
 private:
-	vector<enemy*> _vMinion;
-	vector<enemy*>::iterator _viMinion;
+	vector<monster*> _vMinion;
+	vector<monster*>::iterator _viMinion;
+	tagTile* tile;
+	RECT playerRC;
 	//vector<enemy*> _vBoss;
 
 	bullet* _bullet; //공용총알
 public:
-	HRESULT init();
+	HRESULT init(tagTile* _tile);
 	void release();
 	void update();
 	void render();
@@ -24,12 +26,14 @@ public:
 	void setMinion();
 	//void setBoss();
 	//미니언 총알발사
-	void minionBulletFire(float aimX, float aimY);
+	//void minionBulletFire(float aimX, float aimY);
 	//미니언 삭제
 	void removeMinion(int index);
 
+	//플레이어 렉트 가져오기
+	void setPlayerRC(RECT _playerRC) { playerRC = _playerRC; }
 	//미니언 벡터 가져오기
-	vector<enemy*> getMinion() { return _vMinion; }
+	vector<monster*> getMinion() { return _vMinion; }
 
 	//충돌처리 (미니언들의 총알, 플레이어)
 	void collision(RECT player);

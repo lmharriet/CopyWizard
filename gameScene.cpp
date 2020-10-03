@@ -21,17 +21,17 @@ HRESULT gameScene::init()
 	PARTICLE->init();
 	EFFECT->init();
 
-	IMAGEMANAGER->addFrameImage("golem", "wizard/Golem.bmp", 720, 700, 6, 5);
-
-	_golem = new golem; //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
-	_golem->init(tile, "golem",{ 820,320 },3.f); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
-
-
-	_golem2 = new golem; //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½2)
-	_golem2->init(tile, "golem", { 220,320 }, 3.f); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½2)
-
 	enemy = new enemyManager;
-	enemy->init();
+	enemy->init(tile);
+
+	//_golem = new golem; //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
+	//_golem->init(tile, "golem",{ 820,320 },3.f); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
+
+
+	//_golem2 = new golem; //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½2)
+	//_golem2->init(tile, "golem", { 220,320 }, 3.f); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½2)
+
+	
 
 	return S_OK;
 }
@@ -41,11 +41,11 @@ void gameScene::release()
 	_player->release();
 	SAFE_DELETE(_player);
 
-	_golem->release();
+	/*_golem->release();
 	SAFE_DELETE(_golem);
 
 	_golem2->release();
-	SAFE_DELETE(_golem2);
+	SAFE_DELETE(_golem2);*/
 	enemy->release();
 	SAFE_DELETE(enemy);
 }
@@ -54,8 +54,8 @@ void gameScene::update()
 {
 	UI->update();
 	_player->update();
-	_golem->update();
-	_golem2->update();
+	/*_golem->update();
+	_golem2->update()*/;
 	enemy->update();
 
 
@@ -90,14 +90,14 @@ void gameScene::update()
 	//	}
 	//}
 
-	enemy->minionBulletFire(_player->getX(), _player->getY());
+	//enemy->minionBulletFire(_player->getX(), _player->getY());
 	enemy->collision(_player->getRect());
 
 	for (int i = 0; i < _player->getBlaze()->getBullet().size(); i++)
 	{
 		for (int j = 0; j < enemy->getMinion().size(); j++)
 		{
-			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRect()))
+			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRC()))
 			{
 				_player->getBlaze()->removeBomb(i);
 				enemy->removeMinion(j);
@@ -108,10 +108,9 @@ void gameScene::update()
 
 void gameScene::render()
 {
-	_golem->setCamRC(cam);
-	_golem2->setCamRC(cam);
-	_golem->setPlayerRC(RectMake(_player->getX(), _player->getY(), 100, 100));
-	_golem2->setPlayerRC(RectMake(_player->getX(), _player->getY(), 100, 100));
+	//_golem->setCamRC(cam);
+	//_golem2->setCamRC(cam);
+	enemy->setPlayerRC(RectMake(_player->getX(), _player->getY(), 100, 100));
 	
 	for (int i = 0; i < MAXTILE; i++)
 	{
@@ -127,7 +126,7 @@ void gameScene::render()
 	//CAMERAMANAGER->Rectangle(getMemDC(), checkArea);
 	//Rectangle(getMemDC(), checkArea);
 	//_player->render();
-	enemy->render();
+	
 	EFFECT->render(getMemDC());
 
 	bool isRender = false;
@@ -249,7 +248,7 @@ void gameScene::render()
 
 	PARTICLE->render(getMemDC(), CAMERAMANAGER->getRect());
 
-	
+	enemy->render();
 	if(!isRender) _player->render();
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), _player->getRect());
@@ -261,8 +260,8 @@ void gameScene::render()
 
 	viewText();
 	
-	_golem->render(); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
-	_golem2->render(); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
+	//_golem->render(); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
+	//_golem2->render(); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
 
 	
 }

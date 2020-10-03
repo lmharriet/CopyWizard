@@ -14,7 +14,7 @@ public:
 	
 
 	inline POINT getPos() { return pos; } 
-	inline RECT getRC() { return rc; }
+	//inline RECT getRC() { return rc; }
 	inline void setPlayerRC(RECT rc) { playerRC = rc; }
 	inline void setCamRC(RECT rc) { camRC = rc; }
 
