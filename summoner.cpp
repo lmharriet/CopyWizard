@@ -17,7 +17,7 @@ void summoner::addInit()
 
 void summoner::render()
 {
-	CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(pos.x, pos.y, 100, 100));
+	//CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(pos.x, pos.y, 100, 100));
 
 	float x = CAMERAMANAGER->GetRelativeX(pos.x);
 	float y = CAMERAMANAGER->GetRelativeY(pos.y);
@@ -30,6 +30,8 @@ void summoner::update()
 	if(isDetect) time++;
 
 	skill();
+
+	die();
 }
 
 void summoner::skill()

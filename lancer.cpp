@@ -1,27 +1,24 @@
 #include "stdafx.h"
-#include "golem.h"
+#include "lancer.h"
 
-
-void golem::addInit()
+void lancer::addInit()
 {
-    
 }
 
-void golem::update()
+void lancer::update()
 {
-    
     rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
+
     
-    //거리 계산해서 일정 거리 넘어가면 에이스타 작동안되게 하기.
     if (distanceMax > getDistance(pos.x, pos.y, playerRC.left + (playerRC.right - playerRC.left) / 2, playerRC.top + (playerRC.bottom - playerRC.top) / 2))
         isFindWayOn = true;
     else
         isFindWayOn = false;
-   
-   
+
+
     if (isFindWayOn) //길찾기 on
     {
-        
+
         astar->update(camRC, rc, playerRC, &angle);
         if (astar->getFirstTile() && !isATK && !isDie) // 걸을 때
         {
@@ -33,34 +30,32 @@ void golem::update()
             else
                 isLeft = true;
         }
-        else if(!isDie)
+        else if(!isDie) // 걷지 않고 있을 때
         {
             state = STATEIMAGE::ATK;
             isATK = true;
         }
-       
+
     }
     else //길찾기 off
-    { 
+    {
         state = STATEIMAGE::IDLE;
     }
 
     cul.x = CAMERAMANAGER->GetRelativeX(pos.x);
     cul.y = CAMERAMANAGER->GetRelativeY(pos.y);
+
     die();
 }
 
-void golem::render()
+void lancer::render()
 {
-    
-   // FrameRect(getMemDC(), rc, RGB(0, 0, 0));
     stateImageRender();
-  
-
-    //astar->render(getMemDC());
 }
 
-void golem::stateImageRender()
+
+
+void lancer::stateImageRender()
 {
     switch (state)
     {
@@ -75,12 +70,12 @@ void golem::stateImageRender()
             frameIndex.x = 0;
             frameIndex.y = 0;
         }
-        img->frameRender(getMemDC(), cul.x, cul.y,frameIndex.x,frameIndex.y);
-       
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
+
         break;
     case STATEIMAGE::WALK:
         stateImage(5, 2, 0, 1);
-        
+
         break;
     case STATEIMAGE::ATK:
         if (isLeft)
@@ -116,7 +111,7 @@ void golem::stateImageRender()
                 {
                     frameIndex.x = 2;
                     delay++;
-                    if(delay > 3)
+                    if (delay > 3)
                     {
                         isATK = false;
                         delay = 0;
@@ -128,44 +123,66 @@ void golem::stateImageRender()
         }
 
         img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
-        
+
         break;
     case STATEIMAGE::DIE:
         if (isLeft)
         {
-            frameIndex.y = 4;
+            if (frameIndex.y != 6)
+            frameIndex.y = 5;
             count++;
             if (count % 10 == 0)
             {
                 count = 0;
-                frameIndex.x--;
-                if (frameIndex.x < 0)
+                if (frameIndex.y == 5)
+                    frameIndex.x--;
+                else if(frameIndex.y == 6)
+                    frameIndex.x++;
+
+                if (frameIndex.x > 2 && frameIndex.y == 6) //사망 인덱스 6
                 {
-                    frameIndex.x = 0;
+                    
+                    frameIndex.x = 2;
                     delay++;
                     if (delay > 2)
                     {
                         isDelete = true;
                     }
                 }
+                else if (frameIndex.x < 0) // 사망 인덱스 5
+                {
+                    frameIndex.x = 0;
+                    frameIndex.y = 6;
+                   
+                }
             }
         }
         else
         {
+            if(frameIndex.y !=4 )
             frameIndex.y = 3;
             count++;
             if (count % 10 == 0)
             {
                 count = 0;
+                
                 frameIndex.x++;
-                if (frameIndex.x > 5)
+                
+                if (frameIndex.x > 2 && frameIndex.y == 4) //사망 인덱스 6
                 {
-                    frameIndex.x = 5;
+                    
+                    frameIndex.x = 2;
                     delay++;
                     if (delay > 2)
                     {
                         isDelete = true;
                     }
+                }
+                else if (frameIndex.x > 5) // 사망 인덱스 5
+                {
+                    frameIndex.x = 0;
+                    frameIndex.y = 4;
+                    
                 }
 
             }
@@ -173,13 +190,12 @@ void golem::stateImageRender()
 
         img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
 
-
         break;
-   
+
     }
 }
 
-void golem::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R) 
+void lancer::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
 {
     if (isLeft)
     {
@@ -206,8 +222,8 @@ void golem::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
 
         }
     }
-        
+
     img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
 
-   
+
 }

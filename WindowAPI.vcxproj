@@ -164,6 +164,7 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="mainGame.h" />
     <ClInclude Include="mapToolScene.h" />
+    <ClInclude Include="lancer.h" />
     <ClInclude Include="summoner.h" />
     <ClInclude Include="monster.h" />
     <ClInclude Include="particleManager.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="mapToolScene.cpp" />
+    <ClCompile Include="lancer.cpp" />
     <ClCompile Include="summoner.cpp" />
     <ClCompile Include="monster.cpp" />
     <ClCompile Include="particleManager.cpp" />

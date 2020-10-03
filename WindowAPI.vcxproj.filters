@@ -163,6 +163,9 @@
     <ClCompile Include="enemyManager.cpp">
       <Filter>MainGame\인게임</Filter>
     </ClCompile>
+    <ClCompile Include="lancer.cpp">
+      <Filter>MainGame\인게임\monster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -258,6 +261,9 @@
     </ClInclude>
     <ClInclude Include="enemyManager.h">
       <Filter>MainGame\인게임</Filter>
+    </ClInclude>
+    <ClInclude Include="lancer.h">
+      <Filter>MainGame\인게임\monster</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

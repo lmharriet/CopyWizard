@@ -91,6 +91,8 @@ protected:
 	bool isFindWayOn = false;
 	bool isLeft = false;
 	bool isATK = false;
+	bool isDie = false;
+	bool isDelete = false;
 	bool isAstar;
 	const float distanceMax = 700.f;
 	astarManager* astar;
@@ -102,15 +104,19 @@ protected:
 
 public:
 	 
-	HRESULT init(tagTile* tile, const char* fileName, POINT _pos, float _speed);
+	HRESULT init(tagTile* tile, const char* fileName, POINT _pos, float _speed, int _hp);
 	void release();
 	virtual void update()=0;
 	virtual void render()=0;
 	virtual void addInit()=0;
 
-	inline virtual POINT getPos() { return pos; }
+	inline POINT getPos() { return pos; }
 	inline RECT getRC() { return rc; }
-	inline virtual void setPlayerRC(RECT rc) { playerRC = rc; }
-	inline virtual void setCamRC(RECT rc) { camRC = rc; }
+	inline bool getDelete() { return isDelete; }
+
+	inline void setPlayerRC(RECT rc) { playerRC = rc; }
+	inline void setCamRC(RECT rc) { camRC = rc; }
+	inline void setHp(float _atk) { hp = _atk; }
+	void die();
 };
 

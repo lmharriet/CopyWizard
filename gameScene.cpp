@@ -100,8 +100,12 @@ void gameScene::update()
 			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRC()))
 			{
 				_player->getBlaze()->removeBomb(i);
-				enemy->removeMinion(j);
+				//enemy->removeMinion(j);
+				enemy->getMinion()[j]->setHp(0);
+				break;
+				
 			}
+
 		}
 	}
 }

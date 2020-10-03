@@ -317,7 +317,7 @@ void astarManager::setNodeColor(tileNode* node, COLORREF color, HDC hdc)
 //몬스터 관련 함수
 //=============================================
 
-HRESULT monster::init(tagTile* tile, const char* fileName , POINT _pos, float _speed)
+HRESULT monster::init(tagTile* tile, const char* fileName , POINT _pos, float _speed, int _hp)
 {
 	if (!tile)
 	{
@@ -336,6 +336,7 @@ HRESULT monster::init(tagTile* tile, const char* fileName , POINT _pos, float _s
 	pos.x = _pos.x;
 	pos.y = _pos.y;
 	speed = _speed;
+	hp = _hp;
 	frameIndex = { 0,0 };
 
 	addInit();
@@ -350,6 +351,15 @@ void monster::release()
 	{
 		astar->release();
 		SAFE_DELETE(astar);
+	}
+}
+
+void monster::die()
+{
+	if (hp <= 0)
+	{
+		state = STATEIMAGE::DIE;
+		isDie = true;
 	}
 }
 

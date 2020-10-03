@@ -19,7 +19,6 @@ public:
 
 
 	//충돌용 렉트 가져오기
-	//inline RECT getRC() { return rc; }
 	int getX() { return pos.x; }
 	int getY() { return pos.y; }
 
