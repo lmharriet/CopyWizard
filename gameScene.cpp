@@ -22,7 +22,7 @@ HRESULT gameScene::init()
 	EFFECT->init();
 
 	_golem = new golem; //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
-	_golem->init(tile); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
+	_golem->init(tile, { 820,320 }); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
 
 	enemy = new enemyManager;
 	enemy->init();

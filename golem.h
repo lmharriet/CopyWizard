@@ -3,7 +3,7 @@
 class golem : public monster
 {
 public:
-	HRESULT init(tagTile* tile)override ;
+	HRESULT init(tagTile* tile, POINT _pos)override ;
 	void release()override ;
 	void update() override;
 	void render() override;

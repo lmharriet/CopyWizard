@@ -27,6 +27,8 @@ private:
 
 	//int _count;							//시작노드, 종료노드를 한번씩만 선택하기 위한 변수
 	bool isFind;						//길 찾았냐?
+	int monsterPosX;
+	int monsterPosY;
 
 	RECT temp;
 	tagPlayer monsterMove;
@@ -41,7 +43,7 @@ private:
 public:
 	HRESULT init(tagTile* _tile);
 	void release();
-	void update();
+	void update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* angle);
 	void render(HDC hdc);
 
 	/*중요함수*/
@@ -54,17 +56,10 @@ public:
 
 	//편의를 위한 함수
 	void setNodeColor(tileNode* node, COLORREF color, HDC hdc);
-	//void setTileNode(tagTile* _tile) { tile = _tile; }
-	void setCam(RECT _cam) { cam = _cam; }
-	void setEndRC(RECT rc) { playerMove.rc = rc; }
-	void setStartRC(RECT rc) { monsterMove.rc = rc; }
-	//void setStartPos(POINT pos) { startPos = pos; }
-	//void setEndPos(POINT pos) { endPos = pos; }
+	
+	tileNode* getFirstTile() { if (!finalList.empty())return finalList[0]; else return NULL; }
+	
 };
-
-
-
-
 
 
 
@@ -91,7 +86,7 @@ protected:
 	
 
 public:
-	virtual HRESULT init(tagTile* tile)=0;
+	virtual HRESULT init(tagTile* tile, POINT _pos)=0;
 	virtual void release()=0;
 	virtual void update()=0;
 	virtual void render()=0;

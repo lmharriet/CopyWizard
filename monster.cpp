@@ -19,7 +19,6 @@ HRESULT astarManager::init(tagTile* _tile)
 			totalNode[x][y] = &tile[y * MAXTILE_WIDTH + x];
 			totalNode[x][y]->idx = x;
 			totalNode[x][y]->idy = y;
-			//totalNode[x][y]->rc = RectMake(25 + x * 50, 25 + y * 50, 50, 50);
 		}
 	}
 
@@ -31,116 +30,62 @@ HRESULT astarManager::init(tagTile* _tile)
 	closeList.clear();
 	finalList.clear();
 
-	//몬스터
-	//monsterMove.x = monster->getPos().x;
-	//monsterMove.y = monster->getPos().y;
-	//monsterMove.rc = monster->getRC();
-	//monsterMove.speed = 1.f;
-	//
-	//// 스타트 지점 지정
-	//startPos.x = 0;
-	//startPos.y = 0;
-	//totalNode[startPos.x][startPos.y]->nodeState = NODESTATE::NODE_START;
-	//startNode = totalNode[startPos.x][startPos.y];
-
-	//// 도착지점 지정
-	//endPos.x = MAXTILE_WIDTH-1;
-	//endPos.y = 0;
-	//totalNode[endPos.x][endPos.y]->nodeState = NODESTATE::NODE_END;
-	//endNode = totalNode[endPos.x][endPos.y];
-
-	//플레이어
-	//playerMove.x = totalNode[endPos.x][endPos.y]->rc.left+10;
-	//playerMove.y = totalNode[endPos.x][endPos.y]->rc.top+10;
-	//playerMove.speed = 9.0f;
-
 
 	return S_OK;
 }
 
 void astarManager::release()
 {
-	/*for (int y = 0; y < MAXTILE_HEIGHT; y++)
+}
+
+void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* angle)
+{
+	//정보 가져오기
+	cam = _camRC;
+	monsterPosX =_monsterRC.left + (_monsterRC.right - _monsterRC.left) / 2;
+	monsterPosY = _monsterRC.top + (_monsterRC.bottom - _monsterRC.top) / 2;
+	monsterMove.rc = RectMakeCenter(monsterPosX,monsterPosY, 32,32);
+	playerMove.rc = RectMake(_playerRC.left, _playerRC.top, 32, 32);
+
+
+
+	//초기화
+	openList.clear();
+	closeList.clear();
+	finalList.clear();
+	startNode = NULL;
+	endNode = NULL;
+	curNode = NULL;
+	
+
+	//스타트랑 앤드 노드 정하는 용도.
+	for (int y = 0; y < MAXTILE_HEIGHT; y++)
 	{
 		for (int x = 0; x < MAXTILE_WIDTH; x++)
 		{
-			SAFE_DELETE(totalNode[x][y]);
-		}
-	}*/
-	
-}
+			if (endNode && startNode) break;
 
-void astarManager::update()
-{
-	/*if (INPUT->GetKeyDown(VK_UP))
-	{
-		totalNode[endPos.x][endPos.y]->nodeState = NODESTATE::NODE_EMPTY;
-		if(endPos.y >0)
-			endPos.y -= 1;
-
-	}
-	if (INPUT->GetKeyDown(VK_DOWN))
-	{
-		totalNode[endPos.x][endPos.y]->nodeState = NODESTATE::NODE_EMPTY;
-		if (endPos.y < MAXTILE_HEIGHT-1)
-			endPos.y += 1;
-
-	}
-
-	if (INPUT->GetKeyDown(VK_LEFT))
-	{
-		totalNode[endPos.x][endPos.y]->nodeState = NODESTATE::NODE_EMPTY;
-		if (endPos.x > 0)
-			endPos.x -= 1;
-
-	}
-	if (INPUT->GetKeyDown(VK_RIGHT))
-	{
-		totalNode[endPos.x][endPos.y]->nodeState = NODESTATE::NODE_EMPTY;
-		if (endPos.x < MAXTILE_WIDTH-1)
-			endPos.x += 1;
-
-	}*/if (INPUT->GetKeyDown('O'))
-	{
-		for (int y = 0; y < MAXTILE_HEIGHT; y++)
-		{
-			for (int x = 0; x < MAXTILE_WIDTH; x++)
+			if (colCheck(totalNode[x][y]->rc, playerMove.rc)) // player위치 설정
 			{
-				if (endNode && startNode) break;
-
-				if (colCheck(totalNode[x][y]->rc, playerMove.rc))
-				{
-					totalNode[x][y]->nodeState = NODESTATE::NODE_END;
-					endNode = totalNode[x][y];
-					playerMove.x = x;
-					playerMove.y = y;
-					//playerMove.angle = getAngle(playerMove.x, playerMove.y, endNode->rc.left, endNode->rc.top);
-
-				}
-				if (colCheck(totalNode[x][y]->rc, monsterMove.rc))
-				{
-					totalNode[x][y]->nodeState = NODESTATE::NODE_START;
-					startNode = totalNode[x][y];
-					monsterMove.x = x;
-					monsterMove.y = y;
-				}
-
+				totalNode[x][y]->nodeState = NODESTATE::NODE_END;
+				endNode = totalNode[x][y];
+				playerMove.x = x;
+				playerMove.y = y;
 
 			}
+			if (colCheck(totalNode[x][y]->rc, monsterMove.rc)) // monster위치 설정
+			{
+				totalNode[x][y]->nodeState = NODESTATE::NODE_START;
+				startNode = totalNode[x][y];
+				monsterMove.x = x;
+				monsterMove.y = y;
+			}
+
 
 		}
+
 	}
-
-
-	//
-	//if (!colCheck(playerMove.rc, endNode->rc) )
-	//{
-	//	playerMove.x += cos( playerMove.angle) * playerMove.speed;
-	//	playerMove.y += -sin(playerMove.angle) * playerMove.speed;
-	//}
-
-
-
+	
 	//벽(장애물) 노드 세팅하기 (시작, 종료노드 설정전에 벽세우지 못하게 막기)
 	if (INPUT->GetKeyDown(VK_RBUTTON) && startNode && endNode)
 	{
@@ -158,101 +103,19 @@ void astarManager::update()
 			}
 		}
 	}
-	//if (!finalList.empty())
-	//{
-	//	//if(MonsterMove.rc)
-	//	//totalNode[startPos.x][startPos.y]->nodeState = NODESTATE::NODE_EMPTY;
-	//	for (int i = 0; i < MAXTILE_HEIGHT; i++)
-	//	{
-	//		for (int k = 0; k < MAXTILE_WIDTH; k++)
-	//		{
-	//			if (totalNode[k][i] == finalList[0])
-	//			{
-	//				totalNode[k][i]->nodeState = NODESTATE::NODE_START;
-	//				startNode = finalList[0];
-	//				startPos.x = k;
-	//				startPos.y = i;
-	//				break;
-	//			}
-	//			
-	//				
-	//		}
-	//	}
-	//}
+	
 
-	if (INPUT->GetKeyDown('P'))
+	
+	this->pathFinding(); // 길찾기 시작.
+
+	// 몬스터에게 각도 넘김
+	if (!finalList.empty())
 	{
-		cout << 'p' << endl;
-		this->pathFinding();
+		*angle = getAngle(startNode->rc.left, startNode->rc.top, finalList[0]->rc.left, finalList[0]->rc.top);
 	}
 
+	
 
-
-
-	//if (!finalList.empty())
-	//{
-	//	monsterMove.angle = getAngle(monsterMove.x, monsterMove.y, finalList[0]->rc.left, finalList[0]->rc.top);
-	//	
-	//	if (colCheck( monsterMove.rc, finalList[0]->rc))
-	//	{
-	//		for (int i = 0; i < MAXTILE_HEIGHT; i++)
-	//		{
-	//			for (int k = 0; k < MAXTILE_WIDTH; k++)
-	//			{
-	//				if (totalNode[k][i] == finalList[0])
-	//				{
-	//					cout << "들어옴" << endl;
-	//					totalNode[k][i]->nodeState = NODESTATE::NODE_START;
-	//					startNode = totalNode[k][i];
-	//					break;
-	//				}
-	//			}
-	//		}
-
-	//		openList.clear();
-	//		closeList.clear();
-	//		finalList.clear();
-
-	//	}
-	//	
-	//}
-
-	//
-	//if (!finalList.empty())
-	//{
-	//		cout << "움직임" << endl;
-	//		monsterMove.x += cos(monsterMove.angle) * monsterMove.speed;
-	//		monsterMove.y += -sin(monsterMove.angle) * monsterMove.speed;
-	//	//if (!IntersectRect(&temp, &playerMove.rc, &monsterMove.rc))
-	//	//{
-	//	//
-	//	//}
-	//}
-	//else
-	//{
-	//	cout << "멈춤" << endl;
-	//	openList.clear();
-	//	closeList.clear();
-	//	finalList.clear();
-	//}
-	//
-
-
-
-
-
-
-
-
-
-
-
-
-	//재시작용
-	if (INPUT->GetKeyDown(VK_RETURN) && isFind)
-	{
-		this->init(tile);
-	}
 
 }
 
@@ -269,7 +132,7 @@ void astarManager::render(HDC hdc)
 			//  현재렉트만 보여주기
 			if (colCheck(cam, totalNode[x][y]->rc) == false || totalNode[x][y]->keyName == "") continue;
 			
-			//if (totalNode[x][y]->kind == TERRAIN::WALL) setNodeColor(totalNode[x][y], RGB(250, 150, 0), hdc);
+			if (totalNode[x][y]->kind == TERRAIN::WALL) setNodeColor(totalNode[x][y], RGB(250, 150, 0), hdc);
 			//else FrameRect(hdc, totalNode[x][y]->rc, RGB(0, 0, 0));
 
 
@@ -291,10 +154,7 @@ void astarManager::render(HDC hdc)
 				setNodeColor(totalNode[x][y], RGB(200, 150, 100), hdc);
 				textOut(hdc, totalNode[x][y]->rc.left + 100, totalNode[x][y]->rc.top + 10, "[WALL]");
 			}
-
-			//전체노드의 인덱스 보여주기(맨마지막에 출력)
-		//sprintf(str, "[%d,%d]", totalNode[x][y]->idx, totalNode[x][y]->idy);
-		//textOut(hdc, totalNode[x][y]->rc.left , totalNode[x][y]->rc.top , str,RGB(0,0,0));
+		
 		}
 	}
 
@@ -304,55 +164,32 @@ void astarManager::render(HDC hdc)
 		for (int i = 0; i < finalList.size(); i++)
 		{
 			//cout << finalList.size() << endl;
-			setNodeColor(finalList[i], RGB(255, 255, 0), hdc);
-			//sprintf(str, "[%d, %d]      %d번 노드", finalList[i]->idx, finalList[i]->idy, i + 1);
-			//textOut(hdc, finalList[i]->rc.left + 10, finalList[i]->rc.top + 10, str,RGB(0,0,0));
-			//sprintf(str, "G: %d, H: %d, F: %d", finalList[i]->G, finalList[i]->H, finalList[i]->F);
-			//textOut(hdc, finalList[i]->rc.left + 10, finalList[i]->rc.bottom - 30, str,RGB(0,0,0));
-
+			if (i == 0)
+			{
+				setNodeColor(finalList[i], RGB(255, 255, 0), hdc);
+			}
+			else 
+			{
+				setNodeColor(finalList[i], RGB(255, 255, 255), hdc);
+			}
 		}
-		//setNodeColor(endNode, RGB(0, 0, 255),hdc);
 	}
 
-
-	//playerMove.rc = RectMake(playerMove.x, playerMove.y, 50, 50);
-	//monsterMove.rc = RectMake(monsterMove.x, monsterMove.y, 50, 50);
-
-	//Rectangle(hdc, startNode->rc);
-
-	/*HBRUSH hbr = CreateSolidBrush(RGB(0, 0, 255));
-	FillRect(hdc, &playerMove.rc,hbr);*/
 	FrameRect(hdc, playerMove.rc, RGB(0, 0, 255));
-	//Rectangle(hdc, player);
+	FrameRect(hdc, monsterMove.rc, RGB(0, 0, 255));
 }
 
 void astarManager::pathFinding()
 {
-	//종료노드가 없는 경우 길찾기 못함
 	if (!endNode)  return;
 
-	//길찾기를 해보자
-	//검색을 하려면 무조건 오픈리스트에 담는다
-	//F와 H값 가장 작은 놈을 찾아서 그놈을 현재노드로 변경한다
-	//오픈리스트에서 현재노드는 삭제하고
-	//현재노드는 클로즈리스트에 담아둔다
-	//길을 다 찾았다면 클로즈리스트 리버스값을 파이널 리스트로 옮긴다
-
-	//1. 시작노드가 있어야 출발이 가능하니
-	//시작노드를 오픈리스트에 추가를 해줘야 한다
+	
 	openList.push_back(startNode);
 
-	//2. 오픈리스트안에 담겨 있는 벡터를 검사해서
-	//종료노드에 도착할때까지 무한 루프
 	while (openList.size() > 0)
 	{
 		curNode = openList[0];
-
-		//오픈리스트중 F가 가장 작거나 F가 같다면
-		//H가 작은 걸 현재노드로 하고
-		//현재노드를 오픈리스트에서 클로즈 리스트로 옮기기
-		//비교를 하려고 하면 최소 시작노드에서 주변을 탐색한 이후
-		//길찾기가 시작된다
+		
 
 		for (int i = 1; i < openList.size(); i++)
 		{
@@ -400,23 +237,14 @@ void astarManager::pathFinding()
 		}
 
 		
-		//대각선
 		addOpenList(curNode->idx + 1, curNode->idy + 1);	//우하
 		addOpenList(curNode->idx - 1, curNode->idy + 1);	//좌하
 		addOpenList(curNode->idx - 1, curNode->idy - 1);	//좌상
 		addOpenList(curNode->idx + 1, curNode->idy - 1);	//우상
-
-		//상하좌우 (순서는 상관없음 - 어짜피 주변 4개의 노드를 모두 오픈리스트에 담아서 검사할 예정임)
-
-		addOpenList(curNode->idx, curNode->idy - 1);	//상
-		addOpenList(curNode->idx, curNode->idy + 1);	//하
-		addOpenList(curNode->idx - 1, curNode->idy);	//좌
-		addOpenList(curNode->idx + 1, curNode->idy);	//우
-
-		//추후에 대각 4방향도 추가하면 대각선 이동 처리도 가능함
-		//우상, 좌상, 우하, 좌하
-		//예외처리만 잘해주면 된다
-		//벽사이로 막가 안되도록 처리한다
+		addOpenList(curNode->idx, curNode->idy - 1);		//상
+		addOpenList(curNode->idx, curNode->idy + 1);		//하
+		addOpenList(curNode->idx - 1, curNode->idy);		//좌
+		addOpenList(curNode->idx + 1, curNode->idy);		//우
 	}
 
 }
@@ -452,11 +280,7 @@ void astarManager::addOpenList(int idx, int idy)
 		if (openList[i] == neighborNode) return;
 	}
 
-	//마지막으로 오픈리스트에도 없는경우
-	//G, H, ParentNode 설정후 오픈리스트에 추가
-	//F = G + H
-	//G = 시작에서 현재
-	//H = 현재에서 종료
+	
 	neighborNode->G = moveCost;
 	neighborNode->H = (abs(neighborNode->idx - endNode->idx) + abs(neighborNode->idy - endNode->idy)) * 10;
 	neighborNode->F = neighborNode->G + neighborNode->H;

@@ -1,19 +1,18 @@
 #include "stdafx.h"
 #include "golem.h"
 
-HRESULT golem::init(tagTile* tile )
+HRESULT golem::init(tagTile* tile, POINT _pos )
 {
     img = IMAGEMANAGER->addFrameImage("golem", "wizard/Golem.bmp", 720, 700, 6, 5);
     cul = { 0,0 };
-    pos.x = 849;
-    pos.y = 360;
+    pos.x = _pos.x;
+    pos.y = _pos.y;
     speed = 5.f;
+    
     isFindWayOn = false; //길찾기 온/오프
 
     astar = new astarManager;
-    //astar->setTileNode(tile);
     astar->init(tile);
-    //astar->setCam(cam);
 
     return S_OK;
 }
@@ -26,25 +25,34 @@ void golem::release()
 
 void golem::update()
 {
+    
+    rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
+    
+    if (600.f > getDistance(pos.x, pos.y, playerRC.left + (playerRC.right - playerRC.left) / 2, playerRC.top + (playerRC.bottom - playerRC.top) / 2))
+        isFindWayOn = true;
+    else
+        isFindWayOn = false;
+    
    
-    astar->setCam(camRC);
+    if (isFindWayOn) //길찾기 on
+    {
+        astar->update(camRC, rc, playerRC, &angle);
+        if (astar->getFirstTile())
+        {
+            pos.x += cos(angle) * speed;
+            pos.y += -sin(angle) * speed;
+        }
+       
+       
+    }
+    else //길찾기 off
+    { 
+        
+        
+    }
+
     cul.x = CAMERAMANAGER->GetRelativeX(pos.x);
     cul.y = CAMERAMANAGER->GetRelativeY(pos.y);
-    
-    //if (!isFindWayOn) //길찾기 오프
-    //{
-    //  angle = getAngle(cul.x, cul.y, 853, 360);
-    //  if(pos.x !=849)    pos.x += cos(angle) * speed;
-    //  if(pos.y !=360)    pos.y += -sin(angle) * speed;
-    //}
-    //else { //길찾기 온
-    //
-    //    
-    //}
-    rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
-    astar->setStartRC(rc);
-    astar->setEndRC(playerRC);
-    astar->update();
     
 
 }
