@@ -131,7 +131,7 @@ void gameScene::render()
 	//Rectangle(getMemDC(), checkArea);
 	//_player->render();
 	
-	EFFECT->render(getMemDC());
+	EFFECT->pRender(getMemDC());
 
 	bool isRender = false;
 

@@ -80,7 +80,7 @@ void bossScene::render()
 
     //CAMERAMANAGER->Rectangle(getMemDC(), area);
 
-    EFFECT->render(getMemDC());
+    EFFECT->pRender(getMemDC());
     _player->render();
 
     CAMERAMANAGER->Rectangle(getMemDC(), rc);

@@ -8,11 +8,7 @@ HRESULT effectManager::init()
     return S_OK;
 }
 
-void effectManager::release()
-{
-}
-
-void effectManager::render(HDC hdc)
+void effectManager::pRender(HDC hdc)
 {
     time++;
     vector<tagDashEffect>::iterator iter;
@@ -41,6 +37,54 @@ void effectManager::render(HDC hdc)
                 iter = vDashEft.erase(iter);
             }
             else iter++;
+        }
+    }
+}
+
+void effectManager::render(HDC hdc)
+{
+    vector<tagEffect>::iterator iter;
+    for (iter = vEft.begin(); iter != vEft.end();)
+    {
+        image* img = IMAGEMANAGER->findImage(iter->keyName);
+        CAMERAMANAGER->FrameRender(hdc, img, iter->pos.x, iter->pos.y, iter->imgCount, 0);
+
+        if (iter->flipImg == false)
+        {
+            if (time % 5 == 0 && iter->imgCount < iter->maxFrame) iter->imgCount++;
+
+            if (iter->isEraseTime == false)
+            {
+                if (iter->imgCount == iter->maxFrame) iter = vEft.erase(iter);
+                else iter++;
+            }
+
+            else
+            {
+                if (iter->currentTime == iter->eraseTime) iter = vEft.erase(iter);
+                else iter++;
+
+                iter->currentTime++;
+            }
+        }
+
+        else
+        {
+            if (time % 5 == 0 && iter->imgCount > 0) iter->imgCount--;
+
+            if (iter->isEraseTime == false)
+            {
+                if (iter->imgCount == 0) iter = vEft.erase(iter);
+                else iter++;
+            }
+
+            else
+            {
+                if (iter->currentTime == iter->eraseTime) iter = vEft.erase(iter);
+                else iter++;
+
+                iter->currentTime++;
+            }
         }
     }
 }
@@ -105,4 +149,22 @@ void effectManager::setDash(string keyName, int frameY, bool flip, POINT pt)
     effect.pos = pt;
 
     vDashEft.push_back(effect);
+}
+
+//이펙트를 실행 시키기 전 addImage(frame)가 되어있는지 확인해야한다.
+void effectManager::setEffect(string keyName, POINT pt, bool flip, bool isEraseTime, int eraseTime)
+{
+    tagEffect effect;
+    effect.keyName = keyName;
+    effect.pos = pt;
+    effect.flipImg = flip;
+    effect.isEraseTime = isEraseTime;
+    effect.currentTime = 0;
+    effect.eraseTime = eraseTime;
+    effect.maxFrame = IMAGEMANAGER->findImage(keyName)->getMaxFrameX();
+
+    if (!flip) effect.imgCount = 0;
+    else effect.imgCount = effect.maxFrame;
+
+    vEft.push_back(effect);
 }
