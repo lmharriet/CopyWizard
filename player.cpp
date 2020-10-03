@@ -49,6 +49,10 @@ HRESULT player::init()
 	
 	flares = new homingFlares;
 	flares->init(100);
+
+	Meteor = new meteor;
+	Meteor->init(21, 500);
+
 	//angle between mouse & player
 	attackAngle = saveAngle = 0;
 	angleTenth = 0;
@@ -60,12 +64,17 @@ void player::release()
 {
 	blaze->release();
 	SAFE_DELETE(blaze);
+	flares->release();
+	SAFE_DELETE(flares);
+	
 }
 
 void player::update()
 {
 	blaze->update();
 	flares->update();
+	Meteor->update();
+
 	//animation count
 	count++;
 	dashCount++;
@@ -99,6 +108,7 @@ void player::update()
 	changeState();
 	blazeSetUp();
 	standardSetUp();
+	signatureSetUp();
 
 
 
@@ -114,6 +124,7 @@ void player::other_update()
 {
 	blaze->update();
 	flares->update();
+	Meteor->update();
 	//animation count
 	count++;
 	dashCount++;
@@ -147,7 +158,7 @@ void player::other_update()
 	changeState();
 	blazeSetUp();
 	standardSetUp();
-
+	signatureSetUp();
 
 
 
@@ -172,6 +183,7 @@ void player::render()
 
 	blaze->render();
 	flares->render();
+	Meteor->render();
 }
 
 void player::controller()
@@ -361,7 +373,13 @@ void player::standardSetUp()
 		flares->fire(posX, posY);
 	}
 }
-
+void player::signatureSetUp()
+{
+	if (signature)
+	{
+		Meteor->meteorFire(posX, posY, 400,PI_2 -PI_8);
+	} 
+}
 void player::animation()
 {
 	switch (state)
@@ -673,7 +691,7 @@ void player::buttonDown()
 	else basic = false;
 	if (INPUT->GetKeyDown(MK_RBUTTON)) standard = true;
 	else standard = false;
-	if (INPUT->GetKey('Q')) signature = true;
+	if (INPUT->GetKeyDown('Q')) signature = true;
 	else signature = false;
 
 }
