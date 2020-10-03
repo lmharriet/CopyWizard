@@ -8,6 +8,9 @@ HRESULT bossScene::init()
     _player->init();
     CAMERAMANAGER->init(_player->getX(), _player->getY(), MAXTILE, MAXTILE, -MAXTILE, -MAXTILE, WINSIZEX / 2, WINSIZEY / 2);
 
+    EFFECT->init();
+    UI->init();
+
     return S_OK;
 }
 
@@ -22,6 +25,8 @@ void bossScene::release()
 
 void bossScene::update()
 {
+    UI->update();
+
     _player->other_update();
     _player->colorCheck(_background);
 }
@@ -29,5 +34,7 @@ void bossScene::update()
 void bossScene::render()
 {
     CAMERAMANAGER->Render(getMemDC(), _background, 0, 0);
+    EFFECT->render(getMemDC());
     _player->render();
+    UI->render(getMemDC(), 50, 50);
 }
