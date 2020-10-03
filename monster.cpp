@@ -262,8 +262,6 @@ void astarManager::addOpenList(int idx, int idy)
 	//벽은 오픈리스트에 담을 수 없다
 	if (totalNode[idx][idy]->kind == TERRAIN::WALL) return;
 
-
-
 	//클로즈리스트(지나온길)에 있다면 오픈리스트에 담으면 안된다
 	for (int i = 0; i < closeList.size(); i++)
 	{

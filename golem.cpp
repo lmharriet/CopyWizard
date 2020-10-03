@@ -8,11 +8,12 @@ HRESULT golem::init(tagTile* tile, POINT _pos )
     pos.x = _pos.x;
     pos.y = _pos.y;
     speed = 5.f;
-    state = STATEIMAGE::IDLE;
+    //state = STATEIMAGE::IDLE;
     frameIndex = { 0,0 };
-    count = 0;
-    isFindWayOn = false; //길찾기 온/오프
-    isLeft = false;
+    //count = 0;
+    //isFindWayOn = false; //길찾기 온/오프
+    //isLeft = false;
+    //isATK = false;
     astar = new astarManager;
     astar->init(tile);
 
@@ -40,7 +41,7 @@ void golem::update()
     {
         state = STATEIMAGE::WALK;
         astar->update(camRC, rc, playerRC, &angle);
-        if (astar->getFirstTile()) // 걸을 때
+        if (astar->getFirstTile() && !isATK) // 걸을 때
         {
             pos.x += cos(angle) * speed;
             pos.y += -sin(angle) * speed;
@@ -50,7 +51,10 @@ void golem::update()
                 isLeft = true;
         }
         else // 걷지 않고 있을 때
-            state = STATEIMAGE::IDLE;
+        {
+            state = STATEIMAGE::ATK;
+            isATK = true;
+        }
        
     }
     else //길찾기 off
@@ -102,24 +106,42 @@ void golem::stateImageRender()
         {
             frameIndex.y = 0;
             count++;
-            if (count % 5 == 0)
+            if (count % 30 == 0)
             {
                 count = 0;
                 frameIndex.x--;
                 if (frameIndex.x < 3)
+                {
                     frameIndex.x = 3;
+                    delay++;
+                    if (delay > 3)
+                    {
+                        isATK = false;
+                        delay = 0;
+                        frameIndex.x = 5;
+                    }
+                }
             }
         }
         else
         {
             frameIndex.y = 0;
             count++;
-            if (count % 5 == 0)
+            if (count % 30 == 0)
             {
                 count = 0;
                 frameIndex.x++;
                 if (frameIndex.x > 2)
+                {
                     frameIndex.x = 2;
+                    delay++;
+                    if(delay > 3)
+                    {
+                        isATK = false;
+                        delay = 0;
+                        frameIndex.x = 0;
+                    }
+                }
 
             }
         }

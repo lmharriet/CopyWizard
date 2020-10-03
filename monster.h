@@ -84,11 +84,13 @@ protected:
 	int armour;
 	int hp;
 	int hpMax;
-	int count;
+	int count = 0;
+	int delay = 0;
 	POINT frameIndex;
-	STATEIMAGE state;
-	bool isFindWayOn;
-	bool isLeft;
+	STATEIMAGE state = STATEIMAGE::IDLE;
+	bool isFindWayOn = false;
+	bool isLeft = false;
+	bool isATK = false;
 	const float distanceMax = 750.f;
 	astarManager* astar;
 	RECT playerRC;
