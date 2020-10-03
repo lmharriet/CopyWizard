@@ -55,6 +55,30 @@
     <Filter Include="GameFramework\매니져\이펙트">
       <UniqueIdentifier>{aa237418-c4a2-4a5b-8cd7-d2f37372565b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\씬 모음">
+      <UniqueIdentifier>{911f06d7-247d-40f3-9117-92802a7b6edd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\씬 모음\보스">
+      <UniqueIdentifier>{1c9393d5-d725-4a02-9e76-885c481f1ffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\씬 모음\인게임">
+      <UniqueIdentifier>{7adb36db-b0b5-45bd-a5aa-ba5886bb3f75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\씬 모음\맵툴">
+      <UniqueIdentifier>{83066701-2a05-43a2-b4e8-7fee2c51b528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\씬 모음\시작">
+      <UniqueIdentifier>{4052dc18-5085-4007-a9a3-861244d6b9fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\매니져\입력">
+      <UniqueIdentifier>{4b8d0e3c-32e6-4a8e-9aca-0213a25b0a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\매니져\시간">
+      <UniqueIdentifier>{53c59a94-2a5a-448b-843f-7cc5049a8eec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\매니져\저장">
+      <UniqueIdentifier>{15582844-be6b-49b2-9fb2-f7037676cf8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
@@ -65,9 +89,6 @@
     </ClCompile>
     <ClCompile Include="gameNode.cpp">
       <Filter>MainGame\GameNode</Filter>
-    </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>GameFramework\매니져</Filter>
     </ClCompile>
     <ClCompile Include="random.cpp">
       <Filter>GameFramework\유틸</Filter>
@@ -96,16 +117,6 @@
     <ClCompile Include="playerData.cpp">
       <Filter>GameFramework\싱글톤데이터</Filter>
     </ClCompile>
-    <ClCompile Include="gameScene.cpp">
-      <Filter>MainGame\인게임</Filter>
-    </ClCompile>
-    <ClCompile Include="iniData.cpp">
-      <Filter>GameFramework\매니져</Filter>
-    </ClCompile>
-    <ClCompile Include="mapToolScene.cpp">
-      <Filter>MapTool</Filter>
-    </ClCompile>
-    <ClCompile Include="startScene.cpp" />
     <ClCompile Include="imageManager.cpp">
       <Filter>GameFramework\매니져\이미지</Filter>
     </ClCompile>
@@ -118,9 +129,6 @@
     <ClCompile Include="cameraManager.cpp" />
     <ClCompile Include="mainGame.cpp">
       <Filter>MainGame</Filter>
-    </ClCompile>
-    <ClCompile Include="timeManager.cpp">
-      <Filter>GameFramework\매니져</Filter>
     </ClCompile>
     <ClCompile Include="particleManager.cpp">
       <Filter>GameFramework\매니져\파티클</Filter>
@@ -137,6 +145,27 @@
     <ClCompile Include="effectManager.cpp">
       <Filter>GameFramework\매니져\이펙트</Filter>
     </ClCompile>
+    <ClCompile Include="startScene.cpp">
+      <Filter>MainGame\씬 모음\시작</Filter>
+    </ClCompile>
+    <ClCompile Include="mapToolScene.cpp">
+      <Filter>MainGame\씬 모음\맵툴</Filter>
+    </ClCompile>
+    <ClCompile Include="bossScene.cpp">
+      <Filter>MainGame\씬 모음\보스</Filter>
+    </ClCompile>
+    <ClCompile Include="gameScene.cpp">
+      <Filter>MainGame\씬 모음\인게임</Filter>
+    </ClCompile>
+    <ClCompile Include="timeManager.cpp">
+      <Filter>GameFramework\매니져\시간</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>GameFramework\매니져\입력</Filter>
+    </ClCompile>
+    <ClCompile Include="iniData.cpp">
+      <Filter>GameFramework\매니져\저장</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -152,9 +181,6 @@
       <Filter>GameFramework\유틸</Filter>
     </ClInclude>
     <ClInclude Include="singletonBase.h">
-      <Filter>GameFramework\매니져</Filter>
-    </ClInclude>
-    <ClInclude Include="input.h">
       <Filter>GameFramework\매니져</Filter>
     </ClInclude>
     <ClInclude Include="random.h">
@@ -184,19 +210,9 @@
     <ClInclude Include="playerData.h">
       <Filter>GameFramework\싱글톤데이터</Filter>
     </ClInclude>
-    <ClInclude Include="gameScene.h">
-      <Filter>MainGame\인게임</Filter>
-    </ClInclude>
-    <ClInclude Include="iniData.h">
-      <Filter>GameFramework\매니져</Filter>
-    </ClInclude>
-    <ClInclude Include="mapToolScene.h">
-      <Filter>MapTool</Filter>
-    </ClInclude>
     <ClInclude Include="tileNode.h">
       <Filter>MapTool</Filter>
     </ClInclude>
-    <ClInclude Include="startScene.h" />
     <ClInclude Include="colorNode.h">
       <Filter>MapTool</Filter>
     </ClInclude>
@@ -210,9 +226,6 @@
       <Filter>GameFramework\매니져\사운드</Filter>
     </ClInclude>
     <ClInclude Include="cameraManager.h" />
-    <ClInclude Include="timeManager.h">
-      <Filter>GameFramework\매니져</Filter>
-    </ClInclude>
     <ClInclude Include="particleManager.h">
       <Filter>GameFramework\매니져\파티클</Filter>
     </ClInclude>
@@ -230,6 +243,27 @@
     </ClInclude>
     <ClInclude Include="effectManager.h">
       <Filter>GameFramework\매니져\이펙트</Filter>
+    </ClInclude>
+    <ClInclude Include="startScene.h">
+      <Filter>MainGame\씬 모음\시작</Filter>
+    </ClInclude>
+    <ClInclude Include="mapToolScene.h">
+      <Filter>MainGame\씬 모음\맵툴</Filter>
+    </ClInclude>
+    <ClInclude Include="bossScene.h">
+      <Filter>MainGame\씬 모음\보스</Filter>
+    </ClInclude>
+    <ClInclude Include="gameScene.h">
+      <Filter>MainGame\씬 모음\인게임</Filter>
+    </ClInclude>
+    <ClInclude Include="timeManager.h">
+      <Filter>GameFramework\매니져\시간</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>GameFramework\매니져\입력</Filter>
+    </ClInclude>
+    <ClInclude Include="iniData.h">
+      <Filter>GameFramework\매니져\저장</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -4,7 +4,6 @@
 
 HRESULT player::init()
 {
-
 	IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small.bmp", 1000, 2400, 10, 24);
 	IMAGEMANAGER->addFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
 	posX = WINSIZEX / 2;
@@ -111,6 +110,54 @@ void player::update()
 	buttonDown();
 }
 
+void player::other_update()
+{
+	blaze->update();
+	flares->update();
+	//animation count
+	count++;
+	dashCount++;
+
+	// angle(mouse-player), angleTenth
+	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
+	angleTenth = (int)(saveAngle * (18 / PI));
+
+
+	if (speed == 0 && stateCool == 0) controller();
+
+	//tileCol();
+
+	makeCol((int)DIRECTION::TOP, 0, -60);
+	makeCol((int)DIRECTION::BOTTOM, 0, 60);
+	makeCol((int)DIRECTION::LEFT, -45, 0);
+	makeCol((int)DIRECTION::RIGHT, +45, 0);
+
+	makeCol((int)DIRECTION::LEFT_TOP, -25, -30);
+	makeCol((int)DIRECTION::RIGHT_TOP, 25, -30);
+	makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
+	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
+
+	makeCol2(0, -45, -55);
+	makeCol2(1, 45, -55);
+	makeCol2(2, -45, 60);
+	makeCol2(3, 45, 60);
+
+
+	dashFunction();
+	changeState();
+	blazeSetUp();
+	standardSetUp();
+
+
+
+
+	// camera가 따라가는 대상
+	CAMERAMANAGER->MovePivot(posX, posY);
+
+	//don't touch!
+	buttonDown();
+}
+
 void player::render()
 {
 	int tempAngle = attackAngle * (18 / PI);
@@ -121,7 +168,7 @@ void player::render()
 	//Rectangle(getMemDC(), rc);
 
 	animation();
-	viewText();
+	//viewText();
 
 	blaze->render();
 	flares->render();
@@ -496,6 +543,45 @@ void player::tileCol()
 	}
 }
 
+void player::colorCheck(image* img)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		tileCheck[i].isCol = false;
+		if (i < 4)diagonalCheck[i].isCol = false;
+	}
+
+	for (int i = 0; i < 8; i++)
+	{
+		int x = tileCheck[i].rc.left + (tileCheck[i].rc.right - tileCheck[i].rc.left) / 2;
+		int y = tileCheck[i].rc.top + (tileCheck[i].rc.bottom - tileCheck[i].rc.top) / 2;
+
+		COLORREF color = GetPixel(img->getMemDC(), x, y);
+		int r = GetRValue(color);
+		int g = GetGValue(color);
+		int b = GetBValue(color);
+
+		if (r == 255 && g == 0 && b == 255)
+		{
+			tileCheck[i].isCol = true;
+		}
+
+		if (i < 4 && state == STATE::DASH)
+		{
+			x = diagonalCheck[i].rc.left + (diagonalCheck[i].rc.right - diagonalCheck[i].rc.left) / 2;
+			y = diagonalCheck[i].rc.top + (diagonalCheck[i].rc.bottom - diagonalCheck[i].rc.top) / 2;
+
+			color = GetPixel(img->getMemDC(), x, y);
+
+			r = GetRValue(color);
+			g = GetGValue(color);
+			b = GetBValue(color);
+
+			if(r == 255 && g == 0 && b == 255) diagonalCheck[i].isCol = true;
+		}
+	}
+}
+
 void player::makeCol(int index, int destX, int destY, int rcSize)
 {
 	tileCheck[index].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2) + destX, CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2) + destY, rcSize, rcSize);
@@ -597,15 +683,15 @@ void player::viewText()
 {
 
 	char str[126];
-	//for (int i = 0; i < 8; i++)
-	//{
-	//	if (i < 4)
-	//	{
-	//		CAMERAMANAGER->Rectangle(getMemDC(), diagonalCheck[i].rc);
-	//	}
+	for (int i = 0; i < 8; i++)
+	{
+		if (i < 4)
+		{
+			CAMERAMANAGER->Rectangle(getMemDC(), diagonalCheck[i].rc);
+		}
 
-	//	CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i].rc);
-	//}
+		CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i].rc);
+	}
 
 	wsprintf(str, "player move : %d", move);
 	textOut(getMemDC(), 10, 200, str, WHITE);

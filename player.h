@@ -44,6 +44,7 @@ public:
 	HRESULT init();
 	void release();
 	void update();
+	void other_update();
 	void render();
 
 	void controller();
@@ -54,6 +55,7 @@ public:
 
 	//collision detection
 	void tileCol();
+	void colorCheck(image* img);
 	void makeCol(int index, int destX, int destY, int rcSize = 7);
 
 	void makeCol2(int index, int destX, int destY, int rcSize = 10);
