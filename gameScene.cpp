@@ -24,6 +24,10 @@ HRESULT gameScene::init()
 	_golem = new golem; //테스트중 (몬스터골렘)
 	_golem->init(tile, { 820,320 }); //테스트중 (몬스터골렘)
 
+
+	_golem2 = new golem; //테스트중 (몬스터골렘2)
+	_golem2->init(tile, { 600,320 }); //테스트중 (몬스터골렘2)
+
 	enemy = new enemyManager;
 	enemy->init();
 
@@ -38,6 +42,8 @@ void gameScene::release()
 	_golem->release();
 	SAFE_DELETE(_golem);
 
+	_golem2->release();
+	SAFE_DELETE(_golem2);
 	enemy->release();
 	SAFE_DELETE(enemy);
 }
@@ -47,6 +53,7 @@ void gameScene::update()
 	UI->update();
 	_player->update();
 	_golem->update();
+	_golem2->update();
 	enemy->update();
 
 
@@ -100,7 +107,9 @@ void gameScene::update()
 void gameScene::render()
 {
 	_golem->setCamRC(cam);
+	_golem2->setCamRC(cam);
 	_golem->setPlayerRC(RectMake(_player->getX(), _player->getY(), 100, 100));
+	_golem2->setPlayerRC(RectMake(_player->getX(), _player->getY(), 100, 100));
 	
 	for (int i = 0; i < MAXTILE; i++)
 	{
@@ -251,6 +260,7 @@ void gameScene::render()
 	viewText();
 	
 	_golem->render(); //테스트중 (몬스터골렘)
+	_golem2->render(); //테스트중 (몬스터골렘)
 
 	
 }

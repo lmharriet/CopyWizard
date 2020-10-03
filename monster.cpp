@@ -43,7 +43,7 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 	//정보 가져오기
 	cam = _camRC;
 	monsterPosX =_monsterRC.left + (_monsterRC.right - _monsterRC.left) / 2;
-	monsterPosY = _monsterRC.top + (_monsterRC.bottom - _monsterRC.top) / 2;
+	monsterPosY = _monsterRC.bottom;
 	monsterMove.rc = RectMakeCenter(monsterPosX,monsterPosY, 32,32);
 	playerMove.rc = RectMake(_playerRC.left, _playerRC.top, 32, 32);
 

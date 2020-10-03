@@ -61,6 +61,12 @@ public:
 	
 };
 
+enum class STATEIMAGE {
+	IDLE,
+	WALK,
+	ATK,
+	DIE,
+};
 
 
 class monster : public gameNode
@@ -78,10 +84,16 @@ protected:
 	int armour;
 	int hp;
 	int hpMax;
+	int count;
+	POINT frameIndex;
+	STATEIMAGE state;
 	bool isFindWayOn;
+	bool isLeft;
+	const float distanceMax = 750.f;
 	astarManager* astar;
 	RECT playerRC;
 	RECT camRC;
+
 	 
 	
 
@@ -91,6 +103,8 @@ public:
 	virtual void update()=0;
 	virtual void render()=0;
 
+	virtual void stateImageRender() = 0;
+	virtual void stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R) = 0;
 	inline virtual POINT getPos() { return pos; }
 	inline virtual RECT getRC() { return rc; }
 	inline virtual void setPlayerRC(RECT rc) { playerRC = rc; }
