@@ -51,7 +51,6 @@ void gameNode::release()
 	TIME->release();
 	TIME->releaseSingleton();
 
-	EFFECT->release();
 	EFFECT->releaseSingleton();
 
 	//HDC «ÿ¡¶

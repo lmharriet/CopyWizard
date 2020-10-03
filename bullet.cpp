@@ -299,8 +299,8 @@ void meteor::render()
 
 	for (int i = 0; i < _vMeteor.size(); i++)
 	{
-		CAMERAMANAGER->Ellipse(getMemDC(), _vMeteor[i].rc);
-		//CAMERAMANAGER->FrameRender(getMemDC(), _vMeteor[i].img, _vMeteor[i].rc.left, _vMeteor[i].rc.top, index, _vMeteor[i].frameY);
+		//CAMERAMANAGER->Ellipse(getMemDC(), _vMeteor[i].rc);
+		CAMERAMANAGER->FrameRender(getMemDC(), _vMeteor[i].img, _vMeteor[i].rc.left, _vMeteor[i].rc.top, index, _vMeteor[i].frameY);
 	}
 
 	/*wsprintf(temp, "size : %d", _vMeteor.size());
