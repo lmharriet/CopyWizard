@@ -221,6 +221,11 @@ void cameraManager::Rectangle(HDC hdc, RECT rc)
 	::Rectangle(hdc, GetRelativeX(rc.left), GetRelativeY(rc.top), GetRelativeX(rc.right), GetRelativeY(rc.bottom));
 }
 
+void cameraManager::Ellipse(HDC hdc, RECT rc)
+{
+	::Ellipse(hdc, GetRelativeX(rc.left), GetRelativeY(rc.top), GetRelativeX(rc.right), GetRelativeY(rc.bottom));
+}
+
 void cameraManager::RectangleMake(HDC hdc, int left, int top, int width, int height)
 {
 	::RectangleMake(hdc, GetRelativeX(left), GetRelativeY(top), width, height);

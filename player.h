@@ -22,6 +22,7 @@ private:
 	tagCollider diagonalCheck[4];
 
 	float posX, posY;
+	//float angle;
 	float attackAngle;
 	float saveAngle ;
 

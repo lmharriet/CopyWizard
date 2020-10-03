@@ -76,6 +76,7 @@ public:
 	void update();
 
 	void Rectangle(HDC hdc, RECT rc);
+	void Ellipse(HDC hdc, RECT rc);
 	void RectangleMake(HDC hdc, int left, int top, int width, int height);
 	void RectangleMakeCenter(HDC hdc, int x, int y, int width, int height);
 

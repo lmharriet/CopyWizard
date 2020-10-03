@@ -6,6 +6,7 @@ struct tagCollider
 	POINT pos;
 	bool isCol;
 };
+//Dash,RUN
 enum class STATE
 {
 	IDLE, RUN, DASH,
@@ -13,7 +14,7 @@ enum class STATE
 	STANDARD,
 	SIGNATURE
 };
-//Dash,RUN
+
 enum class MOVE
 {
 	LEFT,

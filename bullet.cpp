@@ -268,9 +268,10 @@ HRESULT meteor::init(int bulletMax, float range)
 {
 	_bulletMax = bulletMax;
 	_range = range;
-	angleRange = 0;
+	angleRange = meteorCount = isUlt = 0;
+	ranCount = 10;
 
-	count = index = 0;
+	count = index = timer = 0;
 	return S_OK;
 }
 
@@ -280,6 +281,8 @@ void meteor::release()
 
 void meteor::update()
 {
+	timer++;
+
 	count++;
 	if (count % 5 == 0)
 	{
@@ -287,61 +290,229 @@ void meteor::update()
 		if (index > 5) index = 0;
 	}
 	move();
+
+	meteorUlt();
 }
 
 void meteor::render()
 {
-
+	char temp[126];
 
 	for (int i = 0; i < _vMeteor.size(); i++)
 	{
-		//CAMERAMANAGER->Rectangle(getMemDC(), _vMeteor[i].rc);
-		CAMERAMANAGER->FrameRender(getMemDC(), _vMeteor[i].bulletImage, _vMeteor[i].rc.left, _vMeteor[i].rc.top, index, 0);
+		//CAMERAMANAGER->Ellipse(getMemDC(), _vMeteor[i].rc);
+		CAMERAMANAGER->FrameRender(getMemDC(), _vMeteor[i].img, _vMeteor[i].rc.left, _vMeteor[i].rc.top, index, _vMeteor[i].frameY);
 	}
 
-	char temp[126];
 	wsprintf(temp, "size : %d", _vMeteor.size());
 	textOut(getMemDC(), 100, 300, temp, RGB(255, 255, 255));
 }
 
-void meteor::meteorFire(float x, float y, float speed, float angle)
+void meteor::meteorFire(float x, float y, float speed, MOVE dir, float range)
 {
 	//angleRange = RANDOM->range(PI / 9, angle);
+	float angle = .0f;
+	float spd = .0f;
 
+	tagArcana meteor;
 
-	tagBullet meteor;
-	memset(&meteor, 0, sizeof(meteor));
+	meteor.range = range;
+	switch (dir)
+	{
+	case MOVE::LEFT:
+		angle = 70.f * (PI / 180);
+		meteor.angle = angle + PI - .4f;
+		meteor.frameY = 0;
 
-	meteor.bulletImage = IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp",1200*2, 160*2, 6, 1);
-	meteor.angle = angle;// angleRange;
-	meteor.speed = speed;
-	meteor.x = meteor.fireX = x + cosf(meteor.angle) * meteor.speed;
-	meteor.y = meteor.fireY = y - sinf(meteor.angle) * meteor.speed;
-	meteor.rc = RectMakeCenter(meteor.x, meteor.y, 200*2, 160*2);
+		meteor.x = meteor.fireX = x + cosf(angle) * speed;
+		meteor.y = meteor.fireY = y - sinf(angle) * speed;
+		break;
+	case MOVE::RIGHT:
+		angle = 110.f * (PI / 180);
+		meteor.angle = angle + PI + .4f;
+		meteor.frameY = 1;
 
+		meteor.x = meteor.fireX = x + cosf(angle) * speed;
+		meteor.y = meteor.fireY = y - sinf(angle) * speed;
+		break;
+	case MOVE::UP:
+		angle = 110.f * (PI / 180);
+		meteor.angle = angle + PI + .4f;
+		meteor.frameY = 1;
+
+		spd = speed + 300;
+
+		meteor.x = meteor.fireX = x + cosf(angle) * spd;
+		meteor.y = meteor.fireY = y - sinf(angle) * spd;
+		break;
+	case MOVE::DOWN:
+		angle = 70.f * (PI / 180);
+		meteor.angle = angle + PI - .4f;
+		meteor.frameY = 0;
+
+		spd = speed - 300;
+
+		meteor.x = meteor.fireX = x + cosf(angle) * spd;
+		meteor.y = meteor.fireY = y - sinf(angle) * spd;
+		break;
+	default:
+		return;
+	}
+
+	//memset(&meteor, 0, sizeof(meteor));
+
+	meteor.speed = 12.5f;
+
+	meteor.rc = RectMakeCenter(meteor.x, meteor.y, 200 * 2, 160 * 2);
+	meteor.img = IMAGEMANAGER->findImage("meteor");
+	meteor.lifeTime = 0;
 	//if (_vMeteor.size() >= _bulletMax) continue;
 	_vMeteor.push_back(meteor);
+}
 
+void meteor::meteorUlt()
+{
+	if (isUlt && timer % ranCount == 0)
+	{
+		ranCount = RANDOM->range(15, 27);
+
+		meteorCount++;
+
+		tagArcana tmpMeteor = ult;
+
+		int ranX = 0, ranY = 0;
+
+		switch (tmpMeteor.dir)
+		{
+		case MOVE::LEFT:
+			ranX = RANDOM->range(-100, 0);
+
+			ranY = RANDOM->range(-150, 150);
+			break;
+		case MOVE::RIGHT:
+			ranX = RANDOM->range(0, 100);
+
+			ranY = RANDOM->range(-150, 150);
+			break;
+		case MOVE::UP:
+			ranX = RANDOM->range(-400, -200);
+
+			ranY = RANDOM->range(-100, 0);
+			break;
+		case MOVE::DOWN:
+			ranX = RANDOM->range(300, 500);
+
+			ranY = RANDOM->range(0, 100);
+			break;
+		default:
+			ranX = RANDOM->range(-100, 0);
+
+			ranY = RANDOM->range(-150, 150);
+			break;
+		}
+
+		tmpMeteor.x += ranX;
+		tmpMeteor.fireX += ranX;
+
+		tmpMeteor.y += ranY;
+		tmpMeteor.fireY += ranY;
+
+		tmpMeteor.rc = RectMakeCenter(tmpMeteor.x, tmpMeteor.y, 200 * 2, 160 * 2);
+
+		_vMeteor.push_back(tmpMeteor);
+
+		if (meteorCount == 6)
+		{
+			isUlt = false;
+			ult = { 0, };
+			meteorCount = 0;
+		}
+	}
+}
+
+void meteor::meteorUltFire(float x, float y, float speed, MOVE dir, float range)
+{
+	isUlt = true;
+
+	float angle = .0f;
+	float spd = .0f;
+	
+	switch (dir)
+	{
+	case MOVE::LEFT:
+		angle = 70.f * (PI / 180);
+		ult.angle = angle + PI - .4f;
+		ult.frameY = 0;
+
+		ult.x = ult.fireX = x + cosf(angle) * speed;
+		ult.y = ult.fireY = y - sinf(angle) * speed;
+		break;
+	case MOVE::RIGHT:
+		angle = 110.f * (PI / 180);
+		ult.angle = angle + PI + .4f;
+		ult.frameY = 1;
+
+		ult.x = ult.fireX = x + cosf(angle) * speed;
+		ult.y = ult.fireY = y - sinf(angle) * speed;
+		break;
+	case MOVE::UP:
+		angle = 110.f * (PI / 180);
+		ult.angle = angle + PI + .4f;
+		ult.frameY = 1;
+
+		spd = speed + 200;
+
+		ult.x = ult.fireX = x + cosf(angle) * spd;
+		ult.y = ult.fireY = y - sinf(angle) * spd;
+		break;
+	case MOVE::DOWN:
+		angle = 70.f * (PI / 180);
+		ult.angle = angle + PI - .4f;
+		ult.frameY = 0;
+
+		spd = speed - 200;
+
+		ult.x = ult.fireX = x + cosf(angle) * spd;
+		ult.y = ult.fireY = y - sinf(angle) * spd;
+		break;
+	default:
+		angle = 70.f * (PI / 180);
+		ult.angle = angle + PI - .4f;
+		ult.frameY = 0;
+
+		ult.x = ult.fireX = x + cosf(angle) * speed;
+		ult.y = ult.fireY = y - sinf(angle) * speed;
+		break;
+	}
+
+	ult.speed = 12.5f;
+
+	ult.range = range;
+	ult.rc = RectMakeCenter(ult.x, ult.y, 200 * 2, 160 * 2);
+	ult.img = IMAGEMANAGER->findImage("meteor");
+	ult.lifeTime = 0;
+	ult.dir = dir;
+	ranCount = 10; // 메테오간 딜레이를 랜덤으로 주기위함 (처음에만 10으로 둠)
 }
 
 void meteor::move()
 {
 	for (int i = 0; i < _vMeteor.size(); i++)
 	{
-		_vMeteor[i].angle = PI + PI / 3;
-		_vMeteor[i].speed = 10.f;
+		_vMeteor[i].lifeTime++;
+
 		_vMeteor[i].x = _vMeteor[i].x + cosf(_vMeteor[i].angle) * _vMeteor[i].speed;
 		_vMeteor[i].y = _vMeteor[i].y + (-sinf(_vMeteor[i].angle)) * _vMeteor[i].speed;
-		_vMeteor[i].rc = RectMakeCenter(_vMeteor[i].x, _vMeteor[i].y, 200*2, 160*2);
+		_vMeteor[i].rc = RectMakeCenter(_vMeteor[i].x, _vMeteor[i].y, 200 * 2, 160 * 2);
 
 
-		float distance = getDistance(_vMeteor[i].fireX, _vMeteor[i].fireY, _vMeteor[i].x, _vMeteor[i].y);
-		if (distance > _range)
+		if (_vMeteor[i].lifeTime > _vMeteor[i].range)
 		{
-			for (int i = 0; i < _vMeteor.size(); i++)
-			{
-				_vMeteor.erase(_vMeteor.begin() + i);
-			}
+			//cout << _vMeteor.size() << '\n';
+			//이펙트 플레이
+			//충돌 처리 , 카메라 shake
+			CAMERAMANAGER->Shake(10, 10, 10);
+			_vMeteor.erase(_vMeteor.begin() + i);
 		}
 	}
 

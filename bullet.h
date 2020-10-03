@@ -1,6 +1,6 @@
 #pragma once
 #include "gameNode.h"
-
+#include "unitNode.h"
 //ÃÑ¾Ë ±¸Á¶Ã¼
 struct tagBullet
 {
@@ -14,6 +14,24 @@ struct tagBullet
 	float radius;
 	int count;
 	bool fire;
+};
+
+struct tagArcana
+{
+	image* img;
+	RECT rc;
+	float x, y;
+	float fireX, fireY;
+	float speed;
+	float angle;
+	float radius;
+	float range;
+
+	int lifeTime;
+
+	int frameY;
+
+	MOVE dir;
 };
 
 //=============================================================
@@ -118,20 +136,29 @@ public:
 class meteor :public gameNode
 {
 private:
-	vector<tagBullet> _vMeteor;
+	vector<tagArcana> _vMeteor;
 	float angleRange;
 	float _range;
 	int _bulletMax;
 
+	//ult
+	int meteorCount;
+	bool isUlt;
+	tagArcana ult;
+
+	int ranCount;
+
 	int count, index;
-	
+	int timer;
 public:
 	HRESULT init(int bulletMax, float range);
 	void release();
 	void update();
 	void render();
 
-	void meteorFire(float x, float y, float speed, float angle);
+	void meteorFire(float x, float y, float speed, MOVE dir, float range);
+	void meteorUlt();
+	void meteorUltFire(float x, float y, float speed, MOVE dir, float range);
 	void move();
 
 };

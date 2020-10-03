@@ -6,6 +6,8 @@ HRESULT player::init()
 {
 	IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small.bmp", 1000, 2400, 10, 24);
 	IMAGEMANAGER->addFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
+	IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 2400, 640, 6, 2);
+
 	posX = WINSIZEX / 2;
 	posY = WINSIZEY / 2;
 	rc = RectMakeCenter(posX, posY, 100, 100);
@@ -30,6 +32,7 @@ HRESULT player::init()
 	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
 
 	//3차..
+	//diagonal collision detection Rect
 	makeCol2(0, -45, -55);
 	makeCol2(1, 45, -55);
 	makeCol2(2, -45, 60);
@@ -51,7 +54,7 @@ HRESULT player::init()
 	flares->init(100);
 
 	Meteor = new meteor;
-	Meteor->init(21, 500);
+	Meteor->init(21, 650);
 
 	//angle between mouse & player
 	attackAngle = saveAngle = 0;
@@ -66,11 +69,14 @@ void player::release()
 	SAFE_DELETE(blaze);
 	flares->release();
 	SAFE_DELETE(flares);
+	Meteor->release();
+	SAFE_DELETE(Meteor);
 	
 }
 
 void player::update()
 {
+	
 	blaze->update();
 	flares->update();
 	Meteor->update();
@@ -108,7 +114,7 @@ void player::update()
 	changeState();
 	blazeSetUp();
 	standardSetUp();
-	signatureSetUp();
+	
 
 
 
@@ -158,8 +164,7 @@ void player::other_update()
 	changeState();
 	blazeSetUp();
 	standardSetUp();
-	signatureSetUp();
-
+	
 
 
 	// camera가 따라가는 대상
@@ -375,11 +380,15 @@ void player::standardSetUp()
 }
 void player::signatureSetUp()
 {
-	if (signature)
-	{
-		Meteor->meteorFire(posX, posY, 400,PI_2 -PI_8);
-	} 
+	float dRange = 650.f;
+
+	//Meteor->meteorFire(posX, posY, 600, move, 55);
+	//Meteor->meteorFire(posX + RANDOM->range(-150, 150), posY + RANDOM->range(-150, 150), 600, move, dRange);
+	//Meteor->meteorFire(posX - RANDOM->range(-150, 150), posY - RANDOM->range(-150, 150), 600, move, dRange);
+	Meteor->meteorUltFire(posX, posY, 600, move, 55);
+	signature = false;
 }
+
 void player::animation()
 {
 	switch (state)
@@ -691,9 +700,11 @@ void player::buttonDown()
 	else basic = false;
 	if (INPUT->GetKeyDown(MK_RBUTTON)) standard = true;
 	else standard = false;
-	if (INPUT->GetKeyDown('Q')) signature = true;
-	else signature = false;
-
+	if (INPUT->GetKeyDown('Q') && !signature)
+	{
+		signature = true;
+		signatureSetUp();
+	}
 }
 
 //del
