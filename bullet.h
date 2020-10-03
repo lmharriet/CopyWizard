@@ -52,6 +52,7 @@ public:
 	RECT getRect(int index) { return _vBullet[index].rc; }
 };
 
+//미완성
 //=============================================================
 //	## homingFlares ## (homingFlares[0] -> 배열처럼 미리 장전해두고 총알발사)
 //=============================================================
@@ -80,7 +81,7 @@ public:
 };
 
 //=============================================================
-//	## bomb ## (폭탄처럼 한발씩 발사하고 생성하고 자동삭제) //수정 중
+//	## bomb ## (폭탄처럼 한발씩 발사하고 생성하고 자동삭제) 
 //=============================================================
 class bomb : public gameNode
 {
@@ -109,6 +110,28 @@ public:
 
 	//총알벡터 가져오기
 	vector<tagBullet> getBullet() { return _vBullet; }
-
 };
 
+//=============================================================
+//	## METEOR ## 
+//=============================================================
+class meteor :public gameNode
+{
+private:
+	vector<tagBullet> _vMeteor;
+	float angleRange;
+	float _range;
+	int _bulletMax;
+
+	int count, index;
+	
+public:
+	HRESULT init(int bulletMax, float range);
+	void release();
+	void update();
+	void render();
+
+	void meteorFire(float x, float y, float speed, float angle);
+	void move();
+
+};

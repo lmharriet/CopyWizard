@@ -31,6 +31,7 @@ HRESULT cameraManager::init(float pivotX, float pivotY, float maxX, float maxY, 
 void cameraManager::update()
 {
 	Shaker();
+	playCutScene();
 }
 
 void cameraManager::MovePivot(float x, float y)
@@ -73,6 +74,48 @@ void cameraManager::MovePivotLerp(float x, float y, float lerpSpeed)
 		(x - _pivotX) / lerpSpeed + _pivotX,
 		(y - _pivotY) / lerpSpeed + _pivotY
 	);
+}
+
+void cameraManager::setCutScene(float startX, float startY, float aimX, float aimY, 
+	bool isLerp_START_TO_AIM, bool isLerp_AIM_TO_START,int cutTime ,int returnTime, float lerpSpeed)
+{
+	_startX = startX;
+	_startY = startY;
+	_aimX = aimX;
+	_aimY = aimY;
+	_isLerp_StoA = isLerp_START_TO_AIM;
+	_isLerp_AtoS = isLerp_AIM_TO_START;
+	_cutSceneTimer = cutTime;
+	_returnTime = returnTime;
+	_lerpSpeed = lerpSpeed;
+}
+
+void cameraManager::playCutScene()
+{
+	if (_cutSceneTimer > 0)
+	{
+		_isCutScene = true;
+		_cutSceneTimer--;
+
+		if (_cutSceneTimer > _returnTime)
+		{
+			if (_isLerp_StoA) MovePivotLerp(_aimX, _aimY, _lerpSpeed);
+			else MovePivot(_aimX, _aimY);
+		}
+
+		else
+		{
+			if (_isLerp_AtoS) MovePivotLerp(_startX, _startY, _lerpSpeed);
+			else  MovePivot(_startX, _startY);
+		}
+
+		if (_cutSceneTimer == 0)
+		{
+			_isCutScene = false;
+			_returnTime = 0;
+			_lerpSpeed = 0;
+		}
+	}
 }
 
 void cameraManager::Shake(float shakePowerX, float shakePowerY, int shakeTime, int shakeCycle)

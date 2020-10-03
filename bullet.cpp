@@ -52,7 +52,7 @@ void bullet::fire(float x, float y, float angle, float speed)
 	bullet.x = bullet.fireX = x;
 	bullet.y = bullet.fireY = y;
 	bullet.radius = 25;
-	
+
 	bullet.rc = RectMakeCenter(bullet.x, bullet.y, 50, 50);
 
 	//벡터에 담기
@@ -168,7 +168,7 @@ void homingFlares::move()
 		_vBullet[i].x += cosf(_vBullet[i].angle) * _vBullet[i].speed;
 		_vBullet[i].y += -sinf(_vBullet[i].angle) * _vBullet[i].speed;
 		_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
-	
+
 		//if (_vBullet[i].x - _vBullet[i].fireX < 10.f)
 		//	_vBullet[i].speed = 0.f;
 	}
@@ -208,14 +208,13 @@ void bomb::render()
 {
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
-		CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, 
-			_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth()/2), 
-			_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight()/2), index, 0);
+		CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage,
+			_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth() / 2),
+			_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight() / 2), index, 0);
 
 		CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 20, 20));
 	}
 }
-
 
 void bomb::fire(float x, float y, float speed, float angle, float radius)
 {
@@ -242,7 +241,6 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 
 void bomb::move()
 {
-
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
 		_vBullet[i].x += cosf(_vBullet[i].angle) * _vBullet[i].speed;
@@ -260,4 +258,91 @@ void bomb::move()
 void bomb::removeBomb(int index)
 {
 	_vBullet.erase(_vBullet.begin() + index);
+}
+
+//수정 중(player meteor)
+//=============================================================
+//	## meteor ## (signature)
+//=============================================================
+HRESULT meteor::init(int bulletMax, float range)
+{
+	_bulletMax = bulletMax;
+	_range = range;
+	angleRange = 0;
+
+	count = index = 0;
+	return S_OK;
+}
+
+void meteor::release()
+{
+}
+
+void meteor::update()
+{
+	count++;
+	if (count % 5 == 0)
+	{
+		index++;
+		if (index > 5) index = 0;
+	}
+	move();
+}
+
+void meteor::render()
+{
+
+
+	for (int i = 0; i < _vMeteor.size(); i++)
+	{
+		//CAMERAMANAGER->Rectangle(getMemDC(), _vMeteor[i].rc);
+		CAMERAMANAGER->FrameRender(getMemDC(), _vMeteor[i].bulletImage, _vMeteor[i].rc.left, _vMeteor[i].rc.top, index, 0);
+	}
+
+	char temp[126];
+	wsprintf(temp, "size : %d", _vMeteor.size());
+	textOut(getMemDC(), 100, 300, temp, RGB(255, 255, 255));
+}
+
+void meteor::meteorFire(float x, float y, float speed, float angle)
+{
+	//angleRange = RANDOM->range(PI / 9, angle);
+
+
+	tagBullet meteor;
+	memset(&meteor, 0, sizeof(meteor));
+
+	meteor.bulletImage = IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp",1200*2, 160*2, 6, 1);
+	meteor.angle = angle;// angleRange;
+	meteor.speed = speed;
+	meteor.x = meteor.fireX = x + cosf(meteor.angle) * meteor.speed;
+	meteor.y = meteor.fireY = y - sinf(meteor.angle) * meteor.speed;
+	meteor.rc = RectMakeCenter(meteor.x, meteor.y, 200*2, 160*2);
+
+	//if (_vMeteor.size() >= _bulletMax) continue;
+	_vMeteor.push_back(meteor);
+
+}
+
+void meteor::move()
+{
+	for (int i = 0; i < _vMeteor.size(); i++)
+	{
+		_vMeteor[i].angle = PI + PI / 3;
+		_vMeteor[i].speed = 10.f;
+		_vMeteor[i].x = _vMeteor[i].x + cosf(_vMeteor[i].angle) * _vMeteor[i].speed;
+		_vMeteor[i].y = _vMeteor[i].y + (-sinf(_vMeteor[i].angle)) * _vMeteor[i].speed;
+		_vMeteor[i].rc = RectMakeCenter(_vMeteor[i].x, _vMeteor[i].y, 200*2, 160*2);
+
+
+		float distance = getDistance(_vMeteor[i].fireX, _vMeteor[i].fireY, _vMeteor[i].x, _vMeteor[i].y);
+		if (distance > _range)
+		{
+			for (int i = 0; i < _vMeteor.size(); i++)
+			{
+				_vMeteor.erase(_vMeteor.begin() + i);
+			}
+		}
+	}
+
 }

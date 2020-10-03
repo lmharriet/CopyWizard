@@ -55,10 +55,10 @@ void uiManager::update()
 		}
 	}
 
-	if (INPUT->GetKeyDown('Q'))
+	/*if (INPUT->GetKeyDown('Q'))
 	{
 		if(skillSlot[3].available) skillSlot[3].available = false;
-	}
+	}*/
 }
 
 void uiManager::render(HDC hdc, int destX, int destY)

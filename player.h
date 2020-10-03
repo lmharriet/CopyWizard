@@ -11,7 +11,7 @@ private:
 	tagTile* tile;
 	bomb* blaze;
 	homingFlares* flares;
-
+	meteor* Meteor;
 private:
 
 	MOVE move;
@@ -53,6 +53,8 @@ public:
 	void blazeSetUp();
 	void standardSetUp();
 
+	void signatureSetUp();
+
 	//collision detection
 	void tileCol();
 	void colorCheck(image* img);
@@ -80,6 +82,10 @@ public:
 	//tile address
 	void setTileAd(tagTile* _tile) { tile = _tile; }
 
+	void setX(float x) { posX = x; }
+	void setY(float y) { posY = y; }
+	void reposRect() { rc = RectMakeCenter(posX, posY, 100, 100); }
+	void setStateIDLE() { state = STATE::IDLE; }
 
 	player() {}
 	~player() {}
