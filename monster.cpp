@@ -253,7 +253,7 @@ void astarManager::addOpenList(int idx, int idy)
 {
 	//예외처리 인덱스 범위안에서 추가할 수 있어야 한다
 	
-	if (idx < monsterMove.x - 20 || idx >= monsterMove.x + 20 || idy < monsterMove.y - 20 || idy >= monsterMove.y + 20) return;
+	if (idx < monsterMove.x - 30 || idx >= monsterMove.x + 30 || idy < monsterMove.y - 30 || idy >= monsterMove.y + 30) return;
 
 	if (totalNode[curNode->idx][idy]->kind == TERRAIN::WALL && totalNode[idx][curNode->idy]->kind == TERRAIN::WALL) return;
 	if (totalNode[curNode->idx][idy]->kind == TERRAIN::WALL || totalNode[idx][curNode->idy]->kind == TERRAIN::WALL) return;
