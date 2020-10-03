@@ -30,6 +30,18 @@ private:
 	int		_shakeCycleTimer;	// 흔들 사이클 타이머
 	int		_shakeCycle;		// 흔들 사이클
 
+	// CUTSCENE //
+	int _cutSceneTimer;	// 컷씬 타이머
+	int _returnTime;	// 원래 피봇으로 돌아오는 시간
+	float _startX;		// 시작점 x좌표
+	float _startY;		// 시작점 y좌표
+	float _aimX;		// 목적지 x좌표
+	float _aimY;		// 목적지 y좌표
+	bool _isLerp_StoA;	// 시작점 -> 목적지 까지의 lerp 효과 유무
+	bool _isLerp_AtoS;	// 목적지 -> 시작점 까지의 lerp 효과 유무
+	float _lerpSpeed;	// lerp 효과 속도
+	bool _isCutScene;	// 컷씬 재생중?
+
 	void Shaker();
 
 public:
@@ -46,6 +58,17 @@ public:
 		_distanceY = 0.f;
 		_initDistanceX = 0.f;
 		_initDistanceY = 0.f;
+
+		_cutSceneTimer = 0;
+		_returnTime = 0;
+		_startX = 0;
+		_startY = 0;
+		_aimX = 0;
+		_aimY = 0;
+		_isLerp_StoA = 0;
+		_isLerp_AtoS = 0;
+		_lerpSpeed = 0;
+		_isCutScene = 0;
 	}
 	~cameraManager() {}
 
@@ -65,6 +88,8 @@ public:
 	void AlphaRender(HDC hdc, image* ig, int destX, int destY, BYTE alpha);
 	void MovePivot(float x, float y);
 	void MovePivotLerp(float x, float y, float lerpSpeed = 10.f);
+	void setCutScene(float startX, float startY, float aimX, float aimY, bool isLerp_START_TO_AIM, bool isLerp_AIM_TO_START, int cutTime, int returnTime, float lerpSpeed);
+	void playCutScene();
 	void Shake(float shakePowerX, float shakePowerY, int shakeTime, int shakeCycle = 0);
 	void ZoomInOut(HDC hdc, int destX, int destY, int sourX, int sourY, float scale);
 	int GetRelativeX(float x) { return x - _cameraRect.left; }
@@ -79,4 +104,6 @@ public:
 
 	float getMinX() { return _minX; }
 	float getMinY() { return _minY; }
+
+	bool getIsCutScene() { return _isCutScene; }
 };
