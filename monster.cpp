@@ -317,7 +317,7 @@ void astarManager::setNodeColor(tileNode* node, COLORREF color, HDC hdc)
 //몬스터 관련 함수
 //=============================================
 
-HRESULT monster::init(tagTile* tile, const char* fileName , POINT _pos, float _speed, int _hp)
+HRESULT monster::init(tagTile* tile, const char* fileName , POINT _pos, float _speed, int _hp, bool _isKnockBack)
 {
 	if (!tile)
 	{
@@ -332,6 +332,7 @@ HRESULT monster::init(tagTile* tile, const char* fileName , POINT _pos, float _s
 
 	img = IMAGEMANAGER->findImage(fileName);
 	
+	isKnockBack = _isKnockBack;
 	cul = { 0,0 };
 	pos.x = _pos.x;
 	pos.y = _pos.y;
@@ -351,6 +352,17 @@ void monster::release()
 	{
 		astar->release();
 		SAFE_DELETE(astar);
+	}
+}
+
+void monster::hit(int damage , float hitAngle, float knockBack)
+{
+	hp -= damage;
+
+	if (isKnockBack) // 밀려남.
+	{
+		pos.x += cos(hitAngle) * knockBack;
+		pos.y += -sin(hitAngle) * knockBack;
 	}
 }
 

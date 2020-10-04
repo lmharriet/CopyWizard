@@ -57,7 +57,7 @@ void golem::render()
     stateImageRender();
   
 
-    //astar->render(getMemDC());
+   // astar->render(getMemDC());
 }
 
 void golem::stateImageRender()
@@ -79,8 +79,38 @@ void golem::stateImageRender()
        
         break;
     case STATEIMAGE::WALK:
-        stateImage(5, 2, 0, 1);
-        
+        if (isLeft)
+        {
+            frameIndex.y = 2;
+            count++;
+            if (count % 10 == 0)
+            {
+                count = 0;
+                frameIndex.x--;
+                if (frameIndex.x < 0)
+                {
+                    frameIndex.x = 5;
+                }
+            }
+        }
+        else
+        {
+            frameIndex.y = 1;
+            count++;
+            if (count % 10 == 0)
+            {
+                count = 0;
+                frameIndex.x++;
+                if (frameIndex.x > 5)
+                {
+                    frameIndex.x = 0;
+                }
+
+            }
+        }
+
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
+
         break;
     case STATEIMAGE::ATK:
         if (isLeft)
@@ -178,6 +208,7 @@ void golem::stateImageRender()
    
     }
 }
+/*
 
 void golem::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R) 
 {
@@ -210,4 +241,4 @@ void golem::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
     img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
 
    
-}
+}*/

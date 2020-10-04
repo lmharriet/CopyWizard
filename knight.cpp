@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "lancer.h"
+#include "knight.h"
 
-void lancer::addInit()
+void knight::addInit()
 {
 }
 
-void lancer::update()
+void knight::update()
 {
     rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
@@ -48,21 +48,22 @@ void lancer::update()
     die();
 }
 
-void lancer::render()
+void knight::render()
 {
     stateImageRender();
+   // astar->render(getMemDC());
 }
 
 
 
-void lancer::stateImageRender()
+void knight::stateImageRender()
 {
     switch (state)
     {
     case STATEIMAGE::IDLE:
         if (isLeft)
         {
-            frameIndex.x = 5;
+            frameIndex.x = 1;
             frameIndex.y = 0;
         }
         else
@@ -74,13 +75,13 @@ void lancer::stateImageRender()
 
         break;
     case STATEIMAGE::WALK:
-        stateImage(5, 2, 0, 1);
+        stateImage(4, 2, 0, 1);
 
         break;
     case STATEIMAGE::ATK:
         if (isLeft)
         {
-            frameIndex.y = 0;
+            frameIndex.y = 3;
             count++;
             if (count % 30 == 0)
             {
@@ -101,7 +102,7 @@ void lancer::stateImageRender()
         }
         else
         {
-            frameIndex.y = 0;
+            frameIndex.y = 3;
             count++;
             if (count % 30 == 0)
             {
@@ -128,21 +129,19 @@ void lancer::stateImageRender()
     case STATEIMAGE::DIE:
         if (isLeft)
         {
-            if (frameIndex.y != 6)
-            frameIndex.y = 5;
+            if (frameIndex.y != 7)
+            frameIndex.y = 6;
             count++;
             if (count % 10 == 0)
             {
                 count = 0;
-                if (frameIndex.y == 5)
                     frameIndex.x--;
-                else if(frameIndex.y == 6)
-                    frameIndex.x++;
+               
 
-                if (frameIndex.x > 2 && frameIndex.y == 6) //ªÁ∏¡ ¿Œµ¶Ω∫ 6
+                if (frameIndex.x < 3 && frameIndex.y == 7) //ªÁ∏¡ ¿Œµ¶Ω∫ 6
                 {
                     
-                    frameIndex.x = 2;
+                    frameIndex.x = 3;
                     delay++;
                     if (delay > 2)
                     {
@@ -151,16 +150,16 @@ void lancer::stateImageRender()
                 }
                 else if (frameIndex.x < 0) // ªÁ∏¡ ¿Œµ¶Ω∫ 5
                 {
-                    frameIndex.x = 0;
-                    frameIndex.y = 6;
+                    frameIndex.x = 5;
+                    frameIndex.y = 7;
                    
                 }
             }
         }
         else
         {
-            if(frameIndex.y !=4 )
-            frameIndex.y = 3;
+            if(frameIndex.y !=5 )
+            frameIndex.y = 4;
             count++;
             if (count % 10 == 0)
             {
@@ -168,7 +167,7 @@ void lancer::stateImageRender()
                 
                 frameIndex.x++;
                 
-                if (frameIndex.x > 2 && frameIndex.y == 4) //ªÁ∏¡ ¿Œµ¶Ω∫ 6
+                if (frameIndex.x > 2 && frameIndex.y == 5) //ªÁ∏¡ ¿Œµ¶Ω∫ 6
                 {
                     
                     frameIndex.x = 2;
@@ -181,7 +180,7 @@ void lancer::stateImageRender()
                 else if (frameIndex.x > 5) // ªÁ∏¡ ¿Œµ¶Ω∫ 5
                 {
                     frameIndex.x = 0;
-                    frameIndex.y = 4;
+                    frameIndex.y = 5;
                     
                 }
 
@@ -195,7 +194,7 @@ void lancer::stateImageRender()
     }
 }
 
-void lancer::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
+void knight::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
 {
     if (isLeft)
     {

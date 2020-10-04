@@ -94,6 +94,7 @@ protected:
 	bool isDie = false;
 	bool isDelete = false;
 	bool isAstar;
+	bool isKnockBack ;
 	const float distanceMax = 700.f;
 	astarManager* astar;
 	RECT playerRC;
@@ -104,7 +105,7 @@ protected:
 
 public:
 	 
-	HRESULT init(tagTile* tile, const char* fileName, POINT _pos, float _speed, int _hp);
+	HRESULT init(tagTile* tile, const char* fileName, POINT _pos, float _speed, int _hp, bool _isKnockBack = true);
 	void release();
 	virtual void update()=0;
 	virtual void render()=0;
@@ -117,6 +118,9 @@ public:
 	inline void setPlayerRC(RECT rc) { playerRC = rc; }
 	inline void setCamRC(RECT rc) { camRC = rc; }
 	inline void setHp(float _atk) { hp = _atk; }
+	inline int getHp() { return hp; }
+	
+	void hit(int damage, float hitAngle, float knockBack);
 	void die();
 };
 

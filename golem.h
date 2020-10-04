@@ -9,7 +9,7 @@ public:
 
 	void stateImageRender();
 
-	void stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R);
+//	void stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R);
 	
 
 	//inline POINT getPos() { return pos; } 

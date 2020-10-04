@@ -1,6 +1,6 @@
 #pragma once
 #include "monster.h"
-class lancer	:    public monster
+class knight	:    public monster
 {
 
 public:
