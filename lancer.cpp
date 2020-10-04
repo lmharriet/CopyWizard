@@ -51,6 +51,7 @@ void lancer::update()
 void lancer::render()
 {
     stateImageRender();
+   // astar->render(getMemDC());
 }
 
 
