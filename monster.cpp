@@ -361,7 +361,7 @@ void monster::hit(int damage , float hitAngle, float knockBack)
 {
 	hp -= damage;
 
-	if (isKnockBack) // 밀려남.
+	if (isKnockBack && !isDie) // 밀려남.
 	{
 		pos.x += cos(hitAngle) * knockBack;
 		pos.y += -sin(hitAngle) * knockBack;
@@ -382,6 +382,7 @@ void monster::die()
 	{
 		state = STATEIMAGE::DIE;
 		isDie = true;
+		
 		
 	}
 }
