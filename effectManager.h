@@ -14,16 +14,16 @@ struct tagDashEffect
 
 struct tagEffect
 {
-	string keyName;
-	int imgCount;
-	bool flipImg;
+	string keyName;		// 출력할 이미지
+	int imgCount;		// 프레임렌더에 필요한 카운트
+	bool flipImg;		// 오른쪽에서 왼쪽으로 출력?
 
-	bool isEraseTime;
-	int eraseTime;
-	int currentTime;
+	bool isEraseTime;	// 시간이 지나면 지워질지, 프레임이 끝나면 지워질지
+	int eraseTime;		// 몇초 뒤에 지워질지
+	int currentTime;	// 현재 시간 (이건 안건드려도됨)
 
-	int maxFrame;
-	POINT pos;
+	int maxFrame;		// 이미지의 최대 프레임 (이것도 안건드려도됨)
+	POINT pos;			// 이미지를 재생시킬 위치
 };
 class effectManager : public singletonBase <effectManager>
 {
