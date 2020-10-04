@@ -37,7 +37,7 @@ private:
 	vector<tagCoin> vCoin;
 	vector<infoTransfer> vTransfer;
 
-	int time;
+	int dtime;
 public:
 	HRESULT init();
 	void update();

@@ -17,7 +17,7 @@ HRESULT gameNode::init()
 	
 	EFFECT->init();
 	ITEM->init();
-	DROP->init();
+	//DROP->init();
 	return S_OK;
 }
 

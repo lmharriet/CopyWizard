@@ -28,8 +28,8 @@ HRESULT bossScene::init()
 
 void bossScene::release()
 {
-    _player->release();
-    SAFE_DELETE(_player);
+    //_player->release();
+    //SAFE_DELETE(_player);
 }
 
 void bossScene::update()
