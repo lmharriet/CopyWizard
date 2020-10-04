@@ -59,10 +59,6 @@ void golem::update()
         {
             state = STATEIMAGE::ATK;
             isATK = true;
-           
-            
-          
-               
         }
        
     }
@@ -70,10 +66,6 @@ void golem::update()
     { 
         state = STATEIMAGE::IDLE;
     }
-
-
-    
-
 
     cul.x = CAMERAMANAGER->GetRelativeX(pos.x);
     cul.y = CAMERAMANAGER->GetRelativeY(pos.y);
