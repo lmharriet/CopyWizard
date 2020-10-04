@@ -44,6 +44,7 @@ using namespace MY_UTIL;
 #include "particleManager.h"
 #include "uiManager.h"
 #include "effectManager.h"
+#include "itemManager.h"
 //#include "astarManager.h"
 
 //=============================================================
@@ -60,6 +61,7 @@ using namespace MY_UTIL;
 #define PARTICLE particleManager::getSingleton()
 #define UI uiManager::getSingleton()
 #define EFFECT effectManager::getSingleton()
+#define ITEM itemManager::getSingleton()
 //#define ASTAR astarManager::getSingleton()
 
 //=============================================================

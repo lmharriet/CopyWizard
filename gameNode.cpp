@@ -16,7 +16,7 @@ HRESULT gameNode::init()
 	TIME->init();						//타임매니져 초기화
 	
 	EFFECT->init();
-
+	ITEM->init();
 	return S_OK;
 }
 
@@ -52,6 +52,7 @@ void gameNode::release()
 	TIME->releaseSingleton();
 
 	EFFECT->releaseSingleton();
+	ITEM->releaseSingleton();
 
 	//HDC 해제
 	ReleaseDC(_hWnd, _hdc);

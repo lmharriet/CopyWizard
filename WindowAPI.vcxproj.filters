@@ -79,6 +79,9 @@
     <Filter Include="MainGame\인게임\monster">
       <UniqueIdentifier>{9d1bf617-7f45-4e7a-9a9e-4392db16c51f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFramework\매니져\아이템">
+      <UniqueIdentifier>{54bd0d0d-95d9-4959-bc59-b6eb9969c604}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
@@ -165,6 +168,9 @@
     </ClCompile>
     <ClCompile Include="lancer.cpp">
       <Filter>MainGame\인게임\monster</Filter>
+    </ClCompile>
+    <ClCompile Include="itemManager.cpp">
+      <Filter>GameFramework\매니져\아이템</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -264,6 +270,9 @@
     </ClInclude>
     <ClInclude Include="lancer.h">
       <Filter>MainGame\인게임\monster</Filter>
+    </ClInclude>
+    <ClInclude Include="itemManager.h">
+      <Filter>GameFramework\매니져\아이템</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
