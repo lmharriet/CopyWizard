@@ -6,6 +6,11 @@ struct tagCollider
 	POINT pos;
 	bool isCol;
 };
+struct tagDash
+{
+	RECT rc;
+	POINT pos;
+};
 //Dash,RUN
 enum class STATE
 {

@@ -78,7 +78,8 @@ class homingFlares : public gameNode
 {
 private:
 	//총알 구조체를 담을 벡터선언
-	vector<tagBullet> _vBullet;
+	vector<tagArcana> _vFlares;
+	vector<tagArcana> _vRange;
 //	vector<tagBullet>::iterator _viBullet;
 
 private:
@@ -92,7 +93,7 @@ public:
 	void render();
 
 	//총알발사
-	void fire(float x, float y);
+	void fire(float x, float y,float angle);
 	//총알무브
 	void move();
 
