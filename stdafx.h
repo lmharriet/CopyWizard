@@ -45,6 +45,7 @@ using namespace MY_UTIL;
 #include "uiManager.h"
 #include "effectManager.h"
 #include "itemManager.h"
+#include "dropManager.h"
 //#include "astarManager.h"
 
 //=============================================================
@@ -62,6 +63,7 @@ using namespace MY_UTIL;
 #define UI uiManager::getSingleton()
 #define EFFECT effectManager::getSingleton()
 #define ITEM itemManager::getSingleton()
+#define DROP dropManager::getSingleton()
 //#define ASTAR astarManager::getSingleton()
 
 //=============================================================

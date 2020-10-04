@@ -4,6 +4,7 @@
 HRESULT gameScene::init()
 {
 	UI->init();
+	DROP->init();
 	
 	_player = new player;
 	_player->init();
@@ -43,6 +44,8 @@ void gameScene::release()
 void gameScene::update()
 {
 	UI->update();
+	DROP->update();
+
 	_player->update();
 	
 	enemy->update();
@@ -119,6 +122,7 @@ void gameScene::render()
 	//Rectangle(getMemDC(), checkArea);
 	//_player->render();
 	
+	DROP->render(getMemDC());
 	EFFECT->pRender(getMemDC());
 
 	bool isRender = false;

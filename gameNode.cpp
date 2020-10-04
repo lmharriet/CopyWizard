@@ -17,6 +17,7 @@ HRESULT gameNode::init()
 	
 	EFFECT->init();
 	ITEM->init();
+	DROP->init();
 	return S_OK;
 }
 
@@ -53,7 +54,7 @@ void gameNode::release()
 
 	EFFECT->releaseSingleton();
 	ITEM->releaseSingleton();
-
+	DROP->releaseSingleton();
 	//HDC «ÿ¡¶
 	ReleaseDC(_hWnd, _hdc);
 }

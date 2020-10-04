@@ -82,6 +82,9 @@
     <Filter Include="GameFramework\매니져\아이템">
       <UniqueIdentifier>{54bd0d0d-95d9-4959-bc59-b6eb9969c604}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFramework\매니져\드롭">
+      <UniqueIdentifier>{c067ca47-9746-4a8a-a18f-a53858e34f29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
@@ -171,6 +174,9 @@
     </ClCompile>
     <ClCompile Include="itemManager.cpp">
       <Filter>GameFramework\매니져\아이템</Filter>
+    </ClCompile>
+    <ClCompile Include="dropManager.cpp">
+      <Filter>GameFramework\매니져\드롭</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -273,6 +279,9 @@
     </ClInclude>
     <ClInclude Include="itemManager.h">
       <Filter>GameFramework\매니져\아이템</Filter>
+    </ClInclude>
+    <ClInclude Include="dropManager.h">
+      <Filter>GameFramework\매니져\드롭</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
