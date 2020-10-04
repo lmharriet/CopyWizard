@@ -44,7 +44,8 @@ public:
 	void render(HDC hdc);
 	void dropPoint(POINT pt, int minCoin, int maxCoin);
 	void coinGenerator();
-
+	
+	vector<tagCoin> getCoinVec() { return vCoin; }
 	RECT getCoinRect(int index) { return vCoin[index].rc; }
 	void delCoin(int index) { vCoin.erase(vCoin.begin() + index); }
 };

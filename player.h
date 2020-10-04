@@ -53,6 +53,7 @@ public:
 	void update();
 	void other_update();
 	void render();
+	void invenRender();
 
 	void controller();
 	void dashFunction();
@@ -61,7 +62,7 @@ public:
 	void standardSetUp();
 	void signatureSetUp();
 
-
+	void takeCoin();
 	//collision detection
 	void tileCol();
 	void colorCheck(image* img);

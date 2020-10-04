@@ -125,18 +125,20 @@ void homingFlares::update()
 
 void homingFlares::render()
 {
-	for (int i = 0; i < _vFlares.size(); i++)
+	/*for (int i = 0; i < _vFlares.size(); i++)
 	{
 		CAMERAMANAGER->Ellipse(getMemDC(), _vFlares[i].rc);
 		CAMERAMANAGER->Ellipse(getMemDC(), _vRange[i] .rc);
-	}
+	}*/
 
 
 }
 //총알발사
 void homingFlares::fire(float x, float y, float angle)
 {
-	tagArcana flares;
+
+
+	/*tagArcana flares;
 	flares.angle = angle;
 	flares.speed = 20.f;
 	flares.x = flares.fireX = x + cosf(flares.angle) * (flares.speed);
@@ -153,14 +155,14 @@ void homingFlares::fire(float x, float y, float angle)
 	range.rc = RectMakeCenter(range.x, range.y, 40, 40);
 
 	_vRange.push_back(range);
-
+*/
 
 }
 
 //총알무브
 void homingFlares::move()
 {
-	for (int i = 0; i < _vFlares.size(); i++)
+	/*for (int i = 0; i < _vFlares.size(); i++)
 	{
 		_vFlares[i].x = _vFlares[i].x + cosf(_vFlares[i].angle) * 5.f;
 		_vFlares[i].y = _vFlares[i].y - sinf(_vFlares[i].angle) * 5.f;
@@ -171,7 +173,7 @@ void homingFlares::move()
 			
 			
 		}
-	}
+	}*/
 }
 
 //수정 중(player flame strike)

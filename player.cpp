@@ -7,6 +7,7 @@ HRESULT player::init()
 	IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
 	IMAGEMANAGER->addFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
 	IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 2400, 640, 6, 2);
+	IMAGEMANAGER->addFrameImage("flame", "resource/player/flame1.bmp",2048, 64, 32, 1);
 
 	posX = WINSIZEX / 2;
 	posY = WINSIZEY / 2;
@@ -44,7 +45,7 @@ HRESULT player::init()
 	//attack type
 	basic = standard = signature = false;
 
-	speed = index = dashIndex = count = dashCount =  0;
+	speed = index = dashIndex = count = dashCount = 0;
 	atkCount = atkIndex = 0;
 	stateCool = meteorCool = 0;
 
@@ -104,7 +105,7 @@ void player::update()
 
 	if (signature) state = STATE::SIGNATURE;
 
-	if (speed == 0 && stateCool == 0 && meteorCool ==0) controller();
+	if (speed == 0 && stateCool == 0 && meteorCool == 0) controller();
 
 	tileCol();
 
@@ -130,7 +131,8 @@ void player::update()
 	standardSetUp();
 	signatureSetUp();
 
-	
+	//
+	takeCoin();
 
 
 	// camera가 따라가는 대상
@@ -182,6 +184,8 @@ void player::other_update()
 
 	signatureSetUp();
 
+	//
+	takeCoin();
 
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
@@ -196,7 +200,7 @@ void player::render()
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
 	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, tempAngle, 0, 50);
 
-	if (state == STATE::DASH) CAMERAMANAGER->Rectangle(getMemDC(),test.rc);
+	CAMERAMANAGER->Rectangle(getMemDC(), test.rc);
 	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	//Rectangle(getMemDC(), rc);
 
@@ -206,6 +210,11 @@ void player::render()
 	blaze->render();
 	flares->render();
 	Meteor->render();
+
+}
+
+void player::invenRender()
+{
 	inven->render();
 }
 
@@ -287,12 +296,11 @@ void player::dashFunction()
 {
 	// 벽에 닿으면 대쉬 불가능, 게임 내에서 대쉬해서 낭떠러지에 닿으면 떨어짐. 
 	// 벽끼임 예외처리 필요
-	
+
 	if (speed == 0)	return;
 
 	if (dashLeft)
 	{
-		
 		if (dashUp)
 		{
 			if (!tileCheck[(int)DIRECTION::LEFT_TOP].isCol &&
@@ -300,9 +308,11 @@ void player::dashFunction()
 			{
 				posX -= speed;
 				posY -= speed;
+				
+				//test.pos.x = cosf()
 			}
-			test.rc.left -= speed;
-			test.rc.top -= speed;
+			/*test.rc.left -= speed;
+			test.rc.top -= speed;*/
 		}
 		else if (dashDown)
 		{
@@ -312,17 +322,16 @@ void player::dashFunction()
 				posX -= speed;
 				posY += speed;
 			}
-			test.rc.left -= speed;
-			test.rc.bottom += speed;
+			/*test.rc.left -= speed;
+			test.rc.bottom += speed;*/
 		}
 		else // 그냥 순수 LEFT
 		{
 			if (!tileCheck[(int)DIRECTION::LEFT].isCol)
 				posX -= speed;
 
+			//test.rc.left -= speed;
 
-			test.rc.left -= speed;
-	
 		}
 	}
 
@@ -336,8 +345,6 @@ void player::dashFunction()
 				posX += speed;
 				posY -= speed;
 			}
-			test.pos.x += speed;
-			test.pos.y -= speed;
 		}
 		else if (dashDown)
 		{
@@ -347,11 +354,13 @@ void player::dashFunction()
 				posX += speed;
 				posY += speed;
 			}
+		
 		}
 		else // 그냥 순수 RIGHT
 		{
 			if (!tileCheck[(int)DIRECTION::RIGHT].isCol)
 				posX += speed;
+
 		}
 	}
 
@@ -360,6 +369,7 @@ void player::dashFunction()
 		//순수 UP
 		if (!tileCheck[(int)DIRECTION::TOP].isCol)
 			posY -= speed;
+		test.rc.top -= speed;
 	}
 
 	else if (dashDown)
@@ -367,6 +377,7 @@ void player::dashFunction()
 		//순수 DOWN
 		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol)
 			posY += speed;
+		test.rc.bottom += speed;
 	}
 
 	speed--;
@@ -405,12 +416,13 @@ void player::standardSetUp()
 {
 	if (standard)
 	{
-		flares->fire(posX,posY, attackAngle);
+		flares->fire(posX, posY, attackAngle);
 	}
 }
+
 void player::signatureSetUp()
 {
-	if (signature && meteorCool ==0)
+	if (signature && meteorCool == 0)
 	{
 		meteorCool = 30;
 		float dRange = 650.f;
@@ -424,6 +436,15 @@ void player::signatureSetUp()
 	{
 		state = STATE::SIGNATURE;
 		meteorCool--;
+	}
+}
+
+void player::takeCoin()
+{
+	for (int i = 0; i < DROP->getCoinVec().size(); i++)
+	{
+		if (colCheck(rc, DROP->getCoinRect(i)))
+			DROP->delCoin(i);
 	}
 }
 
@@ -574,7 +595,7 @@ void player::animation()
 		break;
 	case STATE::SIGNATURE:
 
-		if (move == MOVE::LEFT )
+		if (move == MOVE::LEFT)
 		{
 			if (atkCount % 10 == 0)
 			{
@@ -592,7 +613,7 @@ void player::animation()
 			}
 			frameAnimation(atkIndex, 20);
 		}
-		else if (move == MOVE::UP|| move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
+		else if (move == MOVE::UP || move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
 		{
 			if (atkCount % 10 == 0)
 			{
@@ -808,8 +829,8 @@ void player::viewText()
 		textOut(getMemDC(), 10, 250, str, WHITE);
 
 	}
-			//int x = _ptMouse.x;
-	//int y = _ptMouse.y;
+	//int x = _ptMouse.x;
+//int y = _ptMouse.y;
 
 //	CAMERAMANAGER->RectangleMakeCenter(getMemDC(), posX, posY, 20, 20);
 }
