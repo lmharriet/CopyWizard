@@ -188,7 +188,7 @@ void knight::stateImageRender()
         }
 
         img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
-
+        coinDrop(1, 10);
         break;
 
     }

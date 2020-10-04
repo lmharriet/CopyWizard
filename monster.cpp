@@ -368,6 +368,14 @@ void monster::hit(int damage , float hitAngle, float knockBack)
 	}
 }
 
+void monster::coinDrop(int min, int max)
+{
+	if (isDelete)
+	{
+		DROP->dropPoint({ pos.x+img->getFrameWidth()/2,pos.y + img->getFrameHeight() },min,max);
+	}
+}
+
 void monster::die()
 {
 	if (hp <= 0)

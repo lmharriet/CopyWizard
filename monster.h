@@ -131,6 +131,7 @@ public:
 	inline int getHp() { return hp; }
 	
 	void hit(int damage, float hitAngle, float knockBack);
+	void coinDrop(int min, int max);
 	void die();
 };
 
