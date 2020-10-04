@@ -4,6 +4,7 @@
 #include "colorNode.h"
 #include "bullet.h"
 #include "unitNode.h"
+#include "inventory.h";
 
 class player : public gameNode
 {
@@ -12,6 +13,7 @@ private:
 	bomb* blaze;
 	homingFlares* flares;
 	meteor* Meteor;
+	inventory* inven;
 private:
 
 	MOVE move;
@@ -21,6 +23,9 @@ private:
 	tagCollider tileCheck[8];
 	tagCollider diagonalCheck[4];
 
+//	test
+	tagDash test;
+	
 	float posX, posY;
 	//float angle;
 	float attackAngle;
@@ -28,7 +33,6 @@ private:
 
 	int angleTenth;
 	int speed;
-
 
 	int stateCool;
 	int meteorCool;
@@ -55,8 +59,8 @@ public:
 	void resetKey();
 	void blazeSetUp();
 	void standardSetUp();
-
 	void signatureSetUp();
+
 
 	//collision detection
 	void tileCol();
@@ -66,7 +70,7 @@ public:
 	void makeCol2(int index, int destX, int destY, int rcSize = 10);
 
 
-
+	//animation
 	void animation();
 	void frameAnimation(int frameX, int frameY);
 	void changeState();

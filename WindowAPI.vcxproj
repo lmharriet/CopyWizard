@@ -163,6 +163,7 @@
     <ClInclude Include="imageManager.h" />
     <ClInclude Include="iniData.h" />
     <ClInclude Include="input.h" />
+    <ClInclude Include="inventory.h" />
     <ClInclude Include="itemManager.h" />
     <ClInclude Include="mainGame.h" />
     <ClInclude Include="mapToolScene.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="imageManager.cpp" />
     <ClCompile Include="iniData.cpp" />
     <ClCompile Include="input.cpp" />
+    <ClCompile Include="inventory.cpp" />
     <ClCompile Include="itemManager.cpp" />
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="mapToolScene.cpp" />

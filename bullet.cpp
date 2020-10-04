@@ -115,11 +115,7 @@ HRESULT homingFlares::init(float range)
 
 void homingFlares::release()
 {
-	/*for (int i = 0; i < _vBullet.size(); i++)
-	{
-		_vBullet[i].bulletImage->release();
-		SAFE_DELETE(_vBullet[i].bulletImage);
-	}*/
+
 }
 
 void homingFlares::update()
@@ -129,50 +125,53 @@ void homingFlares::update()
 
 void homingFlares::render()
 {
-	for (int i = 0; i < _vBullet.size(); i++)
+	for (int i = 0; i < _vFlares.size(); i++)
 	{
-		CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
+		CAMERAMANAGER->Ellipse(getMemDC(), _vFlares[i].rc);
+		CAMERAMANAGER->Ellipse(getMemDC(), _vRange[i] .rc);
 	}
 
-	char vec[126];
-	wsprintf(vec, "vecsize : %d", _vBullet.size());
-	textOut(getMemDC(), 10, 300, vec, RGB(255, 255, 255));
+
 }
 //총알발사
-void homingFlares::fire(float x, float y)
+void homingFlares::fire(float x, float y, float angle)
 {
+	tagArcana flares;
+	flares.angle = angle;
+	flares.speed = 20.f;
+	flares.x = flares.fireX = x + cosf(flares.angle) * (flares.speed);
+	flares.y = flares.fireY = y - sinf(flares.angle) * (flares.speed);
+	flares.rc = RectMakeCenter(flares.x, flares.y, 30, 30);
 
-	for (int i = 0; i < 7; i++)
-	{
-		tagBullet flares;
+	_vFlares.push_back(flares);
 
-		memset(&flares, 0, sizeof(flares));
-		//flares.bulletImage
-		flares.x = flares.fireX = x;
-		flares.y = flares.fireY = y;
-		flares.speed = 5.f;
-		flares.angle = 0;
-		flares.rc = RectMakeCenter(flares.x, flares.y, 30, 30);
+	tagArcana range;
+	range.angle = angle;
+	range.speed = 100;
+	range.x = range.fireX = x + cosf(range.angle) * range.speed;
+	range.y = range.fireY = y - sinf(range.angle) * range.speed;
+	range.rc = RectMakeCenter(range.x, range.y, 40, 40);
 
-		_vBullet.push_back(flares);
-	}
+	_vRange.push_back(range);
+
+
 }
 
 //총알무브
 void homingFlares::move()
 {
-	for (int i = 0; i < _vBullet.size(); i++)
+	for (int i = 0; i < _vFlares.size(); i++)
 	{
-		_vBullet[i].angle = (52 * i) + PI;
-		_vBullet[i].speed = 7.f;
-		_vBullet[i].x += cosf(_vBullet[i].angle) * _vBullet[i].speed;
-		_vBullet[i].y += -sinf(_vBullet[i].angle) * _vBullet[i].speed;
-		_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
+		_vFlares[i].x = _vFlares[i].x + cosf(_vFlares[i].angle) * 5.f;
+		_vFlares[i].y = _vFlares[i].y - sinf(_vFlares[i].angle) * 5.f;
+		_vFlares[i].rc = RectMakeCenter(_vFlares[i].x, _vFlares[i].y, 30, 30);
 
-		//if (_vBullet[i].x - _vBullet[i].fireX < 10.f)
-		//	_vBullet[i].speed = 0.f;
+		if (colCheck(_vFlares[i].rc, _vRange[i].rc))
+		{
+			
+			
+		}
 	}
-
 }
 
 //수정 중(player flame strike)
@@ -435,7 +434,7 @@ void meteor::meteorUltFire(float x, float y, float speed, MOVE dir, float range)
 
 	float angle = .0f;
 	float spd = .0f;
-	
+
 	switch (dir)
 	{
 	case MOVE::LEFT:

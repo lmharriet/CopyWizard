@@ -47,6 +47,13 @@ HRESULT player::init()
 	speed = index = dashIndex = count = dashCount =  0;
 	atkCount = atkIndex = 0;
 	stateCool = meteorCool = 0;
+
+	//test
+	test.pos.x = posX;
+	test.pos.y = posY;
+	test.rc = RectMakeCenter(test.pos.x, test.pos.y, 30, 30);
+
+
 	//불렛 클래스
 	blaze = new bomb;
 	blaze->init(100, 200);
@@ -57,6 +64,9 @@ HRESULT player::init()
 	Meteor = new meteor;
 	Meteor->init(650);
 
+	//인벤토리
+	inven = new inventory;
+	inven->init();
 	//angle between mouse & player
 	attackAngle = saveAngle = 0;
 	angleTenth = 0;
@@ -72,6 +82,8 @@ void player::release()
 	SAFE_DELETE(flares);
 	Meteor->release();
 	SAFE_DELETE(Meteor);
+	inven->release();
+	SAFE_DELETE(inven);
 }
 
 void player::update()
@@ -80,7 +92,7 @@ void player::update()
 	blaze->update();
 	flares->update();
 	Meteor->update();
-
+	inven->update();
 	//animation count
 	count++;
 	dashCount++;
@@ -91,7 +103,6 @@ void player::update()
 	angleTenth = (int)(saveAngle * (18 / PI));
 
 	if (signature) state = STATE::SIGNATURE;
-
 
 	if (speed == 0 && stateCool == 0 && meteorCool ==0) controller();
 
@@ -119,6 +130,9 @@ void player::update()
 	standardSetUp();
 	signatureSetUp();
 
+	
+
+
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
 
@@ -131,6 +145,7 @@ void player::other_update()
 	blaze->update();
 	flares->update();
 	Meteor->update();
+	inven->update();
 	//animation count
 	count++;
 	dashCount++;
@@ -181,6 +196,7 @@ void player::render()
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
 	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, tempAngle, 0, 50);
 
+	if (state == STATE::DASH) CAMERAMANAGER->Rectangle(getMemDC(),test.rc);
 	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	//Rectangle(getMemDC(), rc);
 
@@ -190,6 +206,7 @@ void player::render()
 	blaze->render();
 	flares->render();
 	Meteor->render();
+	inven->render();
 }
 
 void player::controller()
@@ -222,6 +239,9 @@ void player::controller()
 	//DASH
 	if (INPUT->GetKeyDown(VK_SPACE) && speed == 0)
 	{
+		test.pos.x = posX;
+		test.pos.y = posY;
+		test.rc = RectMakeCenter(test.pos.x, test.pos.y, 30, 30);
 		//대쉬 이펙트 생성
 		EFFECT->dashEffect(move, { (long)posX,(long)posY });
 		state = STATE::DASH;
@@ -267,11 +287,12 @@ void player::dashFunction()
 {
 	// 벽에 닿으면 대쉬 불가능, 게임 내에서 대쉬해서 낭떠러지에 닿으면 떨어짐. 
 	// 벽끼임 예외처리 필요
-
-	if (speed == 0)return;
+	
+	if (speed == 0)	return;
 
 	if (dashLeft)
 	{
+		
 		if (dashUp)
 		{
 			if (!tileCheck[(int)DIRECTION::LEFT_TOP].isCol &&
@@ -280,6 +301,8 @@ void player::dashFunction()
 				posX -= speed;
 				posY -= speed;
 			}
+			test.rc.left -= speed;
+			test.rc.top -= speed;
 		}
 		else if (dashDown)
 		{
@@ -289,13 +312,17 @@ void player::dashFunction()
 				posX -= speed;
 				posY += speed;
 			}
-
+			test.rc.left -= speed;
+			test.rc.bottom += speed;
 		}
 		else // 그냥 순수 LEFT
 		{
 			if (!tileCheck[(int)DIRECTION::LEFT].isCol)
 				posX -= speed;
 
+
+			test.rc.left -= speed;
+	
 		}
 	}
 
@@ -309,6 +336,8 @@ void player::dashFunction()
 				posX += speed;
 				posY -= speed;
 			}
+			test.pos.x += speed;
+			test.pos.y -= speed;
 		}
 		else if (dashDown)
 		{
@@ -376,7 +405,7 @@ void player::standardSetUp()
 {
 	if (standard)
 	{
-		flares->fire(posX, posY);
+		flares->fire(posX,posY, attackAngle);
 	}
 }
 void player::signatureSetUp()

@@ -178,6 +178,7 @@
     <ClCompile Include="dropManager.cpp">
       <Filter>GameFramework\매니져\드롭</Filter>
     </ClCompile>
+    <ClCompile Include="inventory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -283,5 +284,6 @@
     <ClInclude Include="dropManager.h">
       <Filter>GameFramework\매니져\드롭</Filter>
     </ClInclude>
+    <ClInclude Include="inventory.h" />
   </ItemGroup>
 </Project>
