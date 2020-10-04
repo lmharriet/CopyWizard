@@ -1,7 +1,15 @@
 #pragma once
 #include "monster.h"
+
 class golem : public monster
 {
+	
+
+private:
+	bool atkDirection[MAX];
+	POINT smallSlashIndex;
+	bool isFxAppear;
+
 public:
 	void addInit()override;
 	void update() override;

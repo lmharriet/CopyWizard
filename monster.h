@@ -69,11 +69,21 @@ enum class STATEIMAGE {
 };
 
 
+enum  ATKDIRECTION {
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT,
+	
+	MAX	
+};
+
 class monster : public gameNode
 {
 protected:
 
 	image* img;
+	image* skillImg;
 	RECT rc;
 	POINT pos;
 	POINT cul;
@@ -105,7 +115,7 @@ protected:
 
 public:
 	 
-	HRESULT init(tagTile* tile, const char* fileName, POINT _pos, float _speed, int _hp, bool _isKnockBack = true);
+	HRESULT init(tagTile* tile, const char* fileName, POINT _pos, float _speed, int _hp,  const char* skillImgName, bool _isKnockBack = true);
 	void release();
 	virtual void update()=0;
 	virtual void render()=0;

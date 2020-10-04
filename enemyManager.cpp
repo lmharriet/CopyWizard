@@ -7,6 +7,8 @@ HRESULT enemyManager::init(tagTile* _tile)
 	IMAGEMANAGER->addFrameImage("summoner", "resource/enemy/SummonerSource.bmp", 500, 700, 5, 7);
 	IMAGEMANAGER->addFrameImage("golem", "resource/enemy/Golem.bmp", 720, 700, 6, 5);
 	IMAGEMANAGER->addFrameImage("knight", "resource/enemy/knight.bmp", 650, 1123, 6, 8);
+
+	IMAGEMANAGER->addFrameImage("smallSlash", "resource/enemyEffect/smallSlash.bmp", 246, 492, 3, 6);
 	//미니언 생성, 보스, 일반몬스터
 	//따로 함수로 빼서 처리하면 관리가 편하다
 
@@ -51,6 +53,8 @@ void enemyManager::update()
 
 	
 	
+	
+	
 	//미니언 총알발사
 	//this->minionBulletFire();
 }
@@ -74,19 +78,19 @@ void enemyManager::render()
 void enemyManager::setMinion()
 {
 	monster* _golem1 = new golem;
-	_golem1->init(tile, "golem", { 820,320 }, 3.f,50,false);
+	_golem1->init(tile, "golem", { 820,320 }, 3.f,50,"smallSlash",false);
 	_vMinion.push_back(_golem1);
 	
 	monster* _golem2 = new golem;
-	_golem2->init(tile, "golem", { 220,320 }, 3.f,50, false); 
+	_golem2->init(tile, "golem", { 220,320 }, 3.f,50, "smallSlash",false); 
 	_vMinion.push_back(_golem2);
 	
 	monster* enem = new summoner;
-	enem->init(nullptr,"summoner", { 500,500 },0,10);
+	enem->init(nullptr,"summoner", { 500,500 },0,10,0);
 	_vMinion.push_back(enem);
 
 	monster* _knight = new knight;
-	_knight->init(tile, "knight", { 320, 550 }, 4.f,30);
+	_knight->init(tile, "knight", { 320, 550 }, 4.f,30,"smallSlash");
 	_vMinion.push_back(_knight);
 	
 }

@@ -4,7 +4,12 @@
 
 void golem::addInit()
 {
-    
+    for (int i = 0; i < MAX; i++)
+    {
+        atkDirection[i] = false;
+    }
+    smallSlashIndex = { 0,0 };
+    isFxAppear = false;
 }
 
 void golem::update()
@@ -18,7 +23,6 @@ void golem::update()
     else
         isFindWayOn = false;
    
-   
     if (isFindWayOn) //±æÃ£±â on
     {
         
@@ -29,14 +33,36 @@ void golem::update()
             pos.x += cos(angle) * speed;
             pos.y += -sin(angle) * speed;
             if (0 < cos(angle) * speed)
-                isLeft = false;
+            {
+                atkDirection[LEFT] = false;
+                atkDirection[RIGHT] = true;
+            }
             else
-                isLeft = true;
+            {
+                atkDirection[LEFT] = true;
+                atkDirection[RIGHT] = false;
+            }
+            if (0 < sin(angle) * speed)
+            {
+               
+                atkDirection[UP] = true;
+                atkDirection[DOWN] = false;
+            }
+            else
+            {
+               
+                atkDirection[UP] = false;
+                atkDirection[DOWN] = true;
+            }
         }
         else if(!isDie)
         {
             state = STATEIMAGE::ATK;
             isATK = true;
+           
+            
+          
+               
         }
        
     }
@@ -45,6 +71,10 @@ void golem::update()
         state = STATEIMAGE::IDLE;
     }
 
+
+    
+
+
     cul.x = CAMERAMANAGER->GetRelativeX(pos.x);
     cul.y = CAMERAMANAGER->GetRelativeY(pos.y);
     die();
@@ -52,12 +82,11 @@ void golem::update()
 
 void golem::render()
 {
-    
-   // FrameRect(getMemDC(), rc, RGB(0, 0, 0));
     stateImageRender();
-  
-
-   // astar->render(getMemDC());
+    
+  // FrameRect(getMemDC(), playerRC,RGB(255,255,255));
+  // FrameRect(getMemDC(), rc,RGB(255,255,255));
+   
 }
 
 void golem::stateImageRender()
@@ -65,7 +94,7 @@ void golem::stateImageRender()
     switch (state)
     {
     case STATEIMAGE::IDLE:
-        if (isLeft)
+        if (atkDirection[LEFT])
         {
             frameIndex.x = 5;
             frameIndex.y = 0;
@@ -79,7 +108,7 @@ void golem::stateImageRender()
        
         break;
     case STATEIMAGE::WALK:
-        if (isLeft)
+        if (atkDirection[LEFT])
         {
             frameIndex.y = 2;
             count++;
@@ -113,7 +142,7 @@ void golem::stateImageRender()
 
         break;
     case STATEIMAGE::ATK:
-        if (isLeft)
+        if (atkDirection[LEFT])
         {
             frameIndex.y = 0;
             count++;
@@ -121,6 +150,10 @@ void golem::stateImageRender()
             {
                 count = 0;
                 frameIndex.x--;
+                if (frameIndex.x == 3)
+                {
+                    isFxAppear = true;
+                }
                 if (frameIndex.x < 3)
                 {
                     frameIndex.x = 3;
@@ -134,7 +167,7 @@ void golem::stateImageRender()
                 }
             }
         }
-        else
+        else 
         {
             frameIndex.y = 0;
             count++;
@@ -142,12 +175,17 @@ void golem::stateImageRender()
             {
                 count = 0;
                 frameIndex.x++;
+                if (frameIndex.x == 2)
+                {
+                    isFxAppear = true;
+                 }
                 if (frameIndex.x > 2)
                 {
                     frameIndex.x = 2;
                     delay++;
                     if(delay > 3)
                     {
+                        
                         isATK = false;
                         delay = 0;
                         frameIndex.x = 0;
@@ -159,9 +197,95 @@ void golem::stateImageRender()
 
         img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
         
+        if (!isFxAppear )
+        {
+            smallSlashIndex = { -1,0 };
+            if (atkDirection[LEFT])
+            {
+                smallSlashIndex.x = 3;
+            }
+        }
+
+        if (isFxAppear )
+        {
+            int frameSpeed = 6;
+            if (atkDirection[UP]&&atkDirection[LEFT]&&playerRC.left>rc.left&&playerRC.right<rc.right)
+            {
+                smallSlashIndex.y = 5;
+                if (count % frameSpeed == 0)
+                {
+                    smallSlashIndex.x--;
+                    if (smallSlashIndex.x <0)
+                        isFxAppear = false;
+                    
+                }
+               
+                skillImg->frameRender(getMemDC(), cul.x+10, cul.y-30, smallSlashIndex.x, smallSlashIndex.y);
+            }
+            else if (atkDirection[UP] && atkDirection[RIGHT] && playerRC.left > rc.left && playerRC.right < rc.right)
+            {
+                smallSlashIndex.y = 4;
+                    if (count % frameSpeed == 0)
+                    {
+                        smallSlashIndex.x++;
+                        if (smallSlashIndex.x > 2)
+                            isFxAppear = false;
+                    }
+
+                    skillImg->frameRender(getMemDC(), cul.x+10, cul.y-30, smallSlashIndex.x, smallSlashIndex.y);
+            }
+
+            else if (atkDirection[DOWN]&&atkDirection[LEFT] && playerRC.left > rc.left && playerRC.right < rc.right)
+            {
+                smallSlashIndex.y = 3;
+                if (count % frameSpeed == 0)
+                {
+                    smallSlashIndex.x--;
+                    if (smallSlashIndex.x < 0)
+                        isFxAppear = false;
+                }
+                skillImg->frameRender(getMemDC(), cul.x+10, cul.y+30, smallSlashIndex.x, smallSlashIndex.y);
+            }
+            else if (atkDirection[DOWN] && atkDirection[RIGHT] && playerRC.left > rc.left && playerRC.right < rc.right)
+            {
+                smallSlashIndex.y = 2;
+                if (count % frameSpeed == 0)
+                {
+                    smallSlashIndex.x++;
+                    if (smallSlashIndex.x > 2)
+                        isFxAppear = false;
+                }
+                skillImg->frameRender(getMemDC(), cul.x+10, cul.y+30, smallSlashIndex.x, smallSlashIndex.y);
+            }
+            else if (atkDirection[RIGHT])
+            {
+                smallSlashIndex.y = 0;
+                if (count % frameSpeed == 0)
+                {
+                    smallSlashIndex.x++;
+                    if (smallSlashIndex.x > 2)
+                        isFxAppear = false;
+                }
+                skillImg->frameRender(getMemDC(), cul.x + 80, cul.y + 20, smallSlashIndex.x, smallSlashIndex.y);
+            }
+            else 
+            {
+                smallSlashIndex.y = 1;
+                if (count % frameSpeed == 0)
+                {
+                    smallSlashIndex.x--;
+                    if (smallSlashIndex.x < 0)
+                        isFxAppear = false;
+                }
+                skillImg->frameRender(getMemDC(), cul.x - 60, cul.y + 20, smallSlashIndex.x, smallSlashIndex.y);
+            }
+           
+        }
+       
+        
         break;
     case STATEIMAGE::DIE:
-        if (isLeft)
+        if (atkDirection[LEFT])
         {
             frameIndex.y = 4;
             count++;
@@ -176,6 +300,7 @@ void golem::stateImageRender()
                     if (delay > 2)
                     {
                         isDelete = true;
+
                     }
                 }
             }
