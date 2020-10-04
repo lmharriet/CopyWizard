@@ -29,6 +29,7 @@ struct tagArcana
 
 	int lifeTime;
 
+	int frameX;
 	int frameY;
 
 	MOVE dir;
@@ -162,4 +163,23 @@ public:
 	void meteorUltFire(float x, float y, float speed, MOVE dir, float range);
 	void move();
 
+};
+//===================
+//	## dashFire ## 
+//===================
+class dashFire :public gameNode
+{
+private:
+	vector<tagArcana> _vDash;
+public:
+	HRESULT init();
+	void release();
+	void update();
+	void render();
+
+	void singleRender(int index);
+
+	void fire(float x, float y);
+	float getY(int index) { return _vDash[index].y; }
+	int getSize() { return _vDash.size(); }
 };

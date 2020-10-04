@@ -209,9 +209,10 @@ void bomb::render()
 {
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
-		CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage,
-			_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth() / 2),
-			_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight() / 2), index, 0);
+		
+		//CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage,
+		//_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth() / 2),
+			//_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight() / 2), index, 0);
 
 		CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 20, 20));
 	}
@@ -362,7 +363,6 @@ void meteor::meteorFire(float x, float y, float speed, MOVE dir, float range)
 	//memset(&meteor, 0, sizeof(meteor));
 
 	meteor.speed = 12.5f;
-
 	meteor.rc = RectMakeCenter(meteor.x, meteor.y, 200 * 2, 160 * 2);
 	meteor.img = IMAGEMANAGER->findImage("meteor");
 	meteor.lifeTime = 0;
@@ -517,3 +517,78 @@ void meteor::move()
 	}
 
 }
+
+HRESULT dashFire::init()
+{
+	return S_OK;
+}
+
+void dashFire::release()
+{
+}
+
+void dashFire::update()
+{
+}
+
+void dashFire::render()
+{
+	for (int i = 0; i < _vDash.size();)
+	{
+		_vDash[i].lifeTime++;
+
+		//CAMERAMANAGER->Ellipse(getMemDC(), _vDash[i].rc);
+		image* img = IMAGEMANAGER->findImage("flame");
+
+		CAMERAMANAGER->FrameRender(getMemDC(), img, 
+			_vDash[i].x - img->getFrameWidth()/2,
+			_vDash[i].y - img->getFrameHeight()/2, _vDash[i].frameX, 0);
+
+		if (_vDash[i].lifeTime == 180)
+		{
+			_vDash.erase(_vDash.begin() + i);
+		}
+		else
+		{
+			if (_vDash[i].lifeTime % 5 == 0) _vDash[i].frameX++;
+			if (_vDash[i].frameX == img->getMaxFrameX()) _vDash[i].frameX = 0;
+
+			i++;
+		}
+	}
+}
+
+void dashFire::singleRender(int index)
+{
+	_vDash[index].lifeTime++;
+
+	//CAMERAMANAGER->Ellipse(getMemDC(), _vDash[i].rc);
+	image* img = IMAGEMANAGER->findImage("flame");
+
+	CAMERAMANAGER->FrameRender(getMemDC(), img,
+		_vDash[index].x - img->getFrameWidth() / 2,
+		_vDash[index].y - img->getFrameHeight() / 2, _vDash[index].frameX, 0);
+
+	if (_vDash[index].lifeTime == 180)
+	{
+		_vDash.erase(_vDash.begin() + index);
+	}
+	else
+	{
+		if (_vDash[index].lifeTime % 5 == 0) _vDash[index].frameX++;
+		if (_vDash[index].frameX == img->getMaxFrameX()) _vDash[index].frameX = 0;
+	}
+}
+
+void dashFire::fire(float x, float y)
+{
+	tagArcana dash;
+	dash.rc = RectMakeCenter(x, y, 128, 128);
+	dash.x = x;
+	dash.y = y;
+	dash.frameX = 0;
+	dash.lifeTime = 0;
+	_vDash.push_back(dash);
+}
+
+//추가 스킬 RAGING INFERNO

@@ -7,8 +7,8 @@ HRESULT player::init()
 	IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
 	IMAGEMANAGER->addFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
 	IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 2400, 640, 6, 2);
-	IMAGEMANAGER->addFrameImage("flame", "resource/player/flame1.bmp",2048, 64, 32, 1);
-
+	IMAGEMANAGER->addFrameImage("flame", "resource/player/flame1.bmp",4096, 128, 32, 1);
+	IMAGEMANAGER->addFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
 	posX = WINSIZEX / 2;
 	posY = WINSIZEY / 2;
 	rc = RectMakeCenter(posX, posY, 100, 100);
@@ -49,11 +49,7 @@ HRESULT player::init()
 	atkCount = atkIndex = 0;
 	stateCool = meteorCool = 0;
 
-	//test
-	test.pos.x = posX;
-	test.pos.y = posY;
-	test.rc = RectMakeCenter(test.pos.x, test.pos.y, 30, 30);
-
+	
 
 	//불렛 클래스
 	blaze = new bomb;
@@ -65,6 +61,8 @@ HRESULT player::init()
 	Meteor = new meteor;
 	Meteor->init(650);
 
+	DashFire = new dashFire;
+	DashFire->init();
 	//인벤토리
 	inven = new inventory;
 	inven->init();
@@ -83,6 +81,9 @@ void player::release()
 	SAFE_DELETE(flares);
 	Meteor->release();
 	SAFE_DELETE(Meteor);
+	DashFire->release();
+	SAFE_DELETE(DashFire);
+
 	inven->release();
 	SAFE_DELETE(inven);
 }
@@ -93,6 +94,8 @@ void player::update()
 	blaze->update();
 	flares->update();
 	Meteor->update();
+	DashFire->update();
+
 	inven->update();
 	//animation count
 	count++;
@@ -147,6 +150,8 @@ void player::other_update()
 	blaze->update();
 	flares->update();
 	Meteor->update();
+	DashFire->update();
+
 	inven->update();
 	//animation count
 	count++;
@@ -200,16 +205,28 @@ void player::render()
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
 	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, tempAngle, 0, 50);
 
-	CAMERAMANAGER->Rectangle(getMemDC(), test.rc);
-	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
-	//Rectangle(getMemDC(), rc);
+	bool isRender = false;
 
-	animation();
+	for (int i = 0; i < DashFire->getSize(); i++)
+	{
+		if (!isRender && (DashFire->getY(i) > posY))
+		{
+			isRender = true;
+			animation();
+			DashFire->singleRender(i);
+		}
+		else DashFire->singleRender(i);
+	}
+
+	if (!isRender)animation(); // z렌더 같은 눈속임.. (나중에 frame이 떨어지면 포기하는 기능..)
+	
+
 	viewText();
 
 	blaze->render();
 	flares->render();
 	Meteor->render();
+
 
 }
 
@@ -248,9 +265,6 @@ void player::controller()
 	//DASH
 	if (INPUT->GetKeyDown(VK_SPACE) && speed == 0)
 	{
-		test.pos.x = posX;
-		test.pos.y = posY;
-		test.rc = RectMakeCenter(test.pos.x, test.pos.y, 30, 30);
 		//대쉬 이펙트 생성
 		EFFECT->dashEffect(move, { (long)posX,(long)posY });
 		state = STATE::DASH;
@@ -297,7 +311,10 @@ void player::dashFunction()
 	// 벽에 닿으면 대쉬 불가능, 게임 내에서 대쉬해서 낭떠러지에 닿으면 떨어짐. 
 	// 벽끼임 예외처리 필요
 
-	if (speed == 0)	return;
+	if (speed == 0) return;
+
+	if(speed ==8 || speed==11 || speed == 14 || speed == 17)
+		DashFire->fire(posX, posY);
 
 	if (dashLeft)
 	{
@@ -308,11 +325,9 @@ void player::dashFunction()
 			{
 				posX -= speed;
 				posY -= speed;
-				
-				//test.pos.x = cosf()
+
 			}
-			/*test.rc.left -= speed;
-			test.rc.top -= speed;*/
+
 		}
 		else if (dashDown)
 		{
@@ -322,15 +337,13 @@ void player::dashFunction()
 				posX -= speed;
 				posY += speed;
 			}
-			/*test.rc.left -= speed;
-			test.rc.bottom += speed;*/
+
 		}
 		else // 그냥 순수 LEFT
 		{
 			if (!tileCheck[(int)DIRECTION::LEFT].isCol)
 				posX -= speed;
 
-			//test.rc.left -= speed;
 
 		}
 	}
@@ -369,7 +382,7 @@ void player::dashFunction()
 		//순수 UP
 		if (!tileCheck[(int)DIRECTION::TOP].isCol)
 			posY -= speed;
-		test.rc.top -= speed;
+		
 	}
 
 	else if (dashDown)
@@ -377,7 +390,7 @@ void player::dashFunction()
 		//순수 DOWN
 		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol)
 			posY += speed;
-		test.rc.bottom += speed;
+
 	}
 
 	speed--;

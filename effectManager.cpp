@@ -47,7 +47,10 @@ void effectManager::render(HDC hdc)
     for (iter = vEft.begin(); iter != vEft.end();)
     {
         image* img = IMAGEMANAGER->findImage(iter->keyName);
-        CAMERAMANAGER->FrameRender(hdc, img, iter->pos.x, iter->pos.y, iter->imgCount, 0);
+        CAMERAMANAGER->FrameRender(hdc, img, 
+            iter->pos.x - img->getFrameWidth()/2,
+            iter->pos.y - img->getFrameHeight()/2,
+            iter->imgCount, 0);
 
         if (iter->flipImg == false)
         {
@@ -62,9 +65,12 @@ void effectManager::render(HDC hdc)
             else
             {
                 if (iter->currentTime == iter->eraseTime) iter = vEft.erase(iter);
-                else iter++;
+                else
+                {
+                    iter->currentTime++;
 
-                iter->currentTime++;
+                    iter++;
+                }
             }
         }
 
@@ -81,9 +87,12 @@ void effectManager::render(HDC hdc)
             else
             {
                 if (iter->currentTime == iter->eraseTime) iter = vEft.erase(iter);
-                else iter++;
+                else
+                {
+                    iter->currentTime++;
 
-                iter->currentTime++;
+                    iter++;
+                }
             }
         }
     }

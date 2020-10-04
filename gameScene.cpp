@@ -92,6 +92,9 @@ void gameScene::update()
 			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRC()))
 			{
 				enemy->getMinion()[j]->hit(10, _player->getBlaze()->getBullet()[i].angle, 30.f);
+				EFFECT->setEffect("flameStrike",
+					{ (long)_player->getBlaze()->getBullet()[i].x
+					,(long)_player->getBlaze()->getBullet()[i].y });
 				_player->getBlaze()->removeBomb(i);
 				break;
 				
@@ -246,6 +249,7 @@ void gameScene::render()
 
 	enemy->render();
 	if(!isRender) _player->render();
+	EFFECT->render(getMemDC());
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), _player->getRect());
 	//uiImg->render(getMemDC());
