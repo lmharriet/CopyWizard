@@ -163,7 +163,7 @@
     <ClCompile Include="enemyManager.cpp">
       <Filter>MainGame\인게임</Filter>
     </ClCompile>
-    <ClCompile Include="lancer.cpp">
+    <ClCompile Include="knight.cpp">
       <Filter>MainGame\인게임\monster</Filter>
     </ClCompile>
   </ItemGroup>
@@ -262,7 +262,7 @@
     <ClInclude Include="enemyManager.h">
       <Filter>MainGame\인게임</Filter>
     </ClInclude>
-    <ClInclude Include="lancer.h">
+    <ClInclude Include="knight.h">
       <Filter>MainGame\인게임\monster</Filter>
     </ClInclude>
   </ItemGroup>

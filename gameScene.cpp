@@ -24,12 +24,6 @@ HRESULT gameScene::init()
 	enemy = new enemyManager;
 	enemy->init(tile);
 
-	//_golem = new golem; //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
-	//_golem->init(tile, "golem",{ 820,320 },3.f); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
-
-
-	//_golem2 = new golem; //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½2)
-	//_golem2->init(tile, "golem", { 220,320 }, 3.f); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½2)
 
 	
 
@@ -41,11 +35,7 @@ void gameScene::release()
 	_player->release();
 	SAFE_DELETE(_player);
 
-	/*_golem->release();
-	SAFE_DELETE(_golem);
-
-	_golem2->release();
-	SAFE_DELETE(_golem2);*/
+	
 	enemy->release();
 	SAFE_DELETE(enemy);
 }
@@ -54,8 +44,7 @@ void gameScene::update()
 {
 	UI->update();
 	_player->update();
-	/*_golem->update();
-	_golem2->update()*/;
+	
 	enemy->update();
 
 
