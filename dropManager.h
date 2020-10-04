@@ -37,8 +37,6 @@ private:
 	vector<tagCoin> vCoin;
 	vector<infoTransfer> vTransfer;
 
-	int silverCoin, goldCoin;
-
 	int time;
 public:
 	HRESULT init();
@@ -46,4 +44,7 @@ public:
 	void render(HDC hdc);
 	void dropPoint(POINT pt, int minCoin, int maxCoin);
 	void coinGenerator();
+
+	RECT getCoinRect(int index) { return vCoin[index].rc; }
+	void delCoin(int index) { vCoin.erase(vCoin.begin() + index); }
 };

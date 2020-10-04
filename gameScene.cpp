@@ -36,7 +36,6 @@ void gameScene::release()
 	_player->release();
 	SAFE_DELETE(_player);
 
-	
 	enemy->release();
 	SAFE_DELETE(enemy);
 }

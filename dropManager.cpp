@@ -4,7 +4,6 @@
 HRESULT dropManager::init()
 {
     IMAGEMANAGER->addFrameImage("coin", "Images/item/coin.bmp", 40, 20, 4, 2);
-    silverCoin = goldCoin = 0;
     return S_OK;
 }
 
@@ -31,10 +30,9 @@ void dropManager::render(HDC hdc)
 void dropManager::dropPoint(POINT pt, int minCoin, int maxCoin)
 {
     int ranCoin = RANDOM->range(minCoin, maxCoin);
-    goldCoin = ranCoin / 5;
-    silverCoin = ranCoin % 5;
 
-    vTransfer.push_back({ goldCoin,silverCoin,pt });
+    vTransfer.push_back({ ranCoin / 5,ranCoin % 5,pt });
+    cout << "pt" << '\n';
 }
 
 void dropManager::coinGenerator()
@@ -46,8 +44,8 @@ void dropManager::coinGenerator()
         for (int i = 0; i < iter->gCoin; i++)
         {
             POINT pos = iter->pt;
-            pos.x = RANDOM->range(-20, 20);
-            pos.y = RANDOM->range(-10, 10);
+            pos.x += RANDOM->range(-20, 20);
+            pos.y += RANDOM->range(-10, 10);
 
             vCoin.push_back({ pos,RectMakeCenter(pos.x,pos.y,10,10),5,0,1 });
         }
@@ -55,11 +53,12 @@ void dropManager::coinGenerator()
         for (int j = 0; j < iter->sCoin; j++)
         {
             POINT pos = iter->pt;
-            pos.x = RANDOM->range(-20, 20);
-            pos.y = RANDOM->range(-10, 10);
+            pos.x += RANDOM->range(-20, 20);
+            pos.y += RANDOM->range(-10, 10);
 
-            vCoin.push_back({ pos,RectMakeCenter(pos.x,pos.y,10,10),1,0,1 });
+            vCoin.push_back({ pos,RectMakeCenter(pos.x,pos.y,10,10),1,0,0 });
         }
+
 
         vTransfer.pop_back();
         break;
