@@ -6,7 +6,7 @@ HRESULT enemyManager::init(tagTile* _tile)
 {
 	IMAGEMANAGER->addFrameImage("summoner", "resource/enemy/SummonerSource.bmp", 500, 700, 5, 7);
 	IMAGEMANAGER->addFrameImage("golem", "resource/enemy/Golem.bmp", 720, 700, 6, 5);
-	IMAGEMANAGER->addFrameImage("knight", "resource/enemy/knight.bmp", 491, 849, 6, 8);
+	IMAGEMANAGER->addFrameImage("knight", "resource/enemy/knight.bmp", 650, 1123, 6, 8);
 	//미니언 생성, 보스, 일반몬스터
 	//따로 함수로 빼서 처리하면 관리가 편하다
 
