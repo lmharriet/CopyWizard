@@ -88,6 +88,7 @@ void gameScene::update()
 	{
 		for (int j = 0; j < enemy->getMinion().size(); j++)
 		{
+			if (0 >= enemy->getMinion()[j]->getHp())continue;
 			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRC()))
 			{
 				enemy->getMinion()[j]->hit(10, _player->getBlaze()->getBullet()[i].angle, 30.f);
