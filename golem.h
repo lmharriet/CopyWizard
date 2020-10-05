@@ -8,7 +8,7 @@ class golem : public monster
 private:
 	bool atkDirection[MAX];
 	POINT smallSlashIndex;
-	bool isFxAppear;
+	
 
 public:
 	void addInit()override;

@@ -36,7 +36,6 @@ void summoner::update()
 
     if (!isDie && atkTime%20==0)
     {
-        cout << atkTime << endl;
         atkTime = 0;
         state = STATEIMAGE::ATK;
         isATK = true;
@@ -59,15 +58,15 @@ void summoner::stateImageRender()
     case STATEIMAGE::IDLE:
         if (isLeft)
         {
-            frameIndex[STATEIMAGE::IDLE].x = 0;
-            frameIndex[STATEIMAGE::IDLE].y = 0;
+            frameIndexL[STATEIMAGE::IDLE].x = 0;
+            frameIndexL[STATEIMAGE::IDLE].y = 0;
         }
         else
         {
-            frameIndex[STATEIMAGE::IDLE].x = 0;
-            frameIndex[STATEIMAGE::IDLE].y = 2;
+            frameIndexL[STATEIMAGE::IDLE].x = 0;
+            frameIndexL[STATEIMAGE::IDLE].y = 2;
         }
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex[STATEIMAGE::IDLE].x, frameIndex[STATEIMAGE::IDLE].y);
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);
 
         break;
    
@@ -77,99 +76,99 @@ void summoner::stateImageRender()
         {
             int atkTime = 10;
 
-            if(frameIndex[STATEIMAGE::ATK].y!=1)
-                frameIndex[STATEIMAGE::ATK].y = 0;
+            if(frameIndexL[STATEIMAGE::ATK].y!=1)
+                frameIndexL[STATEIMAGE::ATK].y = 0;
                 count++;
             if (count % atkTime == 0)
             {
                 count = 0;
-                frameIndex[STATEIMAGE::ATK].x++;
-                if (frameIndex[STATEIMAGE::ATK].y == 1 && frameIndex[STATEIMAGE::ATK].x > 4)
+                frameIndexL[STATEIMAGE::ATK].x++;
+                if (frameIndexL[STATEIMAGE::ATK].y == 1 && frameIndexL[STATEIMAGE::ATK].x > 4)
                 {
-                    frameIndex[STATEIMAGE::ATK].x = 4;
+                    frameIndexL[STATEIMAGE::ATK].x = 4;
                     delay++;
                     if (delay > 3)
                     {
                         isATK = false;
                         delay = 0;
-                        frameIndex[STATEIMAGE::ATK].x = 0;
-                        frameIndex[STATEIMAGE::ATK].y = 0;
+                        frameIndexL[STATEIMAGE::ATK].x = 0;
+                        frameIndexL[STATEIMAGE::ATK].y = 0;
                     }
                 }
-                else if (frameIndex[STATEIMAGE::ATK].x > 4)
+                else if (frameIndexL[STATEIMAGE::ATK].x > 4)
                 {
-                    frameIndex[STATEIMAGE::ATK].x = 0;
-                    frameIndex[STATEIMAGE::ATK].y = 1;
+                    frameIndexL[STATEIMAGE::ATK].x = 0;
+                    frameIndexL[STATEIMAGE::ATK].y = 1;
                 }
             }
         }
         else
         {
             int atkTime = 10;
-            if (frameIndex[STATEIMAGE::ATK].y != 3)
-                frameIndex[STATEIMAGE::ATK].y = 2;
+            if (frameIndexL[STATEIMAGE::ATK].y != 3)
+                frameIndexL[STATEIMAGE::ATK].y = 2;
            
             count++;
             if (count % atkTime == 0)
             {
                 count = 0;
-                if (frameIndex[STATEIMAGE::ATK].y == 2)
+                if (frameIndexL[STATEIMAGE::ATK].y == 2)
                 {
-                    frameIndex[STATEIMAGE::ATK].x++;
-                    if (frameIndex[STATEIMAGE::ATK].x > 4)
+                    frameIndexL[STATEIMAGE::ATK].x++;
+                    if (frameIndexL[STATEIMAGE::ATK].x > 4)
                     {
-                        frameIndex[STATEIMAGE::ATK].x = 4;
-                        frameIndex[STATEIMAGE::ATK].y = 3;
+                        frameIndexL[STATEIMAGE::ATK].x = 4;
+                        frameIndexL[STATEIMAGE::ATK].y = 3;
                     }
                 }
 
                 else
-                    frameIndex[STATEIMAGE::ATK].x--;
-                if (frameIndex[STATEIMAGE::ATK].x < 0)
+                    frameIndexL[STATEIMAGE::ATK].x--;
+                if (frameIndexL[STATEIMAGE::ATK].x < 0)
                 {
-                    frameIndex[STATEIMAGE::ATK].x = 0;
+                    frameIndexL[STATEIMAGE::ATK].x = 0;
                     delay++;
                     if (delay > 3)
                     {
                         isATK = false;
                         delay = 0;
-                        frameIndex[STATEIMAGE::ATK].x = 0;
-                        frameIndex[STATEIMAGE::ATK].y = 2;
+                        frameIndexL[STATEIMAGE::ATK].x = 0;
+                        frameIndexL[STATEIMAGE::ATK].y = 2;
                     }
                 }
             }
         }
 
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex[STATEIMAGE::ATK].x, frameIndex[STATEIMAGE::ATK].y);
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::ATK].x, frameIndexL[STATEIMAGE::ATK].y);
 
         break;
     case STATEIMAGE::DIE:
         if (isLeft)
         {
             int dieFrameSpeed = 10;
-            if (frameIndex[STATEIMAGE::DIE].y != 5)
-                frameIndex[STATEIMAGE::DIE].y = 6;
+            if (frameIndexL[STATEIMAGE::DIE].y != 5)
+                frameIndexL[STATEIMAGE::DIE].y = 6;
            
             count++;
             if (count % dieFrameSpeed == 0)
             {
                 count = 0;
-                if (frameIndex[STATEIMAGE::DIE].y == 6)
+                if (frameIndexL[STATEIMAGE::DIE].y == 6)
                 {
-                    frameIndex[STATEIMAGE::DIE].x--;
+                    frameIndexL[STATEIMAGE::DIE].x--;
 
-                    if (frameIndex[STATEIMAGE::DIE].x < 0)
+                    if (frameIndexL[STATEIMAGE::DIE].x < 0)
                     {
-                        frameIndex[STATEIMAGE::DIE].y = 5;
-                        frameIndex[STATEIMAGE::DIE].x = 3;
+                        frameIndexL[STATEIMAGE::DIE].y = 5;
+                        frameIndexL[STATEIMAGE::DIE].x = 3;
                     }
                 }
                 else
                 {
-                    frameIndex[STATEIMAGE::DIE].x++;
-                    if (frameIndex[STATEIMAGE::DIE].x > 4)
+                    frameIndexL[STATEIMAGE::DIE].x++;
+                    if (frameIndexL[STATEIMAGE::DIE].x > 4)
                     {
-                        frameIndex[STATEIMAGE::DIE].x = 4;
+                        frameIndexL[STATEIMAGE::DIE].x = 4;
                         delay++;
                         if (delay > 2)
                         {
@@ -183,34 +182,34 @@ void summoner::stateImageRender()
         else
         {
             int dieFrameSpeed = 10;
-            if (frameIndex[STATEIMAGE::DIE].y != 5)
-                frameIndex[STATEIMAGE::DIE].y = 4;
+            if (frameIndexL[STATEIMAGE::DIE].y != 5)
+                frameIndexL[STATEIMAGE::DIE].y = 4;
 
             count++;
             if (count % dieFrameSpeed == 0)
             {
                 count = 0;
                 
-                frameIndex[STATEIMAGE::DIE].x++;
+                frameIndexL[STATEIMAGE::DIE].x++;
 
-                if (frameIndex[STATEIMAGE::DIE].y==5 && frameIndex[STATEIMAGE::DIE].x>1)
+                if (frameIndexL[STATEIMAGE::DIE].y==5 && frameIndexL[STATEIMAGE::DIE].x>1)
                 {
-                    frameIndex[STATEIMAGE::DIE].x = 1;
+                    frameIndexL[STATEIMAGE::DIE].x = 1;
                     delay++;
                     if (delay > 2)
                     {
                         isDelete = true;
                     }
                 }
-                else if (frameIndex[STATEIMAGE::DIE].x > 4)
+                else if (frameIndexL[STATEIMAGE::DIE].x > 4)
                 {
-                    frameIndex[STATEIMAGE::DIE].y = 5;
-                    frameIndex[STATEIMAGE::DIE].x = 0;
+                    frameIndexL[STATEIMAGE::DIE].y = 5;
+                    frameIndexL[STATEIMAGE::DIE].x = 0;
                 }
             }
         }
 
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex[STATEIMAGE::DIE].x, frameIndex[STATEIMAGE::DIE].y);
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::DIE].x, frameIndexL[STATEIMAGE::DIE].y);
         coinDrop(1, 10);
         break;
 

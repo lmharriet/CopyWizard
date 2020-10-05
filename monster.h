@@ -87,7 +87,8 @@ protected:
 
 	image* img;
 	image* skillImg;
-	POINT frameIndex[STATEIMAGE::STATEMAX];
+	POINT frameIndexL[STATEIMAGE::STATEMAX];
+	POINT frameIndexR[STATEIMAGE::STATEMAX];
 	POINT pos;
 	POINT cul;
 	STATEIMAGE state = STATEIMAGE::IDLE;
@@ -106,6 +107,7 @@ protected:
 	bool isATK = false;
 	bool isDie = false;
 	bool isDelete = false;
+	bool isFxAppear = false;
 	bool isAstar;
 	bool isKnockBack ;
 	const float distanceMax = 700.f;
