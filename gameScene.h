@@ -23,6 +23,8 @@ private:
 
 	//맵타일 정보
 	tagTile tile[MAXTILE];
+	// 메모리 관리용
+	vector<int> vTile;
 
 	//test cam(수정해도됨)
 	RECT cam;
@@ -33,6 +35,8 @@ public:
 	void release();
 	void update();
 	void render();
+
+	void collisionTile();
 
 	//맵 로드
 	void loadMap(const char* mapFileName);
