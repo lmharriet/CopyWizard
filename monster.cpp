@@ -340,7 +340,8 @@ HRESULT monster::init(tagTile* tile, const char* fileName , POINT _pos, float _s
 	pos.y = _pos.y;
 	speed = _speed;
 	hp = _hp;
-	frameIndex = { 0,0 };
+	for(int i=0; i<STATEMAX; i++)
+	frameIndex[i] = { 0,0 };
 
 	addInit();
 	

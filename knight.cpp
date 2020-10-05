@@ -63,15 +63,15 @@ void knight::stateImageRender()
     case STATEIMAGE::IDLE:
         if (isLeft)
         {
-            frameIndex.x = 1;
-            frameIndex.y = 0;
+            frameIndex[STATEIMAGE::IDLE].x = 1;
+            frameIndex[STATEIMAGE::IDLE].y = 0;
         }
         else
         {
-            frameIndex.x = 0;
-            frameIndex.y = 0;
+            frameIndex[STATEIMAGE::IDLE].x = 0;
+            frameIndex[STATEIMAGE::IDLE].y = 0;
         }
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex[STATEIMAGE::IDLE].x, frameIndex[STATEIMAGE::IDLE].y);
 
         break;
     case STATEIMAGE::WALK:
@@ -81,113 +81,113 @@ void knight::stateImageRender()
     case STATEIMAGE::ATK:
         if (isLeft)
         {
-            frameIndex.y = 3;
+            frameIndex[STATEIMAGE::ATK].y = 3;
             count++;
             if (count % 30 == 0)
             {
                 count = 0;
-                frameIndex.x--;
-                if (frameIndex.x < 3)
+                frameIndex[STATEIMAGE::ATK].x--;
+                if (frameIndex[STATEIMAGE::ATK].x < 3)
                 {
-                    frameIndex.x = 3;
+                    frameIndex[STATEIMAGE::ATK].x = 3;
                     delay++;
                     if (delay > 3)
                     {
                         isATK = false;
                         delay = 0;
-                        frameIndex.x = 5;
+                        frameIndex[STATEIMAGE::ATK].x = 5;
                     }
                 }
             }
         }
         else
         {
-            frameIndex.y = 3;
+            frameIndex[STATEIMAGE::ATK].y = 3;
             count++;
             if (count % 30 == 0)
             {
                 count = 0;
-                frameIndex.x++;
-                if (frameIndex.x > 2)
+                frameIndex[STATEIMAGE::ATK].x++;
+                if (frameIndex[STATEIMAGE::ATK].x > 2)
                 {
-                    frameIndex.x = 2;
+                    frameIndex[STATEIMAGE::ATK].x = 2;
                     delay++;
                     if (delay > 3)
                     {
                         isATK = false;
                         delay = 0;
-                        frameIndex.x = 0;
+                        frameIndex[STATEIMAGE::ATK].x = 0;
                     }
                 }
 
             }
         }
 
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
-
+        EFFECT->setEffect("smallSlash", pos);
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex[STATEIMAGE::ATK].x, frameIndex[STATEIMAGE::ATK].y);
         break;
     case STATEIMAGE::DIE:
         if (isLeft)
         {
-            if (frameIndex.y != 7)
-            frameIndex.y = 6;
+            if (frameIndex[STATEIMAGE::DIE].y != 7)
+            frameIndex[STATEIMAGE::DIE].y = 6;
             count++;
             if (count % 10 == 0)
             {
                 count = 0;
-                    frameIndex.x--;
+                    frameIndex[STATEIMAGE::DIE].x--;
                
 
-                if (frameIndex.x < 3 && frameIndex.y == 7) //»ç¸Á ÀÎµ¦½º 6
+                if (frameIndex[STATEIMAGE::DIE].x < 3 && frameIndex[STATEIMAGE::DIE].y == 7) //»ç¸Á ÀÎµ¦½º 6
                 {
                     
-                    frameIndex.x = 3;
+                    frameIndex[STATEIMAGE::DIE].x = 3;
                     delay++;
                     if (delay > 2)
                     {
                         isDelete = true;
                     }
                 }
-                else if (frameIndex.x < 0) // »ç¸Á ÀÎµ¦½º 5
+                else if (frameIndex[STATEIMAGE::DIE].x < 0) // »ç¸Á ÀÎµ¦½º 5
                 {
-                    frameIndex.x = 5;
-                    frameIndex.y = 7;
+                    frameIndex[STATEIMAGE::DIE].x = 5;
+                    frameIndex[STATEIMAGE::DIE].y = 7;
                    
                 }
             }
         }
         else
         {
-            if(frameIndex.y !=5 )
-            frameIndex.y = 4;
+            if(frameIndex[STATEIMAGE::DIE].y !=5 )
+            frameIndex[STATEIMAGE::DIE].y = 4;
             count++;
             if (count % 10 == 0)
             {
                 count = 0;
                 
-                frameIndex.x++;
+                frameIndex[STATEIMAGE::DIE].x++;
                 
-                if (frameIndex.x > 2 && frameIndex.y == 5) //»ç¸Á ÀÎµ¦½º 6
+                if (frameIndex[STATEIMAGE::DIE].x > 2 && frameIndex[STATEIMAGE::DIE].y == 5) //»ç¸Á ÀÎµ¦½º 6
                 {
                     
-                    frameIndex.x = 2;
+                    frameIndex[STATEIMAGE::DIE].x = 2;
                     delay++;
                     if (delay > 2)
                     {
                         isDelete = true;
                     }
                 }
-                else if (frameIndex.x > 5) // »ç¸Á ÀÎµ¦½º 5
+                else if (frameIndex[STATEIMAGE::DIE].x > 5) // »ç¸Á ÀÎµ¦½º 5
                 {
-                    frameIndex.x = 0;
-                    frameIndex.y = 5;
+                    frameIndex[STATEIMAGE::DIE].x = 0;
+                    frameIndex[STATEIMAGE::DIE].y = 5;
                     
                 }
 
             }
         }
 
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex[STATEIMAGE::DIE].x, frameIndex[STATEIMAGE::DIE].y);
         coinDrop(1, 10);
         break;
 
@@ -198,31 +198,31 @@ void knight::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
 {
     if (isLeft)
     {
-        frameIndex.y = indexY_L;
+        frameIndex[STATEIMAGE::WALK].y = indexY_L;
         count++;
         if (count % 10 == 0)
         {
             count = 0;
-            frameIndex.x--;
-            if (frameIndex.x < indexX_R)
-                frameIndex.x = indexX_L;
+            frameIndex[STATEIMAGE::WALK].x--;
+            if (frameIndex[STATEIMAGE::WALK].x < indexX_R)
+                frameIndex[STATEIMAGE::WALK].x = indexX_L;
         }
     }
     else
     {
-        frameIndex.y = indexY_R;
+        frameIndex[STATEIMAGE::WALK].y = indexY_R;
         count++;
         if (count % 10 == 0)
         {
             count = 0;
-            frameIndex.x++;
-            if (frameIndex.x > indexX_L)
-                frameIndex.x = indexX_R;
+            frameIndex[STATEIMAGE::WALK].x++;
+            if (frameIndex[STATEIMAGE::WALK].x > indexX_L)
+                frameIndex[STATEIMAGE::WALK].x = indexX_R;
 
         }
     }
 
-    img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
+    img->frameRender(getMemDC(), cul.x, cul.y, frameIndex[STATEIMAGE::WALK].x, frameIndex[STATEIMAGE::WALK].y);
 
 
 }

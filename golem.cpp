@@ -8,6 +8,12 @@ void golem::addInit()
     {
         atkDirection[i] = false;
     }
+  
+    for (int i = 0; i < STATEMAX; i++)
+    {
+        frameIndex[i] = { 0,0 };
+    }
+
     smallSlashIndex = { 0,0 };
     isFxAppear = false;
 }
@@ -88,106 +94,106 @@ void golem::stateImageRender()
     case STATEIMAGE::IDLE:
         if (atkDirection[LEFT])
         {
-            frameIndex.x = 5;
-            frameIndex.y = 0;
+            frameIndex[STATEIMAGE::IDLE].x = 5;
+            frameIndex[STATEIMAGE::IDLE].y = 0;
         }
         else
         {
-            frameIndex.x = 0;
-            frameIndex.y = 0;
+            frameIndex[STATEIMAGE::IDLE].x = 0;
+            frameIndex[STATEIMAGE::IDLE].y = 0;
         }
-        img->frameRender(getMemDC(), cul.x, cul.y,frameIndex.x,frameIndex.y);
-       
+        img->frameRender(getMemDC(), cul.x, cul.y,frameIndex[STATEIMAGE::IDLE].x, frameIndex[STATEIMAGE::IDLE].y);
+        
         break;
     case STATEIMAGE::WALK:
         if (atkDirection[LEFT])
         {
-            frameIndex.y = 2;
+            frameIndex[WALK].y = 2;
             count++;
             if (count % 10 == 0)
             {
                 count = 0;
-                frameIndex.x--;
-                if (frameIndex.x < 0)
+                frameIndex[WALK].x--;
+                if (frameIndex[WALK].x < 0)
                 {
-                    frameIndex.x = 5;
+                    frameIndex[WALK].x = 5;
                 }
             }
         }
         else
         {
-            frameIndex.y = 1;
+            frameIndex[WALK].y = 1;
             count++;
             if (count % 10 == 0)
             {
                 count = 0;
-                frameIndex.x++;
-                if (frameIndex.x > 5)
+                frameIndex[WALK].x++;
+                if (frameIndex[WALK].x > 5)
                 {
-                    frameIndex.x = 0;
+                    frameIndex[WALK].x = 0;
                 }
 
             }
         }
 
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex[WALK].x, frameIndex[WALK].y);
 
         break;
     case STATEIMAGE::ATK:
         if (atkDirection[LEFT])
         {
-            frameIndex.y = 0;
+            frameIndex[ATK].y = 0;
             count++;
             if (count % 30 == 0)
             {
                 count = 0;
-                frameIndex.x--;
-                if (frameIndex.x == 3)
+                frameIndex[ATK].x--;
+                if (frameIndex[ATK].x == 3)
                 {
                     isFxAppear = true;
                 }
-                if (frameIndex.x < 3)
+                if (frameIndex[ATK].x < 3)
                 {
-                    frameIndex.x = 3;
+                    frameIndex[ATK].x = 3;
                     delay++;
                     if (delay > 3)
                     {
                         isATK = false;
                         delay = 0;
-                        frameIndex.x = 5;
+                        frameIndex[ATK].x = 5;
                     }
                 }
             }
         }
         else 
         {
-            frameIndex.y = 0;
+            frameIndex[ATK].y = 0;
             count++;
             if (count % 30 == 0)
             {
                 count = 0;
-                frameIndex.x++;
-                if (frameIndex.x == 2)
+                frameIndex[ATK].x++;
+                if (frameIndex[ATK].x == 2)
                 {
                     isFxAppear = true;
                  }
-                if (frameIndex.x > 2)
+                if (frameIndex[ATK].x > 2)
                 {
-                    frameIndex.x = 2;
+                    frameIndex[ATK].x = 2;
                     delay++;
                     if(delay > 3)
                     {
                         
                         isATK = false;
                         delay = 0;
-                        frameIndex.x = 0;
+                        frameIndex[ATK].x = 0;
                     }
                 }
 
             }
         }
 
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex[ATK].x, frameIndex[ATK].y);
         
         if (!isFxAppear )
         {
@@ -279,15 +285,15 @@ void golem::stateImageRender()
     case STATEIMAGE::DIE:
         if (atkDirection[LEFT])
         {
-            frameIndex.y = 4;
+            frameIndex[STATEIMAGE::DIE].y = 4;
             count++;
             if (count % 10 == 0)
             {
                 count = 0;
-                frameIndex.x--;
-                if (frameIndex.x < 0)
+                frameIndex[STATEIMAGE::DIE].x--;
+                if (frameIndex[STATEIMAGE::DIE].x < 0)
                 {
-                    frameIndex.x = 0;
+                    frameIndex[STATEIMAGE::DIE].x = 0;
                     delay++;
                     if (delay > 2)
                     {
@@ -299,15 +305,15 @@ void golem::stateImageRender()
         }
         else
         {
-            frameIndex.y = 3;
+            frameIndex[STATEIMAGE::DIE].y = 3;
             count++;
             if (count % 10 == 0)
             {
                 count = 0;
-                frameIndex.x++;
-                if (frameIndex.x > 5)
+                frameIndex[STATEIMAGE::DIE].x++;
+                if (frameIndex[STATEIMAGE::DIE].x > 5)
                 {
-                    frameIndex.x = 5;
+                    frameIndex[STATEIMAGE::DIE].x = 5;
                     delay++;
                     if (delay > 2)
                     {
@@ -318,7 +324,7 @@ void golem::stateImageRender()
             }
         }
 
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex.x, frameIndex.y);
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndex[STATEIMAGE::DIE].x, frameIndex[STATEIMAGE::DIE].y);
         coinDrop(1, 10);
 
 

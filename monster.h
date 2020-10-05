@@ -61,11 +61,14 @@ public:
 	
 };
 
-enum class STATEIMAGE {
+enum  STATEIMAGE {
 	IDLE,
 	WALK,
 	ATK,
+	HIT,
 	DIE,
+
+	STATEMAX
 };
 
 
@@ -84,9 +87,11 @@ protected:
 
 	image* img;
 	image* skillImg;
-	RECT rc;
+	POINT frameIndex[STATEIMAGE::STATEMAX];
 	POINT pos;
 	POINT cul;
+	STATEIMAGE state = STATEIMAGE::IDLE;
+	
 	float speed;
 	float angle;
 	int atk;
@@ -96,8 +101,6 @@ protected:
 	int hpMax;
 	int count = 0;
 	int delay = 0;
-	POINT frameIndex;
-	STATEIMAGE state = STATEIMAGE::IDLE;
 	bool isFindWayOn = false;
 	bool isLeft = false;
 	bool isATK = false;
@@ -106,7 +109,10 @@ protected:
 	bool isAstar;
 	bool isKnockBack ;
 	const float distanceMax = 700.f;
+	
 	astarManager* astar;
+	
+	RECT rc;
 	RECT playerRC;
 	RECT camRC;
 
@@ -114,7 +120,6 @@ protected:
 	
 
 public:
-	 
 	HRESULT init(tagTile* tile, const char* fileName, POINT _pos, float _speed, int _hp,  const char* skillImgName, bool _isKnockBack = true);
 	void release();
 	virtual void update()=0;
