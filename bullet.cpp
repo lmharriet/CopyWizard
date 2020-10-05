@@ -595,6 +595,8 @@ void dashFire::fire(float x, float y)
 
 HRESULT RagingInferno::init()
 {
+
+	
 	gaugeTime = 0;
 	range = distance = 0;
 	index = count = 0;
@@ -627,10 +629,24 @@ void RagingInferno::update(float range)
 
 void RagingInferno::render()
 {
-	CAMERAMANAGER->FrameRender(getMemDC(), inferno.img, 
-		inferno.x-(inferno.img->getFrameWidth()/2), 
-		inferno.y-(inferno.img->getFrameHeight()/2), index,0);
-	CAMERAMANAGER->Ellipse(getMemDC(), inferno.rc);
+
+	//dummy
+	image* dummy;
+	dummy = IMAGEMANAGER->addFrameImage("dummyEffect", "resource/player/dummy.bmp", 750, 150, 5, 1);
+
+
+	if (isFire)
+	{
+		//CAMERAMANAGER->Ellipse(getMemDC(), tail);
+		CAMERAMANAGER->FrameRender(getMemDC(), inferno.img,
+			inferno.x - (inferno.img->getFrameWidth() / 2),
+			inferno.y - (inferno.img->getFrameHeight() / 2), index, 0);
+		CAMERAMANAGER->Ellipse(getMemDC(), inferno.rc);
+	}
+	if (gaugeTime >= 60 && isFire)
+	{ 
+		CAMERAMANAGER->FrameRender(getMemDC(), dummy, tail.left, tail.top, index, 0);
+	}
 }
 
 void RagingInferno::fire(float x, float y, float angle)
@@ -648,26 +664,28 @@ void RagingInferno::fire(float x, float y, float angle)
 }
 void RagingInferno::move(float range)
 {
-	if (gaugeTime > 50 && gaugeTime < 80)
+	if (isFire)
 	{
-		inferno.x = inferno.x + cosf(inferno.angle) * 10.0f;
-		inferno.y = inferno.y - sinf(inferno.angle) * 10.0f;
-		inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
+		if (gaugeTime > 50 && gaugeTime < 70)
+		{
+			inferno.x = inferno.x + cosf(inferno.angle) * 20.0f;
+			inferno.y = inferno.y - sinf(inferno.angle) * 20.0f;
+			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
+		}
+
+		if (gaugeTime >= 70)
+		{
+			tail = RectMakeCenter(inferno.x, inferno.y, 150, 150);
+			inferno.lifeTime--;
+		}
+
+		if (inferno.lifeTime == 0)
+		{
+			inferno.x = inferno.fireX;
+			inferno.y = inferno.fireY;
+			isFire = false;
+		}
 	}
-
-	if (gaugeTime >= 100)
-	{
-		tail = RectMakeCenter(inferno.x, inferno.y, 130, 130);
-		inferno.lifeTime--;
-
-	}
-
-	if (inferno.lifeTime == 0)
-	{
-		inferno.x = inferno.fireX;
-		inferno.y = inferno.fireY;
-	}
-
 }
 
 
