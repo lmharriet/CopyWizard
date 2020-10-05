@@ -340,8 +340,11 @@ HRESULT monster::init(tagTile* tile, const char* fileName , POINT _pos, float _s
 	pos.y = _pos.y;
 	speed = _speed;
 	hp = _hp;
-	for(int i=0; i<STATEMAX; i++)
-	frameIndex[i] = { 0,0 };
+	for (int i = 0; i < STATEMAX; i++)
+	{
+		frameIndexL[i] = { 0,0 };
+		frameIndexR[i] = { 0,0 };
+	}
 
 	addInit();
 	
@@ -360,6 +363,10 @@ void monster::release()
 
 void monster::hit(int damage , float hitAngle, float knockBack)
 {
+	POINT pt = { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 };
+	
+	EFFECT->damageEffect(pt);
+	
 	hp -= damage;
 
 	if (isKnockBack && !isDie) // ¹Ð·Á³².
