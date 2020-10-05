@@ -98,6 +98,27 @@ void effectManager::render(HDC hdc)
     }
 }
 
+void effectManager::dRender(HDC hdc)
+{
+    vector<tagDamageEffect>::iterator iter = dEft.begin();
+    for (iter; iter != dEft.end();)
+    {
+        image* img = IMAGEMANAGER->findImage("damageEffect");
+        CAMERAMANAGER->FrameRender(hdc, img, 
+            iter->pos.x - img->getFrameWidth()/2,
+            iter->pos.y - img->getFrameHeight()/2, 
+            iter->frameX, iter->frameY);
+
+        if (time % 5 == 0) iter->frameX++;
+
+        if (iter->frameX == iter->maxFrame)
+        {
+            iter = dEft.erase(iter);
+        }
+        else iter++;
+    }
+}
+
 void effectManager::addImage()
 {
     //dash
@@ -108,6 +129,9 @@ void effectManager::addImage()
     IMAGEMANAGER->addFrameImage("dashLDRD", "Images/effect/dashLDRD.bmp", 395, 158, 5, 2);
 
     //other
+
+    //damage
+    IMAGEMANAGER->addFrameImage("damageEffect", "Images/effect/monster/damageEffect.bmp", 300, 300, 4, 4);
 }
 
 void effectManager::dashEffect(MOVE direction, POINT pos)
@@ -176,4 +200,15 @@ void effectManager::setEffect(string keyName, POINT pt, bool flip, bool isEraseT
     else effect.imgCount = effect.maxFrame;
 
     vEft.push_back(effect);
+}
+
+void effectManager::damageEffect(POINT pt)
+{
+    tagDamageEffect effect;
+    effect.frameX = 0;
+    effect.frameY = RANDOM->range(0, IMAGEMANAGER->findImage("damageEffect")->getMaxFrameY());
+    effect.maxFrame = IMAGEMANAGER->findImage("damageEffect")->getMaxFrameX();
+    effect.pos = pt;
+
+    dEft.push_back(effect);
 }

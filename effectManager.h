@@ -25,6 +25,15 @@ struct tagEffect
 	int maxFrame;		// 이미지의 최대 프레임 (이것도 안건드려도됨)
 	POINT pos;			// 이미지를 재생시킬 위치
 };
+
+struct tagDamageEffect
+{
+	int frameX;			// 프레임 X 좌표
+	int frameY;			// 프레임 Y 좌표
+
+	int maxFrame;		// 이미지의 최대 프레임 (이것도 안건드려도됨)
+	POINT pos;			// 이미지를 재생시킬 위치
+};
 class effectManager : public singletonBase <effectManager>
 {
 private:
@@ -32,6 +41,8 @@ private:
 	
 	//maxFrame이 되면 erase되는 이펙트 관리
 	vector<tagEffect> vEft;
+	//데미지 이펙트 관리
+	vector<tagDamageEffect> dEft;
 
 	int time;			// 프레임렌더를 하기 위해 필요, 'time++' 을 해주기 위함
 public:
@@ -40,9 +51,13 @@ public:
 
 	void render(HDC hdc);
 
+	void dRender(HDC hdc);
+
 	void addImage();
 	void dashEffect(MOVE direction, POINT pos);
 
 	void setDash(string keyName, int frameY, bool flip, POINT pt);
 	void setEffect(string keyName, POINT pt, bool flip = false, bool isEraseTime = false, int eraseTime = 0);
+
+	void damageEffect(POINT pt);
 };
