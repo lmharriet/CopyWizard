@@ -14,7 +14,10 @@ public:
 	void update() override;
 
 	void stateImageRender();
-	
+
+	void stateIDLE() override;
+	void stateATK()	override;
+	void stateDIE()	override;
 
 
 	summoner() {}
