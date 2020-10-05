@@ -688,18 +688,19 @@ void player::tileCol()
 		if (i < 4) diagonalCheck[i].isCol = false;
 	}
 
-	vector<int>::iterator iter = vTile.begin();
-	for (iter; iter != vTile.end(); ++iter)
+	for (int i = 0; i < vTile.size(); i++)
 	{
-		if (tile[*iter].keyName != "" && tile[*iter].kind != TERRAIN::WALL) continue;
+		int num = vTile[i];
+
+		if (tile[num].keyName != "" && tile[num].kind != TERRAIN::WALL) continue;
 		for (int j = 0; j < 8; j++)
 		{
-			if (colCheck(tileCheck[j].rc, tile[*iter].rc))
+			if (colCheck(tileCheck[j].rc, tile[num].rc))
 			{
 				tileCheck[j].isCol = true;
 			}
 
-			if (j < 4 && colCheck(diagonalCheck[j].rc, tile[*iter].rc) && state == STATE::DASH)
+			if (j < 4 && colCheck(diagonalCheck[j].rc, tile[num].rc) && state == STATE::DASH)
 			{
 				diagonalCheck[j].isCol = true;
 			}

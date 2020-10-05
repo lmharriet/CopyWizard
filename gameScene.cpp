@@ -113,17 +113,15 @@ void gameScene::render()
 	//_golem2->setCamRC(cam);
 	enemy->setPlayerRC(RectMake(_player->getX(), _player->getY(), 100, 100));
 
-	vector<int>::iterator iter = vTile.begin();
-
-	for (iter; iter != vTile.end(); ++iter)
+	for (int i = 0; i < vTile.size(); i++)
 	{
-		if (tile[*iter].keyName == "" || tile[*iter].kind != TERRAIN::TILE)continue;
+		int num = vTile[i];
 
-		image* img = IMAGEMANAGER->findImage(tile[*iter].keyName);
-		string key = tile[*iter].keyName;
-		int height = 0;
+		if (tile[num].keyName == "" || tile[num].kind != TERRAIN::TILE)continue;
 
-		CAMERAMANAGER->FrameRender(getMemDC(), img, tile[*iter].rc.left, tile[*iter].rc.top, tile[*iter].frame.x, tile[*iter].frame.y);
+		image* img = IMAGEMANAGER->findImage(tile[num].keyName);
+
+		CAMERAMANAGER->FrameRender(getMemDC(), img, tile[num].rc.left, tile[num].rc.top, tile[num].frame.x, tile[num].frame.y);
 	}
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), checkArea);
@@ -137,24 +135,25 @@ void gameScene::render()
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), cam);
 
-	iter = vTile.begin();
-	for (iter; iter != vTile.end(); ++iter)
+	for (int i = 0; i < vTile.size(); i++)
 	{
-		if (tile[*iter].keyName == "" || tile[*iter].kind != TERRAIN::WALL) continue;
+		int num = vTile[i];
+
+		if (tile[num].keyName == "" || tile[num].kind != TERRAIN::WALL) continue;
 
 		if (!isRender &&
-			(colCheck(checkArea, tile[*iter].rc) ||
-				colCheck(checkArea, tile[*iter + 15].rc) ||
-				colCheck(checkArea, tile[*iter - MAXTILE_WIDTH * 4 + 10].rc) ||
-				colCheck(checkArea, tile[*iter - MAXTILE_WIDTH * 4 + 5].rc))
+			(colCheck(checkArea, tile[num].rc) ||
+				colCheck(checkArea, tile[num + 15].rc) ||
+				colCheck(checkArea, tile[num - MAXTILE_WIDTH * 4 + 10].rc) ||
+				colCheck(checkArea, tile[num - MAXTILE_WIDTH * 4 + 5].rc))
 			)
 		{
 			isRender = true;
 			_player->render();
 		}
 
-		image* img = IMAGEMANAGER->findImage(tile[*iter].keyName);
-		string key = tile[*iter].keyName;
+		image* img = IMAGEMANAGER->findImage(tile[num].keyName);
+		string key = tile[num].keyName;
 		int height = 0;
 
 		int w = MAXTILE_WIDTH;
@@ -164,30 +163,30 @@ void gameScene::render()
 		int w5 = MAXTILE_WIDTH * 5;
 		int w6 = MAXTILE_WIDTH * 6;
 
-		if (tile[*iter].keyName == "topWall")
+		if (tile[num].keyName == "topWall")
 		{
-			if ((key == tile[*iter + 1].keyName &&
-				key == tile[*iter - w].keyName && key == tile[*iter - w + 1].keyName &&
-				key == tile[*iter - w2].keyName && key == tile[*iter - w2 + 1].keyName &&
-				key == tile[*iter - w3].keyName && key == tile[*iter - w3 + 1].keyName &&
-				key == tile[*iter - w4].keyName && key == tile[*iter - w4 + 1].keyName &&
+			if ((key == tile[num + 1].keyName &&
+				key == tile[num - w].keyName && key == tile[num - w + 1].keyName &&
+				key == tile[num - w2].keyName && key == tile[num - w2 + 1].keyName &&
+				key == tile[num - w3].keyName && key == tile[num - w3 + 1].keyName &&
+				key == tile[num - w4].keyName && key == tile[num - w4 + 1].keyName &&
 
-				key == tile[*iter - w3 + 2].keyName && key == tile[*iter - w3 + 3].keyName &&
-				key == tile[*iter - w3 + 4].keyName && key == tile[*iter - w3 + 5].keyName &&
-				key == tile[*iter - w4 + 2].keyName && key == tile[*iter - w4 + 3].keyName &&
-				key == tile[*iter - w4 + 4].keyName && key == tile[*iter - w4 + 5].keyName &&
+				key == tile[num - w3 + 2].keyName && key == tile[num - w3 + 3].keyName &&
+				key == tile[num - w3 + 4].keyName && key == tile[num - w3 + 5].keyName &&
+				key == tile[num - w4 + 2].keyName && key == tile[num - w4 + 3].keyName &&
+				key == tile[num - w4 + 4].keyName && key == tile[num - w4 + 5].keyName &&
 
-				key == tile[*iter - w4 + 10].keyName && key == tile[*iter - w4 + 11].keyName &&
-				key == tile[*iter - w4 + 12].keyName && key == tile[*iter - w4 + 13].keyName &&
-				key == tile[*iter - w4 + 14].keyName && key == tile[*iter - w4 + 15].keyName &&
+				key == tile[num - w4 + 10].keyName && key == tile[num - w4 + 11].keyName &&
+				key == tile[num - w4 + 12].keyName && key == tile[num - w4 + 13].keyName &&
+				key == tile[num - w4 + 14].keyName && key == tile[num - w4 + 15].keyName &&
 
-				key == tile[*iter - w3 + 12].keyName && key == tile[*iter - w3 + 13].keyName &&
-				key == tile[*iter - w3 + 10].keyName && key == tile[*iter - w3 + 11].keyName &&
-				key == tile[*iter - w3 + 14].keyName && key == tile[*iter - w3 + 15].keyName &&
+				key == tile[num - w3 + 12].keyName && key == tile[num - w3 + 13].keyName &&
+				key == tile[num - w3 + 10].keyName && key == tile[num - w3 + 11].keyName &&
+				key == tile[num - w3 + 14].keyName && key == tile[num - w3 + 15].keyName &&
 
-				key == tile[*iter - w2 + 14].keyName && key == tile[*iter - w2 + 15].keyName &&
-				key == tile[*iter - w + 14].keyName && key == tile[*iter - w + 15].keyName &&
-				key == tile[*iter + 14].keyName && key == tile[*iter + 15].keyName)
+				key == tile[num - w2 + 14].keyName && key == tile[num - w2 + 15].keyName &&
+				key == tile[num - w + 14].keyName && key == tile[num - w + 15].keyName &&
+				key == tile[num + 14].keyName && key == tile[num + 15].keyName)
 				== false)
 			{
 				continue;
@@ -195,43 +194,43 @@ void gameScene::render()
 
 			height = 8 * TILESIZE;
 
-			if (tile[*iter].rc.bottom > (_player->getY() + 30) &&
-				((colCheck(checkArea, tile[*iter].rc) || colCheck(checkArea, tile[*iter + 15].rc) ||
-					colCheck(checkArea, tile[*iter - w4 + 10].rc) || colCheck(checkArea, tile[*iter - w4 + 5].rc))))
+			if (tile[num].rc.bottom > (_player->getY() + 30) &&
+				((colCheck(checkArea, tile[num].rc) || colCheck(checkArea, tile[num + 15].rc) ||
+					colCheck(checkArea, tile[num - w4 + 10].rc) || colCheck(checkArea, tile[num - w4 + 5].rc))))
 			{
-				CAMERAMANAGER->AlphaRender(getMemDC(), img, tile[*iter].rc.left, tile[*iter].rc.top - height, 150);
+				CAMERAMANAGER->AlphaRender(getMemDC(), img, tile[num].rc.left, tile[num].rc.top - height, 150);
 			}
-			else CAMERAMANAGER->Render(getMemDC(), img, tile[*iter].rc.left, tile[*iter].rc.top - height);
+			else CAMERAMANAGER->Render(getMemDC(), img, tile[num].rc.left, tile[num].rc.top - height);
 		}
-		else if (tile[*iter].keyName == "bottomWall")
+		else if (tile[num].keyName == "bottomWall")
 		{
 
-			if ((key == tile[*iter + 1].keyName &&
-				key == tile[*iter - w].keyName && key == tile[*iter - w + 1].keyName &&
-				key == tile[*iter - w2].keyName && key == tile[*iter - w2 + 1].keyName &&
-				key == tile[*iter - w3].keyName && key == tile[*iter - w3 + 1].keyName &&
-				key == tile[*iter - w4].keyName && key == tile[*iter - w4 + 1].keyName &&
-				key == tile[*iter - w5].keyName && key == tile[*iter - w5 + 1].keyName &&
-				key == tile[*iter - w6].keyName && key == tile[*iter - w6 + 1].keyName &&
+			if ((key == tile[num + 1].keyName &&
+				key == tile[num - w].keyName && key == tile[num - w + 1].keyName &&
+				key == tile[num - w2].keyName && key == tile[num - w2 + 1].keyName &&
+				key == tile[num - w3].keyName && key == tile[num - w3 + 1].keyName &&
+				key == tile[num - w4].keyName && key == tile[num - w4 + 1].keyName &&
+				key == tile[num - w5].keyName && key == tile[num - w5 + 1].keyName &&
+				key == tile[num - w6].keyName && key == tile[num - w6 + 1].keyName &&
 
-				key == tile[*iter - w + 2].keyName && key == tile[*iter - w + 3].keyName &&
-				key == tile[*iter - w + 4].keyName &&
-				key == tile[*iter + 2].keyName && key == tile[*iter + 3].keyName &&
-				key == tile[*iter + 4].keyName &&
+				key == tile[num - w + 2].keyName && key == tile[num - w + 3].keyName &&
+				key == tile[num - w + 4].keyName &&
+				key == tile[num + 2].keyName && key == tile[num + 3].keyName &&
+				key == tile[num + 4].keyName &&
 
 
-				key == tile[*iter - w + 11].keyName && key == tile[*iter - w + 12].keyName &&
-				key == tile[*iter - w + 13].keyName &&
-				key == tile[*iter + 11].keyName && key == tile[*iter + 12].keyName &&
-				key == tile[*iter + 13].keyName &&
+				key == tile[num - w + 11].keyName && key == tile[num - w + 12].keyName &&
+				key == tile[num - w + 13].keyName &&
+				key == tile[num + 11].keyName && key == tile[num + 12].keyName &&
+				key == tile[num + 13].keyName &&
 
-				key == tile[*iter + 14].keyName && key == tile[*iter + 15].keyName &&
-				key == tile[*iter - w + 14].keyName && key == tile[*iter - w + 15].keyName &&
-				key == tile[*iter - w2 + 14].keyName && key == tile[*iter - w2 + 15].keyName &&
-				key == tile[*iter - w3 + 14].keyName && key == tile[*iter - w3 + 15].keyName &&
-				key == tile[*iter - w4 + 14].keyName && key == tile[*iter - w4 + 15].keyName &&
-				key == tile[*iter - w5 + 14].keyName && key == tile[*iter - w5 + 15].keyName &&
-				key == tile[*iter - w6 + 14].keyName && key == tile[*iter - w6 + 15].keyName
+				key == tile[num + 14].keyName && key == tile[num + 15].keyName &&
+				key == tile[num - w + 14].keyName && key == tile[num - w + 15].keyName &&
+				key == tile[num - w2 + 14].keyName && key == tile[num - w2 + 15].keyName &&
+				key == tile[num - w3 + 14].keyName && key == tile[num - w3 + 15].keyName &&
+				key == tile[num - w4 + 14].keyName && key == tile[num - w4 + 15].keyName &&
+				key == tile[num - w5 + 14].keyName && key == tile[num - w5 + 15].keyName &&
+				key == tile[num - w6 + 14].keyName && key == tile[num - w6 + 15].keyName
 				) == false)
 			{
 				continue;
@@ -239,16 +238,16 @@ void gameScene::render()
 			height = 8 * TILESIZE;
 
 
-			if (tile[*iter].rc.bottom > (_player->getY() + 30) &&
-				(colCheck(checkArea, tile[*iter].rc) || colCheck(checkArea, tile[*iter + 15].rc)))
+			if (tile[num].rc.bottom > (_player->getY() + 30) &&
+				(colCheck(checkArea, tile[num].rc) || colCheck(checkArea, tile[num + 15].rc)))
 			{
-				CAMERAMANAGER->AlphaRender(getMemDC(), img, tile[*iter].rc.left, tile[*iter].rc.top - height, 150);
+				CAMERAMANAGER->AlphaRender(getMemDC(), img, tile[num].rc.left, tile[num].rc.top - height, 150);
 			}
-			else CAMERAMANAGER->Render(getMemDC(), img, tile[*iter].rc.left, tile[*iter].rc.top - height);
+			else CAMERAMANAGER->Render(getMemDC(), img, tile[num].rc.left, tile[num].rc.top - height);
 		}
 		else
 		{
-			CAMERAMANAGER->FrameRender(getMemDC(), img, tile[*iter].rc.left, tile[*iter].rc.top - (3 * TILESIZE), tile[*iter].frame.x, tile[*iter].frame.y);
+			CAMERAMANAGER->FrameRender(getMemDC(), img, tile[num].rc.left, tile[num].rc.top - (3 * TILESIZE), tile[num].frame.x, tile[num].frame.y);
 		}
 	}
 
