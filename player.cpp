@@ -7,7 +7,7 @@ HRESULT player::init()
 	IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
 	IMAGEMANAGER->addFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
 	IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 2400, 640, 6, 2);
-	IMAGEMANAGER->addFrameImage("flame", "resource/player/flame1.bmp",4096, 128, 32, 1);
+	IMAGEMANAGER->addFrameImage("flame", "resource/player/flame1.bmp", 4096, 128, 32, 1);
 	IMAGEMANAGER->addFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
 	posX = WINSIZEX / 2;
 	posY = WINSIZEY / 2;
@@ -45,27 +45,22 @@ HRESULT player::init()
 	//attack type
 	basic = standard = signature = false;
 
-	speed = index = dashIndex = count = dashCount = 0;
-	atkCount = atkIndex = 0;
-	stateCool = meteorCool = 0;
-
+	speed = 0;
+	atkCount = atkIndex = index = dashIndex = count = dashCount = 0;
+	stateCool = meteorStateCool = 0;
 	
+	//수정 중
+	standardCool = signatureCool = /*standardTiemer= signatureTimer*/50;
+
 
 	//불렛 클래스
-	blaze = new bomb;
-	blaze->init(100, 200);
+	bulletClassInit();
 
-	flares = new homingFlares;
-	flares->init(100);
 
-	Meteor = new meteor;
-	Meteor->init(650);
-
-	DashFire = new dashFire;
-	DashFire->init();
 	//인벤토리
 	inven = new inventory;
 	inven->init();
+
 	//angle between mouse & player
 	attackAngle = saveAngle = 0;
 	angleTenth = 0;
@@ -81,8 +76,10 @@ void player::release()
 	SAFE_DELETE(flares);
 	Meteor->release();
 	SAFE_DELETE(Meteor);
-	DashFire->release();
-	SAFE_DELETE(DashFire);
+	searingRush->release();
+	SAFE_DELETE(searingRush);
+	inferno->release();
+	SAFE_DELETE(inferno);
 
 	inven->release();
 	SAFE_DELETE(inven);
@@ -94,7 +91,10 @@ void player::update()
 	blaze->update();
 	flares->update();
 	Meteor->update();
-	DashFire->update();
+	searingRush->update();
+
+
+	inferno->update(100);
 
 	inven->update();
 	//animation count
@@ -108,7 +108,7 @@ void player::update()
 
 	if (signature) state = STATE::SIGNATURE;
 
-	if (speed == 0 && stateCool == 0 && meteorCool == 0) controller();
+	if (speed == 0 && stateCool == 0 && meteorStateCool == 0) controller();
 
 	tileCol();
 
@@ -150,7 +150,9 @@ void player::other_update()
 	blaze->update();
 	flares->update();
 	Meteor->update();
-	DashFire->update();
+	searingRush->update();
+
+	inferno->update(100);
 
 	inven->update();
 	//animation count
@@ -162,7 +164,7 @@ void player::other_update()
 	angleTenth = (int)(saveAngle * (18 / PI));
 
 
-	if (speed == 0 && stateCool == 0 && meteorCool == 0) controller();
+	if (speed == 0 && stateCool == 0 && meteorStateCool == 0) controller();
 
 	//tileCol();
 
@@ -207,25 +209,26 @@ void player::render()
 
 	bool isRender = false;
 
-	for (int i = 0; i < DashFire->getSize(); i++)
+	for (int i = 0; i < searingRush->getSize(); i++)
 	{
-		if (!isRender && (DashFire->getY(i) > posY))
+		if (!isRender && (searingRush->getY(i) > posY))
 		{
 			isRender = true;
 			animation();
-			DashFire->singleRender(i);
+			searingRush->singleRender(i);
 		}
-		else DashFire->singleRender(i);
+		else searingRush->singleRender(i);
 	}
 
 	if (!isRender)animation(); // z렌더 같은 눈속임.. (나중에 frame이 떨어지면 포기하는 기능..)
-	
+
 
 	viewText();
 
 	blaze->render();
 	flares->render();
 	Meteor->render();
+	inferno->render();
 
 
 }
@@ -233,6 +236,24 @@ void player::render()
 void player::invenRender()
 {
 	inven->render();
+}
+
+void player::bulletClassInit()
+{
+	blaze = new bomb;
+	blaze->init(100, 200);
+
+	flares = new homingFlares;
+	flares->init(100);
+
+	Meteor = new meteor;
+	Meteor->init(650);
+
+	searingRush = new dashFire;
+	searingRush->init();
+
+	inferno = new RagingInferno;
+	inferno->init();
 }
 
 void player::controller()
@@ -313,8 +334,8 @@ void player::dashFunction()
 
 	if (speed == 0) return;
 
-	if(speed ==8 || speed==11 || speed == 14 || speed == 17)
-		DashFire->fire(posX, posY);
+	if (speed == 8 || speed == 11 || speed == 14 || speed == 17)
+		searingRush->fire(posX, posY);
 
 	if (dashLeft)
 	{
@@ -343,8 +364,6 @@ void player::dashFunction()
 		{
 			if (!tileCheck[(int)DIRECTION::LEFT].isCol)
 				posX -= speed;
-
-
 		}
 	}
 
@@ -367,7 +386,7 @@ void player::dashFunction()
 				posX += speed;
 				posY += speed;
 			}
-		
+
 		}
 		else // 그냥 순수 RIGHT
 		{
@@ -382,7 +401,7 @@ void player::dashFunction()
 		//순수 UP
 		if (!tileCheck[(int)DIRECTION::TOP].isCol)
 			posY -= speed;
-		
+
 	}
 
 	else if (dashDown)
@@ -429,15 +448,18 @@ void player::standardSetUp()
 {
 	if (standard)
 	{
-		flares->fire(posX, posY, attackAngle);
+		inferno->fire(posX, posY, attackAngle);
+		//flares->fire(posX, posY, attackAngle);
+		
 	}
+
 }
 
 void player::signatureSetUp()
 {
-	if (signature && meteorCool == 0)
+	if (signature && meteorStateCool == 0)
 	{
-		meteorCool = 30;
+		meteorStateCool = 30;
 		float dRange = 650.f;
 
 		//Meteor->meteorFire(posX, posY, 600, move, 55);
@@ -445,10 +467,10 @@ void player::signatureSetUp()
 		//Meteor->meteorFire(posX - RANDOM->range(-150, 150), posY - RANDOM->range(-150, 150), 600, move, dRange);
 		Meteor->meteorUltFire(posX, posY, 600, move, 55);
 	}
-	if (meteorCool > 0)
+	if (meteorStateCool > 0 )
 	{
 		state = STATE::SIGNATURE;
-		meteorCool--;
+		meteorStateCool--;
 	}
 }
 
@@ -457,7 +479,11 @@ void player::takeCoin()
 	for (int i = 0; i < DROP->getCoinVec().size(); i++)
 	{
 		if (colCheck(rc, DROP->getCoinRect(i)))
+		{
+			UI->setCoin(UI->getCoin()+ DROP->getCoinVec()[i].money);
+
 			DROP->delCoin(i);
+		}
 	}
 }
 
@@ -662,17 +688,18 @@ void player::tileCol()
 		if (i < 4) diagonalCheck[i].isCol = false;
 	}
 
-	for (int i = 0; i < MAXTILE; i++)
+	vector<int>::iterator iter = vTile.begin();
+	for (iter; iter != vTile.end(); ++iter)
 	{
-		if (tile[i].keyName != "" && tile[i].kind != TERRAIN::WALL) continue;
+		if (tile[*iter].keyName != "" && tile[*iter].kind != TERRAIN::WALL) continue;
 		for (int j = 0; j < 8; j++)
 		{
-			if (colCheck(tileCheck[j].rc, tile[i].rc))
+			if (colCheck(tileCheck[j].rc, tile[*iter].rc))
 			{
 				tileCheck[j].isCol = true;
 			}
 
-			if (j < 4 && colCheck(diagonalCheck[j].rc, tile[i].rc) && state == STATE::DASH)
+			if (j < 4 && colCheck(diagonalCheck[j].rc, tile[*iter].rc) && state == STATE::DASH)
 			{
 				diagonalCheck[j].isCol = true;
 			}
@@ -830,10 +857,10 @@ void player::viewText()
 	//	CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i].rc);
 	//}
 
-	wsprintf(str, "meteorCool : %d", meteorCool);
+	wsprintf(str, "meteorCool : %d", meteorStateCool);
 	textOut(getMemDC(), 10, 200, str, WHITE);
 
-	wsprintf(str, "atkIndex  : %d", atkIndex);
+	wsprintf(str, "signatureCool  : %d", signatureCool);
 	textOut(getMemDC(), 10, 220, str, WHITE);
 
 	if (state == STATE::SIGNATURE)

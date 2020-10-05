@@ -13,7 +13,7 @@ HRESULT gameScene::init()
 
 	loadMap("mapData/map0.map");
 	_player->setTileAd(tile);
-	
+	_player->setTileAd0(vTile);
 	
 	cam = RectMakeCenter(0, 0, WINSIZEX, WINSIZEY);
 	checkArea = RectMakeCenter(WINSIZEX/2, WINSIZEY/2, 100, 100);
@@ -25,8 +25,8 @@ HRESULT gameScene::init()
 	enemy = new enemyManager;
 	enemy->init(tile);
 
-
-	
+	//vTile.clear();
+	collisionTile();
 
 	return S_OK;
 }
@@ -42,6 +42,9 @@ void gameScene::release()
 
 void gameScene::update()
 {
+	collisionTile();
+	_player->setTileAd0(vTile);
+
 	UI->update();
 	DROP->update();
 
@@ -109,16 +112,18 @@ void gameScene::render()
 	//_golem->setCamRC(cam);
 	//_golem2->setCamRC(cam);
 	enemy->setPlayerRC(RectMake(_player->getX(), _player->getY(), 100, 100));
-	
-	for (int i = 0; i < MAXTILE; i++)
-	{
-		if (colCheck(cam, tile[i].rc) == false || tile[i].keyName == "" || tile[i].kind != TERRAIN::TILE) continue;
 
-		image* img = IMAGEMANAGER->findImage(tile[i].keyName);
-		string key = tile[i].keyName;
+	vector<int>::iterator iter = vTile.begin();
+
+	for (iter; iter != vTile.end(); ++iter)
+	{
+		if (tile[*iter].keyName == "" || tile[*iter].kind != TERRAIN::TILE)continue;
+
+		image* img = IMAGEMANAGER->findImage(tile[*iter].keyName);
+		string key = tile[*iter].keyName;
 		int height = 0;
 
-		CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
+		CAMERAMANAGER->FrameRender(getMemDC(), img, tile[*iter].rc.left, tile[*iter].rc.top, tile[*iter].frame.x, tile[*iter].frame.y);
 	}
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), checkArea);
@@ -131,23 +136,25 @@ void gameScene::render()
 	bool isRender = false;
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), cam);
-	for (int i = 0; i < MAXTILE; i++)
-	{
-		if (colCheck(cam, tile[i].rc) == false || tile[i].keyName == "" || tile[i].kind != TERRAIN::WALL) continue;
 
-		if (!isRender && 
-			(colCheck(checkArea, tile[i].rc)						  ||
-			 colCheck(checkArea, tile[i + 15].rc)					  ||
-			 colCheck(checkArea, tile[i - MAXTILE_WIDTH * 4 + 10].rc) ||
-			 colCheck(checkArea, tile[i - MAXTILE_WIDTH * 4 + 5].rc))
+	iter = vTile.begin();
+	for (iter; iter != vTile.end(); ++iter)
+	{
+		if (tile[*iter].keyName == "" || tile[*iter].kind != TERRAIN::WALL) continue;
+
+		if (!isRender &&
+			(colCheck(checkArea, tile[*iter].rc) ||
+				colCheck(checkArea, tile[*iter + 15].rc) ||
+				colCheck(checkArea, tile[*iter - MAXTILE_WIDTH * 4 + 10].rc) ||
+				colCheck(checkArea, tile[*iter - MAXTILE_WIDTH * 4 + 5].rc))
 			)
 		{
 			isRender = true;
 			_player->render();
 		}
 
-		image* img = IMAGEMANAGER->findImage(tile[i].keyName);
-		string key = tile[i].keyName;
+		image* img = IMAGEMANAGER->findImage(tile[*iter].keyName);
+		string key = tile[*iter].keyName;
 		int height = 0;
 
 		int w = MAXTILE_WIDTH;
@@ -157,30 +164,30 @@ void gameScene::render()
 		int w5 = MAXTILE_WIDTH * 5;
 		int w6 = MAXTILE_WIDTH * 6;
 
-		if (tile[i].keyName == "topWall")
+		if (tile[*iter].keyName == "topWall")
 		{
-			if ((key == tile[i + 1].keyName &&
-				key == tile[i - w].keyName && key == tile[i - w + 1].keyName &&
-				key == tile[i - w2].keyName && key == tile[i - w2 + 1].keyName &&
-				key == tile[i - w3].keyName && key == tile[i - w3 + 1].keyName &&
-				key == tile[i - w4].keyName && key == tile[i - w4 + 1].keyName &&
+			if ((key == tile[*iter + 1].keyName &&
+				key == tile[*iter - w].keyName && key == tile[*iter - w + 1].keyName &&
+				key == tile[*iter - w2].keyName && key == tile[*iter - w2 + 1].keyName &&
+				key == tile[*iter - w3].keyName && key == tile[*iter - w3 + 1].keyName &&
+				key == tile[*iter - w4].keyName && key == tile[*iter - w4 + 1].keyName &&
 
-				key == tile[i - w3 + 2].keyName && key == tile[i - w3 + 3].keyName &&
-				key == tile[i - w3 + 4].keyName && key == tile[i - w3 + 5].keyName &&
-				key == tile[i - w4 + 2].keyName && key == tile[i - w4 + 3].keyName &&
-				key == tile[i - w4 + 4].keyName && key == tile[i - w4 + 5].keyName &&
+				key == tile[*iter - w3 + 2].keyName && key == tile[*iter - w3 + 3].keyName &&
+				key == tile[*iter - w3 + 4].keyName && key == tile[*iter - w3 + 5].keyName &&
+				key == tile[*iter - w4 + 2].keyName && key == tile[*iter - w4 + 3].keyName &&
+				key == tile[*iter - w4 + 4].keyName && key == tile[*iter - w4 + 5].keyName &&
 
-				key == tile[i - w4 + 10].keyName && key == tile[i - w4 + 11].keyName &&
-				key == tile[i - w4 + 12].keyName && key == tile[i - w4 + 13].keyName &&
-				key == tile[i - w4 + 14].keyName && key == tile[i - w4 + 15].keyName &&
+				key == tile[*iter - w4 + 10].keyName && key == tile[*iter - w4 + 11].keyName &&
+				key == tile[*iter - w4 + 12].keyName && key == tile[*iter - w4 + 13].keyName &&
+				key == tile[*iter - w4 + 14].keyName && key == tile[*iter - w4 + 15].keyName &&
 
-				key == tile[i - w3 + 10].keyName && key == tile[i - w3 + 11].keyName &&
-				key == tile[i - w3 + 12].keyName && key == tile[i - w3 + 13].keyName &&
-				key == tile[i - w3 + 14].keyName && key == tile[i - w3 + 15].keyName &&
+				key == tile[*iter - w3 + 12].keyName && key == tile[*iter - w3 + 13].keyName &&
+				key == tile[*iter - w3 + 10].keyName && key == tile[*iter - w3 + 11].keyName &&
+				key == tile[*iter - w3 + 14].keyName && key == tile[*iter - w3 + 15].keyName &&
 
-				key == tile[i - w2 + 14].keyName && key == tile[i - w2 + 15].keyName &&
-				key == tile[i - w + 14].keyName && key == tile[i - w + 15].keyName &&
-				key == tile[i + 14].keyName && key == tile[i + 15].keyName)
+				key == tile[*iter - w2 + 14].keyName && key == tile[*iter - w2 + 15].keyName &&
+				key == tile[*iter - w + 14].keyName && key == tile[*iter - w + 15].keyName &&
+				key == tile[*iter + 14].keyName && key == tile[*iter + 15].keyName)
 				== false)
 			{
 				continue;
@@ -188,43 +195,43 @@ void gameScene::render()
 
 			height = 8 * TILESIZE;
 
-			if (tile[i].rc.bottom > (_player->getY() + 30) && 
-				((colCheck(checkArea, tile[i].rc) || colCheck(checkArea, tile[i+15].rc) ||
-				  colCheck(checkArea, tile[i-w4+10].rc) || colCheck(checkArea,tile[i-w4+5].rc) )))
+			if (tile[*iter].rc.bottom > (_player->getY() + 30) &&
+				((colCheck(checkArea, tile[*iter].rc) || colCheck(checkArea, tile[*iter + 15].rc) ||
+					colCheck(checkArea, tile[*iter - w4 + 10].rc) || colCheck(checkArea, tile[*iter - w4 + 5].rc))))
 			{
-				CAMERAMANAGER->AlphaRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height, 150);
+				CAMERAMANAGER->AlphaRender(getMemDC(), img, tile[*iter].rc.left, tile[*iter].rc.top - height, 150);
 			}
-			else CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
+			else CAMERAMANAGER->Render(getMemDC(), img, tile[*iter].rc.left, tile[*iter].rc.top - height);
 		}
-		else if (tile[i].keyName == "bottomWall")
+		else if (tile[*iter].keyName == "bottomWall")
 		{
 
-			if ((key == tile[i + 1].keyName &&
-				key == tile[i - w].keyName && key == tile[i - w + 1].keyName &&
-				key == tile[i - w2].keyName && key == tile[i - w2 + 1].keyName &&
-				key == tile[i - w3].keyName && key == tile[i - w3 + 1].keyName &&
-				key == tile[i - w4].keyName && key == tile[i - w4 + 1].keyName &&
-				key == tile[i - w5].keyName && key == tile[i - w5 + 1].keyName &&
-				key == tile[i - w6].keyName && key == tile[i - w6 + 1].keyName &&
+			if ((key == tile[*iter + 1].keyName &&
+				key == tile[*iter - w].keyName && key == tile[*iter - w + 1].keyName &&
+				key == tile[*iter - w2].keyName && key == tile[*iter - w2 + 1].keyName &&
+				key == tile[*iter - w3].keyName && key == tile[*iter - w3 + 1].keyName &&
+				key == tile[*iter - w4].keyName && key == tile[*iter - w4 + 1].keyName &&
+				key == tile[*iter - w5].keyName && key == tile[*iter - w5 + 1].keyName &&
+				key == tile[*iter - w6].keyName && key == tile[*iter - w6 + 1].keyName &&
 
-				key == tile[i - w + 2].keyName && key == tile[i - w + 3].keyName &&
-				key == tile[i - w + 4].keyName &&
-				key == tile[i + 2].keyName && key == tile[i + 3].keyName &&
-				key == tile[i + 4].keyName &&
+				key == tile[*iter - w + 2].keyName && key == tile[*iter - w + 3].keyName &&
+				key == tile[*iter - w + 4].keyName &&
+				key == tile[*iter + 2].keyName && key == tile[*iter + 3].keyName &&
+				key == tile[*iter + 4].keyName &&
 
 
-				key == tile[i - w + 11].keyName && key == tile[i - w + 12].keyName &&
-				key == tile[i - w + 13].keyName &&
-				key == tile[i + 11].keyName && key == tile[i + 12].keyName &&
-				key == tile[i + 13].keyName &&
+				key == tile[*iter - w + 11].keyName && key == tile[*iter - w + 12].keyName &&
+				key == tile[*iter - w + 13].keyName &&
+				key == tile[*iter + 11].keyName && key == tile[*iter + 12].keyName &&
+				key == tile[*iter + 13].keyName &&
 
-				key == tile[i + 14].keyName && key == tile[i + 15].keyName &&
-				key == tile[i - w + 14].keyName && key == tile[i - w + 15].keyName &&
-				key == tile[i - w2 + 14].keyName && key == tile[i - w2 + 15].keyName &&
-				key == tile[i - w3 + 14].keyName && key == tile[i - w3 + 15].keyName &&
-				key == tile[i - w4 + 14].keyName && key == tile[i - w4 + 15].keyName &&
-				key == tile[i - w5 + 14].keyName && key == tile[i - w5 + 15].keyName &&
-				key == tile[i - w6 + 14].keyName && key == tile[i - w6 + 15].keyName
+				key == tile[*iter + 14].keyName && key == tile[*iter + 15].keyName &&
+				key == tile[*iter - w + 14].keyName && key == tile[*iter - w + 15].keyName &&
+				key == tile[*iter - w2 + 14].keyName && key == tile[*iter - w2 + 15].keyName &&
+				key == tile[*iter - w3 + 14].keyName && key == tile[*iter - w3 + 15].keyName &&
+				key == tile[*iter - w4 + 14].keyName && key == tile[*iter - w4 + 15].keyName &&
+				key == tile[*iter - w5 + 14].keyName && key == tile[*iter - w5 + 15].keyName &&
+				key == tile[*iter - w6 + 14].keyName && key == tile[*iter - w6 + 15].keyName
 				) == false)
 			{
 				continue;
@@ -232,16 +239,16 @@ void gameScene::render()
 			height = 8 * TILESIZE;
 
 
-			if (tile[i].rc.bottom > (_player->getY() + 30) && 
-				(colCheck(checkArea, tile[i].rc) || colCheck(checkArea, tile[i + 15].rc)))
+			if (tile[*iter].rc.bottom > (_player->getY() + 30) &&
+				(colCheck(checkArea, tile[*iter].rc) || colCheck(checkArea, tile[*iter + 15].rc)))
 			{
-				CAMERAMANAGER->AlphaRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height, 150);
+				CAMERAMANAGER->AlphaRender(getMemDC(), img, tile[*iter].rc.left, tile[*iter].rc.top - height, 150);
 			}
-			else CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
+			else CAMERAMANAGER->Render(getMemDC(), img, tile[*iter].rc.left, tile[*iter].rc.top - height);
 		}
 		else
 		{
-			CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - (3 * TILESIZE), tile[i].frame.x, tile[i].frame.y);
+			CAMERAMANAGER->FrameRender(getMemDC(), img, tile[*iter].rc.left, tile[*iter].rc.top - (3 * TILESIZE), tile[*iter].frame.x, tile[*iter].frame.y);
 		}
 	}
 
@@ -250,6 +257,7 @@ void gameScene::render()
 	enemy->render();
 	if(!isRender) _player->render();
 	EFFECT->render(getMemDC());
+	EFFECT->dRender(getMemDC());
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), _player->getRect());
 	//uiImg->render(getMemDC());
@@ -264,6 +272,15 @@ void gameScene::render()
 	//_golem2->render(); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
 
 	
+}
+
+void gameScene::collisionTile()
+{
+	vTile.clear();
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (colCheck(cam, tile[i].rc)) vTile.push_back(i);
+	}
 }
 
 void gameScene::loadMap(const char* mapFileName)

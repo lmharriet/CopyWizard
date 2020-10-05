@@ -73,7 +73,7 @@ public:
 
 //미완성
 //=============================================================
-//	## homingFlares ## (homingFlares[0] -> 배열처럼 미리 장전해두고 총알발사)
+//	## homingFlares ## 
 //=============================================================
 class homingFlares : public gameNode
 {
@@ -138,7 +138,7 @@ public:
 class meteor :public gameNode
 {
 private:
-	vector<tagArcana> _vMeteor;
+	vector<tagArcana> vMeteor;
 	float angleRange;
 	float _range;
 
@@ -182,4 +182,28 @@ public:
 	void fire(float x, float y);
 	float getY(int index) { return _vDash[index].y; }
 	int getSize() { return _vDash.size(); }
+};
+
+//===================
+//	## RANGING INFERNO ## 
+//===================
+class RagingInferno :public gameNode
+{
+private:
+	tagArcana inferno;
+	
+	RECT tail;
+
+	float range;
+	float distance;
+	int gaugeTime;
+	int index, count;
+	bool isFire;
+public:
+	HRESULT init();
+	void release();
+	void update(float range);
+	void render();
+	void fire(float x, float y,float angle);
+	void move(float range);
 };

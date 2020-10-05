@@ -170,8 +170,8 @@ void homingFlares::move()
 
 		if (colCheck(_vFlares[i].rc, _vRange[i].rc))
 		{
-			
-			
+
+
 		}
 	}*/
 }
@@ -209,12 +209,12 @@ void bomb::render()
 {
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
-		
-		//CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage,
-		//_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth() / 2),
-			//_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight() / 2), index, 0);
 
-		CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 20, 20));
+		CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage,
+			_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth() / 2),
+			_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight() / 2), index, 0);
+
+		//		CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 20, 20));
 	}
 }
 
@@ -299,10 +299,10 @@ void meteor::render()
 {
 	char temp[126];
 
-	for (int i = 0; i < _vMeteor.size(); i++)
+	for (int i = 0; i < vMeteor.size(); i++)
 	{
 		//CAMERAMANAGER->Ellipse(getMemDC(), _vMeteor[i].rc);
-		CAMERAMANAGER->FrameRender(getMemDC(), _vMeteor[i].img, _vMeteor[i].rc.left, _vMeteor[i].rc.top, index, _vMeteor[i].frameY);
+		CAMERAMANAGER->FrameRender(getMemDC(), vMeteor[i].img, vMeteor[i].rc.left, vMeteor[i].rc.top, index, vMeteor[i].frameY);
 	}
 
 	/*wsprintf(temp, "size : %d", _vMeteor.size());
@@ -367,7 +367,7 @@ void meteor::meteorFire(float x, float y, float speed, MOVE dir, float range)
 	meteor.img = IMAGEMANAGER->findImage("meteor");
 	meteor.lifeTime = 0;
 	//if (_vMeteor.size() >= _bulletMax) continue;
-	_vMeteor.push_back(meteor);
+	vMeteor.push_back(meteor);
 }
 
 void meteor::meteorUlt()
@@ -419,7 +419,7 @@ void meteor::meteorUlt()
 
 		tmpMeteor.rc = RectMakeCenter(tmpMeteor.x, tmpMeteor.y, 200 * 2, 160 * 2);
 
-		_vMeteor.push_back(tmpMeteor);
+		vMeteor.push_back(tmpMeteor);
 
 		if (meteorCount == 6)
 		{
@@ -497,22 +497,22 @@ void meteor::meteorUltFire(float x, float y, float speed, MOVE dir, float range)
 
 void meteor::move()
 {
-	for (int i = 0; i < _vMeteor.size(); i++)
+	for (int i = 0; i < vMeteor.size(); i++)
 	{
-		_vMeteor[i].lifeTime++;
+		vMeteor[i].lifeTime++;
 
-		_vMeteor[i].x = _vMeteor[i].x + cosf(_vMeteor[i].angle) * _vMeteor[i].speed;
-		_vMeteor[i].y = _vMeteor[i].y + (-sinf(_vMeteor[i].angle)) * _vMeteor[i].speed;
-		_vMeteor[i].rc = RectMakeCenter(_vMeteor[i].x, _vMeteor[i].y, 200 * 2, 160 * 2);
+		vMeteor[i].x = vMeteor[i].x + cosf(vMeteor[i].angle) * vMeteor[i].speed;
+		vMeteor[i].y = vMeteor[i].y + (-sinf(vMeteor[i].angle)) * vMeteor[i].speed;
+		vMeteor[i].rc = RectMakeCenter(vMeteor[i].x, vMeteor[i].y, 200 * 2, 160 * 2);
 
 
-		if (_vMeteor[i].lifeTime > _vMeteor[i].range)
+		if (vMeteor[i].lifeTime > vMeteor[i].range)
 		{
-			//cout << _vMeteor.size() << '\n';
+
 			//이펙트 플레이
 			//충돌 처리 , 카메라 shake
 			CAMERAMANAGER->Shake(10, 10, 10);
-			_vMeteor.erase(_vMeteor.begin() + i);
+			vMeteor.erase(vMeteor.begin() + i);
 		}
 	}
 
@@ -540,9 +540,9 @@ void dashFire::render()
 		//CAMERAMANAGER->Ellipse(getMemDC(), _vDash[i].rc);
 		image* img = IMAGEMANAGER->findImage("flame");
 
-		CAMERAMANAGER->FrameRender(getMemDC(), img, 
-			_vDash[i].x - img->getFrameWidth()/2,
-			_vDash[i].y - img->getFrameHeight()/2, _vDash[i].frameX, 0);
+		CAMERAMANAGER->FrameRender(getMemDC(), img,
+			_vDash[i].x - img->getFrameWidth() / 2,
+			_vDash[i].y - img->getFrameHeight() / 2, _vDash[i].frameX, 0);
 
 		if (_vDash[i].lifeTime == 180)
 		{
@@ -592,3 +592,84 @@ void dashFire::fire(float x, float y)
 }
 
 //추가 스킬 RAGING INFERNO
+
+HRESULT RagingInferno::init()
+{
+	gaugeTime = 0;
+	range = distance = 0;
+	index = count = 0;
+
+	isFire = false;
+	inferno.img = IMAGEMANAGER->addFrameImage("inferno", "resource/player/inferno.bmp", 240, 80, 3, 1);
+	return S_OK;
+}
+
+void RagingInferno::release()
+{
+}
+
+void RagingInferno::update(float range)
+{
+	count++;
+	gaugeTime++;
+
+	if (count % 3 == 0)
+	{
+		index++;
+		if (index > 2) index = 0;
+
+	}
+
+	distance = getDistance(inferno.x, inferno.y, inferno.fireX, inferno.fireY);
+
+	move(range);
+}
+
+void RagingInferno::render()
+{
+	CAMERAMANAGER->FrameRender(getMemDC(), inferno.img, 
+		inferno.x-(inferno.img->getFrameWidth()/2), 
+		inferno.y-(inferno.img->getFrameHeight()/2), index,0);
+	CAMERAMANAGER->Ellipse(getMemDC(), inferno.rc);
+}
+
+void RagingInferno::fire(float x, float y, float angle)
+{
+	inferno.angle = angle;
+	inferno.speed = -30.f;
+	inferno.x = inferno.fireX = x + cosf(angle) * inferno.speed;
+	inferno.y = inferno.fireY = y - sinf(angle) * inferno.speed;
+	inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
+	inferno.lifeTime = 100;
+
+	isFire = true;
+
+	gaugeTime = 0;
+}
+void RagingInferno::move(float range)
+{
+	if (gaugeTime > 50 && gaugeTime < 80)
+	{
+		inferno.x = inferno.x + cosf(inferno.angle) * 10.0f;
+		inferno.y = inferno.y - sinf(inferno.angle) * 10.0f;
+		inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
+	}
+
+	if (gaugeTime >= 100)
+	{
+		tail = RectMakeCenter(inferno.x, inferno.y, 130, 130);
+		inferno.lifeTime--;
+
+	}
+
+	if (inferno.lifeTime == 0)
+	{
+		inferno.x = inferno.fireX;
+		inferno.y = inferno.fireY;
+	}
+
+}
+
+
+
+

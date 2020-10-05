@@ -10,11 +10,13 @@ class player : public gameNode
 {
 private:
 	tagTile* tile;
+	vector<int> vTile;
 	
 	bomb* blaze;
 	homingFlares* flares;
 	meteor* Meteor;
-	dashFire* DashFire;
+	dashFire* searingRush;
+	RagingInferno* inferno;
 
 	inventory* inven;
 private:
@@ -35,12 +37,19 @@ private:
 	int speed;
 
 	int stateCool;
-	int meteorCool;
+	int meteorStateCool;
 	int dashCount,dashIndex;
 	int atkCount, atkIndex;
 	int count, index;
 	
+	//cooltime 수정 중
+	int standardCool, signatureCool;
+	int standardTiemer, signatureTimer;
+
+	//dash
 	bool dashLeft, dashRight, dashUp, dashDown;
+	
+	//skill kind
 	bool basic, standard, signature;
 	
 	// 신호 중복 방지
@@ -54,6 +63,8 @@ public:
 	void other_update();
 	void render();
 	void invenRender();
+
+	void bulletClassInit();
 
 	void controller();
 	void dashFunction();
@@ -94,7 +105,7 @@ public:
 
 	//tile address
 	void setTileAd(tagTile* _tile) { tile = _tile; }
-
+	void setTileAd0(vector<int> v1) { vTile = v1; }
 	
 
 	player() {}
