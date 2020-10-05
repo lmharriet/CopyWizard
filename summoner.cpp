@@ -7,8 +7,6 @@ void summoner::addInit()
 {
     atkTime = 0;
 
-   
-
 }
 
 void summoner::render()
@@ -51,169 +49,190 @@ void summoner::update()
 
 void summoner::stateImageRender()
 {
-    
-
     switch (state)
     {
     case STATEIMAGE::IDLE:
-        if (isLeft)
-        {
-            frameIndexL[STATEIMAGE::IDLE].x = 0;
-            frameIndexL[STATEIMAGE::IDLE].y = 0;
-        }
-        else
-        {
-            frameIndexL[STATEIMAGE::IDLE].x = 0;
-            frameIndexL[STATEIMAGE::IDLE].y = 2;
-        }
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);
-
+        stateIDLE();
         break;
-   
     case STATEIMAGE::ATK:
-       
-        if (isLeft)
-        {
-            int atkTime = 10;
-
-            if(frameIndexL[STATEIMAGE::ATK].y!=1)
-                frameIndexL[STATEIMAGE::ATK].y = 0;
-                count++;
-            if (count % atkTime == 0)
-            {
-                count = 0;
-                frameIndexL[STATEIMAGE::ATK].x++;
-                if (frameIndexL[STATEIMAGE::ATK].y == 1 && frameIndexL[STATEIMAGE::ATK].x > 4)
-                {
-                    frameIndexL[STATEIMAGE::ATK].x = 4;
-                    delay++;
-                    if (delay > 3)
-                    {
-                        isATK = false;
-                        delay = 0;
-                        frameIndexL[STATEIMAGE::ATK].x = 0;
-                        frameIndexL[STATEIMAGE::ATK].y = 0;
-                    }
-                }
-                else if (frameIndexL[STATEIMAGE::ATK].x > 4)
-                {
-                    frameIndexL[STATEIMAGE::ATK].x = 0;
-                    frameIndexL[STATEIMAGE::ATK].y = 1;
-                }
-            }
-        }
-        else
-        {
-            int atkTime = 10;
-            if (frameIndexL[STATEIMAGE::ATK].y != 3)
-                frameIndexL[STATEIMAGE::ATK].y = 2;
-           
-            count++;
-            if (count % atkTime == 0)
-            {
-                count = 0;
-                if (frameIndexL[STATEIMAGE::ATK].y == 2)
-                {
-                    frameIndexL[STATEIMAGE::ATK].x++;
-                    if (frameIndexL[STATEIMAGE::ATK].x > 4)
-                    {
-                        frameIndexL[STATEIMAGE::ATK].x = 4;
-                        frameIndexL[STATEIMAGE::ATK].y = 3;
-                    }
-                }
-
-                else
-                    frameIndexL[STATEIMAGE::ATK].x--;
-                if (frameIndexL[STATEIMAGE::ATK].x < 0)
-                {
-                    frameIndexL[STATEIMAGE::ATK].x = 0;
-                    delay++;
-                    if (delay > 3)
-                    {
-                        isATK = false;
-                        delay = 0;
-                        frameIndexL[STATEIMAGE::ATK].x = 0;
-                        frameIndexL[STATEIMAGE::ATK].y = 2;
-                    }
-                }
-            }
-        }
-
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::ATK].x, frameIndexL[STATEIMAGE::ATK].y);
-
+        stateATK();
         break;
     case STATEIMAGE::DIE:
-        if (isLeft)
-        {
-            int dieFrameSpeed = 10;
-            if (frameIndexL[STATEIMAGE::DIE].y != 5)
-                frameIndexL[STATEIMAGE::DIE].y = 6;
-           
-            count++;
-            if (count % dieFrameSpeed == 0)
-            {
-                count = 0;
-                if (frameIndexL[STATEIMAGE::DIE].y == 6)
-                {
-                    frameIndexL[STATEIMAGE::DIE].x--;
+        stateDIE();
+        break;
 
-                    if (frameIndexL[STATEIMAGE::DIE].x < 0)
-                    {
-                        frameIndexL[STATEIMAGE::DIE].y = 5;
-                        frameIndexL[STATEIMAGE::DIE].x = 3;
-                    }
-                }
-                else
+    }
+}
+
+void summoner::stateIDLE()
+{
+    if (isLeft)
+    {
+        frameIndexL[STATEIMAGE::IDLE].x = 0;
+        frameIndexL[STATEIMAGE::IDLE].y = 0;
+        frameIndexL[STATEIMAGE::ATK].x = 0;
+        frameIndexL[STATEIMAGE::ATK].y = 0;
+        frameIndexL[STATEIMAGE::DIE].x = 4;
+        frameIndexL[STATEIMAGE::DIE].y = 6;
+        
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);
+    }
+    else
+    {
+        frameIndexR[STATEIMAGE::IDLE].x = 0;
+        frameIndexR[STATEIMAGE::IDLE].y = 2;
+        frameIndexR[STATEIMAGE::ATK].x = 0;
+        frameIndexR[STATEIMAGE::ATK].y = 2;
+        frameIndexR[STATEIMAGE::DIE].x = 0;
+        frameIndexR[STATEIMAGE::DIE].y = 4;
+    }
+    img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
+}
+
+void summoner::stateATK()
+{
+
+    if (isLeft)
+    {
+        int atkTime = 10;
+
+        if (frameIndexL[STATEIMAGE::ATK].y != 1)
+            frameIndexL[STATEIMAGE::ATK].y = 0;
+        count++;
+        if (count % atkTime == 0)
+        {
+            count = 0;
+            frameIndexL[STATEIMAGE::ATK].x++;
+            if (frameIndexL[STATEIMAGE::ATK].y == 1 && frameIndexL[STATEIMAGE::ATK].x > 4)
+            {
+                frameIndexL[STATEIMAGE::ATK].x = 4;
+                delay++;
+                if (delay > 3)
                 {
-                    frameIndexL[STATEIMAGE::DIE].x++;
-                    if (frameIndexL[STATEIMAGE::DIE].x > 4)
-                    {
-                        frameIndexL[STATEIMAGE::DIE].x = 4;
-                        delay++;
-                        if (delay > 2)
-                        {
-                            isDelete = true;
-                        }
-                    }
+                    isATK = false;
+                    delay = 0;
+                    frameIndexL[STATEIMAGE::ATK].x = 0;
+                    frameIndexL[STATEIMAGE::ATK].y = 0;
                 }
-               
+            }
+            else if (frameIndexL[STATEIMAGE::ATK].x > 4)
+            {
+                frameIndexL[STATEIMAGE::ATK].x = 0;
+                frameIndexL[STATEIMAGE::ATK].y = 1;
             }
         }
-        else
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::ATK].x, frameIndexL[STATEIMAGE::ATK].y);
+    }
+    else
+    {
+        int atkTime = 10;
+        if (frameIndexR[STATEIMAGE::ATK].y != 3)
+            frameIndexR[STATEIMAGE::ATK].y = 2;
+
+        count++;
+        if (count % atkTime == 0)
         {
-            int dieFrameSpeed = 10;
-            if (frameIndexL[STATEIMAGE::DIE].y != 5)
-                frameIndexL[STATEIMAGE::DIE].y = 4;
-
-            count++;
-            if (count % dieFrameSpeed == 0)
+            count = 0;
+            if (frameIndexR[STATEIMAGE::ATK].y == 2)
             {
-                count = 0;
-                
-                frameIndexL[STATEIMAGE::DIE].x++;
-
-                if (frameIndexL[STATEIMAGE::DIE].y==5 && frameIndexL[STATEIMAGE::DIE].x>1)
+                frameIndexR[STATEIMAGE::ATK].x++;
+                if (frameIndexR[STATEIMAGE::ATK].x > 4)
                 {
-                    frameIndexL[STATEIMAGE::DIE].x = 1;
+                    frameIndexR[STATEIMAGE::ATK].x = 4;
+                    frameIndexR[STATEIMAGE::ATK].y = 3;
+                }
+            }
+
+            else
+                frameIndexR[STATEIMAGE::ATK].x--;
+            if (frameIndexR[STATEIMAGE::ATK].x < 0)
+            {
+                frameIndexR[STATEIMAGE::ATK].x = 0;
+                delay++;
+                if (delay > 3)
+                {
+                    isATK = false;
+                    delay = 0;
+                    frameIndexR[STATEIMAGE::ATK].x = 0;
+                    frameIndexR[STATEIMAGE::ATK].y = 2;
+                }
+            }
+        }
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::ATK].x, frameIndexR[STATEIMAGE::ATK].y);
+    }
+}
+
+void summoner::stateDIE()
+{
+    if (isLeft)
+    {
+        int dieFrameSpeed = 10;
+        if (frameIndexL[STATEIMAGE::DIE].y != 5)
+            frameIndexL[STATEIMAGE::DIE].y = 6;
+
+        count++;
+        if (count % dieFrameSpeed == 0)
+        {
+            count = 0;
+            if (frameIndexL[STATEIMAGE::DIE].y == 6)
+            {
+                frameIndexL[STATEIMAGE::DIE].x--;
+
+                if (frameIndexL[STATEIMAGE::DIE].x < 0)
+                {
+                    frameIndexL[STATEIMAGE::DIE].y = 5;
+                    frameIndexL[STATEIMAGE::DIE].x = 3;
+                }
+            }
+            else
+            {
+                frameIndexL[STATEIMAGE::DIE].x++;
+                if (frameIndexL[STATEIMAGE::DIE].x > 4)
+                {
+                    frameIndexL[STATEIMAGE::DIE].x = 4;
                     delay++;
                     if (delay > 2)
                     {
                         isDelete = true;
                     }
                 }
-                else if (frameIndexL[STATEIMAGE::DIE].x > 4)
+            }
+
+        }
+    }
+    else
+    {
+        int dieFrameSpeed = 10;
+        if (frameIndexR[STATEIMAGE::DIE].y != 5)
+            frameIndexR[STATEIMAGE::DIE].y = 4;
+
+        count++;
+        if (count % dieFrameSpeed == 0)
+        {
+            count = 0;
+
+            frameIndexR[STATEIMAGE::DIE].x++;
+
+            if (frameIndexR[STATEIMAGE::DIE].y == 5 && frameIndexR[STATEIMAGE::DIE].x > 1)
+            {
+                frameIndexR[STATEIMAGE::DIE].x = 1;
+                delay++;
+                if (delay > 2)
                 {
-                    frameIndexL[STATEIMAGE::DIE].y = 5;
-                    frameIndexL[STATEIMAGE::DIE].x = 0;
+                    isDelete = true;
                 }
             }
+            else if (frameIndexR[STATEIMAGE::DIE].x > 4)
+            {
+                frameIndexR[STATEIMAGE::DIE].y = 5;
+                frameIndexR[STATEIMAGE::DIE].x = 0;
+            }
         }
-
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::DIE].x, frameIndexL[STATEIMAGE::DIE].y);
-        coinDrop(1, 10);
-        break;
-
     }
+
+    img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::DIE].x, frameIndexR[STATEIMAGE::DIE].y);
+    
+    coinDrop(1, 10);
 }
 
 

@@ -128,6 +128,12 @@ public:
 	virtual void render()=0;
 	virtual void addInit()=0;
 
+	virtual void stateIDLE() = 0;
+	virtual void stateATK() = 0;
+	virtual void stateDIE() = 0;
+	
+
+
 	inline POINT getPos() { return pos; }
 	inline RECT getRC() { return rc; }
 	inline bool getDelete() { return isDelete; }
