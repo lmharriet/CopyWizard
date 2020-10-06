@@ -9,7 +9,7 @@ struct tagCollider
 //Dash,RUN
 enum class STATE
 {
-	IDLE, RUN, DASH,
+	IDLE, RUN, DASH,DIE,
 	BASIC,
 	STANDARD,
 	SIGNATURE
