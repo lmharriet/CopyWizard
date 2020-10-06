@@ -1,0 +1,749 @@
+#include "stdafx.h"
+#include "boss.h"
+#include "player.h"
+
+HRESULT boss::init(int _posX, int _posY)
+{
+	IMAGEMANAGER->addFrameImage("boss", "resource/boss/bossSprite.bmp", 1500, 1200, 10, 8, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("punch", "resource/boss/0.bmp", 81, 87, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("drill", "resource/boss/1.bmp", 105, 156, 1, 2, true, RGB(255, 0, 255));
+
+	frameX = frameY = 0;
+
+	boss.bossState = RESPONE;
+
+	count = timer = 0;
+	posX = _posX;
+	posY = _posY;
+
+	boss.center.x = posX;
+	boss.center.y = posY;
+	boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
+	boss.angle = 0;
+
+	for (int i = 0; i < 3; i++) {
+		block[i].center.x = boss.center.x;
+		block[i].center.y = boss.center.y;
+		block[i].rc = RectMakeCenter(block[i].center.x, block[i].center.y, 81, 87);
+		block[i].angle = 0;
+	}
+
+	posPlayer = 5;
+	punchCount = 0;
+	woodTimer = 0;
+
+	jumpMotion = false;
+	leftCheck = false;
+	for (int i = 0; i < 3; i++) {
+		punching[i] = false;
+	}
+	startNiddle = false;
+
+	niddleAngle = 0.0f;
+
+	return S_OK;
+}
+
+void boss::release()
+{
+}
+
+void boss::update()
+{
+	this->jump();
+	this->drill();
+	this->punch();
+	this->niddle();
+	this->wall();
+
+	BOSSMANAGER->update();
+	this->animation();
+}
+
+void boss::render()
+{
+	//IMAGEMANAGER->findImage("boss")->frameRender(getMemDC(), boss.rc.left, boss.rc.top);
+	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("boss"), boss.rc.left, boss.rc.top, frameX, frameY);
+
+	if (boss.bossState == DRILL) {
+		if (!leftCheck) {
+			//IMAGEMANAGER->findImage("drill")->setFrameY(0);
+			//IMAGEMANAGER->frameRender("drill", getMemDC(), drillBlcok.rc.left, drillBlcok.rc.top);
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("drill"), drillBlcok.rc.left, drillBlcok.rc.top, 0, 0);
+		}
+		else {
+			//IMAGEMANAGER->findImage("drill")->setFrameY(1);
+			//IMAGEMANAGER->frameRender("drill", getMemDC(), drillBlcok.rc.left, drillBlcok.rc.top);
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("drill"), drillBlcok.rc.left, drillBlcok.rc.top, 0, 1);
+		}
+	}
+
+	for (int i = 0; i < 3; i++) {
+		if (punching[i]) {
+			//IMAGEMANAGER->findImage("punch")->render(getMemDC(), block[i].rc.left, block[i].rc.top);
+			CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("punch"), block[i].rc.left, block[i].rc.top);
+		}
+	}
+
+	BOSSMANAGER->render(getMemDC());
+}
+
+void boss::animation()
+{
+	switch (boss.bossState)
+	{
+	case RESPONE:
+		// 기둥 있을떄
+
+		// 기둥 사라졌을때
+		frameY = 5;
+		count++;
+		if (count % 10 == 0) {
+			if (frameX > 4) {
+				frameX = 4;
+				timer++;
+				if (timer > 15) {
+					frameX = 0;
+					count = 0;
+					timer = 0;
+					boss.bossState = BOSSIDLE;
+				}
+			}
+			frameX++;
+		}
+		break;
+	case BOSSIDLE:
+		frameX = frameY = 0;
+		break;
+	case JUMP:
+		if (!jumpMotion) {
+			count++;
+			if (count % 10 == 0) {
+				if (frameX < 2) {
+					count = 0;
+					frameX = 2;
+					timer++;
+					if (timer > 5) {
+						jumpMotion = true;
+						timer = 0;
+						frameX = 0;
+					}
+				}
+				if (!jumpMotion) {
+					frameX--;
+				}
+			}
+		}
+		else {
+			frameY = 7;
+			count++;
+			if (count % 20 == 0) {
+				if (frameX > 2) {
+					count = 0;
+					frameX = 0;
+					jumpMotion = false;
+					boss.bossState = BOSSIDLE;
+				}
+				frameX++;
+			}
+		}
+		break;
+	case DRILL:
+		if (leftCheck) {
+			frameX = 9;
+			frameY = 2;
+			timer++;
+			if (timer > 30) {
+				frameX = 8;
+			}
+		}
+		else {
+			frameX = 0;
+			frameY = 2;
+			timer++;
+			if (timer > 30) {
+				frameX = 1;
+			}
+		}
+		break;
+	case PUNCH:
+		if (punchCount == 0) {
+			switch (posPlayer)
+			{
+			case 1:
+				frameX = 0;
+				frameY = 3;
+				timer++;
+				if (timer > 30) {
+					frameX = 1;
+					punching[0] = true;
+				}
+				if (timer > 60) {
+					punchCount++;
+					leftCheck = true;
+					timer = 0;
+					this->bossPlayerAngle();
+					block[1].angle = boss.angle;
+					punching[1] = true;
+				}
+				break;
+			case 2:
+				frameX = 9;
+				frameY = 2;
+				timer++;
+				if (timer > 30) {
+					frameX = 8;
+					punching[0] = true;
+				}
+				if (timer > 60) {
+					punchCount++;
+					leftCheck = false;
+					timer = 0;
+					this->bossPlayerAngle();
+					block[1].angle = boss.angle;
+					punching[1] = true;
+				}
+				break;
+			case 3:
+				frameX = 9;
+				frameY = 5;
+				timer++;
+				if (timer > 30) {
+					frameX = 6;
+					punching[0] = true;
+				}
+				if (timer > 60) {
+					punchCount++;
+					leftCheck = false;
+					timer = 0;
+					this->bossPlayerAngle();
+					block[1].angle = boss.angle;
+					punching[1] = true;
+				}
+				break;
+			case 4:
+				frameX = 0;
+				frameY = 2;
+				timer++;
+				if (timer > 30) {
+					frameX = 1;
+					punching[0] = true;
+				}
+				if (timer > 60) {
+					punchCount++;
+					leftCheck = true;
+					timer = 0;
+					this->bossPlayerAngle();
+					block[1].angle = boss.angle;
+					punching[1] = true;
+				}
+				break;
+			}
+		}
+		else if (punchCount == 1) {
+			switch (posPlayer)
+			{
+			case 1:
+				if (leftCheck) {
+					frameX = 0;
+					frameY = 3;
+					timer++;
+					if (timer > 30) {
+						punchCount++;
+						timer = 0;
+						leftCheck = false;
+						this->bossPlayerAngle();
+						block[2].angle = boss.angle;
+						punching[2] = true;
+					}
+				}
+				else {
+					frameX = 1;
+					frameY = 3;
+					timer++;
+					if (timer > 30) {
+						punchCount++;
+						timer = 0;
+						leftCheck = true;
+						this->bossPlayerAngle();
+						block[2].angle = boss.angle;
+						punching[2] = true;
+					}
+				}
+				break;
+			case 2:
+				if (leftCheck) {
+					frameX = 8;
+					frameY = 2;
+					timer++;
+					if (timer > 30) {
+						punchCount++;
+						timer = 0;
+						leftCheck = false;
+						this->bossPlayerAngle();
+						block[2].angle = boss.angle;
+						punching[2] = true;
+					}
+				}
+				else {
+					frameX = 7;
+					frameY = 2;
+					timer++;
+					if (timer > 30) {
+						punchCount++;
+						timer = 0;
+						leftCheck = true;
+						this->bossPlayerAngle();
+						block[2].angle = boss.angle;
+						punching[2] = true;
+					}
+				}
+				break;
+			case 3:
+				if (leftCheck) {
+					frameX = 9;
+					frameY = 6;
+					timer++;
+					if (timer > 30) {
+						punchCount++;
+						timer = 0;
+						leftCheck = false;
+						this->bossPlayerAngle();
+						block[2].angle = boss.angle;
+						punching[2] = true;
+					}
+				}
+				else {
+					frameX = 3;
+					frameY = 1;
+					timer++;
+					if (timer > 30) {
+						punchCount++;
+						timer = 0;
+						leftCheck = true;
+						this->bossPlayerAngle();
+						block[2].angle = boss.angle;
+						punching[2] = true;
+					}
+				}
+				break;
+			case 4:
+				if (leftCheck) {
+					frameX = 6;
+					frameY = 6;
+					timer++;
+					if (timer > 30) {
+						punchCount++;
+						timer = 0;
+						leftCheck = false;
+						this->bossPlayerAngle();
+						block[2].angle = boss.angle;
+						punching[2] = true;
+					}
+				}
+				else {
+					frameX = 1;
+					frameY = 2;
+					timer++;
+					if (timer > 30) {
+						punchCount++;
+						timer = 0;
+						leftCheck = true;
+						this->bossPlayerAngle();
+						block[2].angle = boss.angle;
+						punching[2] = true;
+					}
+				}
+				break;
+			}
+		}
+		else if (punchCount == 2) {
+			switch (posPlayer)
+			{
+			case 1:
+				if (leftCheck) {
+					frameX = 0;
+					frameY = 3;
+				}
+				else {
+					frameX = 1;
+					frameY = 3;
+				}
+				timer++;
+				if (timer > 40) {
+					punchCount = 0;
+					timer = 0;
+					leftCheck = false;
+					boss.bossState = BOSSIDLE;
+				}
+				break;
+			case 2:
+				if (leftCheck) {
+					frameX = 8;
+					frameY = 2;
+				}
+				else {
+					frameX = 7;
+					frameY = 2;
+				}
+				timer++;
+				if (timer > 40) {
+					punchCount = 0;
+					timer = 0;
+					leftCheck = false;
+					boss.bossState = BOSSIDLE;
+				}
+				break;
+			case 3:
+				if (leftCheck) {
+					IMAGEMANAGER->findImage("boss")->setFrameY(6);
+					IMAGEMANAGER->findImage("boss")->setFrameX(9);
+				}
+				else {
+					IMAGEMANAGER->findImage("boss")->setFrameY(1);
+					IMAGEMANAGER->findImage("boss")->setFrameX(3);
+				}
+				timer++;
+				if (timer > 40) {
+					punchCount = 0;
+					timer = 0;
+					leftCheck = false;
+					boss.bossState = BOSSIDLE;
+				}
+				break;
+			case 4:
+				if (leftCheck) {
+					IMAGEMANAGER->findImage("boss")->setFrameY(6);
+					IMAGEMANAGER->findImage("boss")->setFrameX(6);
+				}
+				else {
+					IMAGEMANAGER->findImage("boss")->setFrameY(2);
+					IMAGEMANAGER->findImage("boss")->setFrameX(1);
+				}
+				timer++;
+				if (timer > 40) {
+					punchCount = 0;
+					timer = 0;
+					leftCheck = false;
+					boss.bossState = BOSSIDLE;
+				}
+				break;
+			}
+		}
+		break;
+	case NIDDLE:
+		if (!jumpMotion) {
+			IMAGEMANAGER->findImage("boss")->setFrameY(0);
+			count++;
+			if (count % 10 == 0) {
+				if (index < 2) {
+					count = 0;
+					timer = 0;
+					index = 0;
+					jumpMotion = true;
+				}
+				IMAGEMANAGER->findImage("boss")->setFrameX(index);
+				if (!jumpMotion) {
+					index--;
+				}
+			}
+		}
+		else {
+			IMAGEMANAGER->findImage("boss")->setFrameY(7);
+			count++;
+			if (count % 20 == 0) {
+				if (index > 2) {
+					count = 0;
+					index = 2;
+				}
+				IMAGEMANAGER->findImage("boss")->setFrameX(index);
+				index++;
+			}
+		}
+		break;
+	case WALL:
+		IMAGEMANAGER->findImage("boss")->setFrameY(0);
+		IMAGEMANAGER->findImage("boss")->setFrameX(3);
+		timer++;
+		if (timer > 50) {
+			IMAGEMANAGER->findImage("boss")->setFrameX(2);
+		}
+		break;
+	}
+}
+ //플레이어 위치, 보스 범위 조정 필요
+void boss::bossPlayerAngle()
+{
+	boss.center.x = boss.rc.left + 75;
+	boss.center.y = boss.rc.top + 75;
+	posX = _player->getX();
+	posY = _player->getY();
+	boss.angle = getAngle(boss.center.x, boss.center.y, posX, posY);
+	if (boss.angle >= 1.0f && boss.angle < 2.5f) {
+		posPlayer = 1;
+	}
+	else if (boss.angle >= 2.5f && boss.angle < 4.0f) {
+		posPlayer = 2;
+	}
+	else if (boss.angle >= 4.0f && boss.angle < 5.5f) {
+		posPlayer = 3;
+	}
+	else if (boss.angle >= 5.5f || boss.angle < 1.0f) {
+		posPlayer = 4;
+	}
+}
+
+void boss::jump()
+{
+	if (INPUT->GetKeyDown('Z') && boss.bossState != RESPONE) {
+		frameX = 4;
+		frameY = 0;
+		jumpMotion = false;
+		boss.bossState = JUMP;
+		posX = _player->getX();
+		posY = _player->getRect().bottom - WINSIZEY;
+	}
+
+	if (boss.bossState == JUMP && jumpMotion) {
+		if (frameX == 1) {
+			if (boss.rc.bottom < 0) {
+				boss.rc = RectMakeCenter(posX, posY, 150, 150);
+			}
+			else {
+				boss.rc.top -= 50;
+				boss.rc.bottom -= 50;
+			}
+		}
+		else if (frameX == 2) {
+			if (boss.rc.bottom <= posY + WINSIZEY) {
+				boss.rc.top += 50;
+				boss.rc.bottom += 50;
+			}
+			else {
+				boss.center.x = boss.rc.left + 75;
+				boss.center.y = boss.rc.top + 75;
+			}
+		}
+	}
+}
+
+void boss::drill()
+{
+	if (INPUT->GetKeyDown('X')) {
+		boss.bossState = DRILL;
+		count = 0;
+		timer = 0;
+		boss.center.x = boss.rc.left + 75;
+		boss.center.y = boss.rc.top + 75;
+		posX = _player->getX();
+		posY = _player->getY();
+		boss.angle = getAngle(boss.center.x, boss.center.y, posX, posY);
+		if (boss.rc.right < _player->getRect().left) {
+			drillBlcok.rc = RectMakeCenter(boss.center.x + 50, boss.center.y + 20, 100, 80);
+			leftCheck = false;
+		}
+		else {
+			leftCheck = true;
+			drillBlcok.rc = RectMakeCenter(boss.center.x - 50, boss.center.y + 20, 100, 80);
+		}
+	}
+
+	if (boss.bossState == DRILL && timer > 30) {
+		if (boss.rc.left > 0 && boss.rc.right < WINSIZEX && boss.rc.top > 0 && boss.rc.bottom < WINSIZEY) {
+			boss.center.x += cosf(boss.angle) * 30;
+			boss.center.y += -sinf(boss.angle) * 30;
+			boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
+			if (leftCheck) {
+				drillBlcok.rc = RectMakeCenter(boss.center.x - 75, boss.center.y + 20, 100, 80);
+			}
+			else {
+				drillBlcok.rc = RectMakeCenter(boss.center.x + 75, boss.center.y + 20, 100, 80);
+			}
+		}
+		else {
+			count++;
+			if (count > 50) {
+				if (boss.rc.left <= 0) {
+					boss.center.x += 30;
+				}
+				else if (boss.rc.right >= WINSIZEX) {
+					boss.center.x -= 30;
+				}
+				else if (boss.rc.top <= 0) {
+					boss.center.y += 30;
+				}
+				else if (boss.rc.bottom >= WINSIZEY) {
+					boss.center.y -= 30;
+				}
+				boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
+				boss.bossState = BOSSIDLE;
+				timer = 0;
+				count = 0;
+			}
+		}
+	}
+}
+
+void boss::punch()
+{
+	if (INPUT->GetKeyDown('C')) {
+		boss.bossState = PUNCH;
+		count = 0;
+		timer = 0;
+		this->bossPlayerAngle();
+		for (int i = 0; i < 3; i++) {
+			block[i].center.x = boss.center.x;
+			block[i].center.y = boss.center.y;
+			block[i].angle = boss.angle;
+			block[i].rc = RectMakeCenter(block[i].center.x, block[i].center.y, 100, 100);
+		}
+	}
+
+	if (boss.bossState == PUNCH) {
+		for (int i = 0; i < 3; i++) {
+			if (punching[i]) {
+				block[i].center.x += cosf(block[i].angle) * 35;
+				block[i].center.y += -sinf(block[i].angle) * 35;
+				block[i].rc = RectMakeCenter(block[i].center.x, block[i].center.y, 100, 100);
+			}
+			if (block[i].rc.left > WINSIZEX || block[i].rc.right < 0 || block[i].rc.top > WINSIZEY || block[i].rc.bottom < 0) {
+				punching[i] = false;
+			}
+		}
+	}
+}
+
+void boss::niddle()
+{
+	if (INPUT->GetKeyDown('V')) {
+		boss.bossState = NIDDLE;
+		jumpMotion = false;
+		timer = 0;
+		index = 4;
+	}
+
+	if (boss.bossState == NIDDLE && jumpMotion) {
+		if (index == 1) {
+			if (boss.rc.bottom < 0) {
+				boss.rc = RectMakeCenter(WINSIZEX / 2, WINSIZEY / 2 - WINSIZEY, 150, 150);
+			}
+			else {
+				boss.rc.top -= 50;
+				boss.rc.bottom -= 50;
+			}
+		}
+		else if (index == 2) {
+			if (boss.rc.bottom <= WINSIZEY / 2 + 75) {
+				boss.rc.top += 50;
+				boss.rc.bottom += 50;
+			}
+			else {
+				for (int i = 0; i < 5; i++) {
+					//niddleBlock[i].angle = PI_2 / 5 * i * 72 + 18;
+					niddleBlock[i].angle = (18 + (i * 72)) * PI / 180;
+					niddleBlock[i].center.x = cosf(niddleBlock[i].angle) * 130 + WINSIZEX / 2;
+					niddleBlock[i].center.y = -sinf(niddleBlock[i].angle) * 130 + WINSIZEY / 2;
+					niddleBlock[i].rc = RectMakeCenter(niddleBlock[i].center.x, niddleBlock[i].center.y, 20, 20);
+					niddleBlock[i].isNear = abs((niddleBlock[i].angle + PI) > PI * 2 ? niddleBlock[i].angle - PI : niddleBlock[i].angle + PI - getAngle(niddleBlock[i].center.x, niddleBlock[i].center.y, _player->getX(), _player->getY())) < PI ? true : false;
+					startNiddle = true;
+				}
+				boss.center.x = boss.rc.left + 75;
+				boss.center.y = boss.rc.top + 75;
+			}
+		}
+	}
+
+	if (startNiddle) {
+		timer++;
+		for (int i = 0; i < 5; i++) {
+			niddleAngle = getAngle(niddleBlock[i].center.x, niddleBlock[i].center.y, _player->getX(), _player->getY());
+
+			if (timer % 5 == 0) {
+				BOSSMANAGER->init(niddleBlock[i].center.x, niddleBlock[i].center.y, 20, 1);
+			}
+			if (niddleBlock[i].center.x > _player->getX()) {
+				if (niddleBlock[i].angle > niddleAngle) {
+					niddleBlock[i].angle -= 0.1f;
+				}
+				else if (niddleBlock[i].angle < niddleAngle) {
+					niddleBlock[i].angle += 0.1f;
+				}
+			}
+			else {
+				niddleBlock[i].angle = niddleAngle;
+			}
+
+			niddleBlock[i].center.x += cosf(niddleBlock[i].angle) * 5;
+			niddleBlock[i].center.y += -sinf(niddleBlock[i].angle) * 5;
+
+			niddleBlock[i].rc = RectMakeCenter(niddleBlock[i].center.x, niddleBlock[i].center.y, 20, 20);
+
+			if (timer > 400) {
+				timer = 0;
+				boss.bossState = BOSSIDLE;
+				startNiddle = false;
+			}
+		}
+	}
+}
+
+void boss::middleWood()
+{
+	tagBlock _wall;
+	_wall.center = boss.center;
+	_wall.angle = getAngle(_wall.center.x, _wall.center.y, _player->getX(), _player->getY());
+	_wall.rc = RectMakeCenter(_wall.center.x, _wall.center.y, 44, 44);
+	_wall.type = 0;
+	_wall.blockCount = 0;
+	wallBlock.push_back(_wall);
+}
+
+void boss::wall()
+{
+	if (INPUT->GetKeyDown('B')) {
+		boss.bossState = WALL;
+		count = 0;
+		timer = 0;
+		if (boss.rc.right < _player->getRect().left) {
+			leftCheck = false;
+		}
+		else {
+			leftCheck = true;
+		}
+		for (int i = -1; i < 2; i++) {
+			tagBlock _wall;
+			_wall.center = boss.center;
+			_wall.angle = getAngle(_wall.center.x, _wall.center.y, _player->getX(), _player->getY()) + i * PI_8;
+			_wall.rc = RectMakeCenter(_wall.center.x, _wall.center.y, 44, 44);
+			_wall.type = i;
+			_wall.blockCount = 0;
+			wallBlock.push_back(_wall);
+		}
+	}
+
+	if (boss.bossState == WALL && timer > 50) {
+		count++;
+		if (count > 260) {
+			boss.bossState = BOSSIDLE;
+		}
+		if (count % 90 == 0) {
+			this->middleWood();
+		}
+		for (int i = 0; i < wallBlock.size(); i++) {
+			wallBlock[i].blockCount++;
+			if (wallBlock[i].blockCount % 2 == 0 && wallBlock[i].type == -1) {
+				BOSSMANAGER->init(wallBlock[i].center.x + (leftCheck ? 130 : -130), wallBlock[i].center.y + (leftCheck ? -200 : 0), 240, 0);
+			}
+			if (wallBlock[i].blockCount % 2 == 0 && wallBlock[i].type == 0) {
+				BOSSMANAGER->init(wallBlock[i].center.x + (leftCheck ? -50 : 50), wallBlock[i].center.y - 110, 80, 0);
+			}
+			if (wallBlock[i].blockCount % 2 == 0 && wallBlock[i].type == 1) {
+				BOSSMANAGER->init(wallBlock[i].center.x + (leftCheck ? 130 : -130), wallBlock[i].center.y + (leftCheck ? 0 : -200), 240, 0);
+			}
+
+			wallBlock[i].center.x += cosf(wallBlock[i].angle) * 55;
+			wallBlock[i].center.y += -sinf(wallBlock[i].angle) * 55;
+			wallBlock[i].rc = RectMakeCenter(wallBlock[i].center.x, wallBlock[i].center.y, 48, 44);
+		}
+	}
+}
