@@ -235,7 +235,7 @@ void particleManager0::pointActive()
 		}
 
 		//Á¦°Å
-		if (vParticlePoint[i].delay == vParticlePoint[i].lifeTime)
+		if (vParticlePoint[i].currentTime == vParticlePoint[i].lifeTime)
 		{
 			vParticlePoint.erase(vParticlePoint.begin() + i);
 		}

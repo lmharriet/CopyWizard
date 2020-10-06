@@ -19,7 +19,8 @@ HRESULT gameScene::init()
 	checkArea = RectMakeCenter(WINSIZEX/2, WINSIZEY/2, 100, 100);
 	CAMERAMANAGER->init(_player->getX(), _player->getY(), MAXTILE, MAXTILE, -MAXTILE, -MAXTILE, WINSIZEX / 2, WINSIZEY / 2);
 
-	PARTICLE->init();
+	//PARTICLE->init();
+	PARTICLE0->init();
 	EFFECT->init();
 
 	enemy = new enemyManager;
@@ -66,9 +67,10 @@ void gameScene::update()
 
 	if (INPUT->GetKeyDown(VK_BACK))
 	{
-		PARTICLE->pointGenerate(_player->getX(), _player->getY(), 0, 0, 0, 5, 60);
+		PARTICLE0->pointGenerate(_player->getX(), _player->getY(), 2, 50, 15, 20.f);
+		//PARTICLE->pointGenerate(_player->getX(), _player->getY(), 0, 0, 0, 5, 60);
 	}
-	PARTICLE->pointActive();
+	PARTICLE0->pointActive();
 
 	/*if (INPUT->GetKeyDown(VK_BACK))PARTICLE->resetPoint();*/
 
@@ -238,7 +240,8 @@ void gameScene::render()
 		}
 	}
 
-	PARTICLE->render(getMemDC(), CAMERAMANAGER->getRect());
+	//PARTICLE->render(getMemDC(), CAMERAMANAGER->getRect());
+	PARTICLE0->render(getMemDC());
 
 	enemy->render();
 	if(!isRender) _player->render();
