@@ -67,8 +67,10 @@ void bullet::fire(float x, float y, float angle, float speed)
 
 void bullet::move()
 {
+
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
+		_vBullet[i].FrameX = 1;
 		_vBullet[i].x += cosf(_vBullet[i].angle) * _vBullet[i].speed;
 		_vBullet[i].y += -sinf(_vBullet[i].angle) * _vBullet[i].speed;
 

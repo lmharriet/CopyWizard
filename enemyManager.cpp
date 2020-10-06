@@ -69,7 +69,7 @@ void enemyManager::update()
 	
 	
 	//미니언 총알발사
-	this->minionBulletFire(CAMERAMANAGER->GetRelativeX(playerRC.left), CAMERAMANAGER->GetRelativeY(playerRC.top));
+	this->minionBulletFire(CAMERAMANAGER->GetRelativeX(playerRC.left), CAMERAMANAGER->GetRelativeY(playerRC.top)+20);
 
 }
 
@@ -116,13 +116,15 @@ void enemyManager::minionBulletFire(float aimX, float aimY)
 	{
 		if ((*_viMinion)->getMonsterKind() != MONSTERKIND::SUMMONER) continue;
 		if ((*_viMinion)->getFx() == false)continue;
-
+		if (!_bullet->bulletEmpty()) continue;
+		
+		(*_viMinion)->setBulletFire(false);
 		
 		float angle = getAngle((float)(*_viMinion)->getCulPos().x,(float) (*_viMinion)->getCulPos().y,(float) aimX, (float)aimY);
 
-		_bullet->fire((float)(*_viMinion)->getPos().x, (float)(*_viMinion)->getPos().y-72, angle, 9.0f);
-		_bullet->fire((float)(*_viMinion)->getPos().x, (float)(*_viMinion)->getPos().y-72, angle+PI/4, 9.0f);
-		_bullet->fire((float)(*_viMinion)->getPos().x, (float)(*_viMinion)->getPos().y-72, angle-PI/4, 9.0f);
+		_bullet->fire((float)(*_viMinion)->getPos().x+20, (float)(*_viMinion)->getPos().y-72, angle, 9.0f);
+		_bullet->fire((float)(*_viMinion)->getPos().x+20, (float)(*_viMinion)->getPos().y-72, angle+PI/4, 9.0f);
+		_bullet->fire((float)(*_viMinion)->getPos().x+20, (float)(*_viMinion)->getPos().y-72, angle-PI/4, 9.0f);
 		(*_viMinion)->setFx(false);
 	}
 }

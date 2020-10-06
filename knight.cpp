@@ -7,7 +7,6 @@ void knight::addInit()
     {
         atkDirection[i] = false;
     }
-    
 }
 
 void knight::update()
@@ -15,7 +14,7 @@ void knight::update()
     rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
     
-    if (distanceMax > getDistance(pos.x, pos.y, playerRC.left + (playerRC.right - playerRC.left) / 2, playerRC.top + (playerRC.bottom - playerRC.top) / 2))
+    if (distanceMax > getDistance(pos.x+img->getFrameWidth()*0.5, pos.y+img->getFrameHeight()*1.5, playerRC.left, playerRC.top ))
         isFindWayOn = true;
     else
         isFindWayOn = false;
@@ -35,7 +34,8 @@ void knight::update()
             {
                 atkDirection[LEFT] = false;
                 atkDirection[RIGHT] = true;
-            }
+            } 
+            
             else
             {
                 atkDirection[LEFT] = true;
@@ -76,8 +76,8 @@ void knight::render()
 {
     stateImageRender();
    // astar->render(getMemDC());
-  //  FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
-  //  FrameRect(getMemDC(), rc, RGB(255, 255, 255));
+    //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
+    //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
 }
 
 
