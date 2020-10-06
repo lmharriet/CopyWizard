@@ -93,6 +93,7 @@ class particleManager0 : public singletonBase<particleManager0>
 {
 private:
 	vector<tagParticlePoint2> vParticlePoint; // 파티클 생성자
+	vector<tagParticlePoint2> vExplosion;	  // 폭팔 파티클 생성자
 	vector<tagParticle2> vParticle;			  // 파티클
 public:
 	HRESULT init();
@@ -100,6 +101,9 @@ public:
 
 	void pointGenerate(float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius, float particleSpeed, int frameDelay);
 
+	void explosionGenerate(float x, float y, int maxAngle, float radius, float particleSpeed, int frameDelay);
+
 	void pointActive();
-	void generate(float x, float y, float angle, int delay, float speed);
+	void explosionActive();
+	void generate(string keyName, float x, float y, float angle, int delay, float speed);
 };

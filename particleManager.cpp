@@ -159,6 +159,7 @@ void particleManager::pointActive()
 HRESULT particleManager0::init()
 {
 	IMAGEMANAGER->addFrameImage("frameParticle", "Images/particle/frameParticle.bmp", 240, 160, 6, 4);
+	IMAGEMANAGER->addFrameImage("explosionParticle", "Images/particle/explosionParticle.bmp", 960*5, 640*5, 6, 4);
 	return S_OK;
 }
 
@@ -209,6 +210,21 @@ void particleManager0::pointGenerate(float x, float y, int CreateDelay, int life
 	vParticlePoint.push_back(particlePoint);
 }
 
+void particleManager0::explosionGenerate(float x, float y, int maxAngle, float radius, float particleSpeed, int frameDelay)
+{
+	tagParticlePoint2 particlePoint;
+	particlePoint.x = x;
+	particlePoint.y = y;
+	particlePoint.maxAngle = maxAngle;
+	particlePoint.radius = radius;
+
+	particlePoint.particleSpeed = particleSpeed;
+	particlePoint.frameDelay = frameDelay;
+
+	vExplosion.push_back(particlePoint);
+}
+
+
 void particleManager0::pointActive()
 {
 	float* arr;
@@ -230,8 +246,7 @@ void particleManager0::pointActive()
 			float x = vParticlePoint[i].x + cosf(arr[vParticlePoint[i].angleNum]) * vParticlePoint[i].radius; // 10정도 밀어줌
 			float y = vParticlePoint[i].y - sinf(arr[vParticlePoint[i].angleNum]) * vParticlePoint[i].radius; // 10정도 밀어줌
 
-			generate(x, y, arr[vParticlePoint[i].angleNum], vParticlePoint[i].frameDelay, vParticlePoint[i].particleSpeed);
-			//generate(vParticlePoint[i].x, vParticlePoint[i].y, arr[vParticlePoint[i].angleNum], 5, 2.0f);
+			generate("frameParticle", x, y, arr[vParticlePoint[i].angleNum], vParticlePoint[i].frameDelay, vParticlePoint[i].particleSpeed);
 			vParticlePoint[i].angleNum++;
 
 			if (vParticlePoint[i].angleNum == vParticlePoint[i].maxAngle)vParticlePoint[i].angleNum = 0;
@@ -246,7 +261,27 @@ void particleManager0::pointActive()
 	}
 }
 
-void particleManager0::generate(float x, float y, float angle, int delay, float speed)
+void particleManager0::explosionActive()
+{
+	for (int i = 0; i < vExplosion.size(); i++)
+	{
+		//생성
+		for (int k = 0; k < vExplosion[i].maxAngle; k++)
+		{
+			float angle = (((2.f * PI) / vExplosion[i].maxAngle) * k) + RANDOM->range(-0.4f, 0.4f);
+			float speed = vExplosion[i].particleSpeed + RANDOM->range(-1.f, 1.f);
+			float delay = vExplosion[i].frameDelay + RANDOM->range(0, 4);
+
+			generate("explosionParticle", vExplosion[i].x, vExplosion[i].y, angle, delay, speed);
+		}
+
+		//제거
+		vExplosion.erase(vExplosion.begin() + i);
+		i--;
+	}
+}
+
+void particleManager0::generate(string keyName ,float x, float y, float angle, int delay, float speed)
 {
 	tagParticle2 particle;
 
@@ -258,7 +293,7 @@ void particleManager0::generate(float x, float y, float angle, int delay, float 
 	particle.speed = speed;
 	particle.time = 0;
 
-	image* img = IMAGEMANAGER->findImage("frameParticle");
+	image* img = IMAGEMANAGER->findImage(keyName);
 	//image info
 	particle.frameX = 0;
 	particle.maxFrameX = img->getMaxFrameX();

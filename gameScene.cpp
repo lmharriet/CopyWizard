@@ -67,10 +67,15 @@ void gameScene::update()
 
 	if (INPUT->GetKeyDown(VK_BACK))
 	{
-		PARTICLE0->pointGenerate(_player->getX(), _player->getY(), 2, 50, 15, 20.f, 0.5f, 20);
+		PARTICLE0->explosionGenerate(_player->getX(), _player->getY(), 18, 1.f, 4.f, 11);
+		PARTICLE0->explosionGenerate(_player->getX(), _player->getY(), 15, 1.f, 3.f, 9);
+		PARTICLE0->explosionGenerate(_player->getX(), _player->getY(), 12, 1.f, 2.f, 7);
+		PARTICLE0->explosionGenerate(_player->getX(), _player->getY(), 9, 1.f, 3.f, 5);
+		PARTICLE0->explosionGenerate(_player->getX(), _player->getY(), 6, 1.f, 4.f, 3);
 		//PARTICLE->pointGenerate(_player->getX(), _player->getY(), 0, 0, 0, 5, 60);
 	}
 	PARTICLE0->pointActive();
+	PARTICLE0->explosionActive();
 
 	/*if (INPUT->GetKeyDown(VK_BACK))PARTICLE->resetPoint();*/
 
