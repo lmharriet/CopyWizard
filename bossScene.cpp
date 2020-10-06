@@ -17,11 +17,15 @@ HRESULT bossScene::init()
     EFFECT->init();
     UI->init();
 
+	_boss = new boss;
+	_boss->init(752, 288);
     rc = RectMakeCenter(752, 288, 150, 150);
     area = RectMakeCenter(rc.left + (rc.right - rc.left) / 2, rc.top + (rc.bottom - rc.top) / 2, WINSIZEX, WINSIZEY);
 
     isBattle = false;
     cutTime = 0;
+
+	_boss->getPlayerInfo(_player);
 
     return S_OK;
 }
@@ -51,6 +55,8 @@ void bossScene::update()
 
     //cutScene check
     bossCutScene();
+
+	_boss->update();
 }
 
 void bossScene::bossCutScene()
@@ -84,6 +90,9 @@ void bossScene::render()
     _player->render();
 
     CAMERAMANAGER->Rectangle(getMemDC(), rc);
+	//CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("boss"), rc.left, rc.top, 0, 0);
+	
+	_boss->render();
 
     CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("frontFrame"), 0, 0);
 
