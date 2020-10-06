@@ -158,7 +158,7 @@ void particleManager::pointActive()
 
 HRESULT particleManager0::init()
 {
-	IMAGEMANAGER->addFrameImage("frameParticle", "Images/particle/frameParticleX2.bmp", 200, 160, 5, 4);
+	IMAGEMANAGER->addFrameImage("frameParticle", "Images/particle/frameParticle.bmp", 240, 160, 6, 4);
 	return S_OK;
 }
 

@@ -640,7 +640,7 @@ void RagingInferno::render()
 		CAMERAMANAGER->FrameRender(getMemDC(), inferno.img,
 			inferno.x - (inferno.img->getFrameWidth() / 2),
 			inferno.y - (inferno.img->getFrameHeight() / 2), index, 0);
-		CAMERAMANAGER->Ellipse(getMemDC(), inferno.rc);
+		//CAMERAMANAGER->Ellipse(getMemDC(), inferno.rc);
 	}
 	if (gaugeTime >= 60 && isFire)
 	{ 
@@ -658,8 +658,9 @@ void RagingInferno::fire(float x, float y, float angle)
 	inferno.lifeTime = 100;
 	inferno.atkPower = 30;
 
-	PARTICLE0->pointGenerate(inferno.x, inferno.y, 3, 50, 6, 37.f, 0.5f, 4);
-	PARTICLE0->pointGenerate(inferno.x, inferno.y, 3, 50, 11, 37.f, 0.5f, 4);
+	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
+	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
+	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
 
 	isFire = true;
 
