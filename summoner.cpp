@@ -9,12 +9,6 @@ void summoner::addInit()
 
 }
 
-void summoner::render()
-{
-    //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
-    //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
-    stateImageRender();
-}
 
 void summoner::update()
 {
@@ -47,6 +41,13 @@ void summoner::update()
     die();
 }
 
+
+void summoner::render()
+{
+    //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
+    //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
+    stateImageRender();
+}
 void summoner::stateImageRender()
 {
     switch (state)
