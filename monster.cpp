@@ -317,7 +317,7 @@ void astarManager::setNodeColor(tileNode* node, COLORREF color, HDC hdc)
 //몬스터 관련 함수
 //=============================================
 
-HRESULT monster::init(tagTile* tile, const char* fileName, POINT _pos, float _speed, MONSTERKIND  _kind, int _hp, const char* skillImgName, bool isLongAtk, bool _isKnockBack)
+HRESULT monster::init(tagTile* tile, const char* fileName, POINT _pos, float _speed, MONSTERKIND  _kind, int _hp, const char* skillImgName, bool _isKnockBack, bool isLongAtk)
 {
 	if (!tile)
 	{
@@ -347,6 +347,10 @@ HRESULT monster::init(tagTile* tile, const char* fileName, POINT _pos, float _sp
 		frameIndexL[i] = { 0,0 };
 		frameIndexR[i] = { 0,0 };
 	}
+	for (int i = 0; i < MAX; i++)
+	{
+		atkDirection[i] = false;
+	}
 
 	addInit();
 	
@@ -365,17 +369,23 @@ void monster::release()
 
 void monster::hit(int damage , float hitAngle, float knockBack)
 {
-	POINT pt = { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 };
 	
-	EFFECT->damageEffect(pt);
 	
-	hp -= damage;
+		POINT pt = { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 };
 
-	if (isKnockBack && !isDie) // 밀려남.
-	{
-		pos.x += cos(hitAngle) * knockBack;
-		pos.y += -sin(hitAngle) * knockBack;
-	}
+		EFFECT->damageEffect(pt);
+
+		hp -= damage;
+
+		if (isKnockBack && !isDie) // 밀려남.
+		{
+			pos.x += cos(hitAngle) * knockBack;
+			pos.y += -sin(hitAngle) * knockBack;
+		}
+
+		//state = STATEIMAGE::HIT;
+		//isHit = true;
+	
 }
 
 void monster::coinDrop(int min, int max)
@@ -397,3 +407,17 @@ void monster::die()
 	}
 }
 
+void monster::stateHIT(POINT lPos, POINT rPos)
+{
+	if (atkDirection[LEFT])
+	{
+		frameIndexL[HIT].x = lPos.x;
+		frameIndexL[HIT].y = lPos.y;
+	}
+	else
+	{
+		frameIndexL[HIT].x = rPos.x;
+		frameIndexL[HIT].y = rPos.y;
+	}
+
+}

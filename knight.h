@@ -3,7 +3,6 @@
 class knight	:    public monster
 {
 private:
-	bool atkDirection[MAX];
 
 public:
 	void addInit()override;
