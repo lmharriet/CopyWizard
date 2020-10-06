@@ -19,7 +19,7 @@ void golem::update()
     rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
     
     //거리 계산해서 일정 거리 넘어가면 에이스타 작동안되게 하기.
-    if (distanceMax > getDistance(pos.x, pos.y, playerRC.left + (playerRC.right - playerRC.left) / 2, playerRC.top + (playerRC.bottom - playerRC.top) / 2))
+    if (distanceMax > getDistance(pos.x, pos.y, playerRC.left , playerRC.top))
         isFindWayOn = true;
     else
         isFindWayOn = false;
