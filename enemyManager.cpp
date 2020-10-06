@@ -24,7 +24,7 @@ HRESULT enemyManager::init(tagTile* _tile)
 
 	//공용총알 클래스 초기화
 	_bullet = new bullet;
-	_bullet->init("stoneFly", 15, 700);
+	_bullet->init("stoneFly", 15, 500);
 
 	return S_OK;
 }
