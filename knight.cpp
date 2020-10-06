@@ -3,10 +3,7 @@
 
 void knight::addInit()
 {
-    for (int i = 0; i < MAX; i++)
-    {
-        atkDirection[i] = false;
-    }
+   
 }
 
 void knight::update()
@@ -98,6 +95,9 @@ void knight::stateImageRender()
         break;
     case STATEIMAGE::DIE:
         stateDIE();
+        break;
+    case STATEIMAGE::HIT:
+        stateHIT({ 5,6 }, { 0,4 });
         break;
 
     }

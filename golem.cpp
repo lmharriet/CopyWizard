@@ -4,12 +4,6 @@
 
 void golem::addInit()
 {
-    for (int i = 0; i < MAX; i++)
-    {
-        atkDirection[i] = false;
-    }
-  
- 
     smallSlashIndex = { 0,0 };
 }
 
@@ -28,7 +22,7 @@ void golem::update()
     {
         
         astar->update(camRC, rc, playerRC, &angle);
-        if (astar->getFirstTile() && !isATK && !isDie) // ∞…¿ª ∂ß
+        if (astar->getFirstTile() && !isATK && !isDie && !isHit) // ∞…¿ª ∂ß
         {
             state = STATEIMAGE::WALK;
             pos.x += cos(angle) * speed;
@@ -37,9 +31,11 @@ void golem::update()
             {
                 atkDirection[LEFT] = false;
                 atkDirection[RIGHT] = true;
+                isLeft = false;
             }
             else
             {
+                isLeft = true;
                 atkDirection[LEFT] = true;
                 atkDirection[RIGHT] = false;
             }
@@ -56,7 +52,7 @@ void golem::update()
                 atkDirection[DOWN] = true;
             }
         }
-        else if(!isDie)
+        else if(!isDie && !isHit)
         {
             state = STATEIMAGE::ATK;
             isATK = true;
@@ -127,6 +123,9 @@ void golem::stateImageRender()
         break;
     case STATEIMAGE::DIE:
         stateDIE();
+        break;
+    case STATEIMAGE::HIT:
+        stateHIT();
         break;
    
     }
@@ -352,4 +351,9 @@ void golem::stateDIE()
     }
 
     coinDrop(1, 10);
+}
+
+void golem::stateHIT()
+{
+    cout << "∞Ò∑Ω»˜∆Æ" << endl;
 }

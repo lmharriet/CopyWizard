@@ -114,6 +114,7 @@ protected:
 	bool isLeft = false;
 	bool isATK = false;
 	bool isDie = false;
+	bool isHit = false;
 	bool isDelete = false;
 	bool isFxAppear = false;
 	bool isRanger = false;
@@ -121,6 +122,7 @@ protected:
 	bool isBulletEmpty = true;
 	bool isAstar;
 	bool isKnockBack ;
+	bool atkDirection[MAX];
 	const float distanceMax = 700.f;
 	
 	astarManager* astar;
@@ -134,7 +136,7 @@ protected:
 
 public:
 	HRESULT init(tagTile* tile, const char* fileName, POINT _pos, float _speed, MONSTERKIND _kind,
-		int _hp,  const char* skillImgName, bool isLongAtk = false, bool _isKnockBack = true);
+		int _hp,  const char* skillImgName,  bool _isKnockBack = true, bool isLongAtk = false);
 	void release();
 	virtual void update()=0;
 	virtual void render()=0;
@@ -143,6 +145,7 @@ public:
 	virtual void stateIDLE() = 0;
 	virtual void stateATK() = 0;
 	virtual void stateDIE() = 0;
+	virtual void stateHIT(POINT lPos,POINT rPos);
 	
 
 
@@ -159,7 +162,7 @@ public:
 
 	inline void setPlayerRC(RECT rc) { playerRC = rc; }
 	inline void setCamRC(RECT rc) { camRC = rc; }
-	inline void setHp(float _atk) { hp = _atk; }
+	inline void setHp(float _atk) { hp = (int)_atk; }
 	inline void setATK(bool atk) { isATK = atk; }
 	inline void setFx(bool Fx) {  isFxAppear = Fx; }
 	inline void setBulletFire(bool isFire) { isBulletFire = isFire; }

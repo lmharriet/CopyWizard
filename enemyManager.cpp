@@ -100,11 +100,11 @@ void enemyManager::setMinion()
 	_vMinion.push_back(_golem1);
 	
 	monster* _summoner = new summoner;
-	_summoner->init(nullptr,"summoner", { 500,500 },0, MONSTERKIND::SUMMONER,10,0,true);
+	_summoner->init(nullptr,"summoner", { 500,500 },0, MONSTERKIND::SUMMONER,10,0,true,true);
 	_vMinion.push_back(_summoner);
 
 	monster* _knight = new knight;
-	_knight->init(tile, "knight", { 320, 550 }, 4.f, MONSTERKIND::KNIGHT,30,"smallSlash");
+	_knight->init(tile, "knight", { 320, 550 }, 6.f, MONSTERKIND::KNIGHT,30,"smallSlash");
 	_vMinion.push_back(_knight);
 	
 }

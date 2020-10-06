@@ -12,7 +12,7 @@ void summoner::addInit()
 
 void summoner::update()
 {
-    rc = RectMake(cul.x, cul.y, img->getFrameWidth(), img->getFrameHeight());
+    rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
     if (distanceMax > getDistance(pos.x, pos.y, playerRC.left , playerRC.top ))
         isFindWayOn = true;
@@ -24,21 +24,32 @@ void summoner::update()
     {
         state = STATEIMAGE::IDLE;
         
-        if ((rc.left + (rc.right-rc.left) / 2) < (playerRC.left + (playerRC.right - playerRC.left) / 2))
+        if ((rc.left + (rc.right-rc.left) / 2) < playerRC.left)
         {
-            isLeft = false;
+            atkDirection[LEFT] = false;
+            atkDirection[RIGHT] = true;
         }
         else
-            isLeft = true;
+        {
+            atkDirection[LEFT] = false;
+            atkDirection[RIGHT] = true;
+        }
+        if ((rc.top + (rc.bottom - rc.top) / 2) < playerRC.top)
+        {
+            atkDirection[UP] = false;
+            atkDirection[DOWN] = true;
+        }
+        else
+        {
+            atkDirection[UP] = false;
+            atkDirection[DOWN] = true;
+        }
     }
 
     if (!isDie && atkTime%90==0 && isFindWayOn && !isATK)
     {
-        
         state = STATEIMAGE::ATK;
         isATK = true;
-       
-        
     }
     
     if (isATK)
@@ -49,7 +60,6 @@ void summoner::update()
             isFxAppear = true;
         }
     }
-    
 
     cul.x = CAMERAMANAGER->GetRelativeX(pos.x);
     cul.y = CAMERAMANAGER->GetRelativeY(pos.y);
@@ -60,8 +70,8 @@ void summoner::update()
 
 void summoner::render()
 {
-    //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
-    //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
+    FrameRect(getMemDC(), rc, RGB(255, 255, 255));
+    FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
     stateImageRender();
 }
 void summoner::stateImageRender()
@@ -77,13 +87,16 @@ void summoner::stateImageRender()
     case STATEIMAGE::DIE:
         stateDIE();
         break;
+    case STATEIMAGE::HIT:
+        stateHIT({ 4,6 }, { 0,4 });
+        break;
 
     }
 }
 
 void summoner::stateIDLE()
 {
-    if (isLeft)
+    if (atkDirection[LEFT])
     {
         frameIndexL[STATEIMAGE::IDLE].x = 0;
         frameIndexL[STATEIMAGE::IDLE].y = 0;
@@ -109,7 +122,7 @@ void summoner::stateIDLE()
 void summoner::stateATK()
 {
 
-    if (isLeft)
+    if (atkDirection[LEFT])
     {
         int atkTime = 10;
 
@@ -189,7 +202,7 @@ void summoner::stateATK()
 
 void summoner::stateDIE()
 {
-    if (isLeft)
+    if (atkDirection[LEFT])
     {
         int dieFrameSpeed = 10;
         if (frameIndexL[STATEIMAGE::DIE].y != 5)
