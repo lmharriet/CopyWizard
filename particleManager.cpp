@@ -92,6 +92,38 @@ void particleManager::render(HDC hdc, RECT cam)
 	}
 }
 
+void particleManager::tRender(HDC hdc)
+{
+	for (int i = 0; i < vParticle.size(); i++)
+	{
+		int culX = CAMERAMANAGER->GetRelativeX(vParticle[i]->x);
+		int culY = CAMERAMANAGER->GetRelativeY(vParticle[i]->y);
+		culX += cosf(vParticle[i]->angle) * vParticle[i]->speed;
+		culY += -sinf(vParticle[i]->angle) * vParticle[i]->speed;
+
+		RectangleMakeCenter(hdc, culX, culY, vParticle[i]->size, vParticle[i]->size);
+
+		if (vParticle[i]->size > 0)
+		{
+			vParticle[i]->delay--;
+			vParticle[i]->speed++;
+			vParticle[i]->gravity++;
+
+			if (vParticle[i]->delay <= 0)
+			{
+				vParticle[i]->delay = vParticle[i]->fixedDelay;
+				vParticle[i]->size--;
+			}
+		}
+		else
+		{
+			rtnParticle(vParticle[i]);
+			vParticle.erase(vParticle.begin() + i);
+			i--;
+		}
+	}
+}
+
 void particleManager::pointActive()
 {
 	int i = 0;
@@ -121,4 +153,113 @@ void particleManager::pointActive()
 			break;
 		}
 	}
+
+}
+
+HRESULT particleManager0::init()
+{
+	IMAGEMANAGER->addFrameImage("frameParticle", "Images/particle/frameParticleX2.bmp", 200, 160, 5, 4);
+	return S_OK;
+}
+
+void particleManager0::render(HDC hdc)
+{
+	image* img = IMAGEMANAGER->findImage("frameParticle");
+
+	for (int i = 0; i < vParticle.size();)
+	{
+		vParticle[i].time++;
+		//이동
+		vParticle[i].x += cosf(vParticle[i].angle) * vParticle[i].speed;
+		vParticle[i].y -= sinf(vParticle[i].angle) * vParticle[i].speed;
+
+		CAMERAMANAGER->FrameRender(hdc, img, 
+			vParticle[i].x - img->getFrameWidth()/2,
+			vParticle[i].y - img->getFrameHeight()/2,
+			vParticle[i].frameX,
+			vParticle[i].frameY);
+
+		//이미지
+		if (vParticle[i].time % vParticle[i].delay == 0)
+		{
+			vParticle[i].frameX++;
+		}
+
+		//제거 (조건? maxFrame 되면 제거)
+		if (vParticle[i].frameX == vParticle[i].maxFrameX) vParticle.erase(vParticle.begin() + i);
+		else i++;
+	}
+}
+
+void particleManager0::pointGenerate(float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius)
+{
+	tagParticlePoint2 particlePoint;
+	particlePoint.x = x;
+	particlePoint.y = y;
+	particlePoint.currentTime = 0;
+	particlePoint.delay = CreateDelay;
+	particlePoint.lifeTime = lifeTime;
+	particlePoint.angleNum = 0;
+	particlePoint.maxAngle = maxAngle;
+	particlePoint.radius = radius;
+
+	vParticlePoint.push_back(particlePoint);
+}
+
+void particleManager0::pointActive()
+{
+	float* arr;
+	for (int i = 0; i < vParticlePoint.size();)
+	{
+		arr = new float[vParticlePoint[i].maxAngle];
+
+		for (int k = 0; k < vParticlePoint[i].maxAngle; k++)
+		{
+			arr[k] = (((2.f * PI) / vParticlePoint[i].maxAngle) * k);
+		}
+
+		vParticlePoint[i].currentTime++;
+
+		//생성
+		if (vParticlePoint[i].currentTime % vParticlePoint[i].delay == 0)
+		{
+			//해당 방향으로 조금.. 밀어줌 (중앙에서 조금 떨어지게)
+			float x = vParticlePoint[i].x + cosf(arr[vParticlePoint[i].angleNum]) * vParticlePoint[i].radius; // 10정도 밀어줌
+			float y = vParticlePoint[i].y - sinf(arr[vParticlePoint[i].angleNum]) * vParticlePoint[i].radius; // 10정도 밀어줌
+
+			generate(x, y, arr[vParticlePoint[i].angleNum], 4, 2.f);
+			//generate(vParticlePoint[i].x, vParticlePoint[i].y, arr[vParticlePoint[i].angleNum], 5, 2.0f);
+			vParticlePoint[i].angleNum++;
+
+			if (vParticlePoint[i].angleNum == vParticlePoint[i].maxAngle)vParticlePoint[i].angleNum = 0;
+		}
+
+		//제거
+		if (vParticlePoint[i].delay == vParticlePoint[i].lifeTime)
+		{
+			vParticlePoint.erase(vParticlePoint.begin() + i);
+		}
+		else i++;
+	}
+}
+
+void particleManager0::generate(float x, float y, float angle, int delay, float speed)
+{
+	tagParticle2 particle;
+
+	//default info
+	particle.x = x;
+	particle.y = y;
+	particle.angle = angle;
+	particle.delay = delay;
+	particle.speed = speed;
+	particle.time = 0;
+
+	image* img = IMAGEMANAGER->findImage("frameParticle");
+	//image info
+	particle.frameX = 0;
+	particle.maxFrameX = img->getMaxFrameX();
+	particle.frameY = RANDOM->range(0, img->getMaxFrameY());
+	
+	vParticle.push_back(particle);
 }
