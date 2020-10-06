@@ -28,6 +28,8 @@ HRESULT gameScene::init()
 	//vTile.clear();
 	collisionTile();
 
+	UI->setCoin(PLAYERDATA->getCoin());
+	UI->setHp(PLAYERDATA->getHp());
 	return S_OK;
 }
 
@@ -53,7 +55,7 @@ void gameScene::update()
 	enemy->update();
 
 
-	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX, WINSIZEY);
+	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX+15, WINSIZEY+15);
 	//checkArea = RectMakeCenter(_player->getX(), _player->getY(), 400, 400);
 	checkArea = RectMake(_player->getX() - 100, _player->getY() - WINSIZEY/2 + 420, 200, 500);
 
@@ -87,24 +89,9 @@ void gameScene::update()
 	//enemy->minionBulletFire(_player->getX(), _player->getY());
 	enemy->collision(_player->getRect());
 
-	for (int i = 0; i < _player->getBlaze()->getBullet().size(); i++)
-	{
-		for (int j = 0; j < enemy->getMinion().size(); j++)
-		{
-			if (0 >= enemy->getMinion()[j]->getHp())continue;
-			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRC()))
-			{
-				enemy->getMinion()[j]->hit(10, _player->getBlaze()->getBullet()[i].angle, 30.f);
-				EFFECT->setEffect("flameStrike",
-					{ (long)_player->getBlaze()->getBullet()[i].x
-					,(long)_player->getBlaze()->getBullet()[i].y });
-				_player->getBlaze()->removeBomb(i);
-				break;
-				
-			}
+	//collision between player skill and enemy
+	playerAttack();
 
-		}
-	}
 }
 
 void gameScene::render()
@@ -279,6 +266,56 @@ void gameScene::collisionTile()
 	for (int i = 0; i < MAXTILE; i++)
 	{
 		if (colCheck(cam, tile[i].rc)) vTile.push_back(i);
+	}
+}
+
+void gameScene::playerAttack()
+{
+	//blaze
+	for (int i = 0; i < _player->getBlaze()->getBullet().size(); i++)
+	{
+		for (int j = 0; j < enemy->getMinion().size(); j++)
+		{
+			if (0 >= enemy->getMinion()[j]->getHp())continue;
+			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRC()))
+			{
+				enemy->getMinion()[j]->hit(_player->getBlaze()->getBullet()[i].atkPower,
+					_player->getBlaze()->getBullet()[i].angle, 20.f);
+				EFFECT->setEffect("flameStrike",
+					{ (long)_player->getBlaze()->getBullet()[i].x
+					,(long)_player->getBlaze()->getBullet()[i].y });
+				_player->getBlaze()->removeBomb(i);
+				break;
+
+			}
+		}
+	}
+	//meteor
+	for (int i = 0; i < _player->getMeteor()->getMeteorVec().size(); i++)
+	{
+		for (int j = 0; j < enemy->getMinion().size(); j++)
+		{
+			if (0 >= enemy->getMinion()[j]->getHp())continue;
+			if (colCheck(_player->getMeteor()->getMeteorVec()[i].rc, enemy->getMinion()[j]->getRC()))
+			{
+				enemy->getMinion()[j]->hit(_player->getMeteor()->getMeteorVec()[i].atkPower,
+					_player->getMeteor()->getMeteorVec()[i].angle, 30.f);
+				break;
+			}
+		}
+	}
+	//rush
+	for (int i = 0; i < _player->getDashFire()->getSize(); i++)
+	{
+		for (int j = 0; j < enemy->getMinion().size(); j++)
+		{
+			if (colCheck(_player->getDashFire()->getRect(i), enemy->getMinion()[j]->getRC()))
+			{
+				//col 되면 일정 간격으로 데미지 5번 
+
+			}
+		}
+
 	}
 }
 

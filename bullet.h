@@ -13,6 +13,7 @@ struct tagBullet
 	float gravity;
 	float radius;
 	int count;
+	int atkPower;
 	bool fire;
 };
 
@@ -28,6 +29,7 @@ struct tagArcana
 	float range;
 
 	int lifeTime;
+	int atkPower;
 
 	int frameX;
 	int frameY;
@@ -163,6 +165,7 @@ public:
 	void meteorUltFire(float x, float y, float speed, MOVE dir, float range);
 	void move();
 
+	vector<tagArcana> getMeteorVec() { return vMeteor; }
 };
 //===================
 //	## dashFire ## 
@@ -182,6 +185,8 @@ public:
 	void fire(float x, float y);
 	float getY(int index) { return _vDash[index].y; }
 	int getSize() { return _vDash.size(); }
+	RECT getRect(int index) { return _vDash[index].rc; }
+	
 };
 
 //===================
