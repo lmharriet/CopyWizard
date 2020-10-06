@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="boss.h" />
     <ClInclude Include="bossManager.h" />
     <ClInclude Include="bossScene.h" />
     <ClInclude Include="bossSkill.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="boss.cpp" />
     <ClCompile Include="bossManager.cpp" />
     <ClCompile Include="bossScene.cpp" />
     <ClCompile Include="bossSkill.cpp" />

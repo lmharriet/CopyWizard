@@ -191,6 +191,9 @@
     <ClCompile Include="bossManager.cpp">
       <Filter>MainGame\인게임</Filter>
     </ClCompile>
+    <ClCompile Include="boss.cpp">
+      <Filter>MainGame\씬 모음\보스</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -305,6 +308,9 @@
     </ClInclude>
     <ClInclude Include="bossManager.h">
       <Filter>MainGame\인게임</Filter>
+    </ClInclude>
+    <ClInclude Include="boss.h">
+      <Filter>MainGame\씬 모음\보스</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
