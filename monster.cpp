@@ -73,6 +73,8 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 			if (colCheck(totalNode[x][y]->rc, playerMove.rc)) // player위치 설정
 			{
 				if (totalNode[x][y]->kind == TERRAIN::WALL) continue;
+				if (totalNode[x][y]->kind == TERRAIN::NONE) continue;
+				
 
 				totalNode[x][y]->nodeState = NODESTATE::NODE_END;
 				endNode = totalNode[x][y];
@@ -83,6 +85,7 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 			if (colCheck(totalNode[x][y]->rc, monsterMove.rc)) // monster위치 설정
 			{
 				if (totalNode[x][y]->kind == TERRAIN::WALL) continue;
+				if (totalNode[x][y]->kind == TERRAIN::NONE) continue;
 				
 				totalNode[x][y]->nodeState = NODESTATE::NODE_START;
 				startNode = totalNode[x][y];
@@ -96,22 +99,22 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 	}
 	
 	//벽(장애물) 노드 세팅하기 (시작, 종료노드 설정전에 벽세우지 못하게 막기)
-	if (INPUT->GetKeyDown(VK_RBUTTON) && startNode && endNode)
-	{
-		for (int y = 0; y < MAXTILE_HEIGHT; y++)
-		{
-			for (int x = 0; x < MAXTILE_WIDTH; x++)
-			{
-				if (PtInRect(&totalNode[x][y]->rc, _ptMouse))
-				{
-					//시작노드, 종료노드는 선택하지 못하게 막기
-					if (totalNode[x][y]->nodeState == NODESTATE::NODE_START) continue;
-					if (totalNode[x][y]->nodeState == NODESTATE::NODE_END) continue;
-					totalNode[x][y]->nodeState = NODESTATE::NODE_WALL;
-				}
-			}
-		}
-	}
+	//if (INPUT->GetKeyDown(VK_RBUTTON) && startNode && endNode)
+	//{
+	//	for (int y = 0; y < MAXTILE_HEIGHT; y++)
+	//	{
+	//		for (int x = 0; x < MAXTILE_WIDTH; x++)
+	//		{
+	//			if (PtInRect(&totalNode[x][y]->rc, _ptMouse))
+	//			{
+	//				//시작노드, 종료노드는 선택하지 못하게 막기
+	//				if (totalNode[x][y]->nodeState == NODESTATE::NODE_START) continue;
+	//				if (totalNode[x][y]->nodeState == NODESTATE::NODE_END) continue;
+	//				totalNode[x][y]->nodeState = NODESTATE::NODE_WALL;
+	//			}
+	//		}
+	//	}
+	//}
 	
 
 	
@@ -262,10 +265,12 @@ void astarManager::addOpenList(int idx, int idy)
 {
 	//예외처리 인덱스 범위안에서 추가할 수 있어야 한다
 	
-	if (idx < monsterMove.x - 30 || idx >= monsterMove.x + 30 || idy < monsterMove.y - 30 || idy >= monsterMove.y + 30) return;
+	if (idx < monsterMove.x - 30 || idx >= monsterMove.x + 30 || idy < monsterMove.y - 20 || idy >= monsterMove.y + 20) return;
 
 	if (totalNode[curNode->idx][idy]->kind == TERRAIN::WALL && totalNode[idx][curNode->idy]->kind == TERRAIN::WALL) return;
+	if (totalNode[curNode->idx][idy]->kind == TERRAIN::NONE && totalNode[idx][curNode->idy]->kind == TERRAIN::NONE) return;
 	if (totalNode[curNode->idx][idy]->kind == TERRAIN::WALL || totalNode[idx][curNode->idy]->kind == TERRAIN::WALL) return;
+	if (totalNode[curNode->idx][idy]->kind == TERRAIN::NONE || totalNode[idx][curNode->idy]->kind == TERRAIN::NONE) return;
 
 
 	//벽은 오픈리스트에 담을 수 없다
@@ -372,7 +377,7 @@ void monster::commonUpdate()
 {
 	rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
-	if (distanceMax > getDistance(pos.x + img->getFrameWidth() * 0.5, pos.y + img->getFrameHeight() * 1.5, playerRC.left, playerRC.top))
+	if (distanceMax > getDistance(pos.x /*+ img->getFrameWidth() * 0.5*/, pos.y/* + img->getFrameHeight() * 1.5*/, playerRC.left, playerRC.top))
 		isFindWayOn = true;
 	else
 		isFindWayOn = false;
@@ -381,19 +386,19 @@ void monster::commonUpdate()
 
 	if (isHit && !isDie)
 	{
-		isATK = false;
+		if(kind != MONSTERKIND::GOLEM)
+			isATK = false;
 		hitTime++;
 
 		if (isKnockBack ) // 밀려남.
 		{
-			pos.x += cos(hitAngle) * knockBack*0.125;
-			pos.y += -sin(hitAngle) * knockBack*0.125;
+			pos.x += cos(hitAngle) * knockBack*0.25;
+			pos.y += -sin(hitAngle) * knockBack*0.25;
 		}
 
-		if (hitTime % 8 == 0)
+		if (hitTime % 4 == 0)
 		{
 			isHit = false;
-			//state = STATEIMAGE::IDLE;
 			hitTime = 0;
 		}
 	}
@@ -416,14 +421,11 @@ void monster::hit(int damage , float _hitAngle, float _knockBack)
 
 	hitAngle = _hitAngle;
 	knockBack = _knockBack;
-	//if (isKnockBack && !isDie) // 밀려남.
-	//{
-	//	pos.x += cos(hitAngle) * knockBack;
-	//	pos.y += -sin(hitAngle) * knockBack;
-	//}
 	
+	
+	if(kind != MONSTERKIND::GOLEM)
+		state = STATEIMAGE::HIT;
 
-	state = STATEIMAGE::HIT;
 	isHit = true;
 
 }

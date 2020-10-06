@@ -11,7 +11,7 @@ HRESULT gameScene::init()
 	uiImg = IMAGEMANAGER->addImage("UI", "Images/gameUI.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 	playerImg = IMAGEMANAGER->findImage("playerFrame");
 
-	loadMap("mapData/map0.map");
+	loadMap("mapData/map2.map");
 	_player->setTileAd(tile);
 	_player->setTileAd0(vTile);
 	
@@ -52,7 +52,8 @@ void gameScene::update()
 	DROP->update();
 
 	_player->update();
-	
+
+	enemy->setPlayerRC(RectMake(_player->getX(), _player->getY(), 100, 100));
 	enemy->update();
 
 
@@ -103,10 +104,6 @@ void gameScene::update()
 
 void gameScene::render()
 {
-	//_golem->setCamRC(cam);
-	//_golem2->setCamRC(cam);
-	enemy->setPlayerRC(RectMake(_player->getX(), _player->getY(), 100, 100));
-
 	for (int i = 0; i < vTile.size(); i++)
 	{
 		int num = vTile[i];
@@ -125,6 +122,15 @@ void gameScene::render()
 	DROP->render(getMemDC());
 	EFFECT->pRender(getMemDC());
 
+	bool enemyProRender = false;
+	for (int i = 0; i < enemy->getMinion().size(); i++)
+	{
+		if (_player->getY() >= enemy->getMinion()[i]->getCenterY())
+		{
+			enemy->getMinion()[i]->render();
+		}
+	}
+	
 	bool isRender = false;
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), cam);
@@ -245,9 +251,17 @@ void gameScene::render()
 		}
 	}
 
-
+		
 	enemy->render();
+
 	if(!isRender) _player->render();
+	for (int i = 0; i < enemy->getMinion().size(); i++)
+	{
+		if (_player->getY() < enemy->getMinion()[i]->getCenterY())
+		{
+			enemy->getMinion()[i]->render();
+		}
+	}
 	//PARTICLE->render(getMemDC(), CAMERAMANAGER->getRect());
 	PARTICLE0->render(getMemDC());
 	EFFECT->render(getMemDC());

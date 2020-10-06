@@ -6,6 +6,7 @@ HRESULT enemyManager::init(tagTile* _tile)
 {
 	IMAGEMANAGER->addFrameImage("summoner", "resource/enemy/SummonerSource.bmp", 500, 800, 5, 8);
 	IMAGEMANAGER->addFrameImage("golem", "resource/enemy/Golem.bmp", 720, 700, 6, 5);
+	
 	IMAGEMANAGER->addFrameImage("knight", "resource/enemy/knight.bmp", 650, 1123, 6, 8);
 
 	IMAGEMANAGER->addFrameImage("smallSlash", "resource/enemyEffect/smallSlash.bmp", 300, 600, 3, 6);
@@ -52,6 +53,7 @@ void enemyManager::update()
 	//벡터에 담긴 미니언들 업데이트
 	for (int i = 0; i < _vMinion.size();  )
 	{
+		_vMinion[i]->setPlayerRC(playerRC);
 		_vMinion[i]->commonUpdate();
 
 		if (_vMinion[i]->getDelete())
@@ -67,22 +69,14 @@ void enemyManager::update()
 	
 	//미니언 총알발사
 	this->minionBulletFire(CAMERAMANAGER->GetRelativeX(playerRC.left)-20, CAMERAMANAGER->GetRelativeY(playerRC.top));
+
+	
 }
 
 void enemyManager::render()
 {
 	//공용총알 렌더
 	_bullet->render();
-
-	//벡터에 담긴 미니언들 렌더
-	for (int i = 0; i < _vMinion.size(); i++)
-	{
-		_vMinion[i]->setPlayerRC(playerRC);
-		_vMinion[i]->render();
-		
-	}
-
-	
 }
 
 void enemyManager::setMinion()
@@ -96,15 +90,15 @@ void enemyManager::setMinion()
 	_vMinion.push_back(_golem1);
 	
 	monster* _knight = new knight;
-	_knight->init(tile, "knight", { 320, 550 }, 6.f, MONSTERKIND::KNIGHT, 80, NULL);
+	_knight->init(tile, "knight", { 320, 350 }, 6.f, MONSTERKIND::KNIGHT, 80, NULL);
 	_vMinion.push_back(_knight);
 
 	monster* _summoner = new summoner;
-	_summoner->init(nullptr,"summoner", { 500,500 },0, MONSTERKIND::SUMMONER,50,0,true,true);
+	_summoner->init(nullptr,"summoner", { 500,300 },0, MONSTERKIND::SUMMONER,50,0,true,true);
 	_vMinion.push_back(_summoner);
 
 	monster* _summoner1 = new summoner;
-	_summoner1->init(nullptr, "summoner", { 800,500 }, 0, MONSTERKIND::SUMMONER, 50, 0, true, true);
+	_summoner1->init(nullptr, "summoner", { 800,300 }, 0, MONSTERKIND::SUMMONER, 50, 0, true, true);
 	_vMinion.push_back(_summoner1);
 
 	

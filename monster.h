@@ -126,7 +126,7 @@ protected:
 	bool isAstar;
 	bool isKnockBack ;
 	bool atkDirection[ATKDIRECTION::MAX];
-	const float distanceMax = 700.f;
+	const float distanceMax = 500.f;
 	
 	astarManager* astar;
 	
@@ -164,6 +164,7 @@ public:
 	inline bool getBulletFire() { return isBulletFire; }
 	inline int getHp() { return hp; }
 	inline bool getDie() { return isDie; }
+	inline int getCenterY() { return pos.y + img->getFrameHeight() / 2; }
 
 	inline void setPlayerRC(RECT rc) { playerRC = rc; }
 	inline void setCamRC(RECT rc) { camRC = rc; }

@@ -5,6 +5,7 @@
 void golem::addInit()
 {
     smallSlashIndex = { 0,0 };
+    hitImg = IMAGEMANAGER->addFrameImage("golemHit", "resource/enemy/golemHit.bmp", 720, 420, 6, 3);
 }
 
 void golem::update()
@@ -17,7 +18,7 @@ void golem::update()
     if (isFindWayOn) //길찾기 on
     {
         
-        astar->update(camRC, rc, playerRC, &angle);
+        astar->update(camRC, rc, playerRC, &angle);  // 에이스타에서 앵글 받아옴
         if (astar->getFirstTile() && !isATK && !isDie && !isHit) // 걸을 때
         {
             state = STATEIMAGE::WALK;
@@ -48,7 +49,7 @@ void golem::update()
                 atkDirection[DOWN] = true;
             }
         }
-        else if(!isDie && !isHit)
+        else if(!isDie )
         {
             state = STATEIMAGE::ATK;
             isATK = true;
@@ -57,18 +58,18 @@ void golem::update()
     }
     else //길찾기 off
     { 
-        if (!isHit)
-        {
-            state = STATEIMAGE::IDLE;
-        }
+        state = STATEIMAGE::IDLE;
     }
 
+    
    
 }
 
 void golem::render()
 {
     stateImageRender();
+    
+    cout << "player : " << getDistance(pos.x,pos.y,playerRC.left,playerRC.top) << endl;
     
    //FrameRect(getMemDC(), playerRC,RGB(255,255,255));
    //FrameRect(getMemDC(), rc,RGB(255,255,255));
@@ -96,7 +97,10 @@ void golem::stateImageRender()
                     frameIndexL[WALK].x = 5;
                 }
             }
-            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[WALK].x, frameIndexL[WALK].y);
+            if(isHit)
+                hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[WALK].x, frameIndexL[WALK].y);
+            else
+                img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[WALK].x, frameIndexL[WALK].y);
         }
         else
         {
@@ -111,7 +115,11 @@ void golem::stateImageRender()
                     frameIndexR[WALK].x = 0;
                 }
             }
-            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[WALK].x, frameIndexR[WALK].y);
+            if (isHit)
+                hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[WALK].x, frameIndexR[WALK].y);
+            
+            else
+                img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[WALK].x, frameIndexR[WALK].y);
         }
 
         break;
@@ -121,10 +129,7 @@ void golem::stateImageRender()
     case STATEIMAGE::DIE:
         stateDIE();
         break;
-    case STATEIMAGE::HIT:
-        stateHIT({ 0,0 }, { 0, 0}); // 수정해야함
-        break;
-   
+    
     }
 }
 
@@ -140,6 +145,10 @@ void golem::stateIDLE()
         frameIndexL[STATEIMAGE::ATK].y = 0;
         frameIndexL[STATEIMAGE::DIE].x = 5;
         frameIndexL[STATEIMAGE::DIE].y = 4;
+
+        if(isHit)
+        hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);
+        else
         img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);
     }
     else
@@ -152,7 +161,11 @@ void golem::stateIDLE()
         frameIndexR[STATEIMAGE::ATK].y = 0;
         frameIndexR[STATEIMAGE::DIE].x = 0;
         frameIndexR[STATEIMAGE::DIE].y = 3;
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
+        
+        if(isHit)
+            hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
+        else
+            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
     }
 
 }
@@ -183,7 +196,10 @@ void golem::stateATK()
                 }
             }
         }
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[ATK].x, frameIndexL[ATK].y);
+        if(isHit)
+            hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[ATK].x, frameIndexL[ATK].y);
+        else
+            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[ATK].x, frameIndexL[ATK].y);
     }
     else
     {
@@ -211,7 +227,10 @@ void golem::stateATK()
             }
 
         }
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[ATK].x, frameIndexR[ATK].y);
+        if(isHit)
+            hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[ATK].x, frameIndexR[ATK].y);
+        else
+            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[ATK].x, frameIndexR[ATK].y);
     }
 
 

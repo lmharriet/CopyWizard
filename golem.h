@@ -8,7 +8,7 @@ class golem : public monster
 private:
 	
 	POINT smallSlashIndex;
-	
+	image* hitImg;
 
 public:
 	void addInit()override;
