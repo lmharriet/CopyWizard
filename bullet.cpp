@@ -658,6 +658,9 @@ void RagingInferno::fire(float x, float y, float angle)
 	inferno.lifeTime = 100;
 	inferno.atkPower = 30;
 
+	PARTICLE0->pointGenerate(inferno.x, inferno.y, 3, 50, 6, 37.f, 0.5f, 4);
+	PARTICLE0->pointGenerate(inferno.x, inferno.y, 3, 50, 11, 37.f, 0.5f, 4);
+
 	isFire = true;
 
 	gaugeTime = 0;

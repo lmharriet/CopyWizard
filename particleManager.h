@@ -98,7 +98,7 @@ public:
 	HRESULT init();
 	void render(HDC hdc);
 
-	void pointGenerate(float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius, float particleSpeed, int frameSpeed);
+	void pointGenerate(float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius, float particleSpeed, int frameDelay);
 
 	void pointActive();
 	void generate(float x, float y, float angle, int delay, float speed);

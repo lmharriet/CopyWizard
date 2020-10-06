@@ -67,7 +67,7 @@ void gameScene::update()
 
 	if (INPUT->GetKeyDown(VK_BACK))
 	{
-		PARTICLE0->pointGenerate(_player->getX(), _player->getY(), 2, 50, 15, 20.f, 2.f, 5);
+		PARTICLE0->pointGenerate(_player->getX(), _player->getY(), 2, 50, 15, 20.f, 0.5f, 20);
 		//PARTICLE->pointGenerate(_player->getX(), _player->getY(), 0, 0, 0, 5, 60);
 	}
 	PARTICLE0->pointActive();

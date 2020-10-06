@@ -191,7 +191,7 @@ void particleManager0::render(HDC hdc)
 	}
 }
 
-void particleManager0::pointGenerate(float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius, float particleSpeed, int frameSpeed)
+void particleManager0::pointGenerate(float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius, float particleSpeed, int frameDelay)
 {
 	tagParticlePoint2 particlePoint;
 	particlePoint.x = x;
@@ -204,7 +204,7 @@ void particleManager0::pointGenerate(float x, float y, int CreateDelay, int life
 	particlePoint.radius = radius;
 
 	particlePoint.particleSpeed = particleSpeed;
-	particlePoint.frameDelay = frameSpeed;
+	particlePoint.frameDelay = frameDelay;
 
 	vParticlePoint.push_back(particlePoint);
 }
