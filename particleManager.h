@@ -47,9 +47,12 @@ struct tagParticlePoint2
 	float x, y;
 	int delay;
 
-	int angleNum;	//파티클 n방향을 가리킴
-	int maxAngle;	//파티클의 방향이 총 몇가지?
-	float radius;	//좌표 중앙에서 얼마큼 멀어진곳에 생성?
+	int angleNum;		//파티클 n방향을 가리킴
+	int maxAngle;		//파티클의 방향이 총 몇가지?
+	float radius;		//좌표 중앙에서 얼마큼 멀어진곳에 생성?
+
+	float particleSpeed;//파티클이 angle로 날라가는 속도
+	int frameSpeed;		//파티클 프레임 이미지 속도
 
 	int currentTime;
 	int lifeTime;
@@ -95,7 +98,7 @@ public:
 	HRESULT init();
 	void render(HDC hdc);
 
-	void pointGenerate(float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius);
+	void pointGenerate(float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius, float particleSpeed, int frameSpeed);
 
 	void pointActive();
 	void generate(float x, float y, float angle, int delay, float speed);

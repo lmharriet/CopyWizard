@@ -191,7 +191,7 @@ void particleManager0::render(HDC hdc)
 	}
 }
 
-void particleManager0::pointGenerate(float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius)
+void particleManager0::pointGenerate(float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius, float particleSpeed, int frameSpeed)
 {
 	tagParticlePoint2 particlePoint;
 	particlePoint.x = x;
@@ -202,6 +202,9 @@ void particleManager0::pointGenerate(float x, float y, int CreateDelay, int life
 	particlePoint.angleNum = 0;
 	particlePoint.maxAngle = maxAngle;
 	particlePoint.radius = radius;
+
+	particlePoint.particleSpeed = particleSpeed;
+	particlePoint.frameSpeed = frameSpeed;
 
 	vParticlePoint.push_back(particlePoint);
 }
@@ -227,7 +230,7 @@ void particleManager0::pointActive()
 			float x = vParticlePoint[i].x + cosf(arr[vParticlePoint[i].angleNum]) * vParticlePoint[i].radius; // 10¡§µµ π–æÓ¡‹
 			float y = vParticlePoint[i].y - sinf(arr[vParticlePoint[i].angleNum]) * vParticlePoint[i].radius; // 10¡§µµ π–æÓ¡‹
 
-			generate(x, y, arr[vParticlePoint[i].angleNum], 4, 2.f);
+			generate(x, y, arr[vParticlePoint[i].angleNum], vParticlePoint[i].frameSpeed, vParticlePoint[i].particleSpeed);
 			//generate(vParticlePoint[i].x, vParticlePoint[i].y, arr[vParticlePoint[i].angleNum], 5, 2.0f);
 			vParticlePoint[i].angleNum++;
 
