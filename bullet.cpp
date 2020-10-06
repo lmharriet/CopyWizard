@@ -638,23 +638,15 @@ void RagingInferno::update(float range)
 
 void RagingInferno::render()
 {
-	//dummy
-	image* dummy;
-	dummy = IMAGEMANAGER->addFrameImage("dummyEffect", "resource/player/dummy.bmp", 750, 150, 5, 1);
-
 
 	if (isFire)
 	{
-		//CAMERAMANAGER->Ellipse(getMemDC(), tail);
 		CAMERAMANAGER->FrameRender(getMemDC(), inferno.img,
 			inferno.x - (inferno.img->getFrameWidth() / 2),
 			inferno.y - (inferno.img->getFrameHeight() / 2), index, 0);
 		//CAMERAMANAGER->Ellipse(getMemDC(), inferno.rc);
 	}
-	if (gaugeTime >= 60 && isFire)
-	{
-		CAMERAMANAGER->FrameRender(getMemDC(), dummy, tail.left, tail.top, index, 0);
-	}
+	
 }
 
 void RagingInferno::fire(float x, float y, float angle)
@@ -697,19 +689,18 @@ void RagingInferno::move(float range)
 
 		if (gaugeTime >= 70)
 		{
-			tail = RectMakeCenter(inferno.x, inferno.y, 150, 150);
 			inferno.lifeTime--;
 		}
-
 		if (inferno.lifeTime == 0)
 		{
+			PARTICLE0->explosionGenerate(inferno.x, inferno.y, 18, 1.f, 4.f, 9);
+			PARTICLE0->explosionGenerate(inferno.x, inferno.y, 15, 1.f, 3.f, 7);
+			PARTICLE0->explosionGenerate(inferno.x, inferno.y, 12, 1.f, 2.f, 5);
+			PARTICLE0->explosionGenerate(inferno.x, inferno.y, 9, 1.f, 3.f, 4);
+			PARTICLE0->explosionGenerate(inferno.x, inferno.y, 6, 1.f, 4.f, 2);
 			inferno.x = inferno.fireX;
 			inferno.y = inferno.fireY;
 			isFire = false;
 		}
 	}
 }
-
-
-
-
