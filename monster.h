@@ -81,6 +81,13 @@ enum  ATKDIRECTION {
 	MAX	
 };
 
+enum class MONSTERKIND {
+	GOLEM,
+	KNIGHT,
+	SUMMONER,
+};
+
+
 class monster : public gameNode
 {
 protected:
@@ -91,10 +98,11 @@ protected:
 	POINT frameIndexR[STATEIMAGE::STATEMAX];
 	POINT pos;
 	POINT cul;
-	STATEIMAGE state = STATEIMAGE::IDLE;
+	STATEIMAGE state = IDLE;
 	
 	float speed;
 	float angle;
+	MONSTERKIND kind;
 	int atk;
 	int atkTime;
 	int armour;
@@ -108,6 +116,9 @@ protected:
 	bool isDie = false;
 	bool isDelete = false;
 	bool isFxAppear = false;
+	bool isRanger = false;
+	bool isBulletFire = false;
+	bool isBulletEmpty = true;
 	bool isAstar;
 	bool isKnockBack ;
 	const float distanceMax = 700.f;
@@ -122,7 +133,8 @@ protected:
 	
 
 public:
-	HRESULT init(tagTile* tile, const char* fileName, POINT _pos, float _speed, int _hp,  const char* skillImgName, bool _isKnockBack = true);
+	HRESULT init(tagTile* tile, const char* fileName, POINT _pos, float _speed, MONSTERKIND _kind,
+		int _hp,  const char* skillImgName, bool isLongAtk = false, bool _isKnockBack = true);
 	void release();
 	virtual void update()=0;
 	virtual void render()=0;
@@ -135,13 +147,23 @@ public:
 
 
 	inline POINT getPos() { return pos; }
+	inline POINT getCulPos() { return cul; }
 	inline RECT getRC() { return rc; }
+	inline MONSTERKIND getMonsterKind() { return kind; }
 	inline bool getDelete() { return isDelete; }
+	inline bool getATKCHECK() { return isATK; }
+	inline bool getRange() { return isRanger; }
+	inline bool getFx() { return isFxAppear; }
+	inline bool getBulletFire() { return isBulletFire; }
+	inline int getHp() { return hp; }
 
 	inline void setPlayerRC(RECT rc) { playerRC = rc; }
 	inline void setCamRC(RECT rc) { camRC = rc; }
 	inline void setHp(float _atk) { hp = _atk; }
-	inline int getHp() { return hp; }
+	inline void setATK(bool atk) { isATK = atk; }
+	inline void setFx(bool Fx) {  isFxAppear = Fx; }
+	inline void setBulletFire(bool isFire) { isBulletFire = isFire; }
+	inline void setBulletEmpty(bool isEmpty) { isBulletEmpty = isEmpty; }
 	
 	void hit(int damage, float hitAngle, float knockBack);
 	void coinDrop(int min, int max);

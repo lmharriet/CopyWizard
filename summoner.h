@@ -18,6 +18,7 @@ public:
 	void stateIDLE() override;
 	void stateATK()	override;
 	void stateDIE()	override;
+	
 
 
 	summoner() {}

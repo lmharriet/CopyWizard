@@ -31,8 +31,10 @@ void bullet::render()
 {
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
-		CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
+		CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, _vBullet[i].x, _vBullet[i].y,
+			_vBullet[i].FrameX, _vBullet[i].FrameY);
 	}
+
 }
 
 void bullet::fire(float x, float y, float angle, float speed)
@@ -47,11 +49,15 @@ void bullet::fire(float x, float y, float angle, float speed)
 	//구조체 변수들의 값을 한번에 0으로 초기화 시켜준다
 	//ZeroMemory(&bullet, sizeof(tagBullet));
 	//bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
+	bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
 	bullet.speed = speed;
 	bullet.angle = angle;
 	bullet.x = bullet.fireX = x;
 	bullet.y = bullet.fireY = y;
-	bullet.radius = 25;
+	bullet.radius = 36;
+	bullet.count = 0;
+	bullet.FrameX = 0;
+	bullet.FrameY = 0;
 
 	bullet.rc = RectMakeCenter(bullet.x, bullet.y, 50, 50);
 
@@ -69,12 +75,13 @@ void bullet::move()
 		_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 50, 50);
 
 		//총알이 사거리 보다 커졌을때
-		//float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
-		//	_vBullet[i].x, _vBullet[i].y);
-		//if (_range < distance)
-		//{
-		//	_vBullet.erase(_vBullet.begin() + i);
-		//}
+		float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
+			_vBullet[i].x, _vBullet[i].y);
+		if (_range < distance)
+		{
+			_vBullet.erase(_vBullet.begin() + i);
+		}
+
 	}
 }
 //총알삭제

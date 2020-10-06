@@ -26,7 +26,7 @@ public:
 	void setMinion();
 	//void setBoss();
 	//미니언 총알발사
-	//void minionBulletFire(float aimX, float aimY);
+	void minionBulletFire(float aimX, float aimY);
 	//미니언 삭제
 	void removeMinion(int index);
 

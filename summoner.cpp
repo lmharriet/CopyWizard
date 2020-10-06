@@ -12,7 +12,13 @@ void summoner::addInit()
 
 void summoner::update()
 {
-    rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
+    rc = RectMake(cul.x, cul.y, img->getFrameWidth(), img->getFrameHeight());
+
+    if (distanceMax > getDistance(pos.x, pos.y, playerRC.left + (playerRC.right - playerRC.left) / 2, playerRC.top + (playerRC.bottom - playerRC.top) / 2))
+        isFindWayOn = true;
+    else
+        isFindWayOn = false;
+
     atkTime++;
     if (!isATK && !isDie) 
     {
@@ -26,11 +32,13 @@ void summoner::update()
             isLeft = true;
     }
 
-    if (!isDie && atkTime%20==0)
+    if (!isDie && atkTime%150==0 && isFindWayOn )
     {
         atkTime = 0;
         state = STATEIMAGE::ATK;
         isATK = true;
+        isFxAppear = true;
+        
     }
     
     
@@ -44,8 +52,8 @@ void summoner::update()
 
 void summoner::render()
 {
-    //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
-    //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
+    FrameRect(getMemDC(), rc, RGB(255, 255, 255));
+    FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
     stateImageRender();
 }
 void summoner::stateImageRender()
@@ -111,6 +119,7 @@ void summoner::stateATK()
                 if (delay > 3)
                 {
                     isATK = false;
+                    isBulletFire = true;
                     delay = 0;
                     frameIndexL[STATEIMAGE::ATK].x = 0;
                     frameIndexL[STATEIMAGE::ATK].y = 0;
@@ -150,6 +159,7 @@ void summoner::stateATK()
             {
                 frameIndexR[STATEIMAGE::ATK].x = 0;
                 delay++;
+                    isBulletFire = true;
                 if (delay > 3)
                 {
                     isATK = false;

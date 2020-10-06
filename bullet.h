@@ -15,6 +15,8 @@ struct tagBullet
 	int count;
 	int atkPower;
 	bool fire;
+	int FrameX;
+	int FrameY;
 };
 
 struct tagArcana
@@ -63,6 +65,8 @@ public:
 	void fire(float x, float y, float angle, float speed);
 	//총알무브
 	void move();
+	//총알 비어있는지 확인
+	bool bulletEmpty() { if (_vBullet.empty())return true; else return false; }
 
 	//총알삭제
 	void removeBullet(int index);
