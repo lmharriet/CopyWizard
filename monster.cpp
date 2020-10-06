@@ -175,7 +175,6 @@ void astarManager::render(HDC hdc)
 	{
 		for (int i = 0; i < finalList.size(); i++)
 		{
-			//cout << finalList.size() << endl;
 			if (i == 0)
 			{
 				setNodeColor(finalList[i], RGB(255, 255, 0), hdc);

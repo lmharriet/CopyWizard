@@ -69,7 +69,7 @@ void golem::render()
 {
     stateImageRender();
     
-    cout << "player : " << getDistance(pos.x,pos.y,playerRC.left,playerRC.top) << endl;
+  
     
    //FrameRect(getMemDC(), playerRC,RGB(255,255,255));
    //FrameRect(getMemDC(), rc,RGB(255,255,255));

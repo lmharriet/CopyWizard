@@ -117,7 +117,6 @@ void enemyManager::minionBulletFire(float aimX, float aimY)
 		(*_viMinion)->setBulletFire(false);
 		
 		float angle = getAngle((float)(*_viMinion)->getCulPos().x,(float) (*_viMinion)->getCulPos().y,(float) aimX, (float)aimY);
-		cout << "fire" << endl;
 		_bullet->fire((float)(*_viMinion)->getPos().x+20, (float)(*_viMinion)->getPos().y-72, angle, 9.0f);
 		_bullet->fire((float)(*_viMinion)->getPos().x+20, (float)(*_viMinion)->getPos().y-72, angle+PI/4, 9.0f);
 		_bullet->fire((float)(*_viMinion)->getPos().x+20, (float)(*_viMinion)->getPos().y-72, angle-PI/4, 9.0f);

@@ -72,7 +72,6 @@ void knight::update()
 void knight::render()
 {
     stateImageRender();
-    cout << "player : " << getDistance(pos.x, pos.y, playerRC.left, playerRC.top) << endl;
    // astar->render(getMemDC());
     //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
     //FrameRect(getMemDC(), rc, RGB(255, 255, 255));

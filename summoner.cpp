@@ -71,7 +71,6 @@ void summoner::render()
    // FrameRect(getMemDC(), rc, RGB(255, 255, 255));
    // FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
     stateImageRender();
-    cout << "player : " << getDistance(pos.x, pos.y, playerRC.left, playerRC.top) << endl;
 }
 void summoner::stateImageRender()
 {
