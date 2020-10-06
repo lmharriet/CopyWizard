@@ -145,6 +145,7 @@ class meteor :public gameNode
 {
 private:
 	vector<tagArcana> vMeteor;
+	
 	float angleRange;
 	float _range;
 
@@ -200,8 +201,6 @@ class RagingInferno :public gameNode
 {
 private:
 	tagArcana inferno;
-	
-	RECT tail;
 
 	float range;
 	float distance;
