@@ -21,7 +21,7 @@ public:
 	void stateIDLE() override;
 	void stateATK()	override;
 	void stateDIE()	override;
-	void stateHIT() ;
+	//void stateHIT() ;
 
 //	void stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R);
 	

@@ -342,6 +342,7 @@ HRESULT monster::init(tagTile* tile, const char* fileName, POINT _pos, float _sp
 	pos.y = _pos.y;
 	speed = _speed;
 	hp = _hp;
+	hitTime = 0;
 	for (int i = 0; i < STATEMAX; i++)
 	{
 		frameIndexL[i] = { 0,0 };
@@ -367,25 +368,64 @@ void monster::release()
 	}
 }
 
-void monster::hit(int damage , float hitAngle, float knockBack)
+void monster::commonUpdate()
 {
-	
-	
-		POINT pt = { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 };
+	rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
-		EFFECT->damageEffect(pt);
+	if (distanceMax > getDistance(pos.x + img->getFrameWidth() * 0.5, pos.y + img->getFrameHeight() * 1.5, playerRC.left, playerRC.top))
+		isFindWayOn = true;
+	else
+		isFindWayOn = false;
 
-		hp -= damage;
+	update(); //몬스터별 업데이트
 
-		if (isKnockBack && !isDie) // 밀려남.
+	if (isHit && !isDie)
+	{
+		isATK = false;
+		hitTime++;
+
+		if (isKnockBack ) // 밀려남.
 		{
-			pos.x += cos(hitAngle) * knockBack;
-			pos.y += -sin(hitAngle) * knockBack;
+			pos.x += cos(hitAngle) * knockBack*0.125;
+			pos.y += -sin(hitAngle) * knockBack*0.125;
 		}
 
-		//state = STATEIMAGE::HIT;
-		//isHit = true;
+		if (hitTime % 8 == 0)
+		{
+			isHit = false;
+			//state = STATEIMAGE::IDLE;
+			hitTime = 0;
+		}
+	}
 	
+
+
+	cul.x = CAMERAMANAGER->GetRelativeX(pos.x);
+	cul.y = CAMERAMANAGER->GetRelativeY(pos.y);
+
+	die();
+}
+
+void monster::hit(int damage , float _hitAngle, float _knockBack)
+{
+	POINT pt = { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 };
+
+	EFFECT->damageEffect(pt);
+
+	hp -= damage;
+
+	hitAngle = _hitAngle;
+	knockBack = _knockBack;
+	//if (isKnockBack && !isDie) // 밀려남.
+	//{
+	//	pos.x += cos(hitAngle) * knockBack;
+	//	pos.y += -sin(hitAngle) * knockBack;
+	//}
+	
+
+	state = STATEIMAGE::HIT;
+	isHit = true;
+
 }
 
 void monster::coinDrop(int min, int max)
@@ -402,8 +442,6 @@ void monster::die()
 	{
 		state = STATEIMAGE::DIE;
 		isDie = true;
-		
-		
 	}
 }
 
@@ -411,13 +449,15 @@ void monster::stateHIT(POINT lPos, POINT rPos)
 {
 	if (atkDirection[LEFT])
 	{
-		frameIndexL[HIT].x = lPos.x;
-		frameIndexL[HIT].y = lPos.y;
+		frameIndexL[STATEIMAGE::HIT].x = lPos.x;
+		frameIndexL[STATEIMAGE::HIT].y = lPos.y;
+		img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::HIT].x, frameIndexL[STATEIMAGE::HIT].y);
 	}
 	else
 	{
-		frameIndexL[HIT].x = rPos.x;
-		frameIndexL[HIT].y = rPos.y;
+		frameIndexR[STATEIMAGE::HIT].x = rPos.x;
+		frameIndexR[STATEIMAGE::HIT].y = rPos.y;
+		img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::HIT].x, frameIndexR[STATEIMAGE::HIT].y);
 	}
 
 }

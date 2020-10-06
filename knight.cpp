@@ -8,20 +8,19 @@ void knight::addInit()
 
 void knight::update()
 {
-    rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
     
-    if (distanceMax > getDistance(pos.x+img->getFrameWidth()*0.5, pos.y+img->getFrameHeight()*1.5, playerRC.left, playerRC.top ))
+   /* if (distanceMax > getDistance(pos.x+img->getFrameWidth()*0.5, pos.y+img->getFrameHeight()*1.5, playerRC.left, playerRC.top ))
         isFindWayOn = true;
     else
-        isFindWayOn = false;
+        isFindWayOn = false;*/
 
 
     if (isFindWayOn) //길찾기 on
     {
 
         astar->update(camRC, rc, playerRC, &angle);
-        if (astar->getFirstTile() && !isATK && !isDie) // 걸을 때
+        if (astar->getFirstTile() && !isATK && !isDie && !isHit) // 걸을 때
         {
             state = STATEIMAGE::WALK;
             pos.x += cos(angle) * speed;
@@ -51,7 +50,7 @@ void knight::update()
                 atkDirection[DOWN] = true;
             }
         }
-        else if(!isDie) // 걷지 않고 있을 때
+        else if(!isDie && !isHit) // 걷지 않고 있을 때
         {
             state = STATEIMAGE::ATK;
             isATK = true;
@@ -60,13 +59,14 @@ void knight::update()
     }
     else //길찾기 off
     {
-        state = STATEIMAGE::IDLE;
+        if (!isHit)
+        {
+            state = STATEIMAGE::IDLE;
+        }
     }
 
-    cul.x = CAMERAMANAGER->GetRelativeX(pos.x);
-    cul.y = CAMERAMANAGER->GetRelativeY(pos.y);
+    
 
-    die();
 }
 
 void knight::render()

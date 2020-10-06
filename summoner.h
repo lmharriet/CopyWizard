@@ -7,7 +7,7 @@ class summoner : public monster
 {
 private:
 
-
+	int randomTime;
 public:
 	void addInit()override;
 	void update() override;

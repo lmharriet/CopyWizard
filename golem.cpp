@@ -10,13 +10,9 @@ void golem::addInit()
 void golem::update()
 {
     
-    rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
     
     //거리 계산해서 일정 거리 넘어가면 에이스타 작동안되게 하기.
-    if (distanceMax > getDistance(pos.x, pos.y, playerRC.left , playerRC.top))
-        isFindWayOn = true;
-    else
-        isFindWayOn = false;
+   
    
     if (isFindWayOn) //길찾기 on
     {
@@ -61,12 +57,13 @@ void golem::update()
     }
     else //길찾기 off
     { 
-        state = STATEIMAGE::IDLE;
+        if (!isHit)
+        {
+            state = STATEIMAGE::IDLE;
+        }
     }
 
-    cul.x = CAMERAMANAGER->GetRelativeX(pos.x);
-    cul.y = CAMERAMANAGER->GetRelativeY(pos.y);
-    die();
+   
 }
 
 void golem::render()
@@ -125,7 +122,7 @@ void golem::stateImageRender()
         stateDIE();
         break;
     case STATEIMAGE::HIT:
-        stateHIT();
+        stateHIT({ 0,0 }, { 0, 0}); // 수정해야함
         break;
    
     }
@@ -353,7 +350,7 @@ void golem::stateDIE()
     coinDrop(1, 10);
 }
 
-void golem::stateHIT()
-{
-    cout << "골렘히트" << endl;
-}
+//void golem::stateHIT()
+//{
+//    cout << "골렘히트" << endl;
+//}

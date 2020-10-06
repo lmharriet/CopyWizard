@@ -102,6 +102,8 @@ protected:
 	
 	float speed;
 	float angle;
+	float hitAngle;
+	float knockBack;
 	MONSTERKIND kind;
 	int atk;
 	int atkTime;
@@ -110,6 +112,7 @@ protected:
 	int hpMax;
 	int count = 0;
 	int delay = 0;
+	int hitTime;
 	bool isFindWayOn = false;
 	bool isLeft = false;
 	bool isATK = false;
@@ -122,7 +125,7 @@ protected:
 	bool isBulletEmpty = true;
 	bool isAstar;
 	bool isKnockBack ;
-	bool atkDirection[MAX];
+	bool atkDirection[ATKDIRECTION::MAX];
 	const float distanceMax = 700.f;
 	
 	astarManager* astar;
@@ -138,6 +141,7 @@ public:
 	HRESULT init(tagTile* tile, const char* fileName, POINT _pos, float _speed, MONSTERKIND _kind,
 		int _hp,  const char* skillImgName,  bool _isKnockBack = true, bool isLongAtk = false);
 	void release();
+	void commonUpdate();
 	virtual void update()=0;
 	virtual void render()=0;
 	virtual void addInit()=0;
@@ -159,6 +163,7 @@ public:
 	inline bool getFx() { return isFxAppear; }
 	inline bool getBulletFire() { return isBulletFire; }
 	inline int getHp() { return hp; }
+	inline bool getDie() { return isDie; }
 
 	inline void setPlayerRC(RECT rc) { playerRC = rc; }
 	inline void setCamRC(RECT rc) { camRC = rc; }
@@ -168,7 +173,7 @@ public:
 	inline void setBulletFire(bool isFire) { isBulletFire = isFire; }
 	inline void setBulletEmpty(bool isEmpty) { isBulletEmpty = isEmpty; }
 	
-	void hit(int damage, float hitAngle, float knockBack);
+	void hit(int damage, float _hitAngle, float _knockBack);
 	void coinDrop(int min, int max);
 	void die();
 };

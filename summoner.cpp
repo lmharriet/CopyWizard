@@ -6,21 +6,20 @@
 void summoner::addInit()
 {
     atkTime = 0;
-
+    randomTime = RANDOM->range(90, 120);
 }
 
 
 void summoner::update()
 {
-    rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
-    if (distanceMax > getDistance(pos.x, pos.y, playerRC.left , playerRC.top ))
+  /*  if (distanceMax > getDistance(pos.x, pos.y, playerRC.left , playerRC.top ))
         isFindWayOn = true;
     else
-        isFindWayOn = false;
+        isFindWayOn = false;*/
 
     atkTime++;
-    if (!isATK && !isDie) 
+    if (!isATK && !isDie && !isHit) 
     {
         state = STATEIMAGE::IDLE;
         
@@ -31,8 +30,8 @@ void summoner::update()
         }
         else
         {
-            atkDirection[LEFT] = false;
-            atkDirection[RIGHT] = true;
+            atkDirection[LEFT] = true;
+            atkDirection[RIGHT] = false;
         }
         if ((rc.top + (rc.bottom - rc.top) / 2) < playerRC.top)
         {
@@ -41,37 +40,36 @@ void summoner::update()
         }
         else
         {
-            atkDirection[UP] = false;
-            atkDirection[DOWN] = true;
+            atkDirection[UP] = true;
+            atkDirection[DOWN] = false;
         }
     }
-
-    if (!isDie && atkTime%90==0 && isFindWayOn && !isATK)
+    
+    if (!isDie && atkTime%randomTime==0 && isFindWayOn && !isATK && !isHit)
     {
         state = STATEIMAGE::ATK;
         isATK = true;
     }
     
-    if (isATK)
+    if (isATK&& !isHit)
     {
-        if (atkTime % 110==0)
+        if (atkTime % (randomTime+30)==0)
         {
+            randomTime = RANDOM->range(90, 120);
             atkTime = 0;
             isFxAppear = true;
         }
     }
 
-    cul.x = CAMERAMANAGER->GetRelativeX(pos.x);
-    cul.y = CAMERAMANAGER->GetRelativeY(pos.y);
+   
 
-    die();
 }
 
 
 void summoner::render()
 {
-    FrameRect(getMemDC(), rc, RGB(255, 255, 255));
-    FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
+   // FrameRect(getMemDC(), rc, RGB(255, 255, 255));
+   // FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
     stateImageRender();
 }
 void summoner::stateImageRender()
@@ -88,7 +86,7 @@ void summoner::stateImageRender()
         stateDIE();
         break;
     case STATEIMAGE::HIT:
-        stateHIT({ 4,6 }, { 0,4 });
+        stateHIT({ 4,7 }, { 0,7 });
         break;
 
     }
@@ -107,7 +105,7 @@ void summoner::stateIDLE()
         
         img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);
     }
-    else
+    else if(atkDirection[RIGHT])
     {
         frameIndexR[STATEIMAGE::IDLE].x = 0;
         frameIndexR[STATEIMAGE::IDLE].y = 2;
@@ -115,8 +113,9 @@ void summoner::stateIDLE()
         frameIndexR[STATEIMAGE::ATK].y = 2;
         frameIndexR[STATEIMAGE::DIE].x = 0;
         frameIndexR[STATEIMAGE::DIE].y = 4;
+
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
     }
-    img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
 }
 
 void summoner::stateATK()
@@ -235,10 +234,10 @@ void summoner::stateDIE()
                     }
                 }
             }
-
         }
+        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::DIE].x, frameIndexL[STATEIMAGE::DIE].y);
     }
-    else
+    else if(atkDirection[RIGHT])
     {
         int dieFrameSpeed = 10;
         if (frameIndexR[STATEIMAGE::DIE].y != 5)
@@ -266,9 +265,9 @@ void summoner::stateDIE()
                 frameIndexR[STATEIMAGE::DIE].x = 0;
             }
         }
+    img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::DIE].x, frameIndexR[STATEIMAGE::DIE].y);
     }
 
-    img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::DIE].x, frameIndexR[STATEIMAGE::DIE].y);
     
     coinDrop(1, 10);
 }
