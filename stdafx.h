@@ -47,6 +47,7 @@ using namespace MY_UTIL;
 #include "itemManager.h"
 #include "dropManager.h"
 #include "bossManager.h"
+#include "damageManager.h"
 //#include "astarManager.h"
 
 //=============================================================
@@ -66,6 +67,7 @@ using namespace MY_UTIL;
 #define EFFECT effectManager::getSingleton()
 #define ITEM itemManager::getSingleton()
 #define DROP dropManager::getSingleton()
+#define DAMAGE damageManager::getSingleton()
 #define BOSSMANAGER bossManager::getSingleton()
 //#define ASTAR astarManager::getSingleton()
 

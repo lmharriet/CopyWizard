@@ -68,12 +68,8 @@ void gameScene::update()
 
 	if (INPUT->GetKeyDown(VK_BACK))
 	{
-		PARTICLE0->explosionGenerate(_player->getX(), _player->getY(), 18, 1.f, 4.f, 11);
-		PARTICLE0->explosionGenerate(_player->getX(), _player->getY(), 15, 1.f, 3.f, 9);
-		PARTICLE0->explosionGenerate(_player->getX(), _player->getY(), 12, 1.f, 2.f, 7);
-		PARTICLE0->explosionGenerate(_player->getX(), _player->getY(), 9, 1.f, 3.f, 5);
-		PARTICLE0->explosionGenerate(_player->getX(), _player->getY(), 6, 1.f, 4.f, 3);
 		//PARTICLE->pointGenerate(_player->getX(), _player->getY(), 0, 0, 0, 5, 60);
+		DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, 17);
 	}
 	PARTICLE0->pointActive();
 	PARTICLE0->explosionActive();
@@ -266,6 +262,8 @@ void gameScene::render()
 	PARTICLE0->render(getMemDC());
 	EFFECT->render(getMemDC());
 	EFFECT->dRender(getMemDC());
+
+	DAMAGE->render(getMemDC());
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), _player->getRect());
 	//uiImg->render(getMemDC());
