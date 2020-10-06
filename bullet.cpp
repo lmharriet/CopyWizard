@@ -236,6 +236,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	bullet.speed = speed;
 	bullet.angle = angle;
 	bullet.radius = radius;
+	bullet.atkPower = 12;
 	bullet.rc = RectMakeCenter(bullet.x, bullet.y, radius * 2, radius * 2);
 
 	_vBullet.push_back(bullet);
@@ -366,6 +367,7 @@ void meteor::meteorFire(float x, float y, float speed, MOVE dir, float range)
 	meteor.rc = RectMakeCenter(meteor.x, meteor.y, 200 * 2, 160 * 2);
 	meteor.img = IMAGEMANAGER->findImage("meteor");
 	meteor.lifeTime = 0;
+	meteor.atkPower = 75;
 	//if (_vMeteor.size() >= _bulletMax) continue;
 	vMeteor.push_back(meteor);
 }
@@ -508,7 +510,6 @@ void meteor::move()
 
 		if (vMeteor[i].lifeTime > vMeteor[i].range)
 		{
-
 			//이펙트 플레이
 			//충돌 처리 , 카메라 shake
 			CAMERAMANAGER->Shake(10, 10, 10);
@@ -588,6 +589,7 @@ void dashFire::fire(float x, float y)
 	dash.y = y;
 	dash.frameX = 0;
 	dash.lifeTime = 0;
+	dash.atkPower = 5;
 	_vDash.push_back(dash);
 }
 
@@ -595,8 +597,6 @@ void dashFire::fire(float x, float y)
 
 HRESULT RagingInferno::init()
 {
-
-	
 	gaugeTime = 0;
 	range = distance = 0;
 	index = count = 0;
@@ -629,7 +629,6 @@ void RagingInferno::update(float range)
 
 void RagingInferno::render()
 {
-
 	//dummy
 	image* dummy;
 	dummy = IMAGEMANAGER->addFrameImage("dummyEffect", "resource/player/dummy.bmp", 750, 150, 5, 1);
@@ -657,6 +656,7 @@ void RagingInferno::fire(float x, float y, float angle)
 	inferno.y = inferno.fireY = y - sinf(angle) * inferno.speed;
 	inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
 	inferno.lifeTime = 100;
+	inferno.atkPower = 30;
 
 	isFire = true;
 

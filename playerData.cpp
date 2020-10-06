@@ -3,6 +3,8 @@
 
 HRESULT playerData::init()
 {
+	hp = 500;
+	coin = 123;
 	return S_OK;
 }
 

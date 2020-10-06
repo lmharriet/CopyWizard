@@ -34,8 +34,8 @@ HRESULT uiManager::init()
 	skillSlot[3].keyName = "fireDragon";
 	skillSlot[3].maxCoolTime = 120; // 2√ 
 
-	coin = 123;
-	hp = 470;
+	coin = 0;
+	hp = 0;
 	return S_OK;
 }
 

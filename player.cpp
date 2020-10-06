@@ -480,8 +480,10 @@ void player::takeCoin()
 	{
 		if (colCheck(rc, DROP->getCoinRect(i)))
 		{
-			UI->setCoin(UI->getCoin()+ DROP->getCoinVec()[i].money);
-
+			PLAYERDATA->setCoin(PLAYERDATA->getCoin() + DROP->getCoinVec()[i].money);
+			UI->setCoin(PLAYERDATA->getCoin());
+			//UI->setCoin(UI->getCoin()+ DROP->getCoinVec()[i].money);
+			
 			DROP->delCoin(i);
 		}
 	}
@@ -874,4 +876,10 @@ void player::viewText()
 //int y = _ptMouse.y;
 
 //	CAMERAMANAGER->RectangleMakeCenter(getMemDC(), posX, posY, 20, 20);
+}
+
+void player::death(int _hp)
+{
+
+	if (_hp >= 0) isDead = true;
 }

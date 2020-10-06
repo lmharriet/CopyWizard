@@ -29,8 +29,6 @@ public:
 
 	void skillRender(HDC hdc);
 
-	int getCoin() { return coin; }
-
 	void setCoin(int num) { coin = num; }
 	void setHp(int _hp) { hp = _hp; }
 

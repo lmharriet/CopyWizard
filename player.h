@@ -33,8 +33,10 @@ private:
 	float attackAngle;
 	float saveAngle ;
 
+
 	int angleTenth;
 	int speed;
+	int hp;
 
 	int stateCool;
 	int meteorStateCool;
@@ -55,7 +57,7 @@ private:
 	// 신호 중복 방지
 	bool isLeft, isRight, isUp, isDown;
 	
-
+	bool isDead;
 public:
 	HRESULT init();
 	void release();
@@ -90,6 +92,10 @@ public:
 	void buttonDown();
 	void viewText();
 
+	//사망 판정
+	void death(int _hp);
+
+
 
 	//getter ,setter
 	float getX() { return posX; }
@@ -97,6 +103,8 @@ public:
 	RECT getRect() { return rc; }
 	bomb* getBlaze() { return blaze; }
 	meteor* getMeteor() { return Meteor; }
+	dashFire* getDashFire() { return searingRush; }
+	
 
 	void setX(float x) { posX = x; }
 	void setY(float y) { posY = y; }

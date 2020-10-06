@@ -38,6 +38,7 @@ public:
 
 	void collisionTile();
 
+	void playerAttack();
 	//¸Ê ·Îµå
 	void loadMap(const char* mapFileName);
 
