@@ -52,7 +52,7 @@ struct tagParticlePoint2
 	float radius;		//좌표 중앙에서 얼마큼 멀어진곳에 생성?
 
 	float particleSpeed;//파티클이 angle로 날라가는 속도
-	int frameSpeed;		//파티클 프레임 이미지 속도
+	int frameDelay;		//파티클 프레임 이미지 딜레이
 
 	int currentTime;
 	int lifeTime;

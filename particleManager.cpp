@@ -204,7 +204,7 @@ void particleManager0::pointGenerate(float x, float y, int CreateDelay, int life
 	particlePoint.radius = radius;
 
 	particlePoint.particleSpeed = particleSpeed;
-	particlePoint.frameSpeed = frameSpeed;
+	particlePoint.frameDelay = frameSpeed;
 
 	vParticlePoint.push_back(particlePoint);
 }
@@ -230,7 +230,7 @@ void particleManager0::pointActive()
 			float x = vParticlePoint[i].x + cosf(arr[vParticlePoint[i].angleNum]) * vParticlePoint[i].radius; // 10¡§µµ π–æÓ¡‹
 			float y = vParticlePoint[i].y - sinf(arr[vParticlePoint[i].angleNum]) * vParticlePoint[i].radius; // 10¡§µµ π–æÓ¡‹
 
-			generate(x, y, arr[vParticlePoint[i].angleNum], vParticlePoint[i].frameSpeed, vParticlePoint[i].particleSpeed);
+			generate(x, y, arr[vParticlePoint[i].angleNum], vParticlePoint[i].frameDelay, vParticlePoint[i].particleSpeed);
 			//generate(vParticlePoint[i].x, vParticlePoint[i].y, arr[vParticlePoint[i].angleNum], 5, 2.0f);
 			vParticlePoint[i].angleNum++;
 
