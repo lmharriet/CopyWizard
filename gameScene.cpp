@@ -240,11 +240,11 @@ void gameScene::render()
 		}
 	}
 
-	//PARTICLE->render(getMemDC(), CAMERAMANAGER->getRect());
-	PARTICLE0->render(getMemDC());
 
 	enemy->render();
 	if(!isRender) _player->render();
+	//PARTICLE->render(getMemDC(), CAMERAMANAGER->getRect());
+	PARTICLE0->render(getMemDC());
 	EFFECT->render(getMemDC());
 	EFFECT->dRender(getMemDC());
 
