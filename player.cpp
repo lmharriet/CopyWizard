@@ -47,16 +47,14 @@ HRESULT player::init()
 
 	speed = 0;
 	atkCount = atkIndex = index = dashIndex = count = dashCount = 0;
-	stateCool = meteorStateCool = 0;
-	
+	stateCool = infernoStateCool = meteorStateCool = 0;
+
 	//수정 중
 	standardCool = signatureCool = /*standardTiemer= signatureTimer*/50;
 
 
 	//불렛 클래스
 	bulletClassInit();
-
-
 	//인벤토리
 	inven = new inventory;
 	inven->init();
@@ -107,8 +105,8 @@ void player::update()
 	angleTenth = (int)(saveAngle * (18 / PI));
 
 	if (signature) state = STATE::SIGNATURE;
-
-	if (speed == 0 && stateCool == 0 && meteorStateCool == 0) controller();
+	if (standard) state = STATE::STANDARD;
+	if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && infernoStateCool==0) controller();
 
 	tileCol();
 
@@ -140,7 +138,7 @@ void player::update()
 
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
-
+	death();
 	//don't touch!
 	buttonDown();
 }
@@ -163,7 +161,8 @@ void player::other_update()
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
 
-
+	if (signature) state = STATE::SIGNATURE;
+	if (standard) state = STATE::STANDARD;
 	if (speed == 0 && stateCool == 0 && meteorStateCool == 0) controller();
 
 	//tileCol();
@@ -193,10 +192,9 @@ void player::other_update()
 
 	//
 	takeCoin();
-
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
-
+	death();
 	//don't touch!
 	buttonDown();
 }
@@ -409,7 +407,6 @@ void player::dashFunction()
 		//순수 DOWN
 		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol)
 			posY += speed;
-
 	}
 
 	speed--;
@@ -446,13 +443,10 @@ void player::blazeSetUp()
 
 void player::standardSetUp()
 {
-	if (standard)
+	if (standard && infernoStateCool == 0)
 	{
 		inferno->fire(posX, posY, attackAngle);
-		//flares->fire(posX, posY, attackAngle);
-		
 	}
-
 }
 
 void player::signatureSetUp()
@@ -460,18 +454,19 @@ void player::signatureSetUp()
 	if (signature && meteorStateCool == 0)
 	{
 		meteorStateCool = 30;
-		float dRange = 650.f;
+		//float dRange = 650.f;
 
 		//Meteor->meteorFire(posX, posY, 600, move, 55);
 		//Meteor->meteorFire(posX + RANDOM->range(-150, 150), posY + RANDOM->range(-150, 150), 600, move, dRange);
 		//Meteor->meteorFire(posX - RANDOM->range(-150, 150), posY - RANDOM->range(-150, 150), 600, move, dRange);
 		Meteor->meteorUltFire(posX, posY, 600, move, 55);
 	}
-	if (meteorStateCool > 0 )
+	if (meteorStateCool > 0)
 	{
 		state = STATE::SIGNATURE;
 		meteorStateCool--;
 	}
+
 }
 
 void player::takeCoin()
@@ -483,7 +478,7 @@ void player::takeCoin()
 			PLAYERDATA->setCoin(PLAYERDATA->getCoin() + DROP->getCoinVec()[i].money);
 			UI->setCoin(PLAYERDATA->getCoin());
 			//UI->setCoin(UI->getCoin()+ DROP->getCoinVec()[i].money);
-			
+
 			DROP->delCoin(i);
 		}
 	}
@@ -540,7 +535,6 @@ void player::animation()
 		}
 		break;
 	case STATE::DASH:
-
 		if (dashLeft)
 		{
 			if (dashCount % 3 == 0)
@@ -579,8 +573,17 @@ void player::animation()
 		}
 		break;
 
+	case STATE::DIE:
+
+		if (count % 5 == 0)
+		{
+			index++;
+			if (index > 9) index = 0;
+		}
+		frameAnimation(index, 9);
+		break;
 	case STATE::BASIC:
-	{
+
 		if (angleTenth > 14 && angleTenth <= 23)//left
 		{
 			if (count % 3 == 0)
@@ -630,8 +633,8 @@ void player::animation()
 			if (stateCool == 0)
 				move = MOVE::DOWN;
 		}
-	}
-	break;
+
+		break;
 	case STATE::STANDARD:
 		break;
 	case STATE::SIGNATURE:
@@ -838,7 +841,7 @@ void player::buttonDown()
 	//Attack
 	if (INPUT->GetKeyDown(VK_LBUTTON)) basic = true;
 	else basic = false;
-	if (INPUT->GetKeyDown(MK_RBUTTON)) standard = true;
+	if (INPUT->GetKeyDown(VK_RBUTTON)) standard = true;
 	else standard = false;
 	if (INPUT->GetKeyDown('Q'))	signature = true;
 	else signature = false;
@@ -860,7 +863,7 @@ void player::viewText()
 	//	CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i].rc);
 	//}
 
-	wsprintf(str, "meteorCool : %d", meteorStateCool);
+	/*wsprintf(str, "meteorCool : %d", meteorStateCool);
 	textOut(getMemDC(), 10, 200, str, WHITE);
 
 	wsprintf(str, "signatureCool  : %d", signatureCool);
@@ -871,15 +874,16 @@ void player::viewText()
 		wsprintf(str, "player state: %d ", state);
 		textOut(getMemDC(), 10, 250, str, WHITE);
 
-	}
-	//int x = _ptMouse.x;
-//int y = _ptMouse.y;
+	}*/
 
-//	CAMERAMANAGER->RectangleMakeCenter(getMemDC(), posX, posY, 20, 20);
 }
 
-void player::death(int _hp)
+void player::death()
 {
+	if (PLAYERDATA->getHp() <= 0)
+	{
+		isDead = true;
+		state = STATE::DIE;
+	}
 
-	if (_hp >= 0) isDead = true;
 }

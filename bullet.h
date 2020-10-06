@@ -14,6 +14,8 @@ struct tagBullet
 	float radius;
 	int count;
 	int atkPower;
+
+	int skillType;
 	bool fire;
 	int FrameX;
 	int FrameY;
@@ -32,6 +34,7 @@ struct tagArcana
 
 	int lifeTime;
 	int atkPower;
+	int skillType;
 
 	int frameX;
 	int frameY;
@@ -141,11 +144,17 @@ public:
 //=============================================================
 //	## METEOR ## 
 //=============================================================
+struct tagCircle
+{
+	float x, y;
+	float angle;
+	RECT rc;
+};
 class meteor :public gameNode
 {
 private:
 	vector<tagArcana> vMeteor;
-	
+	vector<tagCircle> vCircle;
 	float angleRange;
 	float _range;
 
@@ -159,6 +168,8 @@ private:
 
 	int count, index;
 	int timer;
+
+	bool isCol;
 public:
 	HRESULT init(float range);
 	void release();
@@ -169,6 +180,8 @@ public:
 	void meteorUlt();
 	void meteorUltFire(float x, float y, float speed, MOVE dir, float range);
 	void move();
+
+	bool getCol() { return isCol; }
 
 	vector<tagArcana> getMeteorVec() { return vMeteor; }
 };
@@ -214,4 +227,7 @@ public:
 	void render();
 	void fire(float x, float y,float angle);
 	void move(float range);
+
+	bool getFire() { return isFire; }
+	int getGaugeTime() { return gaugeTime; }
 };

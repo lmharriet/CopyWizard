@@ -246,6 +246,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	bullet.angle = angle;
 	bullet.radius = radius;
 	bullet.atkPower = 12;
+	bullet.skillType = 0;
 	bullet.rc = RectMakeCenter(bullet.x, bullet.y, radius * 2, radius * 2);
 
 	_vBullet.push_back(bullet);
@@ -283,6 +284,8 @@ HRESULT meteor::init(float range)
 	ranCount = 10;
 
 	count = index = timer = 0;
+
+	isCol = false;
 	return S_OK;
 }
 
@@ -326,8 +329,8 @@ void meteor::meteorFire(float x, float y, float speed, MOVE dir, float range)
 	float spd = .0f;
 
 	tagArcana meteor;
-
 	meteor.range = range;
+	meteor.skillType = 1;
 	switch (dir)
 	{
 	case MOVE::LEFT:
@@ -337,6 +340,7 @@ void meteor::meteorFire(float x, float y, float speed, MOVE dir, float range)
 
 		meteor.x = meteor.fireX = x + cosf(angle) * speed;
 		meteor.y = meteor.fireY = y - sinf(angle) * speed;
+
 		break;
 	case MOVE::RIGHT:
 		angle = 110.f * (PI / 180);
@@ -369,14 +373,14 @@ void meteor::meteorFire(float x, float y, float speed, MOVE dir, float range)
 	default:
 		return;
 	}
-
+	
 	//memset(&meteor, 0, sizeof(meteor));
 
 	meteor.speed = 12.5f;
 	meteor.rc = RectMakeCenter(meteor.x, meteor.y, 200 * 2, 160 * 2);
 	meteor.img = IMAGEMANAGER->findImage("meteor");
 	meteor.lifeTime = 0;
-	meteor.atkPower = 75;
+	meteor.atkPower = 0;
 	//if (_vMeteor.size() >= _bulletMax) continue;
 	vMeteor.push_back(meteor);
 }
@@ -434,6 +438,8 @@ void meteor::meteorUlt()
 
 		if (meteorCount == 6)
 		{
+			isCol = true;
+			tmpMeteor.atkPower = 1;
 			isUlt = false;
 			ult = { 0, };
 			meteorCount = 0;
@@ -503,6 +509,9 @@ void meteor::meteorUltFire(float x, float y, float speed, MOVE dir, float range)
 	ult.img = IMAGEMANAGER->findImage("meteor");
 	ult.lifeTime = 0;
 	ult.dir = dir;
+	ult.atkPower = 1;
+
+
 	ranCount = 10; // 메테오간 딜레이를 랜덤으로 주기위함 (처음에만 10으로 둠)
 }
 
@@ -599,6 +608,7 @@ void dashFire::fire(float x, float y)
 	dash.frameX = 0;
 	dash.lifeTime = 0;
 	dash.atkPower = 5;
+	dash.skillType = 2;
 	_vDash.push_back(dash);
 }
 
@@ -658,7 +668,7 @@ void RagingInferno::fire(float x, float y, float angle)
 	inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
 	inferno.lifeTime = 100;
 	inferno.atkPower = 30;
-
+	inferno.skillType = 3;
 	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
 	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
 	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
