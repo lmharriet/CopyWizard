@@ -19,7 +19,7 @@ HRESULT bossScene::init()
 
 	_boss = new boss;
 	_boss->init(752, 288);
-    rc = RectMakeCenter(752, 288, 150, 150);
+    //rc = RectMakeCenter(752, 288, 150, 150);
     area = RectMakeCenter(rc.left + (rc.right - rc.left) / 2, rc.top + (rc.bottom - rc.top) / 2, WINSIZEX, WINSIZEY);
 
     isBattle = false;
@@ -89,7 +89,7 @@ void bossScene::render()
     EFFECT->pRender(getMemDC());
     _player->render();
 
-    CAMERAMANAGER->Rectangle(getMemDC(), rc);
+    //CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	//CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("boss"), rc.left, rc.top, 0, 0);
 	
 	_boss->render();

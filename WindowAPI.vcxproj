@@ -148,7 +148,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bossManager.h" />
     <ClInclude Include="bossScene.h" />
+    <ClInclude Include="bossSkill.h" />
     <ClInclude Include="bullet.h" />
     <ClInclude Include="cameraManager.h" />
     <ClInclude Include="colorNode.h" />
@@ -187,7 +189,9 @@
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="bossManager.cpp" />
     <ClCompile Include="bossScene.cpp" />
+    <ClCompile Include="bossSkill.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="cameraManager.cpp" />
     <ClCompile Include="damageManager.cpp" />

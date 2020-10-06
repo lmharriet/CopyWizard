@@ -185,6 +185,12 @@
     <ClCompile Include="damageManager.cpp">
       <Filter>GameFramework\매니져\데미지</Filter>
     </ClCompile>
+    <ClCompile Include="bossSkill.cpp">
+      <Filter>MainGame\씬 모음\보스</Filter>
+    </ClCompile>
+    <ClCompile Include="bossManager.cpp">
+      <Filter>MainGame\인게임</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -293,6 +299,12 @@
     <ClInclude Include="inventory.h" />
     <ClInclude Include="damageManager.h">
       <Filter>GameFramework\매니져\데미지</Filter>
+    </ClInclude>
+    <ClInclude Include="bossSkill.h">
+      <Filter>MainGame\씬 모음\보스</Filter>
+    </ClInclude>
+    <ClInclude Include="bossManager.h">
+      <Filter>MainGame\인게임</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

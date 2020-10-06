@@ -396,12 +396,12 @@ void boss::animation()
 				break;
 			case 3:
 				if (leftCheck) {
-					IMAGEMANAGER->findImage("boss")->setFrameY(6);
-					IMAGEMANAGER->findImage("boss")->setFrameX(9);
+					frameX = 9;
+					frameY = 6;
 				}
 				else {
-					IMAGEMANAGER->findImage("boss")->setFrameY(1);
-					IMAGEMANAGER->findImage("boss")->setFrameX(3);
+					frameX = 3;
+					frameY = 1;
 				}
 				timer++;
 				if (timer > 40) {
@@ -413,12 +413,12 @@ void boss::animation()
 				break;
 			case 4:
 				if (leftCheck) {
-					IMAGEMANAGER->findImage("boss")->setFrameY(6);
-					IMAGEMANAGER->findImage("boss")->setFrameX(6);
+					frameX = 6;
+					frameY = 6;
 				}
 				else {
-					IMAGEMANAGER->findImage("boss")->setFrameY(2);
-					IMAGEMANAGER->findImage("boss")->setFrameX(1);
+					frameX = 1;
+					frameY = 2;
 				}
 				timer++;
 				if (timer > 40) {
@@ -433,40 +433,40 @@ void boss::animation()
 		break;
 	case NIDDLE:
 		if (!jumpMotion) {
-			IMAGEMANAGER->findImage("boss")->setFrameY(0);
+			frameY = 0;
 			count++;
 			if (count % 10 == 0) {
-				if (index < 2) {
+				if (frameX < 2) {
 					count = 0;
 					timer = 0;
-					index = 0;
+					frameX = 0;
 					jumpMotion = true;
 				}
-				IMAGEMANAGER->findImage("boss")->setFrameX(index);
+				IMAGEMANAGER->findImage("boss")->setFrameX(frameX);
 				if (!jumpMotion) {
-					index--;
+					frameX--;
 				}
 			}
 		}
 		else {
-			IMAGEMANAGER->findImage("boss")->setFrameY(7);
+			frameY = 7;
 			count++;
 			if (count % 20 == 0) {
-				if (index > 2) {
+				if (frameX > 2) {
 					count = 0;
-					index = 2;
+					frameX = 2;
 				}
-				IMAGEMANAGER->findImage("boss")->setFrameX(index);
-				index++;
+				IMAGEMANAGER->findImage("boss")->setFrameX(frameX);
+				frameX++;
 			}
 		}
 		break;
 	case WALL:
-		IMAGEMANAGER->findImage("boss")->setFrameY(0);
-		IMAGEMANAGER->findImage("boss")->setFrameX(3);
+		frameX = 3;
+		frameY = 0;
 		timer++;
 		if (timer > 50) {
-			IMAGEMANAGER->findImage("boss")->setFrameX(2);
+			frameX = 2;
 		}
 		break;
 	}
@@ -619,11 +619,11 @@ void boss::niddle()
 		boss.bossState = NIDDLE;
 		jumpMotion = false;
 		timer = 0;
-		index = 4;
+		frameX = 4;
 	}
 
 	if (boss.bossState == NIDDLE && jumpMotion) {
-		if (index == 1) {
+		if (frameX == 1) {
 			if (boss.rc.bottom < 0) {
 				boss.rc = RectMakeCenter(WINSIZEX / 2, WINSIZEY / 2 - WINSIZEY, 150, 150);
 			}
@@ -632,7 +632,7 @@ void boss::niddle()
 				boss.rc.bottom -= 50;
 			}
 		}
-		else if (index == 2) {
+		else if (frameX == 2) {
 			if (boss.rc.bottom <= WINSIZEY / 2 + 75) {
 				boss.rc.top += 50;
 				boss.rc.bottom += 50;
