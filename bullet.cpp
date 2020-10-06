@@ -652,7 +652,7 @@ void RagingInferno::render()
 		//CAMERAMANAGER->Ellipse(getMemDC(), inferno.rc);
 	}
 	if (gaugeTime >= 60 && isFire)
-	{ 
+	{
 		CAMERAMANAGER->FrameRender(getMemDC(), dummy, tail.left, tail.top, index, 0);
 	}
 }
@@ -684,6 +684,15 @@ void RagingInferno::move(float range)
 			inferno.x = inferno.x + cosf(inferno.angle) * 20.0f;
 			inferno.y = inferno.y - sinf(inferno.angle) * 20.0f;
 			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
+
+			if (gaugeTime % 3 == 0) PARTICLE0->pointGenerate(inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);
+		}
+
+		if (gaugeTime == 70)
+		{
+			PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 100, 3, 3.f, 0.8f, 10);
+			PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 100, 5, 5.f, 0.7f, 10);
+			PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 100, 7, 7.f, 0.6f, 10);
 		}
 
 		if (gaugeTime >= 70)
