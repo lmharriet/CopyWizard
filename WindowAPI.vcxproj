@@ -153,6 +153,7 @@
     <ClInclude Include="cameraManager.h" />
     <ClInclude Include="colorNode.h" />
     <ClInclude Include="commonMacroFunction.h" />
+    <ClInclude Include="damageManager.h" />
     <ClInclude Include="dropManager.h" />
     <ClInclude Include="effectManager.h" />
     <ClInclude Include="enemyManager.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="bossScene.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="cameraManager.cpp" />
+    <ClCompile Include="damageManager.cpp" />
     <ClCompile Include="dropManager.cpp" />
     <ClCompile Include="effectManager.cpp" />
     <ClCompile Include="enemyManager.cpp" />

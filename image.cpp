@@ -432,6 +432,78 @@ void image::stretchRender(HDC hdc, int destX, int destY, float scale)
 	}
 }
 
+void image::stretchFrameRender(HDC hdc, int destX, int destY,int currentFrameX, int currentFrameY, float scale)
+{
+	//이미지 예외처리
+	_imageInfo->currentFrameX = currentFrameX;
+	_imageInfo->currentFrameY = currentFrameY;
+	if (currentFrameX > _imageInfo->maxFrameX)
+	{
+		_imageInfo->currentFrameX = _imageInfo->maxFrameX;
+	}
+	if (currentFrameY > _imageInfo->maxFrameY)
+	{
+		_imageInfo->currentFrameY = _imageInfo->maxFrameX;
+	}
+
+	if (!_stretchImage) this->initForStretchBlend();
+
+	if (_isTrans) //배경색 없애고 출력
+	{
+		//BitBlt(_stretchImage->hMemDC, 0, 0, _imageInfo->frameWidth * scale, _imageInfo->frameHeight * scale,
+		//	hdc, destX, destY, SRCCOPY);
+		BitBlt(_stretchImage->hMemDC, 0, 0, _imageInfo->frameWidth * scale + destX, _imageInfo->frameHeight * scale + destY,
+			hdc, 0, 0, SRCCOPY);
+
+		// 먼저 늘이거나 줄이고
+		StretchBlt(
+			_stretchImage->hMemDC,
+			0,
+			0,
+			_imageInfo->frameWidth * scale,
+			_imageInfo->frameHeight * scale,
+			_imageInfo->hMemDC,
+			0, 0,
+			_imageInfo->frameWidth,
+			_imageInfo->frameHeight,
+			SRCCOPY
+		);
+		/*
+		* 	GdiTransparentBlt(
+			hdc,						//복사할 장소의 DC
+			destX,						//복사할 좌표 시작X
+			destY,						//복사할 좌표 시작Y
+			_imageInfo->frameWidth,		//복사할 이미지 가로크기
+			_imageInfo->frameHeight,	//복사할 이미지 세로크기
+			_imageInfo->hMemDC,			//복사될 대상 DC
+			_imageInfo->currentFrameX * _imageInfo->frameWidth,		//복사될 대상의 시작지점
+			_imageInfo->currentFrameY * _imageInfo->frameHeight,	//복사될 대상의 시작지점			
+			_imageInfo->frameWidth,		//복사 영역 가로크기
+			_imageInfo->frameHeight,	//복사 영역 세로크기
+			_transColor);				//복사할때 제외할 색상 (일반적으로 마젠타 색상을 사용함)
+		*/
+
+		// 그 뒤에 투명화한다
+		GdiTransparentBlt(
+			hdc,
+			destX,
+			destY,
+			_imageInfo->frameWidth * scale,
+			_imageInfo->frameHeight * scale,
+			_stretchImage->hMemDC,
+			_imageInfo->currentFrameX * _imageInfo->frameWidth,
+			_imageInfo->currentFrameY * _imageInfo->frameHeight,
+			_imageInfo->frameWidth * scale,
+			_imageInfo->frameHeight * scale,
+			_transColor);
+	}
+	else//원본 이미지 그대로 출력
+	{
+		StretchBlt(hdc, destX, destY, _imageInfo->width * scale, _imageInfo->height * scale,
+			_imageInfo->hMemDC, 0, 0, _imageInfo->width, _imageInfo->height, SRCCOPY);
+	}
+}
+
 
 void image::alphaRender(HDC hdc, BYTE alpha)
 {
@@ -669,6 +741,46 @@ void image::frameRender(HDC hdc, int destX, int destY, int currentFrameX, int cu
 			destY,                        //복사할 좌표 시작Y
 			scale.right - scale.left,    //복사할 이미지 가로크기
 			scale.right - scale.left,    //복사할 이미지 세로크기
+			_imageInfo->hMemDC,            //복사될 대상 DC
+			_imageInfo->currentFrameX * _imageInfo->frameWidth,     //복사될 대상의 시작지점
+			_imageInfo->currentFrameY * _imageInfo->frameHeight,    //복사될 대상의 시작지점
+			_imageInfo->frameWidth,        //복사 영역 가로크기
+			_imageInfo->frameHeight,    //복사 영역 세로크기
+			_transColor);                //복사할때 제외할 색상 (일반적으로 마젠타 색상을 사용함)
+	}
+	else//원본 이미지 그대로 출력
+	{
+		BitBlt(hdc, destX, destY, _imageInfo->frameWidth, _imageInfo->frameHeight,
+			_imageInfo->hMemDC,
+			_imageInfo->currentFrameX * _imageInfo->frameWidth,
+			_imageInfo->currentFrameY * _imageInfo->frameHeight, SRCCOPY);
+	}
+}
+
+void image::frameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float scale)
+{
+	//if (!_stretchImage) this->initForStretchBlend();
+
+	//이미지 예외처리
+	_imageInfo->currentFrameX = currentFrameX;
+	_imageInfo->currentFrameY = currentFrameY;
+	if (currentFrameX > _imageInfo->maxFrameX)
+	{
+		_imageInfo->currentFrameX = _imageInfo->maxFrameX;
+	}
+	if (currentFrameY > _imageInfo->maxFrameY)
+	{
+		_imageInfo->currentFrameY = _imageInfo->maxFrameX;
+	}
+
+	if (_isTrans)//배경색 없애고 출력
+	{
+		GdiTransparentBlt(
+			hdc,                        //복사할 장소의 DC
+			destX,                        //복사할 좌표 시작X
+			destY,                        //복사할 좌표 시작Y
+			_imageInfo->frameWidth * scale,    //복사할 이미지 가로크기
+			_imageInfo->frameHeight * scale,    //복사할 이미지 세로크기
 			_imageInfo->hMemDC,            //복사될 대상 DC
 			_imageInfo->currentFrameX * _imageInfo->frameWidth,     //복사될 대상의 시작지점
 			_imageInfo->currentFrameY * _imageInfo->frameHeight,    //복사될 대상의 시작지점

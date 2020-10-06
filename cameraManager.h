@@ -84,8 +84,9 @@ public:
 	void FrameRender(HDC hdc, image* ig, int destX, int destY, int frameX, int frameY);
 	void AlphaFrameRender(HDC hdc, image* ig, int destX, int destY, int frameX, int frameY, BYTE alpha);
 
+	void StretchFrameRender(HDC hdc, image* ig, int destX, int destY, int frameX, int frameY, float scale);
+
 	void TextDraw(HDC hdc, int destX, int destY, LPCSTR lpstring, int c);
-	void StretchRender(HDC hdc, image* ig, int destX, int destY, float scale);
 	void AlphaRender(HDC hdc, image* ig, int destX, int destY, BYTE alpha);
 	void MovePivot(float x, float y);
 	void MovePivotLerp(float x, float y, float lerpSpeed = 10.f);
