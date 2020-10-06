@@ -32,6 +32,7 @@ private:
 	float posX, posY;
 	float attackAngle;
 	float saveAngle ;
+	float saveAngle2 ;
 
 
 	int angleTenth;
@@ -39,6 +40,7 @@ private:
 	int hp;
 
 	int stateCool;
+	int infernoStateCool;
 	int meteorStateCool;
 	int dashCount,dashIndex;
 	int atkCount, atkIndex;
@@ -89,11 +91,14 @@ public:
 	void frameAnimation(int frameX, int frameY);
 	void changeState();
 
+
+	//»ç¸Á ÆÇÁ¤
+	void death();
+
 	void buttonDown();
 	void viewText();
 
-	//»ç¸Á ÆÇÁ¤
-	void death(int _hp);
+
 
 
 
