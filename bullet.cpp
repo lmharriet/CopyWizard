@@ -264,7 +264,7 @@ void bomb::move()
 		float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY, _vBullet[i].x, _vBullet[i].y);
 		if (_range < distance)
 		{
-			PARTICLE->explosionGenerate(_vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3);
+			PARTICLE->explosionGenerate("explosionParticle",_vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3);
 			//_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
 			_vBullet[i].collision = true;
 			cout << i << " : " << _vBullet[i].collision << '\n';
@@ -705,11 +705,8 @@ void RagingInferno::move(int gaugeTime)
 		}
 		if (inferno.lifeTime == 0)
 		{
-			PARTICLE->explosionGenerate(inferno.x, inferno.y, 18, 1.f, 4.f, 9);
-			PARTICLE->explosionGenerate(inferno.x, inferno.y, 15, 1.f, 3.f, 7);
-			PARTICLE->explosionGenerate(inferno.x, inferno.y, 12, 1.f, 2.f, 5);
-			PARTICLE->explosionGenerate(inferno.x, inferno.y, 9, 1.f, 3.f, 4);
-			PARTICLE->explosionGenerate(inferno.x, inferno.y, 6, 1.f, 4.f, 2);
+			PARTICLE->explosionParticlePlay(inferno.x, inferno.y);
+
 			inferno.x = inferno.fireX;
 			inferno.y = inferno.fireY;
 			isFire = false;

@@ -19,8 +19,26 @@ void particleManager::render(HDC hdc)
 
 		vParticle[i].time++;
 		//이동
-		vParticle[i].x += cosf(vParticle[i].angle) * vParticle[i].speed;
-		vParticle[i].y -= sinf(vParticle[i].angle) * vParticle[i].speed;
+		if (vParticle[i].isBack == false)
+		{
+			vParticle[i].x += cosf(vParticle[i].angle) * vParticle[i].speed;
+			vParticle[i].y -= sinf(vParticle[i].angle) * vParticle[i].speed;
+		}
+
+		if (vParticle[i].isBack == true && vParticle[i].backTime > 0)
+		{
+			vParticle[i].backTime--;
+
+			vParticle[i].x += cosf(vParticle[i].angle) * vParticle[i].speed;
+			vParticle[i].y -= sinf(vParticle[i].angle) * vParticle[i].speed;
+		}
+		else
+		{
+			float angle = getAngle(vParticle[i].x, vParticle[i].y, PLAYERDATA->getX(), PLAYERDATA->getY());
+
+			vParticle[i].x += cosf(angle) * vParticle[i].speed * 1.3f;
+			vParticle[i].y -= sinf(angle) * vParticle[i].speed * 1.3f;
+		}
 
 		CAMERAMANAGER->FrameRender(hdc, img, 
 			vParticle[i].x - img->getFrameWidth()/2,
@@ -60,7 +78,7 @@ void particleManager::pointGenerate(string keyName,float x, float y, int CreateD
 	vParticlePoint.push_back(particlePoint);
 }
 
-void particleManager::explosionGenerate(float x, float y, int maxAngle, float radius, float particleSpeed, int frameDelay)
+void particleManager::explosionGenerate(string keyName ,float x, float y, int maxAngle, float radius, float particleSpeed, int frameDelay, bool isBack)
 {
 	tagParticlePoint particlePoint;
 	particlePoint.x = x;
@@ -71,9 +89,11 @@ void particleManager::explosionGenerate(float x, float y, int maxAngle, float ra
 	particlePoint.particleSpeed = particleSpeed;
 	particlePoint.frameDelay = frameDelay;
 
+	particlePoint.keyName = keyName;
+	particlePoint.isBack = isBack;
+
 	vExplosion.push_back(particlePoint);
 }
-
 
 void particleManager::pointActive()
 {
@@ -122,7 +142,7 @@ void particleManager::explosionActive()
 			float speed = vExplosion[i].particleSpeed + RANDOM->range(-1.f, 1.f);
 			float delay = vExplosion[i].frameDelay + RANDOM->range(0, 4);
 
-			generate("explosionParticle", vExplosion[i].x, vExplosion[i].y, angle, delay, speed);
+			generate(vExplosion[i].keyName, vExplosion[i].x, vExplosion[i].y, angle, delay, speed, vExplosion[i].isBack, 35);
 		}
 
 		//제거
@@ -131,7 +151,7 @@ void particleManager::explosionActive()
 	}
 }
 
-void particleManager::generate(string keyName ,float x, float y, float angle, int delay, float speed)
+void particleManager::generate(string keyName, float x, float y, float angle, int delay, float speed, bool isBack, int backTime)
 {
 	tagParticle particle;
 
@@ -149,6 +169,27 @@ void particleManager::generate(string keyName ,float x, float y, float angle, in
 	particle.frameX = 0;
 	particle.maxFrameX = img->getMaxFrameX();
 	particle.frameY = RANDOM->range(0, img->getMaxFrameY());
+
+	particle.isBack = isBack;
+	particle.backTime = backTime;
 	
 	vParticle.push_back(particle);
+}
+
+void particleManager::potionParticlePlay(float x, float y)
+{
+	PARTICLE->explosionGenerate("healBallParticle", x, y, 15, 1.f, 4.f, 15, true);
+	PARTICLE->explosionGenerate("healBallParticle", x, y, 12, 1.f, 3.f, 13, true);
+	PARTICLE->explosionGenerate("healBallParticle", x, y, 9, 1.f, 2.f, 11, true);
+	PARTICLE->explosionGenerate("healBallParticle", x, y, 6, 1.f, 3.f, 9, true);
+	PARTICLE->explosionGenerate("healBallParticle", x, y, 3, 1.f, 4.f, 7, true);
+}
+
+void particleManager::explosionParticlePlay(float x, float y)
+{
+	PARTICLE->explosionGenerate("explosionParticle", x, y, 18, 1.f, 4.f, 9);
+	PARTICLE->explosionGenerate("explosionParticle", x, y, 15, 1.f, 3.f, 7);
+	PARTICLE->explosionGenerate("explosionParticle", x, y, 12, 1.f, 2.f, 5);
+	PARTICLE->explosionGenerate("explosionParticle", x, y, 9, 1.f, 3.f, 4);
+	PARTICLE->explosionGenerate("explosionParticle", x, y, 6, 1.f, 4.f, 2);
 }

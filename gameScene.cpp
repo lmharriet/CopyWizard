@@ -44,6 +44,9 @@ void gameScene::release()
 
 void gameScene::update()
 {
+	PLAYERDATA->setX(_player->getX());
+	PLAYERDATA->setY(_player->getY());
+
 	atkCount++;
 	collisionTile();
 	_player->setTileAd0(vTile);
@@ -61,35 +64,13 @@ void gameScene::update()
 	//checkArea = RectMakeCenter(_player->getX(), _player->getY(), 400, 400);
 	checkArea = RectMake(_player->getX() - 100, _player->getY() - WINSIZEY / 2 + 420, 200, 500);
 
-	//if (INPUT->GetKeyDown(VK_SPACE))PARTICLE->init(
-	//	_player->getX(),
-	//	_player->getY(),
-	//	50);
-
 	if (INPUT->GetKeyDown(VK_BACK))
 	{
-		//PARTICLE->pointGenerate(_player->getX(), _player->getY(), 0, 0, 0, 5, 60);
-		DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, 17);
-		//PARTICLE->pointGenerate()
+		PARTICLE->potionParticlePlay(_player->getX(), _player->getY());
 	}
+
 	PARTICLE->pointActive();
 	PARTICLE->explosionActive();
-
-	/*if (INPUT->GetKeyDown(VK_BACK))PARTICLE->resetPoint();*/
-
-
-	//col check ( player -> minion )
-
-	//for (int i = 0; i < enemy->getMinion().size(); i++)
-	//{
-	//	if (enemy->getMinion()[i]->getFind() == true)continue;
-
-	//	if (colCheck(_player->getRect(), enemy->getMinion()[i]->getArea()))
-	//	{
-	//		cout << i << "번 째 몬스터가 플레이어를 감지했다 !" << '\n';
-	//		enemy->getMinion()[i]->setFind(true);
-	//	}
-	//}
 
 	//enemy->minionBulletFire(_player->getX(), _player->getY());
 	enemy->collision(_player->getRect());
@@ -301,7 +282,7 @@ void gameScene::playerAttack()
 			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRC()))
 			{
 
-				PARTICLE->explosionGenerate(_player->getBlaze()->getBullet()[i].x + 20,
+				PARTICLE->explosionGenerate("explosionParticle",_player->getBlaze()->getBullet()[i].x + 20,
 					_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1);
 				enemy->getMinion()[j]->hit(_player->getBlaze()->getBullet()[i].atkPower,
 					_player->getBlaze()->getBullet()[i].angle, 20.f, 0);
