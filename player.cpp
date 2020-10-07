@@ -45,7 +45,7 @@ HRESULT player::init()
 	//attack type
 	basic = standard = signature = false;
 
-	speed = 0;
+	speed = gaugeTime=0;
 	atkCount = atkIndex = index = dashIndex = count = dashCount = 0;
 	stateCool = infernoStateCool = meteorStateCool = 0;
 
@@ -92,7 +92,7 @@ void player::update()
 	searingRush->update();
 
 
-	inferno->update(100);
+	inferno->update(100,gaugeTime);
 
 	inven->update();
 	//animation count
@@ -100,6 +100,7 @@ void player::update()
 	dashCount++;
 	atkCount++;
 
+	gaugeTime++;
 	// angle(mouse-player), angleTenth
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
@@ -150,13 +151,16 @@ void player::other_update()
 	Meteor->update();
 	searingRush->update();
 
-	inferno->update(100);
+	inferno->update(100,gaugeTime);
 
 	inven->update();
 	//animation count
 	count++;
 	dashCount++;
 	atkCount++;
+
+	gaugeTime++;
+
 	// angle(mouse-player), angleTenth
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
@@ -458,10 +462,17 @@ void player::blazeSetUp()
 
 void player::standardSetUp()
 {
+	if (INPUT->GetKeyDown(VK_RBUTTON))
+	{
+		standard = true;
+	}
+	else standard = false;
 	if (standard && infernoStateCool == 0)
 	{
 		inferno->fire(posX, posY, attackAngle);
 	}
+		
+	
 }
 
 void player::signatureSetUp()
@@ -475,7 +486,6 @@ void player::signatureSetUp()
 		//Meteor->meteorFire(posX + RANDOM->range(-150, 150), posY + RANDOM->range(-150, 150), 600, move, dRange);
 		//Meteor->meteorFire(posX - RANDOM->range(-150, 150), posY - RANDOM->range(-150, 150), 600, move, dRange);
 		Meteor->meteorUltFire(posX, posY, 600, move, 55);
-
 
 	}
 	if (meteorStateCool > 0)
@@ -860,8 +870,8 @@ void player::buttonDown()
 	else isDown = false;
 
 	//Attack
-	if (INPUT->GetKeyDown(VK_RBUTTON)) standard = true;
-	else standard = false;
+	//if (INPUT->GetKeyDown(VK_RBUTTON)) standard = true;
+	//else standard = false;
 	if (INPUT->GetKeyDown('Q'))	signature = true;
 	else signature = false;
 
@@ -879,30 +889,6 @@ void player::viewText()
 
 	wsprintf(str, "state : %d", state);
 	textOut(getMemDC(), 100, 250, str, WHITE);
-
-
-	//for (int i = 0; i < 8; i++)
-	//{
-	//	if (i < 4)
-	//	{
-	//		CAMERAMANAGER->Rectangle(getMemDC(), diagonalCheck[i].rc);
-	//	}
-
-	//	CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i].rc);
-	//}
-
-	/*wsprintf(str, "meteorCool : %d", meteorStateCool);
-	textOut(getMemDC(), 10, 200, str, WHITE);
-
-	wsprintf(str, "signatureCool  : %d", signatureCool);
-	textOut(getMemDC(), 10, 220, str, WHITE);
-
-	if (state == STATE::SIGNATURE)
-	{
-		wsprintf(str, "player state: %d ", state);
-		textOut(getMemDC(), 10, 250, str, WHITE);
-
-	}*/
 
 }
 

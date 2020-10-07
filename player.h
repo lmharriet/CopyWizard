@@ -37,7 +37,8 @@ private:
 
 	int angleTenth;
 	int speed;
-	int hp;
+	int gaugeTime;
+
 
 	int stateCool;
 	int infernoStateCool;
@@ -97,9 +98,6 @@ public:
 
 	void buttonDown();
 	void viewText();
-
-
-
 
 
 	//getter ,setter

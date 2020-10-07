@@ -222,7 +222,7 @@ void bomb::render()
 			_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth() / 2),
 			_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight() / 2), index, 0);
 
-		//		CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 20, 20));
+				CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 20, 20));
 
 	}
 
@@ -247,7 +247,6 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	bullet.angle = angle;
 	bullet.radius = radius;
 	bullet.atkPower = 12;
-	bullet.skillType = 0;
 	bullet.collision = false;
 	bullet.rc = RectMakeCenter(bullet.x, bullet.y, radius * 2, radius * 2);
 
@@ -266,7 +265,7 @@ void bomb::move()
 		if (_range < distance)
 		{
 			PARTICLE0->explosionGenerate(_vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3);
-
+			//_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
 			_vBullet[i].collision = true;
 			cout << i << " : " << _vBullet[i].collision << '\n';
 		}
@@ -336,7 +335,6 @@ void meteor::meteorFire(float x, float y, float speed, MOVE dir, float range)
 
 	tagArcana meteor;
 	meteor.range = range;
-	meteor.skillType = 1;
 	switch (dir)
 	{
 	case MOVE::LEFT:
@@ -556,11 +554,7 @@ void dashFire::release()
 
 void dashFire::update()
 {
-	for (int i = 0; i < _vDash.size(); i++)
-	{
-		if (_vDash[i].Collision) _vDash[i].atkPower = 4;
-		else _vDash[i].atkPower = 0;
-	}
+	
 }
 
 void dashFire::render()
@@ -622,8 +616,7 @@ void dashFire::fire(float x, float y)
 	dash.y = y;
 	dash.frameX = 0;
 	dash.lifeTime = 0;
-	dash.skillType = 2;
-	dash.Collision = false;
+	dash.atkPower = 7;
 	_vDash.push_back(dash);
 }
 
@@ -631,7 +624,6 @@ void dashFire::fire(float x, float y)
 
 HRESULT RagingInferno::init()
 {
-	gaugeTime = 0;
 	range = distance = 0;
 	index = count = 0;
 
@@ -644,26 +636,23 @@ void RagingInferno::release()
 {
 }
 
-void RagingInferno::update(float range)
+void RagingInferno::update(float range,  int gaugeTime)
 {
 	count++;
-	gaugeTime++;
 
 	if (count % 3 == 0)
 	{
 		index++;
 		if (index > 2) index = 0;
-
 	}
 
 	distance = getDistance(inferno.x, inferno.y, inferno.fireX, inferno.fireY);
 
-	move(range);
+	move(range, gaugeTime);
 }
 
 void RagingInferno::render()
 {
-
 	if (isFire)
 	{
 		CAMERAMANAGER->FrameRender(getMemDC(), inferno.img,
@@ -671,7 +660,6 @@ void RagingInferno::render()
 			inferno.y - (inferno.img->getFrameHeight() / 2), index, 0);
 		//CAMERAMANAGER->Ellipse(getMemDC(), inferno.rc);
 	}
-
 }
 
 void RagingInferno::fire(float x, float y, float angle)
@@ -683,16 +671,14 @@ void RagingInferno::fire(float x, float y, float angle)
 	inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
 	inferno.lifeTime = 100;
 	inferno.atkPower = 30;
-	inferno.skillType = 3;
 	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
 	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
 	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
 
 	isFire = true;
 
-	gaugeTime = 0;
 }
-void RagingInferno::move(float range)
+void RagingInferno::move(float range, int gaugeTime)
 {
 	if (isFire)
 	{

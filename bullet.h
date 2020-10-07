@@ -15,7 +15,6 @@ struct tagBullet
 	int count;
 	int atkPower;
 
-	int skillType;
 	bool fire;
 	bool collision;
 	int FrameX;
@@ -35,7 +34,6 @@ struct tagArcana
 
 	int lifeTime;
 	int atkPower;
-	int skillType;
 
 	int frameX;
 	int frameY;
@@ -162,7 +160,7 @@ public:
 	void meteorUlt();
 	void meteorUltFire(float x, float y, float speed, MOVE dir, float range);
 	void move();
-
+	int getSkillNum() { return 1; }
 
 	bool getCol() { return isCol; }
 
@@ -192,10 +190,9 @@ public:
 	RECT getRect(int index) { return _vDash[index].rc; }
 	int getSize() { return _vDash.size(); }
 	int getAtk(int index) { return _vDash[index].atkPower; }
+	int getSkillNum() { return 2; }
 	float getY(int index) { return _vDash[index].y; }
-	bool getCol(int index) { return _vDash[index].Collision; }
 
-	void setCol(int index, bool temp) { _vDash[index].Collision = temp; }
 	
 };
 
@@ -209,23 +206,21 @@ private:
 
 	float range;
 	float distance;
-	int gaugeTime;
 	int index, count;
 	bool isFire;
 public:
 	HRESULT init();
 	void release();
-	void update(float range);
+	void update(float range, int gaugeTime);
 	void render();
 	void fire(float x, float y,float angle);
-	void move(float range);
-
+	void move(float range, int gaugeTime);
+	int getSkillNum() { return 3; }
 
 	//getter , setter
 	bool getFire() { return isFire; }
 	bool getCol() { return inferno.Collision; }
-	int getGaugeTime() { return gaugeTime; }
-	
+
 };
 
 

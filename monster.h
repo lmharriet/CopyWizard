@@ -12,6 +12,14 @@ struct tagPlayer  //나중에 버릴 것
 	float angle;
 
 };
+
+struct tagHit
+{
+	int skillNum;
+	int currentTime;
+	int endTime;
+};
+
 class astarManager
 {
 private:
@@ -71,7 +79,6 @@ enum  STATEIMAGE {
 	STATEMAX
 };
 
-
 enum  ATKDIRECTION {
 	UP,
 	DOWN,
@@ -86,7 +93,6 @@ enum class MONSTERKIND {
 	KNIGHT,
 	SUMMONER,
 };
-
 
 class monster : public gameNode
 {
@@ -134,9 +140,7 @@ protected:
 	RECT playerRC;
 	RECT camRC;
 
-	 
-	
-
+	vector<tagHit> vHit;
 public:
 	HRESULT init(tagTile* tile, const char* fileName, POINT _pos, float _speed, MONSTERKIND _kind,
 		int _hp,  const char* skillImgName,  bool _isKnockBack = true, bool isLongAtk = false);
@@ -174,7 +178,11 @@ public:
 	inline void setBulletFire(bool isFire) { isBulletFire = isFire; }
 	inline void setBulletEmpty(bool isEmpty) { isBulletEmpty = isEmpty; }
 	
-	void hit(int damage, float _hitAngle, float _knockBack);
+	void hit(int damage, float _hitAngle, float _knockBack, int skillNum);
+	bool hitCheck(int skillNum);
+
+	void hitCul();
+
 	void coinDrop(int min, int max);
 	void die();
 };

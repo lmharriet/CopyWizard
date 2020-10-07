@@ -395,14 +395,14 @@ void monster::commonUpdate()
 			pos.y += -sin(hitAngle) * knockBack*0.25;
 		}
 
-		if (hitTime % 4 == 0)
+		if (hitTime % 6 == 0)
 		{
 			isHit = false;
 			hitTime = 0;
 		}
 	}
 	
-
+	hitCul();
 
 	cul.x = CAMERAMANAGER->GetRelativeX(pos.x);
 	cul.y = CAMERAMANAGER->GetRelativeY(pos.y);
@@ -410,8 +410,10 @@ void monster::commonUpdate()
 	die();
 }
 
-void monster::hit(int damage , float _hitAngle, float _knockBack)
+void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum)
 {
+	if (hitCheck(skillNum) == false)return;
+
 	POINT pt = { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 };
 
 	EFFECT->damageEffect(pt);
@@ -427,6 +429,54 @@ void monster::hit(int damage , float _hitAngle, float _knockBack)
 
 	isHit = true;
 
+}
+
+bool monster::hitCheck(int skillNum)
+{
+	for (int i = 0; i < vHit.size(); i++)
+	{
+		if (vHit[i].skillNum == skillNum)return false;
+	}
+
+	tagHit hit;
+	hit.skillNum = skillNum;
+	hit.currentTime = 0;
+	switch (hit.skillNum)
+	{
+	case 0:
+		hit.endTime = 2;
+		break;
+	case 1:
+		hit.endTime = 10;
+		break;
+	case 2:
+		hit.endTime = 15;
+		break;
+	case 3:
+		hit.endTime = 5;
+		break;
+	}
+	vHit.push_back(hit);
+
+	return true;
+}
+
+void monster::hitCul()
+{
+	for (int i = 0; i < vHit.size(); )
+	{
+		//삭제 확인
+		if (vHit[i].currentTime == vHit[i].endTime)
+		{
+			vHit.erase(vHit.begin() + i);
+		}
+		else
+		{
+			vHit[i].currentTime++;
+			i++;
+		}
+
+	}
 }
 
 void monster::coinDrop(int min, int max)

@@ -29,10 +29,10 @@ HRESULT mainGame::init()
 	maptool->addImage();
 	/*현재씬*/
 
-	//SCENEMANAGER->loadScene("인게임");
+	SCENEMANAGER->loadScene("인게임");
 	//SCENEMANAGER->loadScene("시작화면");
 	//SCENEMANAGER->loadScene("맵툴제작");
-	SCENEMANAGER->loadScene("보스방");
+	//SCENEMANAGER->loadScene("보스방");
 
 	ShowCursor(false);
 	return S_OK;

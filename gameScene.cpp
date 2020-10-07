@@ -304,13 +304,14 @@ void gameScene::playerAttack()
 				PARTICLE0->explosionGenerate(_player->getBlaze()->getBullet()[i].x + 20,
 					_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1);
 				enemy->getMinion()[j]->hit(_player->getBlaze()->getBullet()[i].atkPower,
-					_player->getBlaze()->getBullet()[i].angle, 20.f);
-				
+					_player->getBlaze()->getBullet()[i].angle, 20.f, 0);
+
 				/*EFFECT->setEffect("flameStrike",
 					{ (long)_player->getBlaze()->getBullet()[i].x
 					,(long)_player->getBlaze()->getBullet()[i].y });*/
 
 				_player->getBlaze()->setCol(i, true);
+
 				break;
 
 			}
@@ -325,7 +326,9 @@ void gameScene::playerAttack()
 			if (colCheck(_player->getMeteor()->getMeteorVec()[i].rc, enemy->getMinion()[j]->getRC()))
 			{
 				enemy->getMinion()[j]->hit(_player->getMeteor()->getMeteorVec()[i].atkPower,
-					_player->getMeteor()->getMeteorVec()[i].angle, 30.f);
+					_player->getMeteor()->getMeteorVec()[i].angle, 30.f, _player->getMeteor()->getSkillNum());
+
+
 				break;
 			}
 		}
@@ -339,13 +342,11 @@ void gameScene::playerAttack()
 			if (colCheck(_player->getDashFire()->getRect(i), enemy->getMinion()[j]->getRC()))
 			{
 				if (0 >= enemy->getMinion()[j]->getHp())continue;
-				if (atkCount % 30 == 0)
-				{
-					_player->getDashFire()->setCol(i, true);
 
-					enemy->getMinion()[j]->hit(_player->getDashFire()->getAtk(i),
-						70.f, 20.f);
-				}
+				enemy->getMinion()[j]->hit(_player->getDashFire()->getAtk(i),
+					70.f, 20.f, _player->getDashFire()->getSkillNum());
+
+
 			}
 		}
 	}
