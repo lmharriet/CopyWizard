@@ -3,7 +3,7 @@
 
 HRESULT dropManager::init()
 {
-    IMAGEMANAGER->addFrameImage("coin", "Images/item/coinX2.bmp", 80, 40, 4, 2);
+    IMAGEMANAGER->addFrameImage("coin", "Images/item/coinV3.bmp", 80, 60, 4, 3);
     dtime = 0;
     return S_OK;
 }
@@ -22,7 +22,7 @@ void dropManager::render(HDC hdc)
     {
         CAMERAMANAGER->FrameRender(hdc, IMAGEMANAGER->findImage("coin"), iter->pt.x, iter->pt.y, iter->currentFrameX, iter->frameY);
 
-        if (dtime % 5 == 0)
+        if (dtime % 8 == 0)
         {
             iter->currentFrameX++;
         }
