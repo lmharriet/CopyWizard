@@ -19,8 +19,7 @@ HRESULT gameScene::init()
 	checkArea = RectMakeCenter(WINSIZEX / 2, WINSIZEY / 2, 100, 100);
 	CAMERAMANAGER->init(_player->getX(), _player->getY(), MAXTILE, MAXTILE, -MAXTILE, -MAXTILE, WINSIZEX / 2, WINSIZEY / 2);
 
-	//PARTICLE->init();
-	PARTICLE0->init();
+	PARTICLE->init();
 	EFFECT->init();
 
 	enemy = new enemyManager;
@@ -72,8 +71,8 @@ void gameScene::update()
 		//PARTICLE->pointGenerate(_player->getX(), _player->getY(), 0, 0, 0, 5, 60);
 		DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, 17);
 	}
-	PARTICLE0->pointActive();
-	PARTICLE0->explosionActive();
+	PARTICLE->pointActive();
+	PARTICLE->explosionActive();
 
 	/*if (INPUT->GetKeyDown(VK_BACK))PARTICLE->resetPoint();*/
 
@@ -260,7 +259,7 @@ void gameScene::render()
 		}
 	}
 	//PARTICLE->render(getMemDC(), CAMERAMANAGER->getRect());
-	PARTICLE0->render(getMemDC());
+	PARTICLE->render(getMemDC());
 	EFFECT->render(getMemDC());
 	EFFECT->dRender(getMemDC());
 
@@ -301,7 +300,7 @@ void gameScene::playerAttack()
 			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRC()))
 			{
 
-				PARTICLE0->explosionGenerate(_player->getBlaze()->getBullet()[i].x + 20,
+				PARTICLE->explosionGenerate(_player->getBlaze()->getBullet()[i].x + 20,
 					_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1);
 				enemy->getMinion()[j]->hit(_player->getBlaze()->getBullet()[i].atkPower,
 					_player->getBlaze()->getBullet()[i].angle, 20.f, 0);

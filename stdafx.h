@@ -62,7 +62,6 @@ using namespace MY_UTIL;
 #define CAMERAMANAGER cameraManager::getSingleton()
 #define TIME timeManager::getSingleton()
 #define PARTICLE particleManager::getSingleton()
-#define PARTICLE0 particleManager0::getSingleton()
 #define UI uiManager::getSingleton()
 #define EFFECT effectManager::getSingleton()
 #define ITEM itemManager::getSingleton()
