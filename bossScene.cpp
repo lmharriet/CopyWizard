@@ -19,7 +19,7 @@ HRESULT bossScene::init()
 
 	_boss = new boss;
 	_boss->init(752, 288);
-    //rc = RectMakeCenter(752, 288, 150, 150);
+    rc = RectMakeCenter(752, 288, 150, 150);
     area = RectMakeCenter(rc.left + (rc.right - rc.left) / 2, rc.top + (rc.bottom - rc.top) / 2, WINSIZEX, WINSIZEY);
 
     isBattle = false;
@@ -56,7 +56,9 @@ void bossScene::update()
     //cutScene check
     bossCutScene();
 
-	_boss->update();
+	if (isBattle) {
+		_boss->update();
+	}
 }
 
 void bossScene::bossCutScene()
@@ -72,7 +74,7 @@ void bossScene::bossCutScene()
             rc.top + (rc.bottom - rc.top) / 2,      // 목적 좌표 y
             true,                                   // 시작 -> 목적 isLerp?
             true,                                   // 목적 -> 시작 isLerp?
-            150,                                    // 컷씬 유지 시간
+			150,                                    // 컷씬 유지 시간
             50,                                     // 시작지점으로 되돌아오는 시간
             10.f                                    // lerp 속도
         );

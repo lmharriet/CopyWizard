@@ -8,7 +8,8 @@ HRESULT boss::init(int _posX, int _posY)
 	IMAGEMANAGER->addImage("punch", "resource/boss/0.bmp", 81, 87, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("drill", "resource/boss/1.bmp", 105, 156, 1, 2, true, RGB(255, 0, 255));
 
-	frameX = frameY = 0;
+	frameX = 0;
+	frameY = 5;
 
 	boss.bossState = RESPONE;
 
@@ -62,25 +63,19 @@ void boss::update()
 
 void boss::render()
 {
-	//IMAGEMANAGER->findImage("boss")->frameRender(getMemDC(), boss.rc.left, boss.rc.top);
 	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("boss"), boss.rc.left, boss.rc.top, frameX, frameY);
 
 	if (boss.bossState == DRILL) {
 		if (!leftCheck) {
-			//IMAGEMANAGER->findImage("drill")->setFrameY(0);
-			//IMAGEMANAGER->frameRender("drill", getMemDC(), drillBlcok.rc.left, drillBlcok.rc.top);
 			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("drill"), drillBlcok.rc.left, drillBlcok.rc.top, 0, 0);
 		}
 		else {
-			//IMAGEMANAGER->findImage("drill")->setFrameY(1);
-			//IMAGEMANAGER->frameRender("drill", getMemDC(), drillBlcok.rc.left, drillBlcok.rc.top);
 			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("drill"), drillBlcok.rc.left, drillBlcok.rc.top, 0, 1);
 		}
 	}
 
 	for (int i = 0; i < 3; i++) {
 		if (punching[i]) {
-			//IMAGEMANAGER->findImage("punch")->render(getMemDC(), block[i].rc.left, block[i].rc.top);
 			CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("punch"), block[i].rc.left, block[i].rc.top);
 		}
 	}
@@ -98,18 +93,17 @@ void boss::animation()
 		// 기둥 사라졌을때
 		frameY = 5;
 		count++;
+		timer++;
 		if (count % 10 == 0) {
-			if (frameX > 4) {
-				frameX = 4;
-				timer++;
-				if (timer > 15) {
-					frameX = 0;
-					count = 0;
-					timer = 0;
-					boss.bossState = BOSSIDLE;
-				}
+			if (frameX < 4) {
+				frameX++;
 			}
-			frameX++;
+		}
+		if (timer > 150) {
+			frameX = 0;
+			count = 0;
+			timer = 0;
+			boss.bossState = BOSSIDLE;
 		}
 		break;
 	case BOSSIDLE:
