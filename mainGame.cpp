@@ -29,9 +29,9 @@ HRESULT mainGame::init()
 	maptool->addImage();
 	/*현재씬*/
 
-	//SCENEMANAGER->loadScene("인게임");
+	SCENEMANAGER->loadScene("인게임");
 	//SCENEMANAGER->loadScene("시작화면");
-	SCENEMANAGER->loadScene("맵툴제작");
+	//SCENEMANAGER->loadScene("맵툴제작");
 	//SCENEMANAGER->loadScene("보스방");
 
 	ShowCursor(false);
@@ -80,8 +80,7 @@ void mainGame::render()
 	//씬매니져 렌더
 	SCENEMANAGER->render();
 	TIME->render(getMemDC());
-	//IMAGEMANAGER->findImage("cursor")->render(getMemDC(), _ptMouse.x - 32, _ptMouse.y - 32);
-	IMAGEMANAGER->findImage("cursor")->alphaRender(getMemDC(), _ptMouse.x - 32, _ptMouse.y - 32, 100);
+	IMAGEMANAGER->findImage("cursor")->render(getMemDC(), _ptMouse.x - 32, _ptMouse.y - 32);
 
 	
 //=============================================================

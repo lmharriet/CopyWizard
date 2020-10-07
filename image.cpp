@@ -383,9 +383,8 @@ void image::renderResize(HDC hdc, int destX, int destY, int sourWidth, int sourH
 	{
 		//BitBlt : DC간의 영역끼리 고속복사 해주는 함수
 		//메모리DC => 화면DC로 복사한다
-
-		StretchBlt(hdc, destX, destY, _imageInfo->width * scale, _imageInfo->height * scale,
-			_imageInfo->hMemDC, 0, 0, _imageInfo->width, _imageInfo->height, SRCCOPY);
+		BitBlt(hdc, destX, destY, sourWidth * scale, sourHeight * scale,
+			_imageInfo->hMemDC, sourWidth, sourHeight, SRCCOPY);
 	}
 }
 
