@@ -113,7 +113,7 @@ void boss::animation()
 		if (!jumpMotion) {
 			count++;
 			if (count % 10 == 0) {
-				if (frameX < 2) {
+				if (frameX <= 2) {
 					count = 0;
 					frameX = 2;
 					timer++;
@@ -121,9 +121,10 @@ void boss::animation()
 						jumpMotion = true;
 						timer = 0;
 						frameX = 0;
+						count = 0;
 					}
 				}
-				if (!jumpMotion) {
+				if (frameX > 2) {
 					frameX--;
 				}
 			}
@@ -132,13 +133,19 @@ void boss::animation()
 			frameY = 7;
 			count++;
 			if (count % 20 == 0) {
-				if (frameX > 2) {
+				if (frameX >= 2) {
 					count = 0;
-					frameX = 0;
-					jumpMotion = false;
-					boss.bossState = BOSSIDLE;
+					frameX = 2;
+					timer++;
+					if (timer > 2) {
+						timer = 0;
+						jumpMotion = false;
+						boss.bossState = BOSSIDLE;
+					}
 				}
-				frameX++;
+				else {
+					frameX++;
+				}
 			}
 		}
 		break;
@@ -436,7 +443,6 @@ void boss::animation()
 					frameX = 0;
 					jumpMotion = true;
 				}
-				IMAGEMANAGER->findImage("boss")->setFrameX(frameX);
 				if (!jumpMotion) {
 					frameX--;
 				}
@@ -446,12 +452,13 @@ void boss::animation()
 			frameY = 7;
 			count++;
 			if (count % 20 == 0) {
-				if (frameX > 2) {
+				if (frameX >= 2) {
 					count = 0;
 					frameX = 2;
 				}
-				IMAGEMANAGER->findImage("boss")->setFrameX(frameX);
-				frameX++;
+				else {
+					frameX++;
+				}
 			}
 		}
 		break;
@@ -514,6 +521,7 @@ void boss::jump()
 				boss.rc.bottom += 50;
 			}
 			else {
+				CAMERAMANAGER->Shake(10, 10, 3);
 				boss.center.x = boss.rc.left + 75;
 				boss.center.y = boss.rc.top + 75;
 			}
@@ -543,7 +551,7 @@ void boss::drill()
 	}
 
 	if (boss.bossState == DRILL && timer > 30) {
-		if (boss.rc.left > 0 && boss.rc.right < WINSIZEX && boss.rc.top > 0 && boss.rc.bottom < WINSIZEY) {
+		if (boss.rc.left > 100 && boss.rc.right < WINSIZEX + 100 && boss.rc.top > 100 && boss.rc.bottom < WINSIZEY) {
 			boss.center.x += cosf(boss.angle) * 30;
 			boss.center.y += -sinf(boss.angle) * 30;
 			boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
@@ -557,16 +565,16 @@ void boss::drill()
 		else {
 			count++;
 			if (count > 50) {
-				if (boss.rc.left <= 0) {
+				if (boss.rc.left <= 100) {
 					boss.center.x += 30;
 				}
-				else if (boss.rc.right >= WINSIZEX) {
+				else if (boss.rc.right >= WINSIZEX + 100) {
 					boss.center.x -= 30;
 				}
-				else if (boss.rc.top <= 0) {
+				else if (boss.rc.top <= 100) {
 					boss.center.y += 30;
 				}
-				else if (boss.rc.bottom >= WINSIZEY) {
+				else if (boss.rc.bottom >= WINSIZEY + 100) {
 					boss.center.y -= 30;
 				}
 				boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
@@ -599,8 +607,9 @@ void boss::punch()
 				block[i].center.x += cosf(block[i].angle) * 35;
 				block[i].center.y += -sinf(block[i].angle) * 35;
 				block[i].rc = RectMakeCenter(block[i].center.x, block[i].center.y, 100, 100);
+				CAMERAMANAGER->Shake(10, 10, 2);
 			}
-			if (block[i].rc.left > WINSIZEX || block[i].rc.right < 0 || block[i].rc.top > WINSIZEY || block[i].rc.bottom < 0) {
+			if (block[i].rc.left > WINSIZEX + 150|| block[i].rc.right < 100 || block[i].rc.top > WINSIZEY || block[i].rc.bottom < 150) {
 				punching[i] = false;
 			}
 		}
@@ -615,7 +624,7 @@ void boss::niddle()
 		timer = 0;
 		frameX = 4;
 	}
-
+	cout << count << endl;
 	if (boss.bossState == NIDDLE && jumpMotion) {
 		if (frameX == 1) {
 			if (boss.rc.bottom < 0) {
@@ -626,7 +635,7 @@ void boss::niddle()
 				boss.rc.bottom -= 50;
 			}
 		}
-		else if (frameX == 2) {
+		else if (frameX == 2 && !startNiddle) {
 			if (boss.rc.bottom <= WINSIZEY / 2 + 75) {
 				boss.rc.top += 50;
 				boss.rc.bottom += 50;
@@ -672,6 +681,8 @@ void boss::niddle()
 
 			niddleBlock[i].rc = RectMakeCenter(niddleBlock[i].center.x, niddleBlock[i].center.y, 20, 20);
 
+			CAMERAMANAGER->Shake(5, 5, 100);
+
 			if (timer > 400) {
 				timer = 0;
 				boss.bossState = BOSSIDLE;
@@ -713,10 +724,12 @@ void boss::wall()
 			_wall.blockCount = 0;
 			wallBlock.push_back(_wall);
 		}
+		this->bossPlayerAngle();
 	}
 
 	if (boss.bossState == WALL && timer > 50) {
 		count++;
+		CAMERAMANAGER->Shake(5, 5, 60);
 		if (count > 260) {
 			boss.bossState = BOSSIDLE;
 		}
@@ -725,19 +738,48 @@ void boss::wall()
 		}
 		for (int i = 0; i < wallBlock.size(); i++) {
 			wallBlock[i].blockCount++;
-			if (wallBlock[i].blockCount % 2 == 0 && wallBlock[i].type == -1) {
-				BOSSMANAGER->init(wallBlock[i].center.x + (leftCheck ? 130 : -130), wallBlock[i].center.y + (leftCheck ? -200 : 0), 240, 0);
+			if (wallBlock[i].rc.left > 0 && wallBlock[i].rc.right < WINSIZEX + 100 && wallBlock[i].rc.top > 100 && wallBlock[i].rc.bottom < WINSIZEY + 100) {
+				if (wallBlock[i].blockCount % 2 == 0 && wallBlock[i].type == -1) {
+					switch (posPlayer)
+					{
+					case 1:
+						BOSSMANAGER->init(wallBlock[i].center.x + 30, wallBlock[i].center.y, 240, 0);
+						break;
+					case 2:
+						BOSSMANAGER->init(wallBlock[i].center.x + 130, wallBlock[i].center.y -200, 240, 0);
+						break;
+					case 3:
+						BOSSMANAGER->init(wallBlock[i].center.x - 200, wallBlock[i].center.y - 150, 240, 0);
+						break;
+					case 4:
+						BOSSMANAGER->init(wallBlock[i].center.x -130, wallBlock[i].center.y, 240, 0);
+						break;
+					}
+				}
+				if (wallBlock[i].blockCount % 2 == 0 && wallBlock[i].type == 0) {
+					BOSSMANAGER->init(wallBlock[i].center.x + (leftCheck ? -50 : 50), wallBlock[i].center.y - 110, 80, 0);
+				}
+				if (wallBlock[i].blockCount % 2 == 0 && wallBlock[i].type == 1) {
+					switch (posPlayer)
+					{
+					case 1:
+						BOSSMANAGER->init(wallBlock[i].center.x - 170, wallBlock[i].center.y, 240, 0);
+						break;
+					case 2:
+						BOSSMANAGER->init(wallBlock[i].center.x + 130, wallBlock[i].center.y, 240, 0);
+						break;
+					case 3:
+						BOSSMANAGER->init(wallBlock[i].center.x + 50, wallBlock[i].center.y - 150, 240, 0);
+						break;
+					case 4:
+						BOSSMANAGER->init(wallBlock[i].center.x - 130, wallBlock[i].center.y - 200, 240, 0);
+						break;
+					}
+				}
+				wallBlock[i].center.x += cosf(wallBlock[i].angle) * 55;
+				wallBlock[i].center.y += -sinf(wallBlock[i].angle) * 55;
+				wallBlock[i].rc = RectMakeCenter(wallBlock[i].center.x, wallBlock[i].center.y, 48, 44);
 			}
-			if (wallBlock[i].blockCount % 2 == 0 && wallBlock[i].type == 0) {
-				BOSSMANAGER->init(wallBlock[i].center.x + (leftCheck ? -50 : 50), wallBlock[i].center.y - 110, 80, 0);
-			}
-			if (wallBlock[i].blockCount % 2 == 0 && wallBlock[i].type == 1) {
-				BOSSMANAGER->init(wallBlock[i].center.x + (leftCheck ? 130 : -130), wallBlock[i].center.y + (leftCheck ? 0 : -200), 240, 0);
-			}
-
-			wallBlock[i].center.x += cosf(wallBlock[i].angle) * 55;
-			wallBlock[i].center.y += -sinf(wallBlock[i].angle) * 55;
-			wallBlock[i].rc = RectMakeCenter(wallBlock[i].center.x, wallBlock[i].center.y, 48, 44);
 		}
 	}
 }
