@@ -60,7 +60,7 @@ HRESULT player::init()
 	inven->init();
 
 	//angle between mouse & player
-	attackAngle = saveAngle = 0;
+	attackAngle = saveAngle = saveAngle2 = 0;
 	angleTenth = 0;
 
 	return S_OK;
@@ -155,6 +155,7 @@ void player::other_update()
 
 
 	inven->update();
+
 	//animation count
 	count++;
 	dashCount++;
@@ -464,6 +465,7 @@ void player::standardSetUp()
 	if (INPUT->GetKeyDown(VK_RBUTTON))
 	{
 		standard = true;
+		saveAngle2 = attackAngle;
 	}
 	else standard = false;
 
@@ -473,8 +475,6 @@ void player::standardSetUp()
 	}
 
 	if (inferno->getGauging()) state = STATE::STANDARD;
-
-	
 }
 
 void player::signatureSetUp()
@@ -487,8 +487,8 @@ void player::signatureSetUp()
 		//Meteor->meteorFire(posX, posY, 600, move, 55);
 		//Meteor->meteorFire(posX + RANDOM->range(-150, 150), posY + RANDOM->range(-150, 150), 600, move, dRange);
 		//Meteor->meteorFire(posX - RANDOM->range(-150, 150), posY - RANDOM->range(-150, 150), 600, move, dRange);
-		Meteor->meteorUltFire(posX, posY, 600, move, 55);
-
+		//Meteor->meteorUltFire(posX, posY, 600, move, 55);
+		Meteor->makeCircle(posX, posY, 200, move);
 	}
 	if (meteorStateCool > 0)
 	{
@@ -514,7 +514,7 @@ void player::takeCoin()
 
 void player::animation()
 {
-	int tempAngle = attackAngle * (18 / PI);
+	int tempAngle = saveAngle2 * (18 / PI);
 
 	switch (state)
 	{
@@ -669,7 +669,7 @@ void player::animation()
 
 			if (tempAngle > 14 && tempAngle <= 23)//left
 			{
-				if (gaugeTime < 45)	atkIndex = 0;
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
 				else
 				{
 					atkIndex++;
@@ -683,7 +683,7 @@ void player::animation()
 			}
 			else if (tempAngle <= 4 || tempAngle > 32) //right
 			{
-				if (gaugeTime < 45)	atkIndex = 0;
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
 				else
 				{
 					atkIndex++;
@@ -696,7 +696,7 @@ void player::animation()
 			}
 			else if (tempAngle > 4 && tempAngle <= 12) //up
 			{
-				if (gaugeTime < 45)	atkIndex = 0;
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
 				else
 				{
 					atkIndex++;
@@ -708,7 +708,7 @@ void player::animation()
 			}
 			else if (tempAngle > 23 && tempAngle <= 32) //down
 			{
-				if (gaugeTime < 45)	atkIndex = 0;
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
 				else
 				{
 					atkIndex++;
@@ -909,8 +909,6 @@ void player::changeState()
 		}
 
 	}
-
-
 }
 
 void player::buttonDown()
