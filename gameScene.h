@@ -30,6 +30,8 @@ private:
 	RECT cam;
 	RECT checkArea;
 
+	 int atkCount;
+
 public:
 	HRESULT init();
 	void release();

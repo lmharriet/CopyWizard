@@ -5,7 +5,7 @@ HRESULT gameScene::init()
 {
 	UI->init();
 	DROP->init();
-	
+
 	_player = new player;
 	_player->init();
 	uiImg = IMAGEMANAGER->addImage("UI", "Images/gameUI.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
@@ -14,9 +14,9 @@ HRESULT gameScene::init()
 	loadMap("mapData/map2.map");
 	_player->setTileAd(tile);
 	_player->setTileAd0(vTile);
-	
+
 	cam = RectMakeCenter(0, 0, WINSIZEX, WINSIZEY);
-	checkArea = RectMakeCenter(WINSIZEX/2, WINSIZEY/2, 100, 100);
+	checkArea = RectMakeCenter(WINSIZEX / 2, WINSIZEY / 2, 100, 100);
 	CAMERAMANAGER->init(_player->getX(), _player->getY(), MAXTILE, MAXTILE, -MAXTILE, -MAXTILE, WINSIZEX / 2, WINSIZEY / 2);
 
 	//PARTICLE->init();
@@ -36,15 +36,16 @@ HRESULT gameScene::init()
 
 void gameScene::release()
 {
-	_player->release();
+	/*_player->release();
 	SAFE_DELETE(_player);
 
 	enemy->release();
-	SAFE_DELETE(enemy);
+	SAFE_DELETE(enemy);*/
 }
 
 void gameScene::update()
 {
+	atkCount++;
 	collisionTile();
 	_player->setTileAd0(vTile);
 
@@ -57,9 +58,9 @@ void gameScene::update()
 	enemy->update();
 
 
-	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX+15, WINSIZEY+15);
+	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX + 15, WINSIZEY + 15);
 	//checkArea = RectMakeCenter(_player->getX(), _player->getY(), 400, 400);
-	checkArea = RectMake(_player->getX() - 100, _player->getY() - WINSIZEY/2 + 420, 200, 500);
+	checkArea = RectMake(_player->getX() - 100, _player->getY() - WINSIZEY / 2 + 420, 200, 500);
 
 	//if (INPUT->GetKeyDown(VK_SPACE))PARTICLE->init(
 	//	_player->getX(),
@@ -114,7 +115,7 @@ void gameScene::render()
 	//CAMERAMANAGER->Rectangle(getMemDC(), checkArea);
 	//Rectangle(getMemDC(), checkArea);
 	//_player->render();
-	
+
 	DROP->render(getMemDC());
 	EFFECT->pRender(getMemDC());
 
@@ -126,7 +127,7 @@ void gameScene::render()
 			enemy->getMinion()[i]->render();
 		}
 	}
-	
+
 	bool isRender = false;
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), cam);
@@ -247,10 +248,10 @@ void gameScene::render()
 		}
 	}
 
-		
+
 	enemy->render();
 
-	if(!isRender) _player->render();
+	if (!isRender) _player->render();
 	for (int i = 0; i < enemy->getMinion().size(); i++)
 	{
 		if (_player->getY() < enemy->getMinion()[i]->getCenterY())
@@ -273,11 +274,11 @@ void gameScene::render()
 	UI->render(getMemDC(), 50, 50);
 
 	viewText();
-	
+
 	//_golem->render(); //테스트중 (몬스터골렘)
 	//_golem2->render(); //테스트중 (몬스터골렘)
 
-	
+
 }
 
 void gameScene::collisionTile()
@@ -299,12 +300,17 @@ void gameScene::playerAttack()
 			if (0 >= enemy->getMinion()[j]->getHp())continue;
 			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRC()))
 			{
+
+				PARTICLE0->explosionGenerate(_player->getBlaze()->getBullet()[i].x + 20,
+					_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1);
 				enemy->getMinion()[j]->hit(_player->getBlaze()->getBullet()[i].atkPower,
 					_player->getBlaze()->getBullet()[i].angle, 20.f);
-				EFFECT->setEffect("flameStrike",
+				
+				/*EFFECT->setEffect("flameStrike",
 					{ (long)_player->getBlaze()->getBullet()[i].x
-					,(long)_player->getBlaze()->getBullet()[i].y });
-				_player->getBlaze()->removeBomb(i);
+					,(long)_player->getBlaze()->getBullet()[i].y });*/
+
+				_player->getBlaze()->setCol(i, true);
 				break;
 
 			}
@@ -325,18 +331,29 @@ void gameScene::playerAttack()
 		}
 	}
 	//rush
+
 	for (int i = 0; i < _player->getDashFire()->getSize(); i++)
 	{
 		for (int j = 0; j < enemy->getMinion().size(); j++)
 		{
 			if (colCheck(_player->getDashFire()->getRect(i), enemy->getMinion()[j]->getRC()))
 			{
-				//col 되면 일정 간격으로 데미지 5번 
+				if (0 >= enemy->getMinion()[j]->getHp())continue;
+				if (atkCount % 30 == 0)
+				{
+					_player->getDashFire()->setCol(i, true);
 
+					enemy->getMinion()[j]->hit(_player->getDashFire()->getAtk(i),
+						70.f, 20.f);
+				}
 			}
 		}
-
 	}
+
+
+	//inferno
+
+	//for(int i = 0 ; i)
 }
 
 void gameScene::loadMap(const char* mapFileName)

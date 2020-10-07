@@ -106,7 +106,7 @@ void player::update()
 
 	if (signature) state = STATE::SIGNATURE;
 	if (standard) state = STATE::STANDARD;
-	if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && infernoStateCool==0) controller();
+	if (speed == 0 /*&& stateCool == 0 && meteorStateCool == 0 && infernoStateCool == 0*/) controller();
 
 	tileCol();
 
@@ -163,7 +163,7 @@ void player::other_update()
 
 	if (signature) state = STATE::SIGNATURE;
 	if (standard) state = STATE::STANDARD;
-	if (speed == 0 && stateCool == 0 && meteorStateCool == 0) controller();
+	if (speed == 0 /*&& stateCool == 0 && meteorStateCool == 0*/) controller();
 
 	//tileCol();
 
@@ -205,8 +205,10 @@ void player::render()
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
 	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, tempAngle, 0, 50);
 
+
 	bool isRender = false;
 
+	// DASH FIRE RENDER
 	for (int i = 0; i < searingRush->getSize(); i++)
 	{
 		if (!isRender && (searingRush->getY(i) > posY))
@@ -220,13 +222,12 @@ void player::render()
 
 	if (!isRender)animation(); // z렌더 같은 눈속임.. (나중에 frame이 떨어지면 포기하는 기능..)
 
-
-	viewText();
-
 	blaze->render();
 	flares->render();
 	Meteor->render();
 	inferno->render();
+
+	viewText();
 
 
 }
@@ -239,7 +240,7 @@ void player::invenRender()
 void player::bulletClassInit()
 {
 	blaze = new bomb;
-	blaze->init(100, 200);
+	blaze->init(3, 200);
 
 	flares = new homingFlares;
 	flares->init(100);
@@ -413,31 +414,45 @@ void player::dashFunction()
 	if (speed == 0) resetKey();
 }
 
-void player::blazeSetUp()
+void player::blazeSetUp() 
 {
+	if (INPUT->GetKeyDown(VK_LBUTTON))
+	{
+		basic = true;
+	}
 	if (stateCool == 0 && basic)
 	{
-		if (basic)
-		{
-			//basic 공격 할 때 앵글을 저장
-			saveAngle = attackAngle;
-		}
-		stateCool = 15;
+		//basic 공격 할 때 앵글을 저장
+		saveAngle = attackAngle;
+		stateCool=20;
 
 		float x = cosf(attackAngle) * 50.f + posX;
 		float y = -sinf(attackAngle) * 50.f + posY;
 
-		blaze->fire(x, y, 10, attackAngle, 30);
+		blaze->fire(x, y, 10, attackAngle, 2);
 	}
 
 	if (stateCool > 0)
 	{
-		stateCool--;
 		state = STATE::BASIC;
-		// 저장된 앵글 방향으로 움직이기
-		posX += cosf(saveAngle);
-		posY += -sinf(saveAngle);
+		stateCool--;
 	}
+
+	for (int i = 0; i < blaze->getSize(); i++)
+	{
+		if (blaze->getCol(i))
+		{
+			basic = false;
+			blaze->removeBomb(i);
+		}
+	}
+	
+
+	//	// 저장된 앵글 방향으로 움직이기
+	//	/*posX += cosf(saveAngle);
+	//	posY += -sinf(saveAngle);*/
+	//}
+	//else basic = false;
 
 }
 
@@ -460,13 +475,14 @@ void player::signatureSetUp()
 		//Meteor->meteorFire(posX + RANDOM->range(-150, 150), posY + RANDOM->range(-150, 150), 600, move, dRange);
 		//Meteor->meteorFire(posX - RANDOM->range(-150, 150), posY - RANDOM->range(-150, 150), 600, move, dRange);
 		Meteor->meteorUltFire(posX, posY, 600, move, 55);
+
+
 	}
 	if (meteorStateCool > 0)
 	{
 		state = STATE::SIGNATURE;
 		meteorStateCool--;
 	}
-
 }
 
 void player::takeCoin()
@@ -574,12 +590,13 @@ void player::animation()
 		break;
 
 	case STATE::DIE:
-
-		if (count % 5 == 0)
-		{
+		if (index < 5 && count % 30 == 0)
 			index++;
-			if (index > 9) index = 0;
-		}
+
+		if (index >= 5 && count % 7 == 0)
+			index++;
+
+		if (index > 9) index = 9;
 		frameAnimation(index, 9);
 		break;
 	case STATE::BASIC:
@@ -773,56 +790,60 @@ void player::resetKey()
 void player::changeState()
 {
 	if (speed > 0)return;
-
-	if (isLeft)
-	{
-		state = STATE::RUN;
-		if (isUp)
-		{
-			move = MOVE::LEFT_TOP;
-		}
-		else if (isDown)
-		{
-			move = MOVE::LEFT_DOWN;
-		}
-		else // 그냥 순수 LEFT
-		{
-			move = MOVE::LEFT;
-		}
-	}
-
-	else if (isRight)
-	{
-		state = STATE::RUN;
-		if (isUp)
-		{
-			move = MOVE::RIGHT_TOP;
-		}
-		else if (isDown)
-		{
-			move = MOVE::RIGHT_DOWN;
-		}
-		else // 그냥 순수 LEFT
-		{
-			move = MOVE::RIGHT;
-		}
-	}
-
-	else if (isUp) // 그냥 순수 UP
-	{
-		state = STATE::RUN;
-		move = MOVE::UP;
-	}
-
-	else if (isDown) // 그냥 순수 DOWN
-	{
-		state = STATE::RUN;
-		move = MOVE::DOWN;
-	}
 	else
 	{
-		state = STATE::IDLE;
+		if (isLeft)
+		{
+			state = STATE::RUN;
+			if (isUp)
+			{
+				move = MOVE::LEFT_TOP;
+			}
+			else if (isDown)
+			{
+				move = MOVE::LEFT_DOWN;
+			}
+			else // 그냥 순수 LEFT
+			{
+				move = MOVE::LEFT;
+			}
+		}
+
+		else if (isRight)
+		{
+			state = STATE::RUN;
+			if (isUp)
+			{
+				move = MOVE::RIGHT_TOP;
+			}
+			else if (isDown)
+			{
+				move = MOVE::RIGHT_DOWN;
+			}
+			else // 그냥 순수 LEFT
+			{
+				move = MOVE::RIGHT;
+			}
+		}
+
+		else if (isUp) // 그냥 순수 UP
+		{
+			state = STATE::RUN;
+			move = MOVE::UP;
+		}
+
+		else if (isDown) // 그냥 순수 DOWN
+		{
+			state = STATE::RUN;
+			move = MOVE::DOWN;
+		}
+		else
+		{
+			state = STATE::IDLE;
+		}
+
 	}
+
 
 }
 
@@ -839,8 +860,6 @@ void player::buttonDown()
 	else isDown = false;
 
 	//Attack
-	if (INPUT->GetKeyDown(VK_LBUTTON)) basic = true;
-	else basic = false;
 	if (INPUT->GetKeyDown(VK_RBUTTON)) standard = true;
 	else standard = false;
 	if (INPUT->GetKeyDown('Q'))	signature = true;
@@ -853,6 +872,15 @@ void player::buttonDown()
 void player::viewText()
 {
 	char str[126];
+
+	wsprintf(str, "basic  : %d , standard : %d ,signature : %d", basic, standard, signature);
+	textOut(getMemDC(), 10, 220, str, WHITE);
+
+
+	wsprintf(str, "state : %d", state);
+	textOut(getMemDC(), 100, 250, str, WHITE);
+
+
 	//for (int i = 0; i < 8; i++)
 	//{
 	//	if (i < 4)

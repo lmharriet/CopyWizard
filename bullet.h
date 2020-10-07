@@ -17,6 +17,7 @@ struct tagBullet
 
 	int skillType;
 	bool fire;
+	bool collision;
 	int FrameX;
 	int FrameY;
 };
@@ -39,6 +40,7 @@ struct tagArcana
 	int frameX;
 	int frameY;
 
+	bool Collision;
 	MOVE dir;
 };
 
@@ -78,36 +80,9 @@ public:
 	vector<tagBullet> getBullet() { return _vBullet; }
 	//공용총알 렉트 가져오기
 	RECT getRect(int index) { return _vBullet[index].rc; }
+	
 };
 
-//미완성
-//=============================================================
-//	## homingFlares ## 
-//=============================================================
-class homingFlares : public gameNode
-{
-private:
-	//총알 구조체를 담을 벡터선언
-	vector<tagArcana> _vFlares;
-	vector<tagArcana> _vRange;
-//	vector<tagBullet>::iterator _viBullet;
-
-private:
-	float _range;			//총알 사거리
-	int _bulletMax;			//총알 최대갯수
-
-public:
-	HRESULT init(float range);
-	void release();
-	void update();
-	void render();
-
-	//총알발사
-	void fire(float x, float y,float angle);
-	//총알무브
-	void move();
-
-};
 
 //=============================================================
 //	## bomb ## (폭탄처럼 한발씩 발사하고 생성하고 자동삭제) 
@@ -139,6 +114,11 @@ public:
 
 	//총알벡터 가져오기
 	vector<tagBullet> getBullet() { return _vBullet; }
+
+	bool getCol(int index) { return _vBullet[index].collision; }
+	int getSize() { return _vBullet.size(); }
+
+	void setCol(int index, bool temp) { _vBullet[index].collision = temp; }
 };
 
 //=============================================================
@@ -155,6 +135,8 @@ class meteor :public gameNode
 private:
 	vector<tagArcana> vMeteor;
 	vector<tagCircle> vCircle;
+
+
 	float angleRange;
 	float _range;
 
@@ -181,10 +163,13 @@ public:
 	void meteorUltFire(float x, float y, float speed, MOVE dir, float range);
 	void move();
 
+
 	bool getCol() { return isCol; }
 
 	vector<tagArcana> getMeteorVec() { return vMeteor; }
 };
+
+
 //===================
 //	## dashFire ## 
 //===================
@@ -201,9 +186,16 @@ public:
 	void singleRender(int index);
 
 	void fire(float x, float y);
-	float getY(int index) { return _vDash[index].y; }
-	int getSize() { return _vDash.size(); }
+
+	//getter, setter
+	
 	RECT getRect(int index) { return _vDash[index].rc; }
+	int getSize() { return _vDash.size(); }
+	int getAtk(int index) { return _vDash[index].atkPower; }
+	float getY(int index) { return _vDash[index].y; }
+	bool getCol(int index) { return _vDash[index].Collision; }
+
+	void setCol(int index, bool temp) { _vDash[index].Collision = temp; }
 	
 };
 
@@ -228,6 +220,40 @@ public:
 	void fire(float x, float y,float angle);
 	void move(float range);
 
+
+	//getter , setter
 	bool getFire() { return isFire; }
+	bool getCol() { return inferno.Collision; }
 	int getGaugeTime() { return gaugeTime; }
+	
+};
+
+
+//미완성
+//=============================================================
+//	## homingFlares ## 
+//=============================================================
+class homingFlares : public gameNode
+{
+private:
+	//총알 구조체를 담을 벡터선언
+	vector<tagArcana> _vFlares;
+	vector<tagArcana> _vRange;
+	//	vector<tagBullet>::iterator _viBullet;
+
+private:
+	float _range;			//총알 사거리
+	int _bulletMax;			//총알 최대갯수
+
+public:
+	HRESULT init(float range);
+	void release();
+	void update();
+	void render();
+
+	//총알발사
+	void fire(float x, float y, float angle);
+	//총알무브
+	void move();
+
 };

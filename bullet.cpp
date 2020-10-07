@@ -218,13 +218,14 @@ void bomb::render()
 {
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
-
 		CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage,
 			_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth() / 2),
 			_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight() / 2), index, 0);
 
 		//		CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 20, 20));
+
 	}
+
 }
 
 void bomb::fire(float x, float y, float speed, float angle, float radius)
@@ -247,6 +248,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	bullet.radius = radius;
 	bullet.atkPower = 12;
 	bullet.skillType = 0;
+	bullet.collision = false;
 	bullet.rc = RectMakeCenter(bullet.x, bullet.y, radius * 2, radius * 2);
 
 	_vBullet.push_back(bullet);
@@ -263,7 +265,10 @@ void bomb::move()
 		float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY, _vBullet[i].x, _vBullet[i].y);
 		if (_range < distance)
 		{
-			_vBullet.erase(_vBullet.begin() + i);
+			PARTICLE0->explosionGenerate(_vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3);
+
+			_vBullet[i].collision = true;
+			cout << i << " : " << _vBullet[i].collision << '\n';
 		}
 	}
 }
@@ -317,6 +322,7 @@ void meteor::render()
 		//CAMERAMANAGER->Ellipse(getMemDC(), _vMeteor[i].rc);
 		CAMERAMANAGER->FrameRender(getMemDC(), vMeteor[i].img, vMeteor[i].rc.left, vMeteor[i].rc.top, index, vMeteor[i].frameY);
 	}
+
 
 	/*wsprintf(temp, "size : %d", _vMeteor.size());
 	textOut(getMemDC(), 100, 300, temp, RGB(255, 255, 255));*/
@@ -373,7 +379,7 @@ void meteor::meteorFire(float x, float y, float speed, MOVE dir, float range)
 	default:
 		return;
 	}
-	
+
 	//memset(&meteor, 0, sizeof(meteor));
 
 	meteor.speed = 12.5f;
@@ -537,6 +543,8 @@ void meteor::move()
 
 }
 
+
+//DASH
 HRESULT dashFire::init()
 {
 	return S_OK;
@@ -548,6 +556,11 @@ void dashFire::release()
 
 void dashFire::update()
 {
+	for (int i = 0; i < _vDash.size(); i++)
+	{
+		if (_vDash[i].Collision) _vDash[i].atkPower = 4;
+		else _vDash[i].atkPower = 0;
+	}
 }
 
 void dashFire::render()
@@ -597,6 +610,8 @@ void dashFire::singleRender(int index)
 		if (_vDash[index].lifeTime % 5 == 0) _vDash[index].frameX++;
 		if (_vDash[index].frameX == img->getMaxFrameX()) _vDash[index].frameX = 0;
 	}
+
+
 }
 
 void dashFire::fire(float x, float y)
@@ -607,8 +622,8 @@ void dashFire::fire(float x, float y)
 	dash.y = y;
 	dash.frameX = 0;
 	dash.lifeTime = 0;
-	dash.atkPower = 5;
 	dash.skillType = 2;
+	dash.Collision = false;
 	_vDash.push_back(dash);
 }
 
@@ -656,7 +671,7 @@ void RagingInferno::render()
 			inferno.y - (inferno.img->getFrameHeight() / 2), index, 0);
 		//CAMERAMANAGER->Ellipse(getMemDC(), inferno.rc);
 	}
-	
+
 }
 
 void RagingInferno::fire(float x, float y, float angle)
