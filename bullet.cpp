@@ -222,7 +222,7 @@ void bomb::render()
 			_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth() / 2),
 			_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight() / 2), index, 0);
 
-				CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 20, 20));
+		CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 20, 20));
 
 	}
 
@@ -264,7 +264,7 @@ void bomb::move()
 		float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY, _vBullet[i].x, _vBullet[i].y);
 		if (_range < distance)
 		{
-			PARTICLE->explosionGenerate("explosionParticle",_vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3);
+			PARTICLE->explosionGenerate("explosionParticle", _vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3);
 			//_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
 			_vBullet[i].collision = true;
 			cout << i << " : " << _vBullet[i].collision << '\n';
@@ -288,7 +288,7 @@ HRESULT meteor::init(float range)
 	ranCount = 10;
 
 	count = index = timer = 0;
-
+	circleCount = CircleIndex = 0;
 	isCol = false;
 	return S_OK;
 }
@@ -307,6 +307,13 @@ void meteor::update()
 		index++;
 		if (index > 5) index = 0;
 	}
+
+	circleCount++;
+	if (circleCount % 5 == 0)
+	{
+		CircleIndex++;
+		if (CircleIndex > 24)CircleIndex = 24;
+	}
 	move();
 
 	meteorUlt();
@@ -314,17 +321,85 @@ void meteor::update()
 
 void meteor::render()
 {
+
+	//test
+	image* img = IMAGEMANAGER->addFrameImage("circle", "resource/player/castingCircle.bmp",3201, 128, 25, 1);
+	
 	char temp[126];
+
 
 	for (int i = 0; i < vMeteor.size(); i++)
 	{
 		//CAMERAMANAGER->Ellipse(getMemDC(), _vMeteor[i].rc);
-		CAMERAMANAGER->FrameRender(getMemDC(), vMeteor[i].img, vMeteor[i].rc.left, vMeteor[i].rc.top, index, vMeteor[i].frameY);
+		//CAMERAMANAGER->FrameRender(getMemDC(), vMeteor[i].img, vMeteor[i].rc.left, vMeteor[i].rc.top, index, vMeteor[i].frameY);
+	}
+
+	for (int i = 0; i < vCircle.size(); i++)
+	{
+		//CAMERAMANAGER->Ellipse(getMemDC(), vCircle[i].rc);
+		CAMERAMANAGER->FrameRender(getMemDC(), img,
+			vCircle[i].x - img->getFrameWidth() / 2, vCircle[i].y - img->getFrameHeight() / 2, CircleIndex, 0);
 	}
 
 
-	/*wsprintf(temp, "size : %d", _vMeteor.size());
-	textOut(getMemDC(), 100, 300, temp, RGB(255, 255, 255));*/
+}
+
+void meteor::makeCircle(float x, float y, float radius, MOVE direction)
+{
+	//플레이어 기준으로 왼쪽 오른쪽 위 아래 마법진 생성
+
+	tagCircle circle;
+	switch (direction)
+	{
+	case MOVE::LEFT:
+		//왼
+		circle.angle = PI;
+		circle.x = x + cosf(circle.angle) * radius;
+		circle.y = y - sinf(circle.angle) * radius;
+		circle.rc = RectMakeCenter(circle.x, circle.y, radius, radius);
+		circle.lifeTime = 0;
+		break;
+	case MOVE::RIGHT:
+		//오른
+		circle.angle = 0;
+		circle.x = x + cosf(circle.angle) * radius;
+		circle.y = y - sinf(circle.angle) * radius;
+		circle.rc = RectMakeCenter(circle.x, circle.y, radius, radius);
+		circle.lifeTime = 0;
+		break;
+
+	case MOVE::UP:
+		//위
+		circle.angle = PI_2;
+		circle.x = x + cosf(circle.angle) * radius;
+		circle.y = y - sinf(circle.angle) * radius;
+		circle.rc = RectMakeCenter(circle.x, circle.y, radius, radius);
+		circle.lifeTime = 0;
+		break;
+	case MOVE::DOWN:
+		//아래
+		circle.angle = PI_2 * 3;
+		circle.x = x + cosf(circle.angle) * radius;
+		circle.y = y - sinf(circle.angle) * radius;
+		circle.rc = RectMakeCenter(circle.x, circle.y, radius, radius);
+		circle.lifeTime = 0;
+		break;
+	default:
+
+		circle.angle = 0;
+		circle.x = x + cosf(circle.angle) * radius;
+		circle.y = y - sinf(circle.angle) * radius;
+		circle.rc = RectMakeCenter(circle.x, circle.y, radius, radius);
+		circle.lifeTime = 0;
+		break;
+	}
+
+
+	vCircle.push_back(circle);
+}
+
+void meteor::creatMeteor(float x, float y, float angle, float speed, MOVE direction)
+{
 }
 
 void meteor::meteorFire(float x, float y, float speed, MOVE dir, float range)
@@ -554,7 +629,7 @@ void dashFire::release()
 
 void dashFire::update()
 {
-	
+
 }
 
 void dashFire::render()
@@ -629,7 +704,7 @@ HRESULT RagingInferno::init()
 	distance = 0;
 	index = count = 0;
 
-	isFire = gauging=false;
+	isFire = gauging = isActive = false;
 	inferno.img = IMAGEMANAGER->addFrameImage("inferno", "resource/player/inferno.bmp", 240, 80, 3, 1);
 	return S_OK;
 }
@@ -638,7 +713,7 @@ void RagingInferno::release()
 {
 }
 
-void RagingInferno::update(int *gaugeTime)
+void RagingInferno::update(int* gaugeTime)
 {
 	count++;
 
@@ -651,7 +726,12 @@ void RagingInferno::update(int *gaugeTime)
 	distance = getDistance(inferno.x, inferno.y, inferno.fireX, inferno.fireY);
 
 	move(*gaugeTime);
-
+	if (isActive && *gaugeTime < 70)
+	{
+		*gaugeTime = 70;
+		inferno.lifeTime--;
+	}
+	
 }
 
 void RagingInferno::render()
@@ -699,7 +779,7 @@ void RagingInferno::render()
 
 }
 
-void RagingInferno::fire(float x, float y, float angle,int *gaugeTime)
+void RagingInferno::fire(float x, float y, float angle, int* gaugeTime)
 {
 	inferno.angle = angle;
 	inferno.speed = -30.f;
@@ -708,38 +788,38 @@ void RagingInferno::fire(float x, float y, float angle,int *gaugeTime)
 	inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
 	inferno.lifeTime = 100;
 	inferno.atkPower = 30;
-	PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
-	PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
-	PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
+	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
+	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
+	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
 	*gaugeTime = 0;
 	isFire = true;
 	gauging = true;
-
-
-	
 }
+
 void RagingInferno::move(int gaugeTime)
 {
 	if (isFire)
 	{
 		if (gaugeTime > 50 && gaugeTime < 70)
 		{
+
 			inferno.x = inferno.x + cosf(inferno.angle) * 20.0f;
 			inferno.y = inferno.y - sinf(inferno.angle) * 20.0f;
 			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 50, 50);
 			gauging = false;
-			if (gaugeTime % 3 == 0) PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);
+			if (gaugeTime % 3 == 0) PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);
+		}
+		else isActive = false;
+		 if (gaugeTime == 70)
+		{
+			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 3, 3.f, 0.8f, 10);
+			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 5, 5.f, 0.7f, 10);
+			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 7, 7.f, 0.6f, 10);
 		}
 
-		if (gaugeTime == 70)
+		 if (gaugeTime >= 70)
 		{
-			PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 2, 100, 3, 3.f, 0.8f, 10);
-			PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 2, 100, 5, 5.f, 0.7f, 10);
-			PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 2, 100, 7, 7.f, 0.6f, 10);
-		}
-
-		if (gaugeTime >= 70)
-		{
+			 isActive = true;
 			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 150, 150);
 
 			inferno.lifeTime--;
@@ -775,6 +855,7 @@ void RagingInferno::move(int gaugeTime)
 			}
 			time++;
 		}
+
 		if (inferno.lifeTime == 0)
 		{
 			PARTICLE->explosionParticlePlay(inferno.x, inferno.y);
@@ -782,9 +863,18 @@ void RagingInferno::move(int gaugeTime)
 			inferno.x = inferno.fireX;
 			inferno.y = inferno.fireY;
 			isFire = false;
+			isActive = false;
 		}
 	}
 }
-void RagingInferno::createTail()
+
+bool RagingInferno::CheckCollision(RECT enemy)
 {
+	RECT temp;
+	if (IntersectRect(&temp, &inferno.rc, &enemy))
+	{
+		return true;
+	}
+	else return false;
+
 }

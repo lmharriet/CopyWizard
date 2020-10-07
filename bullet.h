@@ -124,9 +124,14 @@ public:
 //=============================================================
 struct tagCircle
 {
+	RECT rc;
 	float x, y;
 	float angle;
-	RECT rc;
+	float radius;
+
+	int lifeTime;
+	bool isCol;
+
 };
 class meteor :public gameNode
 {
@@ -147,6 +152,7 @@ private:
 	int ranCount;
 
 	int count, index;
+	int circleCount, CircleIndex;
 	int timer;
 
 	bool isCol;
@@ -156,12 +162,20 @@ public:
 	void update();
 	void render();
 
+
+
+	void makeCircle(float x, float y, float radius, MOVE direction);
+	void creatMeteor(float x, float y, float angle, float speed, MOVE direction);
+
+
+
 	void meteorFire(float x, float y, float speed, MOVE dir, float range);
 	void meteorUlt();
 	void meteorUltFire(float x, float y, float speed, MOVE dir, float range);
 	void move();
+	
+	
 	int getSkillNum() { return 1; }
-
 	bool getCol() { return isCol; }
 
 	vector<tagArcana> getMeteorVec() { return vMeteor; }
@@ -221,6 +235,7 @@ private:
 	float distance;
 	int index, count;
 	bool isFire;
+	bool isActive;
 	bool gauging;
 
 	int time;
@@ -231,17 +246,19 @@ public:
 	void render();
 	void fire(float x, float y,float angle, int *gaugeTime);
 	void move( int gaugeTime);
-	void createTail();
+	bool CheckCollision(RECT enemy);
 	int getSkillNum() { return 3; }
 
 	//getter , setter
 	bool getFire() { return isFire; }
 	bool getCol() { return inferno.Collision; }
 	bool getGauging() { return gauging; }
+	bool getActive() { return isActive; }
 
 	tagArcana getInf() { return inferno; }
 	void setX(float X) { inferno.x = X; }
 	void setY(float Y) { inferno.y = Y; }
+	void setActive(bool temp) { isActive = temp; }
 };
 
 
