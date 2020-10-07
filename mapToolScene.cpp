@@ -910,7 +910,7 @@ void mapToolScene::objectImgRender()
 
 					key == tile[i - w2 + 14].keyName && key == tile[i - w2 + 15].keyName &&
 					key == tile[i - w + 14].keyName && key == tile[i - w + 15].keyName &&
-					key == tile[i + 14].keyName && key == tile[i + 15].keyName) 
+					key == tile[i + 14].keyName && key == tile[i + 15].keyName)
 					== false)
 				{
 					continue;
@@ -974,6 +974,43 @@ void mapToolScene::objectImgRender()
 				image* img = IMAGEMANAGER->findImage(tile[i].keyName);
 
 				img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
+			}
+
+			else if (key == "shopWall0" || key == "shopWall1")
+			{
+				int w = MAXTILE_WIDTH;
+				int w2 = MAXTILE_WIDTH * 2;
+				int w3 = MAXTILE_WIDTH * 3;
+				int w4 = MAXTILE_WIDTH * 4;
+				int w5 = MAXTILE_WIDTH * 5;
+
+				height = 5 * _tileSize;
+
+				if (key == "shopWall0")
+				{
+					if ((key == tile[i + 1].keyName && key == tile[i - w].keyName && key == tile[i - w2].keyName &&
+						key == tile[i - w3].keyName && key == tile[i - w4].keyName && key == tile[i - w5].keyName) == false)
+					{
+						continue;
+					}
+
+					img = IMAGEMANAGER->findImage(key);
+					img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
+				}
+
+				if (key == "shopWall1")
+				{
+					//예외 처리
+					if ((key == tile[i + 1].keyName && key == tile[i + 1 - w].keyName && key == tile[i + 1 - w2].keyName &&
+						key == tile[i + 1 - w3].keyName && key == tile[i + 1 - w4].keyName && key == tile[i + 1 - w5].keyName) == false)
+					{
+						continue;
+					}
+
+
+					img = IMAGEMANAGER->findImage(key);
+					img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
+				}
 			}
 
 			else
@@ -1296,6 +1333,37 @@ void mapToolScene::controller()
 							tile[i].kind = user.kind;
 						}
 
+						else if (user.KeyName == "shopWall0")
+						{
+							//i, i + w, i + 2w, i + 3w, i + 4w, i + 5w, i + 5w + 1
+							for (int q = 0; q < 6; q++)
+							{
+								tile[i + (MAXTILE_WIDTH * q)].keyName = user.KeyName;
+								tile[i + (MAXTILE_WIDTH * q)].kind = user.kind;
+
+								if (q == 5)
+								{
+									tile[i + (MAXTILE_WIDTH * q + 1)].keyName = user.KeyName;
+									tile[i + (MAXTILE_WIDTH * q + 1)].kind = user.kind;
+								}
+							}
+						}
+
+						else if (user.KeyName == "shopWall1")
+						{
+							for (int q = 0; q < 6; q++)
+							{
+								tile[(i + 1) + (MAXTILE_WIDTH * q)].keyName = user.KeyName;
+								tile[(i + 1) + (MAXTILE_WIDTH * q)].kind = user.kind;
+
+								if (q == 5)
+								{
+									tile[(i+1) + (MAXTILE_WIDTH * q) - 1].keyName = user.KeyName;
+									tile[(i+1) + (MAXTILE_WIDTH * q) - 1].kind = user.kind;
+								}
+							}
+						}
+
 						else
 						{
 							tile[i].keyName = user.KeyName;
@@ -1303,7 +1371,6 @@ void mapToolScene::controller()
 							tile[i].frame.x = RANDOM->range(5);
 							tile[i].frame.y = 0;
 						}
-
 					}
 				}
 				break;
@@ -1505,6 +1572,8 @@ void mapToolScene::controller()
 			if (user.kind != TERRAIN::WALL)break;
 
 			if (user.KeyName == "bottomWall" || user.KeyName == "topWall")break; // fix
+
+			if (user.KeyName != "wall0" && user.KeyName != "wall1" && user.KeyName != "wall2")break;
 
 			if (!dragButton.isCol)
 			{
