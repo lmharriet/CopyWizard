@@ -91,8 +91,7 @@ void player::update()
 	Meteor->update();
 	searingRush->update();
 
-
-	inferno->update(100,gaugeTime);
+	inferno->update(&gaugeTime);
 
 	inven->update();
 	//animation count
@@ -105,8 +104,6 @@ void player::update()
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
 
-	if (signature) state = STATE::SIGNATURE;
-	if (standard) state = STATE::STANDARD;
 	if (speed == 0 /*&& stateCool == 0 && meteorStateCool == 0 && infernoStateCool == 0*/) controller();
 
 	tileCol();
@@ -151,7 +148,7 @@ void player::other_update()
 	Meteor->update();
 	searingRush->update();
 
-	inferno->update(100,gaugeTime);
+	inferno->update(&gaugeTime);
 
 	inven->update();
 	//animation count
@@ -165,9 +162,8 @@ void player::other_update()
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
 
-	if (signature) state = STATE::SIGNATURE;
-	if (standard) state = STATE::STANDARD;
-	if (speed == 0 /*&& stateCool == 0 && meteorStateCool == 0*/) controller();
+
+	if (speed == 0 && stateCool == 0 /*&& meteorStateCool == 0*/) controller();
 
 	//tileCol();
 
@@ -467,11 +463,14 @@ void player::standardSetUp()
 		standard = true;
 	}
 	else standard = false;
+
 	if (standard && infernoStateCool == 0)
 	{
-		inferno->fire(posX, posY, attackAngle);
+		inferno->fire(posX, posY, attackAngle,&gaugeTime);
 	}
-		
+
+	if (inferno->getGauging()) state = STATE::STANDARD;
+
 	
 }
 
@@ -512,6 +511,8 @@ void player::takeCoin()
 
 void player::animation()
 {
+	int tempAngle = attackAngle * (18 / PI);
+
 	switch (state)
 	{
 	case STATE::IDLE:
@@ -660,9 +661,61 @@ void player::animation()
 			if (stateCool == 0)
 				move = MOVE::DOWN;
 		}
-
 		break;
 	case STATE::STANDARD:
+
+			if (tempAngle > 14 && tempAngle <= 23)//left
+			{
+				if (gaugeTime < 45)	atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+				frameAnimation(atkIndex, 6);
+
+
+				//왼쪽 공격 끝나면 왼쪽 향하기
+				if (gaugeTime > 50) move = MOVE::LEFT;
+			}
+			else if (tempAngle <= 4 || tempAngle > 32) //right
+			{
+				if (gaugeTime < 45)	atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+
+				frameAnimation(atkIndex, 5);
+				// 오른쪽 공격 끝나면 오른쪽 향하기
+				if (gaugeTime > 50) move = MOVE::RIGHT;
+			}
+			else if (tempAngle > 4 && tempAngle <= 12) //up
+			{
+				if (gaugeTime < 45)	atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+				frameAnimation(atkIndex, 14);
+				//위쪽 공격 끝나면 위쪽 향하기
+				if(gaugeTime >50) move = MOVE::UP;
+			}
+			else if (tempAngle > 23 && tempAngle <= 32) //down
+			{
+				if (gaugeTime < 45)	atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+				frameAnimation(atkIndex, 6);
+				//아래쪽 공격 끝나면 아래쪽 향하기
+				if (gaugeTime > 50) move = MOVE::DOWN;
+			}
+
 		break;
 	case STATE::SIGNATURE:
 

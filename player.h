@@ -61,6 +61,7 @@ private:
 	bool isLeft, isRight, isUp, isDown;
 	
 	bool isDead;
+
 public:
 	HRESULT init();
 	void release();

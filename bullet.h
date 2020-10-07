@@ -204,22 +204,24 @@ class RagingInferno :public gameNode
 private:
 	tagArcana inferno;
 
-	float range;
+
 	float distance;
 	int index, count;
 	bool isFire;
+	bool gauging;
 public:
 	HRESULT init();
 	void release();
-	void update(float range, int gaugeTime);
+	void update(int *gaugeTime);
 	void render();
-	void fire(float x, float y,float angle);
-	void move(float range, int gaugeTime);
+	void fire(float x, float y,float angle, int *gaugeTime);
+	void move( int gaugeTime);
 	int getSkillNum() { return 3; }
 
 	//getter , setter
 	bool getFire() { return isFire; }
 	bool getCol() { return inferno.Collision; }
+	bool getGauging() { return gauging; }
 
 };
 

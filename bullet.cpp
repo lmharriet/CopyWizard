@@ -624,10 +624,10 @@ void dashFire::fire(float x, float y)
 
 HRESULT RagingInferno::init()
 {
-	range = distance = 0;
+	distance = 0;
 	index = count = 0;
 
-	isFire = false;
+	isFire = gauging=false;
 	inferno.img = IMAGEMANAGER->addFrameImage("inferno", "resource/player/inferno.bmp", 240, 80, 3, 1);
 	return S_OK;
 }
@@ -636,7 +636,7 @@ void RagingInferno::release()
 {
 }
 
-void RagingInferno::update(float range,  int gaugeTime)
+void RagingInferno::update(int *gaugeTime)
 {
 	count++;
 
@@ -648,7 +648,7 @@ void RagingInferno::update(float range,  int gaugeTime)
 
 	distance = getDistance(inferno.x, inferno.y, inferno.fireX, inferno.fireY);
 
-	move(range, gaugeTime);
+	move(*gaugeTime);
 }
 
 void RagingInferno::render()
@@ -662,7 +662,7 @@ void RagingInferno::render()
 	}
 }
 
-void RagingInferno::fire(float x, float y, float angle)
+void RagingInferno::fire(float x, float y, float angle,int *gaugeTime)
 {
 	inferno.angle = angle;
 	inferno.speed = -30.f;
@@ -674,11 +674,12 @@ void RagingInferno::fire(float x, float y, float angle)
 	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
 	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
 	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
-
+	*gaugeTime = 0;
 	isFire = true;
+	gauging = true;
 
 }
-void RagingInferno::move(float range, int gaugeTime)
+void RagingInferno::move(int gaugeTime)
 {
 	if (isFire)
 	{
@@ -687,7 +688,7 @@ void RagingInferno::move(float range, int gaugeTime)
 			inferno.x = inferno.x + cosf(inferno.angle) * 20.0f;
 			inferno.y = inferno.y - sinf(inferno.angle) * 20.0f;
 			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
-
+			gauging = false;
 			if (gaugeTime % 3 == 0) PARTICLE0->pointGenerate(inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);
 		}
 
