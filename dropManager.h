@@ -24,16 +24,28 @@ struct tagCoin
 	int frameY;
 };
 
+struct tagHealBall
+{
+	POINT pt;
+	RECT rc;
+	int heal;
+
+	int currentFrameX;
+};
+
 struct infoTransfer
 {
 	int gCoin;
 	int sCoin;
+	int bCoin;
 	POINT pt;
 };
 
 class dropManager : public singletonBase<dropManager>
 {
 private:
+	vector<tagHealBall> vHealBall;
+
 	vector<tagCoin> vCoin;
 	vector<infoTransfer> vTransfer;
 
@@ -42,10 +54,15 @@ public:
 	HRESULT init();
 	void update();
 	void render(HDC hdc);
-	void dropPoint(POINT pt, int minCoin, int maxCoin);
+	void dropPoint(POINT pt, int minCoin, int maxCoin, float healBallpercentage = 0.f);
+	bool checkPercentage(int persentage);
 	void coinGenerator();
 	
 	vector<tagCoin> getCoinVec() { return vCoin; }
 	RECT getCoinRect(int index) { return vCoin[index].rc; }
 	void delCoin(int index) { vCoin.erase(vCoin.begin() + index); }
+
+	vector<tagHealBall> getBallVec() { return vHealBall; }
+	RECT getHealRect(int index) { return vHealBall[index].rc; }
+	void delHeal(int index) { vHealBall.erase(vHealBall.begin() + index); }
 };
