@@ -14,10 +14,17 @@ class bossScene : public gameNode
 
 	player* _player;
 	boss* _boss;
+
+	//»ç¿îµå
+
+	bool isBossBGM;
+	float fadeIn;
 public:
 	HRESULT init();
 	void release();
 	void update();
 	void bossCutScene();
 	void render();
+
+	void soundInit();
 };

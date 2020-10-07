@@ -3,6 +3,7 @@
 
 HRESULT gameScene::init()
 {
+	
 	UI->init();
 	DROP->init();
 
@@ -30,6 +31,10 @@ HRESULT gameScene::init()
 
 	UI->setCoin(PLAYERDATA->getCoin());
 	UI->setHp(PLAYERDATA->getHp());
+
+	//sound
+	isIngameBGM = true;
+	fadeIn = 0.f;
 	return S_OK;
 }
 
@@ -44,6 +49,15 @@ void gameScene::release()
 
 void gameScene::update()
 {
+	//사운드
+	if (isIngameBGM)
+	{
+		SOUNDMANAGER->fadeIn("ingameBGM", fadeIn);
+		fadeIn += 0.002f;
+		if (fadeIn >= SOUNDMANAGER->getVolumeBGM())
+			isIngameBGM = false;
+	}
+
 	PLAYERDATA->setX(_player->getX());
 	PLAYERDATA->setY(_player->getY());
 
@@ -342,18 +356,17 @@ void gameScene::playerAttack()
 
 		if (colCheck(_player->getInferno()->getInf().rc, enemy->getMinion()[i]->getRC()))
 		{
-			if (PLAYERDATA->getGaugeTime() > 50 && PLAYERDATA->getGaugeTime() < 70)
+			//게이징 + 무브 상태가 아닐 때 inferno와 몬스터 충돌 체크
+			if (!_player->getInferno()->getActive() && _player->getInferno()->CheckCollision(enemy->getMinion()[i]->getRC()))
 			{
-				float angle = getAngle(enemyX + 40, enemyY + 40,
-					_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
-
-				float x = enemyX + cosf(angle) * 20.f;
-				float y = enemyY - sinf(angle) * 20.f;
-
-				enemy->getMinion()[i]->setPt(x, y);
-			
-				enemy->getMinion()[i]->hit(0, 0, 0.f, 0);
+				//충돌되면 그 자리에서 공격
+				if (PLAYERDATA->getGaugeTime() < 70)
+				{
+					PLAYERDATA->setGaugeTime(70);
+					_player->getInferno()->setActive(true);
+				}
 			}
+
 			else if (PLAYERDATA->getGaugeTime() >= 70)
 			{
 				float angle = getAngle(enemyX + 40, enemyY + 40,
@@ -366,6 +379,7 @@ void gameScene::playerAttack()
 
 				enemy->getMinion()[i]->hit(1, 0, 0.f, 3);
 			}
+
 		}
 	}
 }

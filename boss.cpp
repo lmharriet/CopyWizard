@@ -51,6 +51,10 @@ HRESULT boss::init(int _posX, int _posY)
 
 	niddleAngle = 0.0f;
 
+
+	//sound
+
+	isPlayDrillSFX = isPlayJumpSFX = isPlayWallSFX = isPlayNiddleSFX = isPlayPunchSFX = false;
 	return S_OK;
 }
 
@@ -113,6 +117,7 @@ void boss::animation()
 		break;
 	case BOSSIDLE:
 		frameX = frameY = 0;
+		isPlayDrillSFX = isPlayJumpSFX = isPlayWallSFX = isPlayNiddleSFX = isPlayPunchSFX = false;
 		break;
 	case JUMP:
 		if (!jumpMotion) {
@@ -127,6 +132,12 @@ void boss::animation()
 						timer = 0;
 						frameX = 0;
 						count = 0;
+						if (!isPlayJumpSFX)
+						{
+							SOUNDMANAGER->play("bossJumpSFX", false);
+							SOUNDMANAGER->play("bossJumpVO", false);
+							isPlayJumpSFX = true;
+						}
 					}
 				}
 				if (frameX > 2) {
@@ -145,6 +156,7 @@ void boss::animation()
 					if (timer > 2) {
 						timer = 0;
 						jumpMotion = false;
+						isPlayJumpSFX = false;
 						boss.bossState = BOSSIDLE;
 					}
 				}
@@ -155,6 +167,12 @@ void boss::animation()
 		}
 		break;
 	case DRILL:
+		if (!isPlayDrillSFX)
+		{
+			SOUNDMANAGER->play("bossDrillSFX", false);
+			SOUNDMANAGER->play("bossDrillVO", false);
+			isPlayDrillSFX = true;
+		}
 		if (leftCheck) {
 			frameX = 9;
 			frameY = 2;
@@ -173,6 +191,12 @@ void boss::animation()
 		}
 		break;
 	case PUNCH:
+		if (!isPlayPunchSFX)
+		{
+			SOUNDMANAGER->play("bossPunchSFX", false);
+			SOUNDMANAGER->play("bossPunchVO", false);
+			isPlayPunchSFX = true;
+		}
 		if (punchCount == 0) {
 			switch (posPlayer)
 			{
@@ -381,6 +405,7 @@ void boss::animation()
 					timer = 0;
 					leftCheck = false;
 					boss.bossState = BOSSIDLE;
+					isPlayPunchSFX = false;
 					punchPattern = false;
 					patternStart = false;
 				}
@@ -400,6 +425,7 @@ void boss::animation()
 					timer = 0;
 					leftCheck = false;
 					boss.bossState = BOSSIDLE;
+					isPlayPunchSFX = false;
 					punchPattern = false;
 					patternStart = false;
 				}
@@ -419,6 +445,7 @@ void boss::animation()
 					timer = 0;
 					leftCheck = false;
 					boss.bossState = BOSSIDLE;
+					isPlayPunchSFX = false;
 					punchPattern = false;
 					patternStart = false;
 				}
@@ -437,6 +464,7 @@ void boss::animation()
 					punchCount = 0;
 					timer = 0;
 					leftCheck = false;
+					isPlayPunchSFX = false;
 					boss.bossState = BOSSIDLE;
 					punchPattern = false;
 					patternStart = false;
@@ -446,6 +474,12 @@ void boss::animation()
 		}
 		break;
 	case NIDDLE:
+		if (!isPlayNiddleSFX)
+		{
+			SOUNDMANAGER->play("bossNiddleSFX", false);
+			SOUNDMANAGER->play("bossNiddleVO", false);
+			isPlayNiddleSFX = true;
+		}
 		if (!jumpMotion) {
 			frameY = 0;
 			count++;
@@ -476,6 +510,12 @@ void boss::animation()
 		}
 		break;
 	case WALL:
+		if (!isPlayWallSFX)
+		{
+			SOUNDMANAGER->play("bossWallSFX", false);
+			SOUNDMANAGER->play("bossWallVO", false);
+			isPlayWallSFX = true;
+		}
 		frameX = 3;
 		frameY = 0;
 		timer++;

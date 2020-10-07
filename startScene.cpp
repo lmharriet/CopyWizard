@@ -5,8 +5,9 @@
 HRESULT startScene::init()
 {
 	//사운드
-	SOUNDMANAGER->play("titleBGM",true);
+	SOUNDMANAGER->stop("ingameBGM");
 	SOUNDMANAGER->stop("mapToolBGM");
+	SOUNDMANAGER->play("titleBGM",true);
 	isTitleBGM = true;
 	fadeIn = 0.0f;
 	
@@ -63,6 +64,7 @@ void startScene::update()
 			{
 			case 0:
 				SOUNDMANAGER->stop("titleBGM");
+				SOUNDMANAGER->play("ingameBGM",true);
 				SCENEMANAGER->loadScene("인게임");
 				break;
 			case 1:

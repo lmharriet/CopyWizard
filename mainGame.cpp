@@ -15,6 +15,8 @@ HRESULT mainGame::init()
 	//BGM_Sound
 	SOUNDMANAGER->addSound("titleBGM", "Sound/TitleScreen.mp3", true, true);
 	SOUNDMANAGER->addSound("mapToolBGM", "Sound/MapToolBGM.mp3", true, true);
+	SOUNDMANAGER->addSound("ingameBGM", "Sound/IngameBGM.mp3", true, true);
+	SOUNDMANAGER->addSound("bossBGM", "Sound/BossBGM.mp3", true, true);
 	volume = 0.5f;
 
 	/*씬추가*/
@@ -31,8 +33,8 @@ HRESULT mainGame::init()
 
 	//SCENEMANAGER->loadScene("인게임");
 	//SCENEMANAGER->loadScene("시작화면");
-	SCENEMANAGER->loadScene("맵툴제작");
-	//SCENEMANAGER->loadScene("보스방");
+	//SCENEMANAGER->loadScene("맵툴제작");
+	SCENEMANAGER->loadScene("보스방");
 
 	ShowCursor(false);
 	return S_OK;
@@ -98,6 +100,8 @@ void mainGame::volumeControl()
 			volume += .05f;
 			SOUNDMANAGER->setBackGroundVolume("titleBGM", volume);
 			SOUNDMANAGER->setBackGroundVolume("mapToolBGM", volume);
+			SOUNDMANAGER->setBackGroundVolume("ingameBGM", volume);
+			SOUNDMANAGER->setBackGroundVolume("bossBGM", volume);
 		}
 	}
 	if (INPUT->GetKeyDown(VK_SUBTRACT) || INPUT->GetKeyDown(VK_OEM_MINUS))
@@ -107,6 +111,8 @@ void mainGame::volumeControl()
 			volume -= .05f;
 			SOUNDMANAGER->setBackGroundVolume("titleBGM", volume);
 			SOUNDMANAGER->setBackGroundVolume("mapToolBGM", volume);
+			SOUNDMANAGER->setBackGroundVolume("ingameBGM", volume);
+			SOUNDMANAGER->setBackGroundVolume("bossBGM", volume);
 		}
 	}
 }
