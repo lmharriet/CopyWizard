@@ -32,6 +32,8 @@ HRESULT boss::init(int _posX, int _posY)
 	posPlayer = 5;
 	punchCount = 0;
 	woodTimer = 0;
+	pattern = 0;
+	patternCount = 0;
 
 	jumpMotion = false;
 	leftCheck = false;
@@ -39,6 +41,13 @@ HRESULT boss::init(int _posX, int _posY)
 		punching[i] = false;
 	}
 	startNiddle = false;
+	patternStart = false;
+
+	jumpPattern = false;
+	drillPattern = false;
+	punchPattern = false;
+	niddlePattern = false;
+	wallPattern = false;
 
 	niddleAngle = 0.0f;
 
@@ -51,11 +60,7 @@ void boss::release()
 
 void boss::update()
 {
-	this->jump();
-	this->drill();
-	this->punch();
-	this->niddle();
-	this->wall();
+	this->bossPattern();
 
 	BOSSMANAGER->update();
 	this->animation();
@@ -376,6 +381,8 @@ void boss::animation()
 					timer = 0;
 					leftCheck = false;
 					boss.bossState = BOSSIDLE;
+					punchPattern = false;
+					patternStart = false;
 				}
 				break;
 			case 2:
@@ -393,6 +400,8 @@ void boss::animation()
 					timer = 0;
 					leftCheck = false;
 					boss.bossState = BOSSIDLE;
+					punchPattern = false;
+					patternStart = false;
 				}
 				break;
 			case 3:
@@ -410,6 +419,8 @@ void boss::animation()
 					timer = 0;
 					leftCheck = false;
 					boss.bossState = BOSSIDLE;
+					punchPattern = false;
+					patternStart = false;
 				}
 				break;
 			case 4:
@@ -427,6 +438,8 @@ void boss::animation()
 					timer = 0;
 					leftCheck = false;
 					boss.bossState = BOSSIDLE;
+					punchPattern = false;
+					patternStart = false;
 				}
 				break;
 			}
@@ -494,9 +507,10 @@ void boss::bossPlayerAngle()
 	}
 }
 
-void boss::jump()
+void boss::jump(int patternType)
 {
-	if (INPUT->GetKeyDown('Z') && boss.bossState != RESPONE) {
+	if (patternType == 1 && !jumpPattern) {
+		jumpPattern = true;
 		frameX = 4;
 		frameY = 0;
 		jumpMotion = false;
@@ -521,17 +535,19 @@ void boss::jump()
 				boss.rc.bottom += 50;
 			}
 			else {
-				CAMERAMANAGER->Shake(10, 10, 3);
+				CAMERAMANAGER->Shake(30, 30, 15);
 				boss.center.x = boss.rc.left + 75;
 				boss.center.y = boss.rc.top + 75;
+				patternStart = false;
+				jumpPattern = false;
 			}
 		}
 	}
 }
 
-void boss::drill()
+void boss::drill(int patternType)
 {
-	if (INPUT->GetKeyDown('X')) {
+	if (patternType == 2 && !drillPattern) {
 		boss.bossState = DRILL;
 		count = 0;
 		timer = 0;
@@ -548,6 +564,7 @@ void boss::drill()
 			leftCheck = true;
 			drillBlcok.rc = RectMakeCenter(boss.center.x - 50, boss.center.y + 20, 100, 80);
 		}
+		drillPattern = true;
 	}
 
 	if (boss.bossState == DRILL && timer > 30) {
@@ -579,6 +596,8 @@ void boss::drill()
 				}
 				boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
 				boss.bossState = BOSSIDLE;
+				drillPattern = false;
+				patternStart = false;
 				timer = 0;
 				count = 0;
 			}
@@ -586,9 +605,9 @@ void boss::drill()
 	}
 }
 
-void boss::punch()
+void boss::punch(int patternType)
 {
-	if (INPUT->GetKeyDown('C')) {
+	if (patternType == 3 && !punchPattern) {
 		boss.bossState = PUNCH;
 		count = 0;
 		timer = 0;
@@ -599,6 +618,7 @@ void boss::punch()
 			block[i].angle = boss.angle;
 			block[i].rc = RectMakeCenter(block[i].center.x, block[i].center.y, 100, 100);
 		}
+		punchPattern = true;
 	}
 
 	if (boss.bossState == PUNCH) {
@@ -616,15 +636,16 @@ void boss::punch()
 	}
 }
 
-void boss::niddle()
+void boss::niddle(int patternType)
 {
-	if (INPUT->GetKeyDown('V')) {
+	if (patternType == 4 && !niddlePattern) {
 		boss.bossState = NIDDLE;
 		jumpMotion = false;
 		timer = 0;
 		frameX = 4;
+		niddlePattern = true;
 	}
-	cout << count << endl;
+
 	if (boss.bossState == NIDDLE && jumpMotion) {
 		if (frameX == 1) {
 			if (boss.rc.bottom < 0) {
@@ -681,12 +702,14 @@ void boss::niddle()
 
 			niddleBlock[i].rc = RectMakeCenter(niddleBlock[i].center.x, niddleBlock[i].center.y, 20, 20);
 
-			CAMERAMANAGER->Shake(5, 5, 100);
+			CAMERAMANAGER->Shake(5, 5, 70);
 
 			if (timer > 400) {
 				timer = 0;
 				boss.bossState = BOSSIDLE;
 				startNiddle = false;
+				niddlePattern = false;
+				patternStart = false;
 			}
 		}
 	}
@@ -703,9 +726,9 @@ void boss::middleWood()
 	wallBlock.push_back(_wall);
 }
 
-void boss::wall()
+void boss::wall(int patternType)
 {
-	if (INPUT->GetKeyDown('B')) {
+	if (patternType == 5 && !wallPattern) {
 		boss.bossState = WALL;
 		count = 0;
 		timer = 0;
@@ -725,6 +748,7 @@ void boss::wall()
 			wallBlock.push_back(_wall);
 		}
 		this->bossPlayerAngle();
+		wallPattern = true;
 	}
 
 	if (boss.bossState == WALL && timer > 50) {
@@ -732,6 +756,8 @@ void boss::wall()
 		CAMERAMANAGER->Shake(5, 5, 60);
 		if (count > 260) {
 			boss.bossState = BOSSIDLE;
+			patternStart = false;
+			wallPattern = false;
 		}
 		if (count % 90 == 0) {
 			this->middleWood();
@@ -780,6 +806,30 @@ void boss::wall()
 				wallBlock[i].center.y += -sinf(wallBlock[i].angle) * 55;
 				wallBlock[i].rc = RectMakeCenter(wallBlock[i].center.x, wallBlock[i].center.y, 48, 44);
 			}
+		}
+	}
+}
+
+void boss::bossPattern()
+{
+	if (boss.bossState == BOSSIDLE) {
+		pattern = RANDOM->range(5) + 1;
+		patternStart = true;
+		patternCount++;
+	}
+	if (patternStart && patternCount < 4) {
+		this->jump(pattern);
+		this->drill(pattern);
+		this->punch(pattern);
+		this->niddle(pattern);
+		this->wall(pattern);
+	}
+	if (patternCount > 4) {
+		timer++;
+		cout << timer << endl;
+		if (timer > 200) {
+			timer = 0;
+			patternCount = 0;
 		}
 	}
 }

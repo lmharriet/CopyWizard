@@ -48,11 +48,20 @@ private:
 	int punchCount;
 	int woodTimer;
 	int frameX, frameY;
+	int pattern;
+	int patternCount;
 
 	bool jumpMotion;
 	bool leftCheck;
 	bool punching[3];
 	bool startNiddle;
+	bool patternStart;
+
+	bool jumpPattern;
+	bool drillPattern;
+	bool punchPattern;
+	bool niddlePattern;
+	bool wallPattern;
 
 	float niddleAngle;
 public:
@@ -63,12 +72,13 @@ public:
 
 	void animation();
 	void bossPlayerAngle();
-	void jump();
-	void drill();
-	void punch();
-	void niddle();
+	void jump(int patternType);
+	void drill(int patternType);
+	void punch(int patternType);
+	void niddle(int patternType);
 	void middleWood();
-	void wall();
+	void wall(int patternType);
+	void bossPattern();
 
 	RECT getBossRect() {
 		return boss.rc;
