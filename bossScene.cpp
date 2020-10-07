@@ -31,6 +31,10 @@ HRESULT bossScene::init()
     UI->setCoin(PLAYERDATA->getCoin());
     UI->setHp(PLAYERDATA->getHp());
 
+
+    //sound
+    soundInit();
+
     return S_OK;
 }
 
@@ -42,6 +46,14 @@ void bossScene::release()
 
 void bossScene::update()
 {
+    //sound 
+    if (isBossBGM)
+    {
+        SOUNDMANAGER->fadeIn("bossBGM", fadeIn);
+        fadeIn += 0.002f;
+        if (fadeIn >= SOUNDMANAGER->getVolumeBGM())
+            isBossBGM = false;
+    }
     //camera update
     CAMERAMANAGER->update();
 
@@ -74,6 +86,8 @@ void bossScene::bossCutScene()
 {
     if (!isBattle && colCheck(_player->getRect(), area))
     {
+        SOUNDMANAGER->play("CutSceneSFX", false);
+        SOUNDMANAGER->play("CutSceneVO", false);
         isBattle = true; // 한번만 실행하기 위함
         CAMERAMANAGER->setCutScene
         (
@@ -108,4 +122,24 @@ void bossScene::render()
     CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("frontFrame"), 0, 0);
     PARTICLE->render(getMemDC());
     UI->render(getMemDC(), 50, 50);
+}
+
+void bossScene::soundInit()
+{
+    isBossBGM = true;
+    fadeIn = 0.f;
+
+    SOUNDMANAGER->addSound("bossDrillSFX", "Sound/bossDrillSFX.mp3");
+    SOUNDMANAGER->addSound("bossDrillVO", "Sound/bossDrillVO.mp3");
+    SOUNDMANAGER->addSound("bossJumpSFX", "Sound/bossJumpSFX.mp3");
+    SOUNDMANAGER->addSound("bossJumpVO", "Sound/bossJumpVO.mp3");
+    SOUNDMANAGER->addSound("bossNiddleSFX", "Sound/bossNiddleSFX.mp3");
+    SOUNDMANAGER->addSound("bossPunchSFX", "Sound/bossPunchSFX.mp3");
+    SOUNDMANAGER->addSound("bossPunchVO", "Sound/bossPunchVO.mp3");
+    SOUNDMANAGER->addSound("bossWallSFX", "Sound/bossWallSFX.mp3");
+    SOUNDMANAGER->addSound("bossWallVO", "Sound/bossWallVO.mp3");
+    SOUNDMANAGER->addSound("CutSceneSFX", "Sound/CutSceneSFX.mp3");
+    SOUNDMANAGER->addSound("CutSceneVO", "Sound/CutSceneVO.mp3");
+
+    SOUNDMANAGER->play("bossBGM",true);
 }

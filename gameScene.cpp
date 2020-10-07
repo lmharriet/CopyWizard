@@ -3,6 +3,7 @@
 
 HRESULT gameScene::init()
 {
+	
 	UI->init();
 	DROP->init();
 
@@ -30,6 +31,10 @@ HRESULT gameScene::init()
 
 	UI->setCoin(PLAYERDATA->getCoin());
 	UI->setHp(PLAYERDATA->getHp());
+
+	//sound
+	isIngameBGM = true;
+	fadeIn = 0.f;
 	return S_OK;
 }
 
@@ -44,6 +49,15 @@ void gameScene::release()
 
 void gameScene::update()
 {
+	//»ç¿îµå
+	if (isIngameBGM)
+	{
+		SOUNDMANAGER->fadeIn("ingameBGM", fadeIn);
+		fadeIn += 0.002f;
+		if (fadeIn >= SOUNDMANAGER->getVolumeBGM())
+			isIngameBGM = false;
+	}
+
 	PLAYERDATA->setX(_player->getX());
 	PLAYERDATA->setY(_player->getY());
 

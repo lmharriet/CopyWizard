@@ -32,6 +32,11 @@ private:
 
 	 int atkCount;
 
+	 //»ç¿îµå
+
+	 bool isIngameBGM;
+	 float fadeIn;
+
 public:
 	HRESULT init();
 	void release();

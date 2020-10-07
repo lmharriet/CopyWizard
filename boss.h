@@ -64,6 +64,13 @@ private:
 	bool wallPattern;
 
 	float niddleAngle;
+
+	//sound
+	bool isPlayDrillSFX;
+	bool isPlayJumpSFX;
+	bool isPlayWallSFX;
+	bool isPlayNiddleSFX;
+	bool isPlayPunchSFX;
 public:
 	HRESULT init(int _posX, int _posY);
 	void release();
