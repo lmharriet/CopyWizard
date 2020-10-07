@@ -27,6 +27,10 @@ HRESULT bossScene::init()
 
 	_boss->getPlayerInfo(_player);
 
+    PARTICLE0->init();
+    UI->setCoin(PLAYERDATA->getCoin());
+    UI->setHp(PLAYERDATA->getHp());
+
     return S_OK;
 }
 
@@ -59,6 +63,11 @@ void bossScene::update()
 	if (isBattle) {
 		_boss->update();
 	}
+
+    PARTICLE0->pointActive();
+    PARTICLE0->explosionActive();
+
+
 }
 
 void bossScene::bossCutScene()
@@ -97,6 +106,6 @@ void bossScene::render()
 	_boss->render();
 
     CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("frontFrame"), 0, 0);
-
+    PARTICLE0->render(getMemDC());
     UI->render(getMemDC(), 50, 50);
 }
