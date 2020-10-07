@@ -309,10 +309,10 @@ void meteor::update()
 	}
 
 	circleCount++;
-	if (circleCount % 5 == 0)
+	if (circleCount % 7 == 0)
 	{
 		CircleIndex++;
-		if (CircleIndex > 24)CircleIndex = 24;
+		if (CircleIndex > 23)CircleIndex = 23;
 	}
 	move();
 
@@ -323,7 +323,7 @@ void meteor::render()
 {
 
 	//test
-	image* img = IMAGEMANAGER->addFrameImage("circle", "resource/player/castingCircle.bmp",3201, 128, 25, 1);
+	image* img = IMAGEMANAGER->addFrameImage("circle", "resource/player/castingCircle1.bmp",3072, 128, 24, 1,true,RGB(255,0,0));
 	
 	char temp[126];
 
