@@ -4,16 +4,19 @@
 HRESULT particleManager::init()
 {
 	IMAGEMANAGER->addFrameImage("frameParticle", "Images/particle/frameParticle.bmp", 240, 160, 6, 4);
-	IMAGEMANAGER->addFrameImage("explosionParticle", "Images/particle/explosionParticle.bmp", 960*5, 640*5, 6, 4);
+	IMAGEMANAGER->addFrameImage("explosionParticle", "Images/particle/explosionParticle.bmp", 960/2, 640/2, 6, 4);
+	IMAGEMANAGER->addFrameImage("healBallParticle", "Images/particle/healBallParticle.bmp", 60, 5, 10, 1);
 	return S_OK;
 }
 
 void particleManager::render(HDC hdc)
 {
-	image* img = IMAGEMANAGER->findImage("frameParticle");
+	image* img = nullptr;
 
 	for (int i = 0; i < vParticle.size();)
 	{
+		img = IMAGEMANAGER->findImage(vParticle[i].keyName);
+
 		vParticle[i].time++;
 		//이동
 		vParticle[i].x += cosf(vParticle[i].angle) * vParticle[i].speed;
@@ -37,7 +40,7 @@ void particleManager::render(HDC hdc)
 	}
 }
 
-void particleManager::pointGenerate(float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius, float particleSpeed, int frameDelay)
+void particleManager::pointGenerate(string keyName,float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius, float particleSpeed, int frameDelay)
 {
 	tagParticlePoint particlePoint;
 	particlePoint.x = x;
@@ -51,6 +54,8 @@ void particleManager::pointGenerate(float x, float y, int CreateDelay, int lifeT
 
 	particlePoint.particleSpeed = particleSpeed;
 	particlePoint.frameDelay = frameDelay;
+
+	particlePoint.keyName = keyName;
 
 	vParticlePoint.push_back(particlePoint);
 }
@@ -91,7 +96,7 @@ void particleManager::pointActive()
 			float x = vParticlePoint[i].x + cosf(arr[vParticlePoint[i].angleNum]) * vParticlePoint[i].radius; // 10정도 밀어줌
 			float y = vParticlePoint[i].y - sinf(arr[vParticlePoint[i].angleNum]) * vParticlePoint[i].radius; // 10정도 밀어줌
 
-			generate("frameParticle", x, y, arr[vParticlePoint[i].angleNum], vParticlePoint[i].frameDelay, vParticlePoint[i].particleSpeed);
+			generate(vParticlePoint[i].keyName, x, y, arr[vParticlePoint[i].angleNum], vParticlePoint[i].frameDelay, vParticlePoint[i].particleSpeed);
 			vParticlePoint[i].angleNum++;
 
 			if (vParticlePoint[i].angleNum == vParticlePoint[i].maxAngle)vParticlePoint[i].angleNum = 0;
@@ -139,6 +144,7 @@ void particleManager::generate(string keyName ,float x, float y, float angle, in
 	particle.time = 0;
 
 	image* img = IMAGEMANAGER->findImage(keyName);
+	particle.keyName = keyName;
 	//image info
 	particle.frameX = 0;
 	particle.maxFrameX = img->getMaxFrameX();

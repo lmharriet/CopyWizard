@@ -3,6 +3,8 @@
 
 struct tagParticle
 {
+	string keyName;
+
 	float x, y;
 	float angle;
 	float speed;
@@ -18,6 +20,8 @@ struct tagParticle
 
 struct tagParticlePoint
 {
+	string keyName;
+
 	float x, y;
 	int delay;
 
@@ -42,7 +46,7 @@ public:
 	HRESULT init();
 	void render(HDC hdc);
 
-	void pointGenerate(float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius, float particleSpeed, int frameDelay);
+	void pointGenerate(string keyName, float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius, float particleSpeed, int frameDelay);
 
 	void explosionGenerate(float x, float y, int maxAngle, float radius, float particleSpeed, int frameDelay);
 

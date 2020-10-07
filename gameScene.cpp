@@ -70,6 +70,7 @@ void gameScene::update()
 	{
 		//PARTICLE->pointGenerate(_player->getX(), _player->getY(), 0, 0, 0, 5, 60);
 		DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, 17);
+		//PARTICLE->pointGenerate()
 	}
 	PARTICLE->pointActive();
 	PARTICLE->explosionActive();

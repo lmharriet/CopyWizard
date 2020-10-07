@@ -671,9 +671,9 @@ void RagingInferno::fire(float x, float y, float angle,int *gaugeTime)
 	inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
 	inferno.lifeTime = 100;
 	inferno.atkPower = 30;
-	PARTICLE->pointGenerate(inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
-	PARTICLE->pointGenerate(inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
-	PARTICLE->pointGenerate(inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
+	PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
+	PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
+	PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
 	*gaugeTime = 0;
 	isFire = true;
 	gauging = true;
@@ -689,14 +689,14 @@ void RagingInferno::move(int gaugeTime)
 			inferno.y = inferno.y - sinf(inferno.angle) * 20.0f;
 			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
 			gauging = false;
-			if (gaugeTime % 3 == 0) PARTICLE->pointGenerate(inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);
+			if (gaugeTime % 3 == 0) PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);
 		}
 
 		if (gaugeTime == 70)
 		{
-			PARTICLE->pointGenerate(inferno.x, inferno.y, 2, 100, 3, 3.f, 0.8f, 10);
-			PARTICLE->pointGenerate(inferno.x, inferno.y, 2, 100, 5, 5.f, 0.7f, 10);
-			PARTICLE->pointGenerate(inferno.x, inferno.y, 2, 100, 7, 7.f, 0.6f, 10);
+			PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 2, 100, 3, 3.f, 0.8f, 10);
+			PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 2, 100, 5, 5.f, 0.7f, 10);
+			PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 2, 100, 7, 7.f, 0.6f, 10);
 		}
 
 		if (gaugeTime >= 70)
