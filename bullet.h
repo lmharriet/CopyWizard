@@ -193,22 +193,37 @@ public:
 	int getSkillNum() { return 2; }
 	float getY(int index) { return _vDash[index].y; }
 
-	
+
 };
 
 //===================
 //	## RANGING INFERNO ## 
 //===================
+struct tagTail
+{
+	int currentTime;
+	float minAngle;
+	int lifeTime;
+	float speed;
+	float angle;
+
+	float x;
+	float y;
+};
+
 class RagingInferno :public gameNode
 {
 private:
 	tagArcana inferno;
 
+	vector<tagTail> vTail;
 
 	float distance;
 	int index, count;
 	bool isFire;
 	bool gauging;
+
+	int time;
 public:
 	HRESULT init();
 	void release();
@@ -216,6 +231,7 @@ public:
 	void render();
 	void fire(float x, float y,float angle, int *gaugeTime);
 	void move( int gaugeTime);
+	void createTail();
 	int getSkillNum() { return 3; }
 
 	//getter , setter
@@ -223,6 +239,9 @@ public:
 	bool getCol() { return inferno.Collision; }
 	bool getGauging() { return gauging; }
 
+	tagArcana getInf() { return inferno; }
+	void setX(float X) { inferno.x = X; }
+	void setY(float Y) { inferno.y = Y; }
 };
 
 

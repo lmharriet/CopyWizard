@@ -282,7 +282,7 @@ void gameScene::playerAttack()
 			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRC()))
 			{
 
-				PARTICLE->explosionGenerate("explosionParticle",_player->getBlaze()->getBullet()[i].x + 20,
+				PARTICLE->explosionGenerate("explosionParticle", _player->getBlaze()->getBullet()[i].x + 20,
 					_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1);
 				enemy->getMinion()[j]->hit(_player->getBlaze()->getBullet()[i].atkPower,
 					_player->getBlaze()->getBullet()[i].angle, 20.f, 0);
@@ -335,7 +335,39 @@ void gameScene::playerAttack()
 
 	//inferno
 
-	//for(int i = 0 ; i)
+	for (int i = 0; i < enemy->getMinion().size(); i++)
+	{
+		long enemyX = enemy->getMinion()[i]->getPos().x;
+		long enemyY = enemy->getMinion()[i]->getPos().y;
+
+		if (colCheck(_player->getInferno()->getInf().rc, enemy->getMinion()[i]->getRC()))
+		{
+			if (PLAYERDATA->getGaugeTime() > 50 && PLAYERDATA->getGaugeTime() < 70)
+			{
+				float angle = getAngle(enemyX + 40, enemyY + 40,
+					_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
+
+				float x = enemyX + cosf(angle) * 20.f;
+				float y = enemyY - sinf(angle) * 20.f;
+
+				enemy->getMinion()[i]->setPt(x, y);
+			
+				enemy->getMinion()[i]->hit(0, 0, 0.f, 0);
+			}
+			else if (PLAYERDATA->getGaugeTime() >= 70)
+			{
+				float angle = getAngle(enemyX + 40, enemyY + 40,
+					_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
+
+				float x = enemyX + cosf(angle) * 4.5f;
+				float y = enemyY - sinf(angle) * 4.5f;
+
+				enemy->getMinion()[i]->setPt(x, y);
+
+				enemy->getMinion()[i]->hit(1, 0, 0.f, 3);
+			}
+		}
+	}
 }
 
 void gameScene::loadMap(const char* mapFileName)

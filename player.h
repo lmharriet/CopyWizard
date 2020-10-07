@@ -108,7 +108,7 @@ public:
 	bomb* getBlaze() { return blaze; }
 	meteor* getMeteor() { return Meteor; }
 	dashFire* getDashFire() { return searingRush; }
-
+	RagingInferno* getInferno() { return inferno; }
 
 
 	void setX(float x) { posX = x; }

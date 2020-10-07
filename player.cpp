@@ -85,6 +85,7 @@ void player::release()
 
 void player::update()
 {
+	
 
 	blaze->update();
 	flares->update();
@@ -100,6 +101,7 @@ void player::update()
 	atkCount++;
 
 	gaugeTime++;
+	PLAYERDATA->setGaugeTime(gaugeTime);
 	// angle(mouse-player), angleTenth
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
@@ -149,6 +151,8 @@ void player::other_update()
 	searingRush->update();
 
 	inferno->update(&gaugeTime);
+	gaugeTime++;
+
 
 	inven->update();
 	//animation count
@@ -156,7 +160,6 @@ void player::other_update()
 	dashCount++;
 	atkCount++;
 
-	gaugeTime++;
 
 	// angle(mouse-player), angleTenth
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));

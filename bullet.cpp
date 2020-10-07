@@ -624,6 +624,8 @@ void dashFire::fire(float x, float y)
 
 HRESULT RagingInferno::init()
 {
+	time = 0;
+
 	distance = 0;
 	index = count = 0;
 
@@ -649,6 +651,7 @@ void RagingInferno::update(int *gaugeTime)
 	distance = getDistance(inferno.x, inferno.y, inferno.fireX, inferno.fireY);
 
 	move(*gaugeTime);
+
 }
 
 void RagingInferno::render()
@@ -658,8 +661,42 @@ void RagingInferno::render()
 		CAMERAMANAGER->FrameRender(getMemDC(), inferno.img,
 			inferno.x - (inferno.img->getFrameWidth() / 2),
 			inferno.y - (inferno.img->getFrameHeight() / 2), index, 0);
+
+		if (PLAYERDATA->getGaugeTime() >= 70)
+		{
+			for (int i = 0; i < vTail.size();)
+			{
+				//이동
+				vTail[i].x += cosf(vTail[i].angle) * vTail[i].speed;
+				vTail[i].y -= sinf(vTail[i].angle) * vTail[i].speed;
+
+				if (10.f > vTail[i].minAngle)
+				{
+					vTail[i].minAngle += 0.002f;
+				}
+				vTail[i].angle -= sinf(vTail[i].minAngle);
+
+				//렌더
+				//CAMERAMANAGER->Ellipse(getMemDC(), RectMakeCenter(vTail[i].x, vTail[i].y, 20, 20));
+				PARTICLE->generate("frameParticle", vTail[i].x, vTail[i].y, vTail[i].angle, 4, 1.f);
+
+				//삭제
+				if (vTail[i].currentTime == vTail[i].lifeTime) vTail.erase(vTail.begin() + i);
+				else
+				{
+					vTail[i].currentTime++;
+
+					i++;
+				}
+			}
+		}
 		//CAMERAMANAGER->Ellipse(getMemDC(), inferno.rc);
 	}
+	else
+	{
+		if (vTail.empty() == false)vTail.clear();
+	}
+
 }
 
 void RagingInferno::fire(float x, float y, float angle,int *gaugeTime)
@@ -678,6 +715,8 @@ void RagingInferno::fire(float x, float y, float angle,int *gaugeTime)
 	isFire = true;
 	gauging = true;
 
+
+	
 }
 void RagingInferno::move(int gaugeTime)
 {
@@ -687,7 +726,7 @@ void RagingInferno::move(int gaugeTime)
 		{
 			inferno.x = inferno.x + cosf(inferno.angle) * 20.0f;
 			inferno.y = inferno.y - sinf(inferno.angle) * 20.0f;
-			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
+			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 50, 50);
 			gauging = false;
 			if (gaugeTime % 3 == 0) PARTICLE->pointGenerate("frameParticle",inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);
 		}
@@ -701,7 +740,40 @@ void RagingInferno::move(int gaugeTime)
 
 		if (gaugeTime >= 70)
 		{
+			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 150, 150);
+
 			inferno.lifeTime--;
+
+			if (time % 35 == 0)
+			{
+				tagTail tail;
+				tail.currentTime = 0;
+				tail.minAngle = 0.1f;
+				tail.lifeTime = 100;
+				tail.speed = 8.f;
+				float angle = 0;
+
+				tail.x = inferno.x - 17;
+				tail.y = inferno.y - 75;
+				tail.angle = angle;
+
+				vTail.push_back(tail);
+
+				angle = 120 * (PI / 180);
+				tail.x = inferno.x - 57;
+				tail.y = inferno.y + 50;
+				tail.angle = angle;
+
+				vTail.push_back(tail);
+
+				angle = 240 * (PI / 180);
+				tail.x = inferno.x + 73;
+				tail.y = inferno.y + 20;
+				tail.angle = angle;
+
+				vTail.push_back(tail);
+			}
+			time++;
 		}
 		if (inferno.lifeTime == 0)
 		{
@@ -712,4 +784,7 @@ void RagingInferno::move(int gaugeTime)
 			isFire = false;
 		}
 	}
+}
+void RagingInferno::createTail()
+{
 }

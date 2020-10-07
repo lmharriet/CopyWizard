@@ -170,6 +170,9 @@ public:
 	inline bool getDie() { return isDie; }
 	inline int getCenterY() { return pos.y + img->getFrameHeight() / 2; }
 
+	inline void setPt(float x, float y) { pos = { (long)x, (long)y }; }
+	inline void setX(int X) { pos.x = X; }
+	inline void setY(int Y) { pos.y = Y; }
 	inline void setPlayerRC(RECT rc) { playerRC = rc; }
 	inline void setCamRC(RECT rc) { camRC = rc; }
 	inline void setHp(float _atk) { hp = (int)_atk; }

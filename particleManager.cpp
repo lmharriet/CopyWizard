@@ -18,26 +18,31 @@ void particleManager::render(HDC hdc)
 		img = IMAGEMANAGER->findImage(vParticle[i].keyName);
 
 		vParticle[i].time++;
-		//이동
+
+		//이동1
 		if (vParticle[i].isBack == false)
 		{
 			vParticle[i].x += cosf(vParticle[i].angle) * vParticle[i].speed;
 			vParticle[i].y -= sinf(vParticle[i].angle) * vParticle[i].speed;
 		}
 
-		if (vParticle[i].isBack == true && vParticle[i].backTime > 0)
+		//이동2
+		if (vParticle[i].isBack == true)
 		{
-			vParticle[i].backTime--;
+			if (vParticle[i].backTime > 0)
+			{
+				vParticle[i].backTime--;
 
-			vParticle[i].x += cosf(vParticle[i].angle) * vParticle[i].speed;
-			vParticle[i].y -= sinf(vParticle[i].angle) * vParticle[i].speed;
-		}
-		else
-		{
-			float angle = getAngle(vParticle[i].x, vParticle[i].y, PLAYERDATA->getX(), PLAYERDATA->getY());
+				vParticle[i].x += cosf(vParticle[i].angle) * vParticle[i].speed;
+				vParticle[i].y -= sinf(vParticle[i].angle) * vParticle[i].speed;
+			}
+			else
+			{
+				float angle = getAngle(vParticle[i].x, vParticle[i].y, PLAYERDATA->getX(), PLAYERDATA->getY());
 
-			vParticle[i].x += cosf(angle) * vParticle[i].speed * 1.3f;
-			vParticle[i].y -= sinf(angle) * vParticle[i].speed * 1.3f;
+				vParticle[i].x += cosf(angle) * vParticle[i].speed * 1.3f;
+				vParticle[i].y -= sinf(angle) * vParticle[i].speed * 1.3f;
+			}
 		}
 
 		CAMERAMANAGER->FrameRender(hdc, img, 
