@@ -264,7 +264,7 @@ void bomb::move()
 		float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY, _vBullet[i].x, _vBullet[i].y);
 		if (_range < distance)
 		{
-			PARTICLE->explosionGenerate(_vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3);
+			PARTICLE0->explosionGenerate(_vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3);
 			//_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
 			_vBullet[i].collision = true;
 			cout << i << " : " << _vBullet[i].collision << '\n';
@@ -671,9 +671,9 @@ void RagingInferno::fire(float x, float y, float angle)
 	inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
 	inferno.lifeTime = 100;
 	inferno.atkPower = 30;
-	PARTICLE->pointGenerate(inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
-	PARTICLE->pointGenerate(inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
-	PARTICLE->pointGenerate(inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
+	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
+	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
+	PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
 
 	isFire = true;
 
@@ -688,14 +688,14 @@ void RagingInferno::move(float range, int gaugeTime)
 			inferno.y = inferno.y - sinf(inferno.angle) * 20.0f;
 			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
 
-			if (gaugeTime % 3 == 0) PARTICLE->pointGenerate(inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);
+			if (gaugeTime % 3 == 0) PARTICLE0->pointGenerate(inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);
 		}
 
 		if (gaugeTime == 70)
 		{
-			PARTICLE->pointGenerate(inferno.x, inferno.y, 2, 100, 3, 3.f, 0.8f, 10);
-			PARTICLE->pointGenerate(inferno.x, inferno.y, 2, 100, 5, 5.f, 0.7f, 10);
-			PARTICLE->pointGenerate(inferno.x, inferno.y, 2, 100, 7, 7.f, 0.6f, 10);
+			PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 100, 3, 3.f, 0.8f, 10);
+			PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 100, 5, 5.f, 0.7f, 10);
+			PARTICLE0->pointGenerate(inferno.x, inferno.y, 2, 100, 7, 7.f, 0.6f, 10);
 		}
 
 		if (gaugeTime >= 70)
@@ -704,11 +704,11 @@ void RagingInferno::move(float range, int gaugeTime)
 		}
 		if (inferno.lifeTime == 0)
 		{
-			PARTICLE->explosionGenerate(inferno.x, inferno.y, 18, 1.f, 4.f, 9);
-			PARTICLE->explosionGenerate(inferno.x, inferno.y, 15, 1.f, 3.f, 7);
-			PARTICLE->explosionGenerate(inferno.x, inferno.y, 12, 1.f, 2.f, 5);
-			PARTICLE->explosionGenerate(inferno.x, inferno.y, 9, 1.f, 3.f, 4);
-			PARTICLE->explosionGenerate(inferno.x, inferno.y, 6, 1.f, 4.f, 2);
+			PARTICLE0->explosionGenerate(inferno.x, inferno.y, 18, 1.f, 4.f, 9);
+			PARTICLE0->explosionGenerate(inferno.x, inferno.y, 15, 1.f, 3.f, 7);
+			PARTICLE0->explosionGenerate(inferno.x, inferno.y, 12, 1.f, 2.f, 5);
+			PARTICLE0->explosionGenerate(inferno.x, inferno.y, 9, 1.f, 3.f, 4);
+			PARTICLE0->explosionGenerate(inferno.x, inferno.y, 6, 1.f, 4.f, 2);
 			inferno.x = inferno.fireX;
 			inferno.y = inferno.fireY;
 			isFire = false;
