@@ -57,7 +57,8 @@ void gameScene::update()
 		if (fadeIn >= SOUNDMANAGER->getVolumeBGM())
 			isIngameBGM = false;
 	}
-
+	UI->setCoin(PLAYERDATA->getCoin());
+	UI->setHp(PLAYERDATA->getHp());
 	PLAYERDATA->setX(_player->getX());
 	PLAYERDATA->setY(_player->getY());
 
@@ -393,13 +394,11 @@ void gameScene::enemyAttack()
 		{
 			_player->damage(enemy->getBullet()->getBullet()[i].damage, enemy->getBullet()->getBullet()[i].angle);
 			enemy->getBullet()->removeBullet(i);
-			
 		}
 		else
 		{
 			i++;
 		}
-
 	}
 }
 
