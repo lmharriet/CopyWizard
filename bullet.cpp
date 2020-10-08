@@ -31,8 +31,12 @@ void bullet::render()
 {
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
-		CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, _vBullet[i].x, _vBullet[i].y,
-			_vBullet[i].FrameX, _vBullet[i].FrameY);
+		if (_vBullet[i].bulletImage)
+			CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, _vBullet[i].x, _vBullet[i].y,
+				_vBullet[i].FrameX, _vBullet[i].FrameY);
+
+		else
+			CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
 	}
 
 }
@@ -219,12 +223,12 @@ void bomb::render()
 {
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
-		if (_vBullet[i].bulletImage)
-			CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, _vBullet[i].x, _vBullet[i].y,
-				_vBullet[i].FrameX, _vBullet[i].FrameY);
+		CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage,
+			_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth() / 2),
+			_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight() / 2), index, 0);
 
-		else
-			CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
+		CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 20, 20));
+
 	}
 
 }
