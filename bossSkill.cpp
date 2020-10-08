@@ -32,6 +32,15 @@ HRESULT bossSkill::init(float x, float y, int deleteTime, int type)
 		_frameX = 3;
 		_frameY = 0;
 		break;
+	case 2:
+		IMAGEMANAGER->addFrameImage("bossCircle", "resource/boss/bosscircle.bmp", 3584, 256, 14, 1, true, RGB(255, 0, 255));
+
+		_bossCircleImg = IMAGEMANAGER->findImage("bossCircle");
+
+		temp = RectMake(_posX, _posY, 256, 256);
+		_frameX = 0;
+		_frameY = 0;
+		break;
 	}
 
 	return S_OK;
@@ -59,6 +68,8 @@ void bossSkill::render(HDC hdc)
 		//_niddleImg->frameRender(hdc, _posX, _posY, _frameX, _frameY);
 		CAMERAMANAGER->FrameRender(hdc, _niddleImg, _posX, _posY, _frameX, _frameY);
 		break;
+	case 2:
+		CAMERAMANAGER->AlphaFrameRender(hdc, _bossCircleImg, _posX, _posY, _frameX, _frameY, 7);
 	}
 }
 
@@ -81,6 +92,15 @@ void bossSkill::animation()
 			_frameX--;
 			if (_frameX < 0) {
 				_frameX = 0;
+			}
+		}
+		break;
+	case 2:
+		_timer++;
+		if (_timer % 2 == 0) {
+			_frameX++;
+			if (_frameX > 14) {
+				_frameX = 14;
 			}
 		}
 		break;
