@@ -46,6 +46,8 @@ void bossScene::release()
 
 void bossScene::update()
 {
+    UI->setCoin(PLAYERDATA->getCoin());
+    UI->setHp(PLAYERDATA->getHp());
 	PLAYERDATA->setX(_player->getX());
 	PLAYERDATA->setY(_player->getY());
 
