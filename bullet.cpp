@@ -38,10 +38,9 @@ void bullet::render()
 		else
 			CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
 	}
-
 }
 
-void bullet::fire(float x, float y, float angle, float speed,int damage)
+void bullet::fire(float x, float y, float angle, float speed,int damage, bool image)
 {
 	//총알 벡터에 담는것을 제한한다
 	//if (_bulletMax < _vBullet.size() + 1) return;
@@ -53,7 +52,11 @@ void bullet::fire(float x, float y, float angle, float speed,int damage)
 	//구조체 변수들의 값을 한번에 0으로 초기화 시켜준다
 	//ZeroMemory(&bullet, sizeof(tagBullet));
 	//bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
-	bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
+	if (image)
+		bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
+	else bullet.bulletImage = NULL;
+
+
 	bullet.speed = speed;
 	bullet.angle = angle;
 	bullet.x = bullet.fireX = x;
