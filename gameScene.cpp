@@ -74,7 +74,7 @@ void gameScene::update()
 	enemy->update();
 
 
-	cam = RectMakeCenter(_player->getX(), _player->getY(),90, 90);
+	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX+15, WINSIZEY+15);
 	//checkArea = RectMakeCenter(_player->getX(), _player->getY(), 400, 400);
 	checkArea = RectMake(_player->getX() - 100, _player->getY() - WINSIZEY / 2 + 420, 200, 500);
 
