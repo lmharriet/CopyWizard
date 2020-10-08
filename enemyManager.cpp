@@ -5,19 +5,19 @@
 
 HRESULT enemyManager::init(tagTile* _tile)
 {
+	//몬스터 이미지
 	IMAGEMANAGER->addFrameImage("summoner", "resource/enemy/SummonerSource.bmp", 500, 800, 5, 8);
 	IMAGEMANAGER->addFrameImage("golem", "resource/enemy/Golem.bmp", 720, 700, 6, 5);
-	
 	IMAGEMANAGER->addFrameImage("knight", "resource/enemy/knight.bmp", 650, 1123, 6, 8);
 
+	//스킬 이펙트 이미지
 	IMAGEMANAGER->addFrameImage("smallSlash", "resource/enemyEffect/smallSlash.bmp", 300, 600, 3, 6);
 	IMAGEMANAGER->addFrameImage("knightSlashL", "resource/enemyEffect/knightSlashL.bmp", 246, 82, 3, 1);
 	IMAGEMANAGER->addFrameImage("knightSlashR", "resource/enemyEffect/knightSlashR.bmp", 246, 82, 3, 1);
 	IMAGEMANAGER->addFrameImage("knightSlashUp", "resource/enemyEffect/knightSlashUp.bmp", 246, 82, 3, 1);
 	IMAGEMANAGER->addFrameImage("knightSlashDown", "resource/enemyEffect/knightSlashDown.bmp", 246, 82, 3, 1);
 	IMAGEMANAGER->addFrameImage("stoneFly", "resource/enemyEffect/stoneFrame.bmp", 144, 72, 2, 1);
-	//미니언 생성, 보스, 일반몬스터
-	//따로 함수로 빼서 처리하면 관리가 편하다
+	
 
 	tile = _tile;
 	//미니언 생성
@@ -40,16 +40,8 @@ void enemyManager::release()
 void enemyManager::update()
 {
 	//공용총알 업데이트
-	/*int num;
-	_viMinion = _vMinion.begin();
-	for (_viMinion; _viMinion != _vMinion.end(); ++_viMinion)
-	{
-		if ((*_viMinion)->getMonsterKind() != MONSTERKIND::SUMMONER) continue;
-		if ((*_viMinion)->getBulletFire() == false)continue;
-
-		
-	}*/
-	_bullet->update(); //머무르게 하는건 나중에 하기..
+	
+	_bullet->update(); 
 
 	//벡터에 담긴 미니언들 업데이트
 	for (int i = 0; i < _vMinion.size();  )
@@ -83,23 +75,23 @@ void enemyManager::render()
 void enemyManager::setMinion()
 {
 	monster* _golem = new golem;
-	_golem->init(tile, "golem", { 820,320 }, 3.f,MONSTERKIND::GOLEM,50,"smallSlash",false);
+	_golem->init(tile,{ 820,320 });
 	_vMinion.push_back(_golem);
 	
 	monster* _golem1 = new golem;
-	_golem1->init(tile, "golem", { 220,320 }, 3.f, MONSTERKIND::GOLEM,50, "smallSlash",false);
+	_golem1->init(tile,{ 220,320 });
 	_vMinion.push_back(_golem1);
 	
 	monster* _knight = new knight;
-	_knight->init(tile, "knight", { 320, 350 }, 6.f, MONSTERKIND::KNIGHT, 80, NULL);
+	_knight->init(tile,  { 320, 350 });
 	_vMinion.push_back(_knight);
 
 	monster* _summoner = new summoner;
-	_summoner->init(nullptr,"summoner", { 500,300 },0, MONSTERKIND::SUMMONER,50,0,true,true);
+	_summoner->init(nullptr, { 500,300 });
 	_vMinion.push_back(_summoner);
 
 	monster* _summoner1 = new summoner;
-	_summoner1->init(nullptr, "summoner", { 800,300 }, 0, MONSTERKIND::SUMMONER, 50, 0, true, true);
+	_summoner1->init(nullptr, { 800,300 });
 	_vMinion.push_back(_summoner1);
 
 	
@@ -111,47 +103,21 @@ void enemyManager::minionBulletFire(float aimX, float aimY)
 	_viMinion = _vMinion.begin();
 	for (_viMinion; _viMinion != _vMinion.end(); ++_viMinion)
 	{
-		//if ((*_viMinion)->getMonsterKind() != MONSTERKIND::SUMMONER) continue;
 		if ((*_viMinion)->getFx() == false)continue;
-		//if (!_bullet->bulletEmpty()) continue;
 		
 		float angle = getAngle((float)(*_viMinion)->getCulPos().x, (float)(*_viMinion)->getCulPos().y, (float)aimX, (float)aimY);
-			//int direction = (*_viMinion)->getBulletDirection();
 		switch ((*_viMinion)->getMonsterKind())
 		{
 			
 		case MONSTERKIND::GOLEM:
-			switch ((*_viMinion)->getBulletDirection())
-			{
-			case MONSTER_UP:
-				_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle, 0.f, 50, MONSTERKIND::GOLEM);
-				(*_viMinion)->setFx(false);
-				break;
-			case MONSTER_DOWN:
-				_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y + 72, angle, 0.0f, 50, MONSTERKIND::GOLEM);
-				(*_viMinion)->setFx(false);
-				break;
-			case MONSTER_LEFT:
-				_bullet->fire((float)(*_viMinion)->getPos().x - 20, (float)(*_viMinion)->getPos().y , angle, 0.0f, 50, MONSTERKIND::GOLEM);
-				(*_viMinion)->setFx(false);
-				break;
-			case MONSTER_RIGHT:
-				_bullet->fire((float)(*_viMinion)->getPos().x + 100, (float)(*_viMinion)->getPos().y , angle, 0.0f, 50, MONSTERKIND::GOLEM);
-				(*_viMinion)->setFx(false);
-				break;
-			
-			}
-			
+			golemBullet( angle);
 			break;
 		case MONSTERKIND::KNIGHT:
-			//_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle, 0.0f, 50);
-
+			knightBullet(angle);
 			break;
+			
 		case MONSTERKIND::SUMMONER:
-			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle, 9.0f,50,  MONSTERKIND::SUMMONER,true);
-			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle + PI / 4, 9.0f,50,MONSTERKIND::SUMMONER,true);
-			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle - PI / 4, 9.0f,50,MONSTERKIND::SUMMONER,true);
-			(*_viMinion)->setFx(false);
+			summonerBullet(angle);
 			break;
 		}
 		
@@ -163,13 +129,67 @@ void enemyManager::removeMinion(int index)
 	_vMinion.erase(_vMinion.begin() + index);
 }
 
-void enemyManager::collision(RECT player)
+void enemyManager::golemBullet(float angle)
 {
-	for (int i = 0; i < _bullet->getBullet().size(); i++)
+	switch ((*_viMinion)->getBulletDirection())
 	{
-		if (colCheck(_bullet->getRect(i), player))
-		{
-			_bullet->removeBullet(i);
-		}
+	case MONSTER_UP:
+		_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72,
+			angle, 0.f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
+		(*_viMinion)->setFx(false);
+		break;
+	case MONSTER_DOWN:
+		_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y + 72,
+			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
+		(*_viMinion)->setFx(false);
+		break;
+	case MONSTER_LEFT:
+		_bullet->fire((float)(*_viMinion)->getPos().x - 20, (float)(*_viMinion)->getPos().y,
+			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
+		(*_viMinion)->setFx(false);
+		break;
+	case MONSTER_RIGHT:
+		_bullet->fire((float)(*_viMinion)->getPos().x + 100, (float)(*_viMinion)->getPos().y + 50,
+			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
+		(*_viMinion)->setFx(false);
+		break;
 	}
+}
+
+void enemyManager::knightBullet(float angle)
+{
+	switch ((*_viMinion)->getBulletDirection())
+	{
+	case MONSTER_UP:
+		_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72,
+			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
+		(*_viMinion)->setFx(false);
+		break;
+	case MONSTER_DOWN:
+		_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y + 72,
+			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
+		(*_viMinion)->setFx(false);
+		break;
+	case MONSTER_LEFT:
+		_bullet->fire((float)(*_viMinion)->getPos().x - 20, (float)(*_viMinion)->getPos().y + 30,
+			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
+		(*_viMinion)->setFx(false);
+		break;
+	case MONSTER_RIGHT:
+		_bullet->fire((float)(*_viMinion)->getPos().x + 100, (float)(*_viMinion)->getPos().y + 50,
+			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
+		(*_viMinion)->setFx(false);
+		break;
+	}
+}
+
+void enemyManager::summonerBullet(float angle)
+{
+	_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72,
+		angle, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind(), true);
+	_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72,
+		angle + PI / 4, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind(), true);
+	_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72,
+		angle - PI / 4, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind(), true);
+	(*_viMinion)->setFx(false);
 }

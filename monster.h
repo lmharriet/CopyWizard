@@ -139,8 +139,7 @@ protected:
 
 	vector<tagHit> vHit;
 public:
-	HRESULT init(tagTile* tile, const char* fileName, POINT _pos, float _speed, MONSTERKIND _kind,
-		int _hp,  const char* skillImgName,  bool _isKnockBack = true, bool isLongAtk = false);
+	HRESULT init(tagTile* tile, POINT _pos); 
 	void release();
 	void commonUpdate();
 	virtual void update()=0;
@@ -165,6 +164,8 @@ public:
 	inline bool getBulletFire() { return isBulletFire; }
 	inline int getBulletDirection() { for (int i = 0; i < MONSTER_MAX; i++) if (bulletDirection[i])return i; }
 	inline int getHp() { return hp; }
+	inline int getAttack() { return atk; }
+	inline int getArmour() { return armour; }
 	inline bool getDie() { return isDie; }
 	inline int getCenterY() { return pos.y + img->getFrameHeight() / 2; }
 

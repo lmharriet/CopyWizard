@@ -6,14 +6,21 @@ void golem::addInit()
 {
     smallSlashIndex = { 0,0 };
     hitImg = IMAGEMANAGER->addFrameImage("golemHit", "resource/enemy/golemHit.bmp", 720, 420, 6, 3);
+    kind = MONSTERKIND::GOLEM;
+    atk = 10;
+    armour = 50;
+    speed = 3.f;
+    hp = 50;
+    img = IMAGEMANAGER->findImage("golem");
+    skillImg = IMAGEMANAGER->findImage("smallSlash");
+    isKnockBack = false;
+    isRanger = false;
+
 }
 
 void golem::update()
 {
-    
-    
     //거리 계산해서 일정 거리 넘어가면 에이스타 작동안되게 하기.
-   
    
     if (isFindWayOn) //길찾기 on
     {
@@ -68,9 +75,6 @@ void golem::update()
 void golem::render()
 {
     stateImageRender();
-    
-  
-    
    //FrameRect(getMemDC(), playerRC,RGB(255,255,255));
    //FrameRect(getMemDC(), rc,RGB(255,255,255));
   // CAMERAMANAGER->Rectangle(getMemDC(), rc);
@@ -84,44 +88,7 @@ void golem::stateImageRender()
         stateIDLE();
         break;
     case STATEIMAGE::WALK:
-        if (atkDirection[MONSTER_LEFT])
-        {
-            frameIndexL[WALK].y = 2;
-            count++;
-            if (count % 10 == 0)
-            {
-                count = 0;
-                frameIndexL[WALK].x--;
-                if (frameIndexL[WALK].x < 0)
-                {
-                    frameIndexL[WALK].x = 5;
-                }
-            }
-            if(isHit)
-                hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[WALK].x, frameIndexL[WALK].y);
-            else
-                img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[WALK].x, frameIndexL[WALK].y);
-        }
-        else
-        {
-            frameIndexR[WALK].y = 1;
-            count++;
-            if (count % 10 == 0)
-            {
-                count = 0;
-                frameIndexR[WALK].x++;
-                if (frameIndexR[WALK].x > 5)
-                {
-                    frameIndexR[WALK].x = 0;
-                }
-            }
-            if (isHit)
-                hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[WALK].x, frameIndexR[WALK].y);
-            
-            else
-                img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[WALK].x, frameIndexR[WALK].y);
-        }
-
+        stateWalk();
         break;
     case STATEIMAGE::ATK:
         stateATK();
@@ -250,9 +217,9 @@ void golem::stateATK()
         if (atkDirection[MONSTER_UP] && atkDirection[MONSTER_LEFT] && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 40)
         {
             bulletDirection[MONSTER_UP] = true;
-            //bulletDirection[(int)ATKDIRECTION::DOWN] = false;
-            //bulletDirection[(int)ATKDIRECTION::LEFT] = false;
-            //bulletDirection[(int)ATKDIRECTION::RIGHT] = false;
+            bulletDirection[MONSTER_DOWN] = false;
+            bulletDirection[MONSTER_LEFT] = false;
+            bulletDirection[MONSTER_RIGHT] = false;
             smallSlashIndex.y = 5;
             if (count % frameSpeed == 0)
             {
@@ -270,6 +237,9 @@ void golem::stateATK()
         else if (atkDirection[MONSTER_UP] && atkDirection[MONSTER_RIGHT] && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 40)
         {
             bulletDirection[MONSTER_UP] = true;
+            bulletDirection[MONSTER_DOWN] = false;
+            bulletDirection[MONSTER_LEFT] = false;
+            bulletDirection[MONSTER_RIGHT] = false;
             smallSlashIndex.y = 4;
             if (count % frameSpeed == 0)
             {
@@ -287,6 +257,9 @@ void golem::stateATK()
         else if (atkDirection[MONSTER_DOWN] && atkDirection[MONSTER_LEFT] && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 80)
         {
             bulletDirection[MONSTER_DOWN] = true;
+            bulletDirection[MONSTER_UP] = false;
+            bulletDirection[MONSTER_LEFT] = false;
+            bulletDirection[MONSTER_RIGHT] = false;
             smallSlashIndex.y = 3;
             if (count % frameSpeed == 0)
             {
@@ -302,6 +275,9 @@ void golem::stateATK()
         else if (atkDirection[MONSTER_DOWN] && atkDirection[MONSTER_RIGHT] && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 80)
         {
             bulletDirection[MONSTER_DOWN] = true;
+            bulletDirection[MONSTER_UP] = false;
+            bulletDirection[MONSTER_LEFT] = false;
+            bulletDirection[MONSTER_RIGHT] = false;
             smallSlashIndex.y = 2;
             if (count % frameSpeed == 0)
             {
@@ -316,6 +292,9 @@ void golem::stateATK()
         }
         else if (atkDirection[MONSTER_RIGHT])
         {
+            bulletDirection[MONSTER_DOWN] = false;
+            bulletDirection[MONSTER_UP] = false;
+            bulletDirection[MONSTER_LEFT] = false;
             bulletDirection[MONSTER_RIGHT] = true;
             smallSlashIndex.y = 0;
             if (count % frameSpeed == 0)
@@ -332,7 +311,10 @@ void golem::stateATK()
         }
         else
         {
+            bulletDirection[MONSTER_DOWN] = false;
+            bulletDirection[MONSTER_UP] = false;
             bulletDirection[MONSTER_LEFT] = true;
+            bulletDirection[MONSTER_RIGHT] = false;
             smallSlashIndex.y = 1;
             if (count % frameSpeed == 0)
             {
@@ -397,7 +379,45 @@ void golem::stateDIE()
     coinDrop(1, 10);
 }
 
-//void golem::stateHIT()
-//{
-//    cout << "골렘히트" << endl;
-//}
+void golem::stateWalk()
+{
+    if (atkDirection[MONSTER_LEFT])
+    {
+        frameIndexL[WALK].y = 2;
+        count++;
+        if (count % 10 == 0)
+        {
+            count = 0;
+            frameIndexL[WALK].x--;
+            if (frameIndexL[WALK].x < 0)
+            {
+                frameIndexL[WALK].x = 5;
+            }
+        }
+        if (isHit)
+            hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[WALK].x, frameIndexL[WALK].y);
+        else
+            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[WALK].x, frameIndexL[WALK].y);
+    }
+    else
+    {
+        frameIndexR[WALK].y = 1;
+        count++;
+        if (count % 10 == 0)
+        {
+            count = 0;
+            frameIndexR[WALK].x++;
+            if (frameIndexR[WALK].x > 5)
+            {
+                frameIndexR[WALK].x = 0;
+            }
+        }
+        if (isHit)
+            hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[WALK].x, frameIndexR[WALK].y);
+
+        else
+            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[WALK].x, frameIndexR[WALK].y);
+    }
+
+}
+

@@ -3,52 +3,52 @@
 
 void knight::addInit()
 {
-   
+    kind = MONSTERKIND::KNIGHT;
+    atk = 5;
+    armour = 10;
+    speed = 6.f;
+    hp = 80;
+    img = IMAGEMANAGER->findImage("knight");
+    skillImg = NULL;
+    isKnockBack = true;
+    isRanger = false;
 }
 
 void knight::update()
 {
-
-    
-   /* if (distanceMax > getDistance(pos.x+img->getFrameWidth()*0.5, pos.y+img->getFrameHeight()*1.5, playerRC.left, playerRC.top ))
-        isFindWayOn = true;
-    else
-        isFindWayOn = false;*/
-
-
     if (isFindWayOn) //길찾기 on
     {
 
         astar->update(camRC, rc, playerRC, &angle);
+        if (rc.left + img->getFrameWidth()/2 < playerRC.left)
+        {
+            atkDirection[MONSTER_LEFT] = false;
+            atkDirection[MONSTER_RIGHT] = true;
+        }
+
+        else
+        {
+            atkDirection[MONSTER_LEFT] = true;
+            atkDirection[MONSTER_RIGHT] = false;
+        }
+        if (rc.top+img->getFrameHeight()/2 > playerRC.top)
+        {
+
+            atkDirection[MONSTER_UP] = true;
+            atkDirection[MONSTER_DOWN] = false;
+        }
+        else
+        {
+
+            atkDirection[MONSTER_UP] = false;
+            atkDirection[MONSTER_DOWN] = true;
+        }
         if (astar->getFirstTile() && !isATK && !isDie && !isHit) // 걸을 때
         {
             state = STATEIMAGE::WALK;
             pos.x += cos(angle) * speed;
             pos.y += -sin(angle) * speed;
-            
-            if (0 < cos(angle) * speed)
-            {
-                atkDirection[MONSTER_LEFT] = false;
-                atkDirection[MONSTER_RIGHT] = true;
-            } 
-            
-            else
-            {
-                atkDirection[MONSTER_LEFT] = true;
-                atkDirection[MONSTER_RIGHT] = false;
-            }
-            if (0 < sin(angle) * speed)
-            {
-
-                atkDirection[MONSTER_UP] = true;
-                atkDirection[MONSTER_DOWN] = false;
-            }
-            else
-            {
-
-                atkDirection[MONSTER_UP] = false;
-                atkDirection[MONSTER_DOWN] = true;
-            }
+           
         }
         else if(!isDie && !isHit) // 걷지 않고 있을 때
         {
@@ -73,8 +73,8 @@ void knight::render()
 {
     stateImageRender();
    // astar->render(getMemDC());
-    //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
-    //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
+   //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
+   //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
 }
 
 
@@ -85,7 +85,6 @@ void knight::stateImageRender()
     {
     case STATEIMAGE::IDLE:
         stateIDLE();
-
         break;
     case STATEIMAGE::WALK:
         stateImage(4, 2, 0, 1);
@@ -164,42 +163,43 @@ void knight::stateIDLE()
         frameIndexR[STATEIMAGE::DIE].y = 6;
         img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
     }
+    bulletDirection[MONSTER_DOWN] = false;
+    bulletDirection[MONSTER_UP] = false;
+    bulletDirection[MONSTER_LEFT] = false;
+    bulletDirection[MONSTER_RIGHT] = false;
+    isFxAppear = false;
 }
 
 void knight::stateATK()
 {
-    if (atkDirection[MONSTER_UP] /*&& atkDirection[LEFT] */ && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 40)
+    if (atkDirection[MONSTER_UP] && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 40)
     {
         if (delay == 0)
         {
             EFFECT->setEffect("knightSlashUp", { pos.x + 60 ,pos.y + 30 }, true);
+            bulletDirection[MONSTER_DOWN] = false;
+            bulletDirection[MONSTER_UP] = true;
+            bulletDirection[MONSTER_LEFT] = false;
+            bulletDirection[MONSTER_RIGHT] = false;
+            isFxAppear = true;
             delay++;
         }
     }
-    /*else if (atkDirection[UP] && atkDirection[RIGHT] && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 40)
-    {
-        if (delay == 0)
-        {
-            EFFECT->setEffect("knightSlashUp", { pos.x + 60 ,pos.y +30 }, true);
-            delay++;
-        }
-    }*/
+    
     if (atkDirection[MONSTER_DOWN] /*&& atkDirection[LEFT] */ && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 80)
     {
         if (delay == 0)
         {
             EFFECT->setEffect("knightSlashDown", { pos.x + 60,pos.y + 150 }, true);
+            bulletDirection[MONSTER_DOWN] = true;
+            bulletDirection[MONSTER_UP] = false;
+            bulletDirection[MONSTER_LEFT] = false;
+            bulletDirection[MONSTER_RIGHT] = false;
+            isFxAppear = true;
             delay++;
         }
     }
-    /*else if (atkDirection[DOWN] && atkDirection[RIGHT] && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 80)
-    {
-        if (delay == 0)
-        {
-            EFFECT->setEffect("knightSlashDown", { pos.x +60,pos.y + 150 }, true);
-            delay++;
-        }
-    }*/
+   
     if (atkDirection[MONSTER_LEFT])
     {
         frameIndexL[STATEIMAGE::ATK].y = 3;
@@ -213,12 +213,18 @@ void knight::stateATK()
                 if (delay == 0)
                 {
                     EFFECT->setEffect("knightSlashL", { pos.x  ,pos.y + 90 }, true);
+                    bulletDirection[MONSTER_DOWN] = false;
+                    bulletDirection[MONSTER_UP] = false;
+                    bulletDirection[MONSTER_LEFT] = true;
+                    bulletDirection[MONSTER_RIGHT] = false;
+                    isFxAppear = true;
                 }
                 frameIndexL[STATEIMAGE::ATK].x = 3;
                 delay++;
                 if (delay > 5)
                 {
                     isATK = false;
+                    isFxAppear = false;
                     delay = 0;
                     frameIndexL[STATEIMAGE::ATK].x = 5;
                 }
@@ -239,6 +245,11 @@ void knight::stateATK()
                 if (delay == 0)
                 {
                     EFFECT->setEffect("knightSlashR", { pos.x + 90,pos.y + 90 }, true);
+                    bulletDirection[MONSTER_DOWN] = false;
+                    bulletDirection[MONSTER_UP] = false;
+                    bulletDirection[MONSTER_LEFT] = false;
+                    bulletDirection[MONSTER_RIGHT] = true;
+                    isFxAppear = true;
                 }
 
                 frameIndexR[STATEIMAGE::ATK].x = 2;
@@ -246,6 +257,7 @@ void knight::stateATK()
                 if (delay > 5)
                 {
                     isATK = false;
+                    isFxAppear = false;
                     delay = 0;
                     frameIndexR[STATEIMAGE::ATK].x = 0;
 

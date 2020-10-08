@@ -40,6 +40,10 @@ public:
 
 	//bullet 
 	bullet* getBullet() { return _bullet; }
+	void golemBullet(float angle);
+	void knightBullet(float angle);
+	void summonerBullet(float angle);
+
 	
 	enemyManager() {}
 	~enemyManager() {}

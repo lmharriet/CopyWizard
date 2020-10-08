@@ -321,7 +321,7 @@ void astarManager::setNodeColor(tileNode* node, COLORREF color, HDC hdc)
 //몬스터 관련 함수
 //=============================================
 
-HRESULT monster::init(tagTile* tile, const char* fileName, POINT _pos, float _speed, MONSTERKIND  _kind, int _hp, const char* skillImgName, bool _isKnockBack, bool isLongAtk)
+HRESULT monster::init(tagTile* tile, POINT _pos)
 {
 	if (!tile)
 	{
@@ -334,18 +334,10 @@ HRESULT monster::init(tagTile* tile, const char* fileName, POINT _pos, float _sp
 		astar->init(tile);
 	}
 
-	kind = _kind;
-	img = IMAGEMANAGER->findImage(fileName);
-	isRanger = isLongAtk; // 원거리냐 근거리냐
 
-	if(skillImgName)
-		skillImg = IMAGEMANAGER->findImage(skillImgName);
-	isKnockBack = _isKnockBack;
 	cul = { 0,0 };
 	pos.x = _pos.x;
 	pos.y = _pos.y;
-	speed = _speed;
-	hp = _hp;
 	hitTime = 0;
 	for (int i = 0; i < STATEMAX; i++)
 	{
@@ -513,16 +505,3 @@ void monster::stateHIT(POINT lPos, POINT rPos)
 	}
 
 }
-//
-//inline int monster::getBulletDirection()
-//{
-//	/*if (bulletDirection[MONSTER_LEFT])
-//		return 2;
-//	else if (bulletDirection[MONSTER_RIGHT])
-//		return 3;
-//	else if (bulletDirection[MONSTER_UP])
-//		return 0;
-//	else if (bulletDirection[MONSTER_DOWN])
-//		return 1;*/
-//	return MONSTER_DOWN;
-//}

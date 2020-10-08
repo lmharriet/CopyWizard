@@ -6,7 +6,6 @@ private:
 
 public:
 	void addInit()override;
-	//void release()override ;
 	void update() override;
 	void render() override;
 

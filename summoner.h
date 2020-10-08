@@ -1,8 +1,6 @@
 #pragma once
 #include "monster.h"
 
-
-
 class summoner : public monster
 {
 private:
@@ -18,9 +16,5 @@ public:
 	void stateIDLE() override;
 	void stateATK()	override;
 	void stateDIE()	override;
-	
 
-
-	summoner() {}
-	~summoner() {}
 };

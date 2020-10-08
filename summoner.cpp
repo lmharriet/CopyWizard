@@ -9,6 +9,15 @@ void summoner::addInit()
     randomTime = RANDOM->range(90, 120);
     isCasting = false;
     skillImg = IMAGEMANAGER->findImage("stoneFly");
+
+    kind = MONSTERKIND::SUMMONER;
+    atk = 30;
+    armour = 10;
+    speed = 0.f;
+    hp = 50;
+    img = IMAGEMANAGER->findImage("summoner");
+    isKnockBack = true;
+    isRanger = true;
 }
 
 
