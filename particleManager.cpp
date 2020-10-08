@@ -6,6 +6,7 @@ HRESULT particleManager::init()
 	IMAGEMANAGER->addFrameImage("frameParticle", "Images/particle/frameParticle.bmp", 240, 160, 6, 4);
 	IMAGEMANAGER->addFrameImage("explosionParticle", "Images/particle/explosionParticle.bmp", 960/2, 640/2, 6, 4);
 	IMAGEMANAGER->addFrameImage("healBallParticle", "Images/particle/healBallParticle.bmp", 60, 5, 10, 1);
+	IMAGEMANAGER->addFrameImage("bossJumpParticle", "Images/particle/stone.bmp", 60, 15, 4, 1);
 	return S_OK;
 }
 
@@ -197,4 +198,13 @@ void particleManager::explosionParticlePlay(float x, float y)
 	PARTICLE->explosionGenerate("explosionParticle", x, y, 12, 1.f, 2.f, 5);
 	PARTICLE->explosionGenerate("explosionParticle", x, y, 9, 1.f, 3.f, 4);
 	PARTICLE->explosionGenerate("explosionParticle", x, y, 6, 1.f, 4.f, 2);
+}
+
+void particleManager::bossJumpParticlePlay(float x, float y)
+{
+	PARTICLE->explosionGenerate("bossJumpParticle", x, y, 18, 5.f, 4.f, 15);
+	PARTICLE->explosionGenerate("bossJumpParticle", x, y, 15, 5.f, 3.f, 13);
+	PARTICLE->explosionGenerate("bossJumpParticle", x, y, 12, 5.f, 2.f, 11);
+	PARTICLE->explosionGenerate("bossJumpParticle", x, y, 9, 5.f, 3.f, 9);
+	PARTICLE->explosionGenerate("bossJumpParticle", x, y, 6, 5.f, 4.f, 7);
 }

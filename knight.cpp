@@ -28,26 +28,26 @@ void knight::update()
             
             if (0 < cos(angle) * speed)
             {
-                atkDirection[LEFT] = false;
-                atkDirection[RIGHT] = true;
+                atkDirection[MONSTER_LEFT] = false;
+                atkDirection[MONSTER_RIGHT] = true;
             } 
             
             else
             {
-                atkDirection[LEFT] = true;
-                atkDirection[RIGHT] = false;
+                atkDirection[MONSTER_LEFT] = true;
+                atkDirection[MONSTER_RIGHT] = false;
             }
             if (0 < sin(angle) * speed)
             {
 
-                atkDirection[UP] = true;
-                atkDirection[DOWN] = false;
+                atkDirection[MONSTER_UP] = true;
+                atkDirection[MONSTER_DOWN] = false;
             }
             else
             {
 
-                atkDirection[UP] = false;
-                atkDirection[DOWN] = true;
+                atkDirection[MONSTER_UP] = false;
+                atkDirection[MONSTER_DOWN] = true;
             }
         }
         else if(!isDie && !isHit) // 걷지 않고 있을 때
@@ -105,7 +105,7 @@ void knight::stateImageRender()
 
 void knight::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
 {
-    if (atkDirection[LEFT])
+    if (atkDirection[MONSTER_LEFT])
     {
         frameIndexL[STATEIMAGE::WALK].y = indexY_L;
         count++;
@@ -140,7 +140,7 @@ void knight::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
 
 void knight::stateIDLE()
 {
-    if (atkDirection[LEFT])
+    if (atkDirection[MONSTER_LEFT])
     {
         frameIndexL[STATEIMAGE::IDLE].x = 1;
         frameIndexL[STATEIMAGE::IDLE].y = 0;
@@ -168,7 +168,7 @@ void knight::stateIDLE()
 
 void knight::stateATK()
 {
-    if (atkDirection[UP] /*&& atkDirection[LEFT] */ && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 40)
+    if (atkDirection[MONSTER_UP] /*&& atkDirection[LEFT] */ && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 40)
     {
         if (delay == 0)
         {
@@ -184,7 +184,7 @@ void knight::stateATK()
             delay++;
         }
     }*/
-    if (atkDirection[DOWN] /*&& atkDirection[LEFT] */ && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 80)
+    if (atkDirection[MONSTER_DOWN] /*&& atkDirection[LEFT] */ && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 80)
     {
         if (delay == 0)
         {
@@ -200,7 +200,7 @@ void knight::stateATK()
             delay++;
         }
     }*/
-    if (atkDirection[LEFT])
+    if (atkDirection[MONSTER_LEFT])
     {
         frameIndexL[STATEIMAGE::ATK].y = 3;
         count++;
@@ -262,7 +262,7 @@ void knight::stateATK()
 
 void knight::stateDIE()
 {
-    if (atkDirection[LEFT])
+    if (atkDirection[MONSTER_LEFT])
     {
         if (frameIndexL[STATEIMAGE::DIE].y != 7)
             frameIndexL[STATEIMAGE::DIE].y = 6;

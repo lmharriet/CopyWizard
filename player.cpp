@@ -45,7 +45,7 @@ HRESULT player::init()
 	//attack type
 	basic = standard = signature = false;
 
-	speed = gaugeTime=0;
+	speed = gaugeTime = 0;
 	atkCount = atkIndex = index = dashIndex = count = dashCount = 0;
 	stateCool = infernoStateCool = meteorStateCool = 0;
 
@@ -62,6 +62,11 @@ HRESULT player::init()
 	//angle between mouse & player
 	attackAngle = saveAngle = saveAngle2 = 0;
 	angleTenth = 0;
+
+	//damage 
+	damageAngle = 0;
+	damageAngleTenth = frozenTime = 0;
+	isDamaged = false;
 
 	return S_OK;
 }
@@ -85,7 +90,7 @@ void player::release()
 
 void player::update()
 {
-	
+
 
 	blaze->update();
 	flares->update();
@@ -134,6 +139,7 @@ void player::update()
 
 	//
 	takeCoin();
+	damagedCool();
 
 
 	// camera가 따라가는 대상
@@ -196,9 +202,12 @@ void player::other_update()
 
 	//
 	takeCoin();
+	damagedCool();
+
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
 	death();
+
 	//don't touch!
 	buttonDown();
 }
@@ -328,6 +337,7 @@ void player::controller()
 		}
 		speed = 20;
 	}
+
 }
 
 void player::dashFunction()
@@ -418,7 +428,7 @@ void player::dashFunction()
 	if (speed == 0) resetKey();
 }
 
-void player::blazeSetUp() 
+void player::blazeSetUp()
 {
 	if (INPUT->GetKeyDown(VK_LBUTTON))
 	{
@@ -428,7 +438,7 @@ void player::blazeSetUp()
 	{
 		//basic 공격 할 때 앵글을 저장
 		saveAngle = attackAngle;
-		stateCool=20;
+		stateCool = 20;
 
 		float x = cosf(attackAngle) * 50.f + posX;
 		float y = -sinf(attackAngle) * 50.f + posY;
@@ -450,7 +460,7 @@ void player::blazeSetUp()
 			blaze->removeBomb(i);
 		}
 	}
-	
+
 
 	//	// 저장된 앵글 방향으로 움직이기
 	//	/*posX += cosf(saveAngle);
@@ -471,7 +481,7 @@ void player::standardSetUp()
 
 	if (standard && infernoStateCool == 0)
 	{
-		inferno->fire(posX, posY, attackAngle,&gaugeTime);
+		inferno->fire(posX, posY, attackAngle, &gaugeTime);
 	}
 
 	if (inferno->getGauging()) state = STATE::STANDARD;
@@ -602,7 +612,30 @@ void player::animation()
 			frameAnimation(dashIndex, 19);
 		}
 		break;
+	case STATE::DAMAGED:
+		//각도별로 
 
+		if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
+		{
+			frameAnimation(6, 0);
+			if (!isDamaged) move = MOVE::LEFT;
+		}
+		else if (damageAngleTenth <= 4 || damageAngleTenth > 32) //right
+		{
+			frameAnimation(7, 0);
+			if (!isDamaged) move = MOVE::RIGHT;
+		}
+		else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //up
+		{
+			frameAnimation(5, 0);
+			if (!isDamaged) move = MOVE::UP;
+		}
+		else if (damageAngleTenth > 23 && damageAngleTenth <= 32) //down
+		{
+			frameAnimation(4, 0);
+			if (!isDamaged)	move = MOVE::DOWN;
+		}
+		break;
 	case STATE::DIE:
 		if (index < 5 && count % 30 == 0)
 			index++;
@@ -667,57 +700,57 @@ void player::animation()
 		break;
 	case STATE::STANDARD:
 
-			if (tempAngle > 14 && tempAngle <= 23)//left
+		if (tempAngle > 14 && tempAngle <= 23)//left
+		{
+			if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+			else
 			{
-				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
-				else
-				{
-					atkIndex++;
-					if (atkIndex > 3) atkIndex = 3;
-				}
-				frameAnimation(atkIndex, 6);
+				atkIndex++;
+				if (atkIndex > 3) atkIndex = 3;
+			}
+			frameAnimation(atkIndex, 6);
 
 
-				//왼쪽 공격 끝나면 왼쪽 향하기
-				if (gaugeTime > 50) move = MOVE::LEFT;
-			}
-			else if (tempAngle <= 4 || tempAngle > 32) //right
+			//왼쪽 공격 끝나면 왼쪽 향하기
+			if (gaugeTime > 50) move = MOVE::LEFT;
+		}
+		else if (tempAngle <= 4 || tempAngle > 32) //right
+		{
+			if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+			else
 			{
-				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
-				else
-				{
-					atkIndex++;
-					if (atkIndex > 3) atkIndex = 3;
-				}
+				atkIndex++;
+				if (atkIndex > 3) atkIndex = 3;
+			}
 
-				frameAnimation(atkIndex, 5);
-				// 오른쪽 공격 끝나면 오른쪽 향하기
-				if (gaugeTime > 50) move = MOVE::RIGHT;
-			}
-			else if (tempAngle > 4 && tempAngle <= 12) //up
+			frameAnimation(atkIndex, 5);
+			// 오른쪽 공격 끝나면 오른쪽 향하기
+			if (gaugeTime > 50) move = MOVE::RIGHT;
+		}
+		else if (tempAngle > 4 && tempAngle <= 12) //up
+		{
+			if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+			else
 			{
-				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
-				else
-				{
-					atkIndex++;
-					if (atkIndex > 3) atkIndex = 3;
-				}
-				frameAnimation(atkIndex, 14);
-				//위쪽 공격 끝나면 위쪽 향하기
-				if(gaugeTime >50) move = MOVE::UP;
+				atkIndex++;
+				if (atkIndex > 3) atkIndex = 3;
 			}
-			else if (tempAngle > 23 && tempAngle <= 32) //down
+			frameAnimation(atkIndex, 14);
+			//위쪽 공격 끝나면 위쪽 향하기
+			if (gaugeTime > 50) move = MOVE::UP;
+		}
+		else if (tempAngle > 23 && tempAngle <= 32) //down
+		{
+			if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+			else
 			{
-				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
-				else
-				{
-					atkIndex++;
-					if (atkIndex > 3) atkIndex = 3;
-				}
-				frameAnimation(atkIndex, 6);
-				//아래쪽 공격 끝나면 아래쪽 향하기
-				if (gaugeTime > 50) move = MOVE::DOWN;
+				atkIndex++;
+				if (atkIndex > 3) atkIndex = 3;
 			}
+			frameAnimation(atkIndex, 6);
+			//아래쪽 공격 끝나면 아래쪽 향하기
+			if (gaugeTime > 50) move = MOVE::DOWN;
+		}
 
 		break;
 	case STATE::SIGNATURE:
@@ -760,6 +793,8 @@ void player::animation()
 		}
 		break;
 	}
+
+
 
 }
 
@@ -924,12 +959,47 @@ void player::buttonDown()
 	else isDown = false;
 
 	//Attack
-	//if (INPUT->GetKeyDown(VK_RBUTTON)) standard = true;
-	//else standard = false;
 	if (INPUT->GetKeyDown('Q'))	signature = true;
 	else signature = false;
+}
 
+void player::death()
+{
+	if (PLAYERDATA->getHp() <= 0)
+	{
+		isDead = true;
+		state = STATE::DIE;
+	}
+}
+void player::damage(int damage, float attackAngle)
+{
+	if (PLAYERDATA->getHp() <= 0) return;
+	if (damage > 0)
+	{
+		isDamaged = true;
+		damageAngle = attackAngle;
 
+		PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
+
+		//벽에 닿으면 리턴으로 처리하기
+		posX += cosf(damageAngle) * 3.f;
+		posY -= sinf(damageAngle) * 3.f;
+	}
+	else return;
+}
+void player::damagedCool()
+{	
+	if (isDamaged)
+	{
+		frozenTime =60;
+		state = STATE::DAMAGED;
+	}
+	if (frozenTime > 0)
+	{
+		frozenTime--;
+	}
+	else if(frozenTime == 0)
+		isDamaged = false;
 }
 
 //del
@@ -943,15 +1013,5 @@ void player::viewText()
 
 	wsprintf(str, "state : %d", state);
 	textOut(getMemDC(), 100, 250, str, WHITE);
-
-}
-
-void player::death()
-{
-	if (PLAYERDATA->getHp() <= 0)
-	{
-		isDead = true;
-		state = STATE::DIE;
-	}
 
 }

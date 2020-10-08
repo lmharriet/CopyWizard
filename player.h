@@ -47,6 +47,13 @@ private:
 	int atkCount, atkIndex;
 	int count, index;
 	
+	//damage
+	float damageAngle;
+	int damageAngleTenth;
+	int frozenTime;
+	bool isDamaged;
+
+
 	//cooltime 수정 중
 	int standardCool, signatureCool;
 	int standardTiemer, signatureTimer;
@@ -96,6 +103,10 @@ public:
 
 	//사망 판정
 	void death();
+
+	void damage(int damage, float attackAngle);
+
+	void damagedCool();
 
 	void buttonDown();
 	void viewText();

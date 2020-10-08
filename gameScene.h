@@ -9,8 +9,7 @@
 class gameScene : public gameNode
 {
 private:
-	monster* _golem;  //테스트중.. 몬스터(골렘)
-	monster* _golem2;  //테스트중.. 몬스터(골렘)
+	
 	enemyManager* enemy;
 	
 	player* _player;			//플레이어 클래스
@@ -46,6 +45,7 @@ public:
 	void collisionTile();
 
 	void playerAttack();
+	void enemyAttack();
 	//맵 로드
 	void loadMap(const char* mapFileName);
 

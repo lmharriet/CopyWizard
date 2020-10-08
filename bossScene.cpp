@@ -46,6 +46,10 @@ void bossScene::release()
 
 void bossScene::update()
 {
+	PLAYERDATA->setX(_player->getX());
+	PLAYERDATA->setY(_player->getY());
+
+
     //sound 
     if (isBossBGM)
     {

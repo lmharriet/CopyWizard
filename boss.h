@@ -50,6 +50,8 @@ private:
 	int frameX, frameY;
 	int pattern;
 	int patternCount;
+	int patternTimer;
+	int samePattern;
 
 	bool jumpMotion;
 	bool leftCheck;

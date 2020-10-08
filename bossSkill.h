@@ -10,6 +10,7 @@ private:
 	int _type;
 	image* _wallImg;
 	image* _niddleImg;
+	image* _bossCircleImg;
 
 	int _timer;
 	int _frameX;

@@ -31,13 +31,14 @@ void bullet::render()
 {
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
-		CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, _vBullet[i].x, _vBullet[i].y,
-			_vBullet[i].FrameX, _vBullet[i].FrameY);
-	}
+		if (_vBullet[i].bulletImage)
+			CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, _vBullet[i].x, _vBullet[i].y,
+				_vBullet[i].FrameX, _vBullet[i].FrameY);
 
+	}
 }
 
-void bullet::fire(float x, float y, float angle, float speed)
+void bullet::fire(float x, float y, float angle, float speed,int damage, bool image)
 {
 	//총알 벡터에 담는것을 제한한다
 	//if (_bulletMax < _vBullet.size() + 1) return;
@@ -49,12 +50,17 @@ void bullet::fire(float x, float y, float angle, float speed)
 	//구조체 변수들의 값을 한번에 0으로 초기화 시켜준다
 	//ZeroMemory(&bullet, sizeof(tagBullet));
 	//bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
-	bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
+	if (image)
+		bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
+	else bullet.bulletImage = NULL;
+
+
 	bullet.speed = speed;
 	bullet.angle = angle;
 	bullet.x = bullet.fireX = x;
 	bullet.y = bullet.fireY = y;
 	bullet.radius = 36;
+	bullet.damage = damage;
 	bullet.count = 0;
 	bullet.FrameX = 0;
 	bullet.FrameY = 0;
@@ -340,8 +346,6 @@ void meteor::render()
 		CAMERAMANAGER->FrameRender(getMemDC(), img,
 			vCircle[i].x - img->getFrameWidth() / 2, vCircle[i].y - img->getFrameHeight() / 2, CircleIndex, 0);
 	}
-
-
 }
 
 void meteor::makeCircle(float x, float y, float radius, MOVE direction)
@@ -352,7 +356,7 @@ void meteor::makeCircle(float x, float y, float radius, MOVE direction)
 	switch (direction)
 	{
 	case MOVE::LEFT:
-		//왼
+		//왼쪽
 		circle.angle = PI;
 		circle.x = x + cosf(circle.angle) * radius;
 		circle.y = y - sinf(circle.angle) * radius;
@@ -360,7 +364,7 @@ void meteor::makeCircle(float x, float y, float radius, MOVE direction)
 		circle.lifeTime = 0;
 		break;
 	case MOVE::RIGHT:
-		//오른
+		//오른쪽
 		circle.angle = 0;
 		circle.x = x + cosf(circle.angle) * radius;
 		circle.y = y - sinf(circle.angle) * radius;
@@ -398,8 +402,59 @@ void meteor::makeCircle(float x, float y, float radius, MOVE direction)
 	vCircle.push_back(circle);
 }
 
-void meteor::creatMeteor(float x, float y, float angle, float speed, MOVE direction)
+void meteor::creatMeteor(float x, float y, float radius, MOVE direction)
 {
+	tagArcana meteor;
+
+	switch (direction)
+	{
+	case MOVE::LEFT:
+		//왼쪽
+		meteor.angle = 70 * (PI / 180);
+		meteor.x = x + cosf(meteor.angle) * radius;
+		meteor.y = y - sinf(meteor.angle) * radius;
+		meteor.rc = RectMakeCenter(meteor.x, meteor.y, radius, radius);
+		break;
+	
+	case MOVE::RIGHT:
+		//오른쪽
+		meteor.angle = 120 * (PI / 180);
+		meteor.x = x + cosf(meteor.angle) * radius;
+		meteor.y = y - sinf(meteor.angle) * radius;
+		meteor.rc = RectMakeCenter(meteor.x, meteor.y, radius, radius);
+		break;
+
+	case MOVE::UP:
+		//위
+		meteor.angle = PI_2;
+		meteor.x = x + cosf(meteor.angle) * radius + radius / 2;
+		meteor.y = y - sinf(meteor.angle) * radius + radius / 2;
+		meteor.rc = RectMakeCenter(meteor.x, meteor.y, radius, radius);
+		break;
+	case MOVE::DOWN:
+		//아래
+		meteor.angle = PI_2;
+		meteor.x = x + cosf(meteor.angle) * radius - radius / 2;
+		meteor.y = y - sinf(meteor.angle) * radius - radius / 2;
+		meteor.rc = RectMakeCenter(meteor.x, meteor.y, radius, radius);
+		break;
+	
+	default:
+		//오른쪽
+		meteor.angle = 120 * (PI / 180);
+		meteor.x = x + cosf(meteor.angle) * radius;
+		meteor.y = y - sinf(meteor.angle) * radius;
+		meteor.rc = RectMakeCenter(meteor.x, meteor.y, radius, radius);
+		break;
+	}
+	
+	
+
+	
+	
+
+	vMeteor.push_back(meteor);
+
 }
 
 void meteor::meteorFire(float x, float y, float speed, MOVE dir, float range)

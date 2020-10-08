@@ -7,16 +7,13 @@ void summoner::addInit()
 {
     atkTime = 0;
     randomTime = RANDOM->range(90, 120);
+    isCasting = false;
+    skillImg = IMAGEMANAGER->findImage("stoneFly");
 }
 
 
 void summoner::update()
 {
-
-  /*  if (distanceMax > getDistance(pos.x, pos.y, playerRC.left , playerRC.top ))
-        isFindWayOn = true;
-    else
-        isFindWayOn = false;*/
 
     atkTime++;
     if (!isATK && !isDie && !isHit) 
@@ -25,23 +22,23 @@ void summoner::update()
         
         if ((rc.left + (rc.right-rc.left) / 2) < playerRC.left)
         {
-            atkDirection[LEFT] = false;
-            atkDirection[RIGHT] = true;
+            atkDirection[MONSTER_LEFT] = false;
+            atkDirection[MONSTER_RIGHT] = true;
         }
         else
         {
-            atkDirection[LEFT] = true;
-            atkDirection[RIGHT] = false;
+            atkDirection[MONSTER_LEFT] = true;
+            atkDirection[MONSTER_RIGHT] = false;
         }
         if ((rc.top + (rc.bottom - rc.top) / 2) < playerRC.top)
         {
-            atkDirection[UP] = false;
-            atkDirection[DOWN] = true;
+            atkDirection[MONSTER_UP] = false;
+            atkDirection[MONSTER_DOWN] = true;
         }
         else
         {
-            atkDirection[UP] = true;
-            atkDirection[DOWN] = false;
+            atkDirection[MONSTER_UP] = true;
+            atkDirection[MONSTER_DOWN] = false;
         }
     }
     
@@ -60,9 +57,6 @@ void summoner::update()
             isFxAppear = true;
         }
     }
-
-   
-
 }
 
 
@@ -71,6 +65,7 @@ void summoner::render()
    // FrameRect(getMemDC(), rc, RGB(255, 255, 255));
    // FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
     stateImageRender();
+  
 }
 void summoner::stateImageRender()
 {
@@ -94,7 +89,7 @@ void summoner::stateImageRender()
 
 void summoner::stateIDLE()
 {
-    if (atkDirection[LEFT])
+    if (atkDirection[MONSTER_LEFT])
     {
         frameIndexL[STATEIMAGE::IDLE].x = 0;
         frameIndexL[STATEIMAGE::IDLE].y = 0;
@@ -105,7 +100,7 @@ void summoner::stateIDLE()
         
         img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);
     }
-    else if(atkDirection[RIGHT])
+    else if(atkDirection[MONSTER_RIGHT])
     {
         frameIndexR[STATEIMAGE::IDLE].x = 0;
         frameIndexR[STATEIMAGE::IDLE].y = 2;
@@ -116,12 +111,15 @@ void summoner::stateIDLE()
 
         img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
     }
+   
 }
 
 void summoner::stateATK()
 {
-
-    if (atkDirection[LEFT])
+    if (!isCasting)
+        skillImg->frameRender(getMemDC(), cul.x + 20, cul.y - 72, 0, 0);
+   
+    if (atkDirection[MONSTER_LEFT])
     {
         int atkTime = 10;
 
@@ -132,17 +130,18 @@ void summoner::stateATK()
         {
             count = 0;
             frameIndexL[STATEIMAGE::ATK].x++;
-            if (frameIndexL[STATEIMAGE::ATK].y == 1 && frameIndexL[STATEIMAGE::ATK].x == 2)
-                isBulletFire = true;
+            if (frameIndexL[STATEIMAGE::ATK].y == 1 && frameIndexL[STATEIMAGE::ATK].x == 1)
+                isCasting = true;
 
             if (frameIndexL[STATEIMAGE::ATK].y == 1 && frameIndexL[STATEIMAGE::ATK].x > 4)
             {
                 frameIndexL[STATEIMAGE::ATK].x = 4;
                 delay++;
-                
+               
                 if (delay > 3)
                 {
                     isATK = false;
+                    isCasting = false;
                     delay = 0;
                     frameIndexL[STATEIMAGE::ATK].x = 0;
                     frameIndexL[STATEIMAGE::ATK].y = 0;
@@ -179,15 +178,19 @@ void summoner::stateATK()
             else
             {
                 frameIndexR[STATEIMAGE::ATK].x--;
-                if(frameIndexR[STATEIMAGE::ATK].x ==2)
-                    isBulletFire = true;
+
+                if (frameIndexR[STATEIMAGE::ATK].x == 3)
+                    isCasting = true;
+             
                 if (frameIndexR[STATEIMAGE::ATK].x < 0)
                 {
                     frameIndexR[STATEIMAGE::ATK].x = 0;
                     delay++;
+                  
                     if (delay > 3)
                     {
                         isATK = false;
+                        isCasting = false;
                         delay = 0;
                         frameIndexR[STATEIMAGE::ATK].x = 0;
                         frameIndexR[STATEIMAGE::ATK].y = 2;
@@ -197,11 +200,12 @@ void summoner::stateATK()
         }
         img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::ATK].x, frameIndexR[STATEIMAGE::ATK].y);
     }
+   
 }
 
 void summoner::stateDIE()
 {
-    if (atkDirection[LEFT])
+    if (atkDirection[MONSTER_LEFT])
     {
         int dieFrameSpeed = 10;
         if (frameIndexL[STATEIMAGE::DIE].y != 5)
@@ -237,7 +241,7 @@ void summoner::stateDIE()
         }
         img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::DIE].x, frameIndexL[STATEIMAGE::DIE].y);
     }
-    else if(atkDirection[RIGHT])
+    else if(atkDirection[MONSTER_RIGHT])
     {
         int dieFrameSpeed = 10;
         if (frameIndexR[STATEIMAGE::DIE].y != 5)

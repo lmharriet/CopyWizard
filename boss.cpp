@@ -34,6 +34,8 @@ HRESULT boss::init(int _posX, int _posY)
 	woodTimer = 0;
 	pattern = 0;
 	patternCount = 0;
+	patternTimer = 0;
+	samePattern = 0;
 
 	jumpMotion = false;
 	leftCheck = false;
@@ -126,6 +128,7 @@ void boss::animation()
 				if (frameX <= 2) {
 					count = 0;
 					frameX = 2;
+					CAMERAMANAGER->Shake(20, 20, 2);
 					timer++;
 					if (timer > 5) {
 						jumpMotion = true;
@@ -158,6 +161,7 @@ void boss::animation()
 						jumpMotion = false;
 						isPlayJumpSFX = false;
 						boss.bossState = BOSSIDLE;
+						patternCount++;
 					}
 				}
 				else {
@@ -408,6 +412,7 @@ void boss::animation()
 					isPlayPunchSFX = false;
 					punchPattern = false;
 					patternStart = false;
+					patternCount++;
 				}
 				break;
 			case 2:
@@ -428,6 +433,7 @@ void boss::animation()
 					isPlayPunchSFX = false;
 					punchPattern = false;
 					patternStart = false;
+					patternCount++;
 				}
 				break;
 			case 3:
@@ -448,6 +454,7 @@ void boss::animation()
 					isPlayPunchSFX = false;
 					punchPattern = false;
 					patternStart = false;
+					patternCount++;
 				}
 				break;
 			case 4:
@@ -468,6 +475,7 @@ void boss::animation()
 					boss.bossState = BOSSIDLE;
 					punchPattern = false;
 					patternStart = false;
+					patternCount++;
 				}
 				break;
 			}
@@ -555,13 +563,13 @@ void boss::jump(int patternType)
 		frameY = 0;
 		jumpMotion = false;
 		boss.bossState = JUMP;
-		posX = _player->getX();
-		posY = _player->getRect().bottom - WINSIZEY;
 	}
 
 	if (boss.bossState == JUMP && jumpMotion) {
 		if (frameX == 1) {
 			if (boss.rc.bottom < 0) {
+				posX = _player->getX();
+				posY = _player->getRect().bottom - WINSIZEY;
 				boss.rc = RectMakeCenter(posX, posY, 150, 150);
 			}
 			else {
@@ -570,6 +578,7 @@ void boss::jump(int patternType)
 			}
 		}
 		else if (frameX == 2) {
+			BOSSMANAGER->init(posX - 130, posY + WINSIZEY - 150, 30, 2);
 			if (boss.rc.bottom <= posY + WINSIZEY) {
 				boss.rc.top += 50;
 				boss.rc.bottom += 50;
@@ -578,8 +587,22 @@ void boss::jump(int patternType)
 				CAMERAMANAGER->Shake(30, 30, 15);
 				boss.center.x = boss.rc.left + 75;
 				boss.center.y = boss.rc.top + 75;
+				PARTICLE->bossJumpParticlePlay(boss.center.x, boss.center.y);
 				patternStart = false;
 				jumpPattern = false;
+				if (boss.rc.left <= 100) {
+					boss.center.x += 30;
+				}
+				else if (boss.rc.right >= WINSIZEX + 100) {
+					boss.center.x -= 30;
+				}
+				else if (boss.rc.top <= 100) {
+					boss.center.y += 30;
+				}
+				else if (boss.rc.bottom >= WINSIZEY - 100) {
+					boss.center.y -= 30;
+				}
+				boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
 			}
 		}
 	}
@@ -608,7 +631,7 @@ void boss::drill(int patternType)
 	}
 
 	if (boss.bossState == DRILL && timer > 30) {
-		if (boss.rc.left > 100 && boss.rc.right < WINSIZEX + 100 && boss.rc.top > 100 && boss.rc.bottom < WINSIZEY) {
+		if (boss.rc.left > 100 && boss.rc.right < WINSIZEX + 100 && boss.rc.top > 100 && boss.rc.bottom < WINSIZEY - 100) {
 			boss.center.x += cosf(boss.angle) * 30;
 			boss.center.y += -sinf(boss.angle) * 30;
 			boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
@@ -631,11 +654,12 @@ void boss::drill(int patternType)
 				else if (boss.rc.top <= 100) {
 					boss.center.y += 30;
 				}
-				else if (boss.rc.bottom >= WINSIZEY + 100) {
+				else if (boss.rc.bottom >= WINSIZEY - 100) {
 					boss.center.y -= 30;
 				}
 				boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
 				boss.bossState = BOSSIDLE;
+				patternCount++;
 				drillPattern = false;
 				patternStart = false;
 				timer = 0;
@@ -689,7 +713,7 @@ void boss::niddle(int patternType)
 	if (boss.bossState == NIDDLE && jumpMotion) {
 		if (frameX == 1) {
 			if (boss.rc.bottom < 0) {
-				boss.rc = RectMakeCenter(WINSIZEX / 2, WINSIZEY / 2 - WINSIZEY, 150, 150);
+				boss.rc = RectMakeCenter(WINSIZEX / 2 + 100, WINSIZEY / 2 - WINSIZEY, 150, 150);
 			}
 			else {
 				boss.rc.top -= 50;
@@ -747,6 +771,7 @@ void boss::niddle(int patternType)
 			if (timer > 400) {
 				timer = 0;
 				boss.bossState = BOSSIDLE;
+				patternCount++;
 				startNiddle = false;
 				niddlePattern = false;
 				patternStart = false;
@@ -796,6 +821,7 @@ void boss::wall(int patternType)
 		CAMERAMANAGER->Shake(5, 5, 60);
 		if (count > 260) {
 			boss.bossState = BOSSIDLE;
+			patternCount++;
 			patternStart = false;
 			wallPattern = false;
 		}
@@ -804,7 +830,7 @@ void boss::wall(int patternType)
 		}
 		for (int i = 0; i < wallBlock.size(); i++) {
 			wallBlock[i].blockCount++;
-			if (wallBlock[i].rc.left > 0 && wallBlock[i].rc.right < WINSIZEX + 100 && wallBlock[i].rc.top > 100 && wallBlock[i].rc.bottom < WINSIZEY + 100) {
+			if (wallBlock[i].rc.left > 0 && wallBlock[i].rc.right < WINSIZEX + 100 && wallBlock[i].rc.top > 150 && wallBlock[i].rc.bottom < WINSIZEY + 100) {
 				if (wallBlock[i].blockCount % 2 == 0 && wallBlock[i].type == -1) {
 					switch (posPlayer)
 					{
@@ -854,21 +880,23 @@ void boss::bossPattern()
 {
 	if (boss.bossState == BOSSIDLE) {
 		pattern = RANDOM->range(5) + 1;
+		//pattern = 1;
 		patternStart = true;
-		patternCount++;
 	}
-	if (patternStart && patternCount < 4) {
+	if (patternStart && patternCount < 3) {
 		this->jump(pattern);
 		this->drill(pattern);
 		this->punch(pattern);
 		this->niddle(pattern);
 		this->wall(pattern);
 	}
-	if (patternCount > 4) {
-		timer++;
-		cout << timer << endl;
-		if (timer > 200) {
-			timer = 0;
+
+	cout << pattern << endl;
+
+	if (patternCount == 3) {
+		patternTimer++;
+		if (patternTimer > 250) {
+			patternTimer = 0;
 			patternCount = 0;
 		}
 	}

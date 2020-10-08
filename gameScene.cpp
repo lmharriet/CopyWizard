@@ -74,7 +74,7 @@ void gameScene::update()
 	enemy->update();
 
 
-	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX + 15, WINSIZEY + 15);
+	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX+15, WINSIZEY+15);
 	//checkArea = RectMakeCenter(_player->getX(), _player->getY(), 400, 400);
 	checkArea = RectMake(_player->getX() - 100, _player->getY() - WINSIZEY / 2 + 420, 200, 500);
 
@@ -87,10 +87,11 @@ void gameScene::update()
 	PARTICLE->explosionActive();
 
 	//enemy->minionBulletFire(_player->getX(), _player->getY());
-	enemy->collision(_player->getRect());
+	//enemy->collision(_player->getRect());
 
 	//collision between player skill and enemy
 	playerAttack();
+	enemyAttack();
 
 }
 
@@ -381,6 +382,24 @@ void gameScene::playerAttack()
 			}
 
 		}
+	}
+}
+
+void gameScene::enemyAttack()
+{
+	for (int i = 0; i < enemy->getBullet()->getBullet().size(); )
+	{
+		if (colCheck(enemy->getBullet()->getRect(i), _player->getRect()))
+		{
+			_player->damage(enemy->getBullet()->getBullet()[i].damage, enemy->getBullet()->getBullet()[i].angle);
+			enemy->getBullet()->removeBullet(i);
+			
+		}
+		else
+		{
+			i++;
+		}
+
 	}
 }
 
