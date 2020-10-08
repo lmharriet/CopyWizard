@@ -130,6 +130,8 @@ void player::update()
 	makeCol2(2, -45, 60);
 	makeCol2(3, 45, 60);
 
+	
+
 
 	dashFunction();
 	changeState();
@@ -139,7 +141,6 @@ void player::update()
 
 	//
 	takeCoin();
-	damagedCool();
 
 
 	// camera가 따라가는 대상
@@ -202,7 +203,6 @@ void player::other_update()
 
 	//
 	takeCoin();
-	damagedCool();
 
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
@@ -985,7 +985,6 @@ void player::damage(int damage, float attackAngle)
 		posX += cosf(damageAngle) * 3.f;
 		posY -= sinf(damageAngle) * 3.f;
 	}
-	else return;
 }
 void player::damagedCool()
 {	

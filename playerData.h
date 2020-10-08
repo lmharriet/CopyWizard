@@ -7,11 +7,14 @@ private:
 	int hp;
 	int coin;
 	float _x, _y;
+	int maxHp;
+
 	int _gaugeTime;
 public:
 	HRESULT init();
 	void release();
 
+	int getMaxHp() { return maxHp; }
 	int getHp() { return hp; }
 	int getCoin() { return coin; }
 	float getX() { return _x; }
