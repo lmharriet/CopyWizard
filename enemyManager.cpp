@@ -123,29 +123,33 @@ void enemyManager::minionBulletFire(float aimX, float aimY)
 			switch ((*_viMinion)->getBulletDirection())
 			{
 			case MONSTER_UP:
-				cout << "up" << endl;
+				_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle, 0.f, 50);
+				(*_viMinion)->setFx(false);
 				break;
 			case MONSTER_DOWN:
-				cout << "down" << endl;
+				_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y + 72, angle, 0.0f, 50);
+				(*_viMinion)->setFx(false);
 				break;
 			case MONSTER_LEFT:
-				cout << "left" << endl;
+				_bullet->fire((float)(*_viMinion)->getPos().x - 20, (float)(*_viMinion)->getPos().y , angle, 0.0f, 50);
+				(*_viMinion)->setFx(false);
 				break;
 			case MONSTER_RIGHT:
-				cout << "right" << endl;
+				_bullet->fire((float)(*_viMinion)->getPos().x + 100, (float)(*_viMinion)->getPos().y , angle, 0.0f, 50);
+				(*_viMinion)->setFx(false);
 				break;
 			
 			}
-			//_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle, 0.0f, 50);
+			
 			break;
 		case MONSTERKIND::KNIGHT:
 			//_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle, 0.0f, 50);
 
 			break;
 		case MONSTERKIND::SUMMONER:
-			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle, 9.0f,50);
-			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle + PI / 4, 9.0f,50);
-			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle - PI / 4, 9.0f,50);
+			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle, 9.0f,50,true);
+			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle + PI / 4, 9.0f,50,true);
+			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle - PI / 4, 9.0f,50,true);
 			(*_viMinion)->setFx(false);
 			break;
 		}
