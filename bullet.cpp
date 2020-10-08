@@ -35,10 +35,12 @@ void bullet::render()
 			CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, _vBullet[i].x, _vBullet[i].y,
 				_vBullet[i].FrameX, _vBullet[i].FrameY);
 
+		else
+			CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
 	}
 }
 
-void bullet::fire(float x, float y, float angle, float speed,int damage, bool image)
+void bullet::fire(float x, float y, float angle, float speed,int damage,  MONSTERKIND kind, bool image)
 {
 	//총알 벡터에 담는것을 제한한다
 	//if (_bulletMax < _vBullet.size() + 1) return;
@@ -54,7 +56,7 @@ void bullet::fire(float x, float y, float angle, float speed,int damage, bool im
 		bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
 	else bullet.bulletImage = NULL;
 
-
+	bullet.kind = kind;
 	bullet.speed = speed;
 	bullet.angle = angle;
 	bullet.x = bullet.fireX = x;
@@ -80,7 +82,7 @@ void bullet::move()
 		_vBullet[i].x += cosf(_vBullet[i].angle) * _vBullet[i].speed;
 		_vBullet[i].y += -sinf(_vBullet[i].angle) * _vBullet[i].speed;
 
-		_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 50, 50);
+		_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 60, 60);
 
 		//총알이 사거리 보다 커졌을때
 		float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
