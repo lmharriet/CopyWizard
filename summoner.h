@@ -6,7 +6,7 @@
 class summoner : public monster
 {
 private:
-
+	bool isCasting;
 	int randomTime;
 public:
 	void addInit()override;

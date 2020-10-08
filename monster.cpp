@@ -352,11 +352,12 @@ HRESULT monster::init(tagTile* tile, const char* fileName, POINT _pos, float _sp
 		frameIndexL[i] = { 0,0 };
 		frameIndexR[i] = { 0,0 };
 	}
-	for (int i = 0; i < MAX; i++)
+	for (int i = 0; i < MONSTER_MAX; i++)
 	{
 		atkDirection[i] = false;
+		bulletDirection[i] = false;
 	}
-
+	
 	addInit();
 	
 
@@ -498,7 +499,7 @@ void monster::die()
 
 void monster::stateHIT(POINT lPos, POINT rPos)
 {
-	if (atkDirection[LEFT])
+	if (atkDirection[MONSTER_LEFT])
 	{
 		frameIndexL[STATEIMAGE::HIT].x = lPos.x;
 		frameIndexL[STATEIMAGE::HIT].y = lPos.y;
@@ -512,3 +513,16 @@ void monster::stateHIT(POINT lPos, POINT rPos)
 	}
 
 }
+//
+//inline int monster::getBulletDirection()
+//{
+//	/*if (bulletDirection[MONSTER_LEFT])
+//		return 2;
+//	else if (bulletDirection[MONSTER_RIGHT])
+//		return 3;
+//	else if (bulletDirection[MONSTER_UP])
+//		return 0;
+//	else if (bulletDirection[MONSTER_DOWN])
+//		return 1;*/
+//	return MONSTER_DOWN;
+//}

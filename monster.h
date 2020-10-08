@@ -69,23 +69,14 @@ public:
 	
 };
 
-enum  STATEIMAGE {
-	IDLE,
-	WALK,
-	ATK,
-	HIT,
-	DIE,
 
-	STATEMAX
-};
-
-enum  ATKDIRECTION {
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
+enum   ATKDIRECTION {
+	MONSTER_UP,
+	MONSTER_DOWN,
+	MONSTER_LEFT,
+	MONSTER_RIGHT,
 	
-	MAX	
+	MONSTER_MAX	
 };
 
 enum class MONSTERKIND {
@@ -98,6 +89,15 @@ class monster : public gameNode
 {
 protected:
 
+	enum  STATEIMAGE {
+		IDLE,
+		WALK,
+		ATK,
+		HIT,
+		DIE,
+
+		STATEMAX
+	};
 	image* img;
 	image* skillImg;
 	POINT frameIndexL[STATEIMAGE::STATEMAX];
@@ -128,10 +128,12 @@ protected:
 	bool isFxAppear = false;
 	bool isRanger = false;
 	bool isBulletFire = false;
-	bool isBulletEmpty = true;
+	//bool isBulletEmpty = true;
 	bool isAstar;
 	bool isKnockBack ;
-	bool atkDirection[ATKDIRECTION::MAX];
+	bool atkDirection[MONSTER_MAX];
+	bool bulletDirection[MONSTER_MAX];
+
 	const float distanceMax = 500.f;
 	
 	astarManager* astar;
@@ -166,9 +168,12 @@ public:
 	inline bool getRange() { return isRanger; }
 	inline bool getFx() { return isFxAppear; }
 	inline bool getBulletFire() { return isBulletFire; }
+	inline int getBulletDirection() { for (int i = 0; i < MONSTER_MAX; i++) if (bulletDirection[i])return i; }
 	inline int getHp() { return hp; }
 	inline bool getDie() { return isDie; }
 	inline int getCenterY() { return pos.y + img->getFrameHeight() / 2; }
+
+	//inline bool 
 
 	inline void setPt(float x, float y) { pos = { (long)x, (long)y }; }
 	inline void setX(int X) { pos.x = X; }
@@ -179,7 +184,7 @@ public:
 	inline void setATK(bool atk) { isATK = atk; }
 	inline void setFx(bool Fx) {  isFxAppear = Fx; }
 	inline void setBulletFire(bool isFire) { isBulletFire = isFire; }
-	inline void setBulletEmpty(bool isEmpty) { isBulletEmpty = isEmpty; }
+	//inline void setBulletEmpty(bool isEmpty) { isBulletEmpty = isEmpty; }
 	
 	void hit(int damage, float _hitAngle, float _knockBack, int skillNum);
 	bool hitCheck(int skillNum);
