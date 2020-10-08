@@ -411,7 +411,9 @@ void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum)
 
 	EFFECT->damageEffect(pt);
 
-	hp -= damage;
+	int allDamage = damage - armour;
+	if(allDamage>0)
+		hp -= allDamage;
 
 	hitAngle = _hitAngle;
 	knockBack = _knockBack;
