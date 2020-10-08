@@ -613,6 +613,27 @@ void player::animation()
 		break;
 	case STATE::DAMAGED:
 		//각도별로 
+
+		if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
+		{
+			frameAnimation(6, 0);
+			if (!isDamaged) move = MOVE::LEFT;
+		}
+		else if (damageAngleTenth <= 4 || damageAngleTenth > 32) //right
+		{
+			frameAnimation(7, 0);
+			if (!isDamaged) move = MOVE::RIGHT;
+		}
+		else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //up
+		{
+			frameAnimation(5, 0);
+			if (!isDamaged) move = MOVE::UP;
+		}
+		else if (damageAngleTenth > 23 && damageAngleTenth <= 32) //down
+		{
+			frameAnimation(4, 0);
+			if (!isDamaged)	move = MOVE::DOWN;
+		}
 		break;
 	case STATE::DIE:
 		if (index < 5 && count % 30 == 0)
@@ -939,6 +960,38 @@ void player::buttonDown()
 	else signature = false;
 }
 
+void player::death()
+{
+	if (PLAYERDATA->getHp() <= 0)
+	{
+		isDead = true;
+		state = STATE::DIE;
+	}
+}
+void player::damage(int damage, float attackAngle)
+{
+	if (PLAYERDATA->getHp() <= 0) return;
+
+	isDamaged = true;
+	damageAngle = attackAngle;
+
+	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
+	
+	//벽에 닿으면 리턴으로 처리하기
+	posX += cosf(damageAngle) * 3.f;
+	posY -= sinf(damageAngle) * 3.f;
+}
+void player::damagedCool()
+{
+	if (isDamaged )
+	{
+		state = STATE::DAMAGED;
+		frozenTime++;
+		if (frozenTime > 60) isDamaged = false;
+	}
+	frozenTime = 0;
+}
+
 //del
 void player::viewText()
 {
@@ -951,33 +1004,4 @@ void player::viewText()
 	wsprintf(str, "state : %d", state);
 	textOut(getMemDC(), 100, 250, str, WHITE);
 
-}
-
-void player::death()
-{
-	if (PLAYERDATA->getHp() <= 0)
-	{
-		isDead = true;
-		state = STATE::DIE;
-	}
-}
-void player::damage(int damage, float attackAngle, float knockBack)
-{
-	if (PLAYERDATA->getHp() <= 0) return;
-
-	isDamaged = true;
-	damageAngle = attackAngle;
-
-	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
-	posX += cosf(damageAngle) * knockBack;
-	posY -= sinf(damageAngle) * knockBack;
-}
-void player::damagedCool()
-{
-	if (isDamaged)
-	{
-		frozenTime++;
-		if (frozenTime > 60) isDamaged = false;
-	}
-	frozenTime = 0;
 }
