@@ -35,8 +35,6 @@ void bullet::render()
 			CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, _vBullet[i].x, _vBullet[i].y,
 				_vBullet[i].FrameX, _vBullet[i].FrameY);
 
-		else
-			CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
 	}
 }
 
