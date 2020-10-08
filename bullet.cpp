@@ -62,7 +62,7 @@ void bullet::fire(float x, float y, float angle, float speed,int damage,  MONSTE
 	bullet.x = bullet.fireX = x;
 	bullet.y = bullet.fireY = y;
 	bullet.radius = 36;
-	bullet.damage = damage;
+	bullet.atkPower = damage;
 	bullet.count = 0;
 	bullet.FrameX = 0;
 	bullet.FrameY = 0;

@@ -2,6 +2,7 @@
 #include "enemyManager.h"
 
 
+
 HRESULT enemyManager::init(tagTile* _tile)
 {
 	IMAGEMANAGER->addFrameImage("summoner", "resource/enemy/SummonerSource.bmp", 500, 800, 5, 8);
@@ -123,19 +124,19 @@ void enemyManager::minionBulletFire(float aimX, float aimY)
 			switch ((*_viMinion)->getBulletDirection())
 			{
 			case MONSTER_UP:
-				_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle, 0.f, 50);
+				_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle, 0.f, 50, MONSTERKIND::GOLEM);
 				(*_viMinion)->setFx(false);
 				break;
 			case MONSTER_DOWN:
-				_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y + 72, angle, 0.0f, 50);
+				_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y + 72, angle, 0.0f, 50, MONSTERKIND::GOLEM);
 				(*_viMinion)->setFx(false);
 				break;
 			case MONSTER_LEFT:
-				_bullet->fire((float)(*_viMinion)->getPos().x - 20, (float)(*_viMinion)->getPos().y , angle, 0.0f, 50);
+				_bullet->fire((float)(*_viMinion)->getPos().x - 20, (float)(*_viMinion)->getPos().y , angle, 0.0f, 50, MONSTERKIND::GOLEM);
 				(*_viMinion)->setFx(false);
 				break;
 			case MONSTER_RIGHT:
-				_bullet->fire((float)(*_viMinion)->getPos().x + 100, (float)(*_viMinion)->getPos().y , angle, 0.0f, 50);
+				_bullet->fire((float)(*_viMinion)->getPos().x + 100, (float)(*_viMinion)->getPos().y , angle, 0.0f, 50, MONSTERKIND::GOLEM);
 				(*_viMinion)->setFx(false);
 				break;
 			
@@ -147,9 +148,9 @@ void enemyManager::minionBulletFire(float aimX, float aimY)
 
 			break;
 		case MONSTERKIND::SUMMONER:
-			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle, 9.0f,50,true);
-			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle + PI / 4, 9.0f,50,true);
-			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle - PI / 4, 9.0f,50,true);
+			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle, 9.0f,50,  MONSTERKIND::SUMMONER,true);
+			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle + PI / 4, 9.0f,50,MONSTERKIND::SUMMONER,true);
+			_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72, angle - PI / 4, 9.0f,50,MONSTERKIND::SUMMONER,true);
 			(*_viMinion)->setFx(false);
 			break;
 		}

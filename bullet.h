@@ -13,9 +13,9 @@ struct tagBullet
 	float angle;
 	float gravity;
 	float radius;
+	float distance;
 	int count;
 	int atkPower;
-	int damage;
 
 	bool fire;
 	bool collision;
