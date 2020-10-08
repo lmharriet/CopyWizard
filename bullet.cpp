@@ -34,9 +34,6 @@ void bullet::render()
 		if (_vBullet[i].bulletImage)
 			CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, _vBullet[i].x, _vBullet[i].y,
 				_vBullet[i].FrameX, _vBullet[i].FrameY);
-
-		else
-			CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
 	}
 }
 
@@ -55,7 +52,6 @@ void bullet::fire(float x, float y, float angle, float speed, int damage, MONSTE
 	if (image)
 		bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
 	else bullet.bulletImage = NULL;
-
 	bullet.kind = kind;
 	bullet.speed = speed;
 	bullet.angle = angle;
@@ -67,7 +63,6 @@ void bullet::fire(float x, float y, float angle, float speed, int damage, MONSTE
 	bullet.FrameX = 0;
 	bullet.FrameY = 0;
 
-	bullet.rc = RectMakeCenter(bullet.x, bullet.y, 50, 50);
 
 	//벡터에 담기
 	_vBullet.push_back(bullet);
@@ -81,19 +76,35 @@ void bullet::move()
 		_vBullet[i].FrameX = 1;
 		_vBullet[i].x += cosf(_vBullet[i].angle) * _vBullet[i].speed;
 		_vBullet[i].y += -sinf(_vBullet[i].angle) * _vBullet[i].speed;
-
-		_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 60, 60);
-
-		//총알이 사거리 보다 커졌을때
-		float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
-			_vBullet[i].x, _vBullet[i].y);
-		if (_range < distance)
+		switch (_vBullet[i].kind)
 		{
-			_vBullet.erase(_vBullet.begin() + i);
+		case MONSTERKIND::GOLEM:
+			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 90, 120);
+			_vBullet[i].count++;
+			if (_vBullet[i].count >= 10)
+				_vBullet.erase(_vBullet.begin() + i);
+			break;
+		case MONSTERKIND::KNIGHT:
+			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 90, 120);
+			_vBullet[i].count++;
+			if (_vBullet[i].count >= 5)
+				_vBullet.erase(_vBullet.begin() + i);
+			break;
+		case MONSTERKIND::SUMMONER:
+			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 60, 60);
+			float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
+				_vBullet[i].x, _vBullet[i].y);
+			if (_range < distance)//총알이 사거리 보다 커졌을때
+			{
+				_vBullet.erase(_vBullet.begin() + i);
+			}
+			break;
+
 		}
 
 	}
 }
+
 //총알삭제
 void bullet::removeBullet(int index)
 {

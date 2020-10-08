@@ -117,7 +117,7 @@ void player::update()
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
 
-	if (speed == 0 && stateCool == 0 && !isDead/*&& meteorStateCool == 0 && infernoStateCool == 0*/)
+	if (speed == 0 && stateCool == 0 && !isDead && !inferno->getGauging())
 	{
 		controller();
 	}
