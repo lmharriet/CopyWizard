@@ -392,7 +392,7 @@ void gameScene::enemyAttack()
 	{
 		if (colCheck(enemy->getBullet()->getRect(i), _player->getRect()))
 		{
-			_player->damage(enemy->getBullet()->getBullet()[i].damage, enemy->getBullet()->getBullet()[i].angle);
+			_player->damage(enemy->getBullet()->getBullet()[i].atkPower, enemy->getBullet()->getBullet()[i].angle);
 			enemy->getBullet()->removeBullet(i);
 		}
 		else
