@@ -114,11 +114,7 @@ struct tagCam
 	POINT pt;
 };
 
-enum class MONSTERKIND {
-	GOLEM,
-	KNIGHT,
-	SUMMONER,
-};
+
 
 struct tagSpawn
 {

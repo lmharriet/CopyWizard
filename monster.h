@@ -79,11 +79,6 @@ enum   ATKDIRECTION {
 	MONSTER_MAX	
 };
 
-enum class MONSTERKIND {
-	GOLEM,
-	KNIGHT,
-	SUMMONER,
-};
 
 class monster : public gameNode
 {

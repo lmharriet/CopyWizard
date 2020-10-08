@@ -20,3 +20,8 @@ namespace MY_UTIL
 	float getAngle(float startX, float startY, float endX, float endY);
 };
 
+enum class MONSTERKIND {
+	GOLEM,
+	KNIGHT,
+	SUMMONER,
+};
