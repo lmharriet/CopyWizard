@@ -67,6 +67,14 @@ HRESULT player::init()
 	damageAngle = 0;
 	damageAngleTenth = frozenTime = 0;
 	isDamaged = false;
+	isDead = false;
+
+	//test coolTime
+	infernoCool = 0;
+	infernoReady = true; // fire하면 false
+
+
+
 
 	return S_OK;
 }
@@ -90,8 +98,6 @@ void player::release()
 
 void player::update()
 {
-
-
 	blaze->update();
 	flares->update();
 	Meteor->update();
@@ -111,7 +117,10 @@ void player::update()
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
 
-	if (speed == 0 /*&& stateCool == 0 && meteorStateCool == 0 && infernoStateCool == 0*/) controller();
+	if (speed == 0 && stateCool == 0 && !isDead/*&& meteorStateCool == 0 && infernoStateCool == 0*/)
+	{
+		controller();
+	}
 
 	tileCol();
 
@@ -130,8 +139,6 @@ void player::update()
 	makeCol2(2, -45, 60);
 	makeCol2(3, 45, 60);
 
-	
-
 
 	dashFunction();
 	changeState();
@@ -139,9 +146,10 @@ void player::update()
 	standardSetUp();
 	signatureSetUp();
 
+	damagedCool();
 	//
 	takeCoin();
-
+	
 
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
@@ -174,7 +182,7 @@ void player::other_update()
 	angleTenth = (int)(saveAngle * (18 / PI));
 
 
-	if (speed == 0 && stateCool == 0 /*&& meteorStateCool == 0*/) controller();
+	if (speed == 0 && stateCool == 0 &&!isDead/*&& meteorStateCool == 0*/) controller();
 
 	//tileCol();
 
@@ -200,9 +208,10 @@ void player::other_update()
 	standardSetUp();
 
 	signatureSetUp();
-
+	damagedCool();
 	//
 	takeCoin();
+	
 
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
@@ -472,23 +481,49 @@ void player::blazeSetUp()
 
 void player::standardSetUp()
 {
-	if (INPUT->GetKeyDown(VK_RBUTTON))
+
+	//쿨타임 수정하기 *******
+	if (INPUT->GetKeyDown(VK_RBUTTON) && infernoReady)
 	{
 		standard = true;
 		saveAngle2 = attackAngle;
 	}
 	else standard = false;
 
-	if (standard && infernoStateCool == 0)
+	if (standard )
 	{
 		inferno->fire(posX, posY, attackAngle, &gaugeTime);
+	
+		infernoReady = false;
 	}
 
-	if (inferno->getGauging()) state = STATE::STANDARD;
+	if (inferno->getGauging())
+	{
+		state = STATE::STANDARD;
+		
+	}
+
+	if (inferno->getInf().lifeTime == 0 && !inferno->getFire())
+	{
+		infernoCool++;
+
+	}
+
+	if (infernoCool > 100)
+	{
+		infernoReady = true;
+		infernoCool = 0;
+	
+	}
+
+	cout << infernoCool << '\n';
+
 }
 
 void player::signatureSetUp()
 {
+	float mouseX = CAMERAMANAGER->GetAbsoluteX(_ptMouse.x);
+	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
 	if (signature && meteorStateCool == 0)
 	{
 		meteorStateCool = 30;
@@ -498,7 +533,8 @@ void player::signatureSetUp()
 		//Meteor->meteorFire(posX + RANDOM->range(-150, 150), posY + RANDOM->range(-150, 150), 600, move, dRange);
 		//Meteor->meteorFire(posX - RANDOM->range(-150, 150), posY - RANDOM->range(-150, 150), 600, move, dRange);
 		//Meteor->meteorUltFire(posX, posY, 600, move, 55);
-		Meteor->makeCircle(posX, posY, 200, move);
+		Meteor->makeCircle(mouseX, mouseY, 200, move);
+		//Meteor->creatMeteor(posX, posY, 0,100, move);
 	}
 	if (meteorStateCool > 0)
 	{
@@ -613,28 +649,32 @@ void player::animation()
 		}
 		break;
 	case STATE::DAMAGED:
-		//각도별로 
 
-		if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
-		{
-			frameAnimation(6, 0);
-			if (!isDamaged) move = MOVE::LEFT;
-		}
-		else if (damageAngleTenth <= 4 || damageAngleTenth > 32) //right
-		{
-			frameAnimation(7, 0);
-			if (!isDamaged) move = MOVE::RIGHT;
-		}
-		else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //up
-		{
-			frameAnimation(5, 0);
-			if (!isDamaged) move = MOVE::UP;
-		}
-		else if (damageAngleTenth > 23 && damageAngleTenth <= 32) //down
-		{
-			frameAnimation(4, 0);
-			if (!isDamaged)	move = MOVE::DOWN;
-		}
+		frameAnimation(6, 0);
+		if (!isDamaged) move = MOVE::LEFT;
+		
+		//각도별로 
+		
+		//if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
+		//{
+		//	frameAnimation(6, 0);
+		//	if (!isDamaged) move = MOVE::LEFT;
+		//}
+		//else if (damageAngleTenth <= 4 || damageAngleTenth > 32) //right
+		//{
+		//	frameAnimation(7, 0);
+		//	if (!isDamaged) move = MOVE::RIGHT;
+		//}
+		//else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //up
+		//{
+		//	frameAnimation(5, 0);
+		//	if (!isDamaged) move = MOVE::UP;
+		//}
+		//else if (damageAngleTenth > 23 && damageAngleTenth <= 32) //down
+		//{
+		//	frameAnimation(4, 0);
+		//	if (!isDamaged)	move = MOVE::DOWN;
+		//}
 		break;
 	case STATE::DIE:
 		if (index < 5 && count % 30 == 0)
@@ -793,8 +833,6 @@ void player::animation()
 		}
 		break;
 	}
-
-
 
 }
 
@@ -971,46 +1009,49 @@ void player::death()
 		state = STATE::DIE;
 	}
 }
+//플레이어 피격 데미지
 void player::damage(int damage, float attackAngle)
 {
 	if (PLAYERDATA->getHp() <= 0) return;
-	if (damage > 0)
-	{
-		isDamaged = true;
-		damageAngle = attackAngle;
 
-		PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
+	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
 
-		//벽에 닿으면 리턴으로 처리하기
-		posX += cosf(damageAngle) * 3.f;
-		posY -= sinf(damageAngle) * 3.f;
-	}
+	//벽에 닿으면 리턴으로 처리하기
+	posX += cosf(attackAngle) * 3.f;
+	posY -= sinf(attackAngle) * 3.f;
+
+	isDamaged = true;
+
 }
+
 void player::damagedCool()
-{	
+{
 	if (isDamaged)
 	{
-		frozenTime =60;
 		state = STATE::DAMAGED;
+		frozenTime++;
 	}
-	if (frozenTime > 0)
+	if (frozenTime > 6)
 	{
-		frozenTime--;
-	}
-	else if(frozenTime == 0)
 		isDamaged = false;
+		frozenTime = 0;
+	}
 }
+
 
 //del
 void player::viewText()
 {
 	char str[126];
 
-	wsprintf(str, "basic  : %d , standard : %d ,signature : %d", basic, standard, signature);
-	textOut(getMemDC(), 10, 220, str, WHITE);
+	wsprintf(str, "state(4 ==damaged  : %d) , isDamaged : %d ,frozenTime : %d", state, isDamaged, frozenTime);
+	textOut(getMemDC(), 10, 200, str, WHITE);
+
+	wsprintf(str, "damageAngle : %d", damageAngle);
+	textOut(getMemDC(), 100, 230, str, WHITE);
 
 
-	wsprintf(str, "state : %d", state);
+	wsprintf(str, "damageAngleTenth : %d", damageAngleTenth);
 	textOut(getMemDC(), 100, 250, str, WHITE);
 
 }

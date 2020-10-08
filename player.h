@@ -57,6 +57,9 @@ private:
 	//cooltime ¼öÁ¤ Áß
 	int standardCool, signatureCool;
 	int standardTiemer, signatureTimer;
+	
+	int infernoCool;
+	bool infernoReady;
 
 	//dash
 	bool dashLeft, dashRight, dashUp, dashDown;
@@ -115,17 +118,25 @@ public:
 	//getter ,setter
 	float getX() { return posX; }
 	float getY() { return posY; }
+	float getDamageAngle() { return damageAngle; }
+	int getDamageAngleTenth() { return damageAngleTenth; }
 	RECT getRect() { return rc; }
 	bomb* getBlaze() { return blaze; }
 	meteor* getMeteor() { return Meteor; }
 	dashFire* getDashFire() { return searingRush; }
 	RagingInferno* getInferno() { return inferno; }
 
+	bool getDamaged() { return isDamaged; }
+
 
 	void setX(float x) { posX = x; }
 	void setY(float y) { posY = y; }
+	void setDamagedAngle(float *attackAngle) { damageAngle = *attackAngle; }
+	void setDamagedAngleTenth(int angleTenth) { damageAngleTenth = angleTenth; }
 	void reposRect() { rc = RectMakeCenter(posX, posY, 100, 100); }
 	void setStateIDLE() { state = STATE::IDLE; }
+	void setDamaged(bool temp) { isDamaged = temp; }
+
 
 	//tile address
 	void setTileAd(tagTile* _tile) { tile = _tile; }

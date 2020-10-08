@@ -167,7 +167,7 @@ public:
 
 
 	void makeCircle(float x, float y, float radius, MOVE direction);
-	void creatMeteor(float x, float y, float radius, MOVE direction);
+	void creatMeteor(float x, float y,float angle, float radius, MOVE direction);
 
 
 
@@ -272,7 +272,7 @@ class homingFlares : public gameNode
 {
 private:
 	//총알 구조체를 담을 벡터선언
-	vector<tagArcana> _vFlares;
+	vector<tagArcana> cleaver;
 	vector<tagArcana> _vRange;
 	//	vector<tagBullet>::iterator _viBullet;
 

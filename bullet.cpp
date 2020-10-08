@@ -40,7 +40,7 @@ void bullet::render()
 	}
 }
 
-void bullet::fire(float x, float y, float angle, float speed,int damage,  MONSTERKIND kind, bool image)
+void bullet::fire(float x, float y, float angle, float speed, int damage, MONSTERKIND kind, bool image)
 {
 	//총알 벡터에 담는것을 제한한다
 	//if (_bulletMax < _vBullet.size() + 1) return;
@@ -316,29 +316,29 @@ void meteor::update()
 		if (index > 5) index = 0;
 	}
 
-	circleCount++;
-	if (circleCount % 7 == 0)
-	{
-		CircleIndex++;
-		if (CircleIndex > 23)CircleIndex = 23;
-	}
-	move();
+	
+	//move();
 
-	meteorUlt();
+	//meteorUlt();
 }
 
 void meteor::render()
 {
-
+	circleCount++;
+	if (circleCount % 7 == 0)
+	{
+		CircleIndex++;
+		if (CircleIndex > 23)CircleIndex = 0;
+	}
 	//test
-	image* img = IMAGEMANAGER->addFrameImage("circle", "resource/player/castingCircle1.bmp",3072, 128, 24, 1,true,RGB(255,0,0));
-	
+	image* img = IMAGEMANAGER->addFrameImage("circle", "resource/player/castingCircle1.bmp", 3072, 128, 24, 1, true, RGB(255, 0, 0));
+
 	char temp[126];
 
 
 	for (int i = 0; i < vMeteor.size(); i++)
 	{
-		//CAMERAMANAGER->Ellipse(getMemDC(), _vMeteor[i].rc);
+		CAMERAMANAGER->Ellipse(getMemDC(), vMeteor[i].rc);
 		//CAMERAMANAGER->FrameRender(getMemDC(), vMeteor[i].img, vMeteor[i].rc.left, vMeteor[i].rc.top, index, vMeteor[i].frameY);
 	}
 
@@ -355,107 +355,65 @@ void meteor::makeCircle(float x, float y, float radius, MOVE direction)
 	//플레이어 기준으로 왼쪽 오른쪽 위 아래 마법진 생성
 
 	tagCircle circle;
-	switch (direction)
-	{
-	case MOVE::LEFT:
-		//왼쪽
-		circle.angle = PI;
-		circle.x = x + cosf(circle.angle) * radius;
-		circle.y = y - sinf(circle.angle) * radius;
-		circle.rc = RectMakeCenter(circle.x, circle.y, radius, radius);
-		circle.lifeTime = 0;
-		break;
-	case MOVE::RIGHT:
-		//오른쪽
-		circle.angle = 0;
-		circle.x = x + cosf(circle.angle) * radius;
-		circle.y = y - sinf(circle.angle) * radius;
-		circle.rc = RectMakeCenter(circle.x, circle.y, radius, radius);
-		circle.lifeTime = 0;
-		break;
+	//switch (direction)
+	//{
+	//case MOVE::LEFT:
+	//	//왼쪽
+	//	circle.angle = PI;
+	//	circle.x = x + cosf(circle.angle) * radius;
+	//	circle.y = y - sinf(circle.angle) * radius;
+	//	circle.rc = RectMakeCenter(circle.x, circle.y, radius, radius);
+	//	circle.lifeTime = 0;
+	//	break;
+	//case MOVE::RIGHT:
+	//	//오른쪽
+	//	circle.angle = 0;
+	//	circle.x = x + cosf(circle.angle) * radius;
+	//	circle.y = y - sinf(circle.angle) * radius;
+	//	circle.rc = RectMakeCenter(circle.x, circle.y, radius, radius);
+	//	circle.lifeTime = 0;
+	//	break;
 
-	case MOVE::UP:
-		//위
-		circle.angle = PI_2;
-		circle.x = x + cosf(circle.angle) * radius;
-		circle.y = y - sinf(circle.angle) * radius;
-		circle.rc = RectMakeCenter(circle.x, circle.y, radius, radius);
-		circle.lifeTime = 0;
-		break;
-	case MOVE::DOWN:
-		//아래
-		circle.angle = PI_2 * 3;
-		circle.x = x + cosf(circle.angle) * radius;
-		circle.y = y - sinf(circle.angle) * radius;
-		circle.rc = RectMakeCenter(circle.x, circle.y, radius, radius);
-		circle.lifeTime = 0;
-		break;
-	default:
+	//case MOVE::UP:
+	//	//위
+	//	circle.angle = PI_2;
+	//	circle.x = x + cosf(circle.angle) * radius;
+	//	circle.y = y - sinf(circle.angle) * radius;
+	//	circle.rc = RectMakeCenter(circle.x, circle.y, radius, radius);
+	//	circle.lifeTime = 0;
+	//	break;
+	//case MOVE::DOWN:
+	//	//아래
+	//	circle.angle = PI_2 * 3;
+	//	circle.x = x + cosf(circle.angle) * radius;
+	//	circle.y = y - sinf(circle.angle) * radius;
+	//	circle.rc = RectMakeCenter(circle.x, circle.y, radius, radius);
+	//	circle.lifeTime = 0;
+	//	break;
+	//default:
 
-		circle.angle = 0;
-		circle.x = x + cosf(circle.angle) * radius;
-		circle.y = y - sinf(circle.angle) * radius;
-		circle.rc = RectMakeCenter(circle.x, circle.y, radius, radius);
-		circle.lifeTime = 0;
-		break;
-	}
-
+	//	
+	//	break;
+	//}
+	circle.angle = 0;
+	circle.x = x;
+	circle.y = y;
+	circle.rc = RectMakeCenter(circle.x, circle.y, 100, 100);
+	circle.lifeTime = 0;
 
 	vCircle.push_back(circle);
 }
 
-void meteor::creatMeteor(float x, float y, float radius, MOVE direction)
+void meteor::creatMeteor(float x, float y, float angle,float radius, MOVE direction)
 {
 	tagArcana meteor;
-
-	switch (direction)
-	{
-	case MOVE::LEFT:
-		//왼쪽
-		meteor.angle = 70 * (PI / 180);
-		meteor.x = x + cosf(meteor.angle) * radius;
-		meteor.y = y - sinf(meteor.angle) * radius;
-		meteor.rc = RectMakeCenter(meteor.x, meteor.y, radius, radius);
-		break;
+	meteor.angle = PI_2;
+	meteor.x = x;
+	meteor.y = y;
+	meteor.rc = RectMakeCenter(x, y, 100, 100);
 	
-	case MOVE::RIGHT:
-		//오른쪽
-		meteor.angle = 120 * (PI / 180);
-		meteor.x = x + cosf(meteor.angle) * radius;
-		meteor.y = y - sinf(meteor.angle) * radius;
-		meteor.rc = RectMakeCenter(meteor.x, meteor.y, radius, radius);
-		break;
-
-	case MOVE::UP:
-		//위
-		meteor.angle = PI_2;
-		meteor.x = x + cosf(meteor.angle) * radius + radius / 2;
-		meteor.y = y - sinf(meteor.angle) * radius + radius / 2;
-		meteor.rc = RectMakeCenter(meteor.x, meteor.y, radius, radius);
-		break;
-	case MOVE::DOWN:
-		//아래
-		meteor.angle = PI_2;
-		meteor.x = x + cosf(meteor.angle) * radius - radius / 2;
-		meteor.y = y - sinf(meteor.angle) * radius - radius / 2;
-		meteor.rc = RectMakeCenter(meteor.x, meteor.y, radius, radius);
-		break;
-	
-	default:
-		//오른쪽
-		meteor.angle = 120 * (PI / 180);
-		meteor.x = x + cosf(meteor.angle) * radius;
-		meteor.y = y - sinf(meteor.angle) * radius;
-		meteor.rc = RectMakeCenter(meteor.x, meteor.y, radius, radius);
-		break;
-	}
-	
-	
-
-	
-	
-
 	vMeteor.push_back(meteor);
+	
 
 }
 
@@ -653,23 +611,7 @@ void meteor::meteorUltFire(float x, float y, float speed, MOVE dir, float range)
 
 void meteor::move()
 {
-	for (int i = 0; i < vMeteor.size(); i++)
-	{
-		vMeteor[i].lifeTime++;
 
-		vMeteor[i].x = vMeteor[i].x + cosf(vMeteor[i].angle) * vMeteor[i].speed;
-		vMeteor[i].y = vMeteor[i].y + (-sinf(vMeteor[i].angle)) * vMeteor[i].speed;
-		vMeteor[i].rc = RectMakeCenter(vMeteor[i].x, vMeteor[i].y, 200 * 2, 160 * 2);
-
-
-		if (vMeteor[i].lifeTime > vMeteor[i].range)
-		{
-			//이펙트 플레이
-			//충돌 처리 , 카메라 shake
-			CAMERAMANAGER->Shake(10, 10, 10);
-			vMeteor.erase(vMeteor.begin() + i);
-		}
-	}
 
 }
 
@@ -788,7 +730,7 @@ void RagingInferno::update(int* gaugeTime)
 		*gaugeTime = 70;
 		inferno.lifeTime--;
 	}
-	
+
 }
 
 void RagingInferno::render()
@@ -867,16 +809,16 @@ void RagingInferno::move(int gaugeTime)
 			if (gaugeTime % 3 == 0) PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);
 		}
 		else isActive = false;
-		 if (gaugeTime == 70)
+		if (gaugeTime == 70)
 		{
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 3, 3.f, 0.8f, 10);
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 5, 5.f, 0.7f, 10);
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 7, 7.f, 0.6f, 10);
 		}
 
-		 if (gaugeTime >= 70)
+		if (gaugeTime >= 70)
 		{
-			 isActive = true;
+			isActive = true;
 			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 150, 150);
 
 			inferno.lifeTime--;
