@@ -415,6 +415,11 @@ void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum)
 	if(allDamage>0)
 		hp -= allDamage;
 
+	if(cos(_hitAngle)*2.f>0)
+		DAMAGE->generator(pt, allDamage,false);
+	else
+		DAMAGE->generator(pt, allDamage,true);
+
 	hitAngle = _hitAngle;
 	knockBack = _knockBack;
 	
