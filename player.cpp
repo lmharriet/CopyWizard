@@ -337,6 +337,7 @@ void player::controller()
 		}
 		speed = 20;
 	}
+
 }
 
 void player::dashFunction()
@@ -793,6 +794,8 @@ void player::animation()
 		break;
 	}
 
+
+
 }
 
 void player::frameAnimation(int frameX, int frameY)
@@ -971,25 +974,32 @@ void player::death()
 void player::damage(int damage, float attackAngle)
 {
 	if (PLAYERDATA->getHp() <= 0) return;
+	if (damage > 0)
+	{
+		isDamaged = true;
+		damageAngle = attackAngle;
 
-	isDamaged = true;
-	damageAngle = attackAngle;
+		PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
 
-	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
-	
-	//벽에 닿으면 리턴으로 처리하기
-	posX += cosf(damageAngle) * 3.f;
-	posY -= sinf(damageAngle) * 3.f;
+		//벽에 닿으면 리턴으로 처리하기
+		posX += cosf(damageAngle) * 3.f;
+		posY -= sinf(damageAngle) * 3.f;
+	}
+	else return;
 }
 void player::damagedCool()
-{
-	if (isDamaged )
+{	
+	if (isDamaged)
 	{
+		frozenTime =60;
 		state = STATE::DAMAGED;
-		frozenTime++;
-		if (frozenTime > 60) isDamaged = false;
 	}
-	frozenTime = 0;
+	if (frozenTime > 0)
+	{
+		frozenTime--;
+	}
+	else if(frozenTime == 0)
+		isDamaged = false;
 }
 
 //del
