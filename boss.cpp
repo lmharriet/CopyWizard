@@ -880,9 +880,19 @@ void boss::bossPattern()
 {
 	if (boss.bossState == BOSSIDLE) {
 		pattern = RANDOM->range(5) + 1;
-		//pattern = 1;
+		if (samePattern == pattern) {
+			while (true)
+			{
+				pattern = RANDOM->range(5) + 1;
+				if (samePattern != pattern) {
+					break;
+				}
+			}
+		}
+		samePattern = pattern;
 		patternStart = true;
 	}
+
 	if (patternStart && patternCount < 3) {
 		this->jump(pattern);
 		this->drill(pattern);
@@ -891,13 +901,12 @@ void boss::bossPattern()
 		this->wall(pattern);
 	}
 
-	cout << pattern << endl;
-
 	if (patternCount == 3) {
 		patternTimer++;
 		if (patternTimer > 250) {
 			patternTimer = 0;
 			patternCount = 0;
+			samePattern = 0;
 		}
 	}
 }
