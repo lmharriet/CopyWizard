@@ -25,7 +25,7 @@ private:
 	tagTile obTile[MAXTILE];
 
 	/// OPTION ///
-	RECT mapOption[3];
+	RECT mapOption[4];
 	OPTION option;
 
 	// PAGEBUTTON //
@@ -41,7 +41,7 @@ private:
 	tagTile bigTile[6];
 	//tagTile miniTile[4];
 	
-	tagTile wall[10];
+	tagTile wall[18]; // 10 - 16
 
 	tagTile object[5];
 	tagTile deco[9];

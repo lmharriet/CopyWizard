@@ -15,7 +15,7 @@ enum class OPTION
 	WALL_MENU,
 	TILE_MENU,
 	OBJECT_MENU,
-
+	MONSTER_MENU,
 	SELECT_MENU
 };
 
@@ -111,5 +111,16 @@ struct tagDrag
 struct tagCam
 {
 	RECT rc;
+	POINT pt;
+};
+
+enum class MONSTERKIND {
+	GOLEM,
+	KNIGHT,
+	SUMMONER,
+};
+
+struct tagSpawn
+{
 	POINT pt;
 };

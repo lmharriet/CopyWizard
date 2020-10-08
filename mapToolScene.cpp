@@ -154,7 +154,7 @@ void mapToolScene::render()
 
 		if (tile[i].keyName != "")  imageStretchRender(obTile[i].keyName, { obTile[i].rc.left,obTile[i].rc.top }, obTile[i].frame.x, obTile[i].frame.y, obTile[i].rc);
 	}
-	
+
 
 
 	objectImgRender();
@@ -215,7 +215,7 @@ void mapToolScene::buttonCheck()
 	switch (option)
 	{
 	case OPTION::SELECT_MENU:
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			if (PtInRect(&mapOption[i], _ptMouse) && isLeftDown)
 			{
@@ -256,6 +256,20 @@ void mapToolScene::buttonCheck()
 		this->loadCheck();
 		break;
 	case OPTION::OBJECT_MENU:
+		if (PtInRect(&BACK, _ptMouse) && isLeftDown)
+		{
+			user.KeyName = "";
+			user.kind = TERRAIN::NONE;
+			user.transY = 0;
+			option = OPTION::SELECT_MENU;
+
+			tool = TOOL::NONE;
+			dragButton.isCol = false;
+		}
+		this->saveCheck();
+		this->loadCheck();
+		break;
+	case OPTION::MONSTER_MENU:
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown)
 		{
 			user.KeyName = "";
@@ -447,7 +461,7 @@ void mapToolScene::initMaptool()
 void mapToolScene::initButton()
 {
 	//initButton
-	for (int i = 0; i < 3; i++) mapOption[i] = RectMake(1020, 197 + (i * 83), 160, 60);
+	for (int i = 0; i < 4; i++) mapOption[i] = RectMake(1020, 130 + (i * 83), 160, 60);
 
 	for (int i = 0; i < 4; i++) icon[i] = RectMake(1005 + (i * 70), 70, 50, 48);
 
@@ -497,7 +511,7 @@ void mapToolScene::initSelectTerrain()
 	//fix
 	wall[4].rc = RectMake(929, 398, 78, 67);
 	wall[4].kind = TERRAIN::WALL;
-	wall[4].keyName = "topWall";	
+	wall[4].keyName = "topWall";
 
 	wall[5].rc = RectMake(1016, 398, 78, 67);
 	wall[5].kind = TERRAIN::WALL;
@@ -518,6 +532,40 @@ void mapToolScene::initSelectTerrain()
 	wall[9].rc = RectMake(1140, 398, 30, 67);
 	wall[9].kind = TERRAIN::WALL;
 	wall[9].keyName = "shopWall1";
+
+	wall[10].rc = RectMake(1174, 396, 30, 30);
+	wall[10].kind = TERRAIN::WALL;
+	wall[10].keyName = "shopWall2";
+
+	wall[11].rc = RectMake(1207, 396, 30, 30);
+	wall[11].kind = TERRAIN::WALL;
+	wall[11].keyName = "shopWall3";
+
+	wall[12].rc = RectMake(1159, 478, 30, 30);
+	wall[12].kind = TERRAIN::WALL;
+	wall[12].keyName = "wallTile5";
+
+	wall[13].rc = RectMake(1211, 478, 30, 30);
+	wall[13].kind = TERRAIN::WALL;
+	wall[13].keyName = "wallTile6";
+
+	wall[14].rc = RectMake(1058, 478, 38, 38);
+	wall[14].kind = TERRAIN::WALL;
+	wall[14].keyName = "wallTile7";
+
+	wall[15].rc = RectMake(1107, 478, 38, 38);
+	wall[15].kind = TERRAIN::WALL;
+	wall[15].keyName = "wallTile8";	
+	
+	wall[16].rc = RectMake(1058, 500, 38, 38);
+	wall[16].kind = TERRAIN::WALL;
+	wall[16].keyName = "wallTile9";
+
+	wall[17].rc = RectMake(1107, 500, 38, 38);
+	wall[17].kind = TERRAIN::WALL;
+	wall[17].keyName = "wallTile10";
+
+
 
 	//TILE//
 	string str[6] = { "grass0","grass1","ground0","grass2","ground1","ground2" };
@@ -575,6 +623,7 @@ void mapToolScene::addImage()
 {
 	//UI//
 	IMAGEMANAGER->addImage("mapMenu", "maptool/ui/maptoolmenu.bmp", 360, 720);
+	IMAGEMANAGER->addImage("monsterMenu", "maptool/ui/monsterMenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("wallMenu", "maptool/ui/wallmenu1.bmp", 360, 720);
 	IMAGEMANAGER->addImage("tileMenu", "maptool/ui/tilemenu1.bmp", 360, 720);
 	IMAGEMANAGER->addImage("objectMenu", "maptool/ui/objectmenu1.bmp", 360, 720);
@@ -597,8 +646,20 @@ void mapToolScene::addImage()
 	//fix 10/07
 	IMAGEMANAGER->addImage("leftWall", "maptool/wall/wallTile1.bmp", _tileSize, _tileSize);
 	IMAGEMANAGER->addImage("rightWall", "maptool/wall/wallTile2.bmp", _tileSize, _tileSize);
-	IMAGEMANAGER->addImage("shopWall0", "maptool/wall/shopWall0.bmp", _tileSize * 2, _tileSize * 6, true);
-	IMAGEMANAGER->addImage("shopWall1", "maptool/wall/shopWall1.bmp", _tileSize * 2, _tileSize * 6, true);
+	IMAGEMANAGER->addImage("shopWall0", "maptool/wall/shopWall0.bmp", _tileSize * 2, _tileSize * 6);
+	IMAGEMANAGER->addImage("shopWall1", "maptool/wall/shopWall1.bmp", _tileSize * 2, _tileSize * 6);
+	//fix 10/08
+	IMAGEMANAGER->addImage("shopWall2", "maptool/wall/shopWall2.bmp", _tileSize * 2, _tileSize * 3);
+	IMAGEMANAGER->addImage("shopWall3", "maptool/wall/shopWall3.bmp", _tileSize * 2, _tileSize * 3);
+
+	IMAGEMANAGER->addImage("wallTile5", "maptool/wall/wallTile5.bmp", _tileSize, _tileSize);
+	IMAGEMANAGER->addImage("wallTile6", "maptool/wall/wallTile6.bmp", _tileSize, _tileSize);
+
+	IMAGEMANAGER->addImage("wallTile7", "maptool/wall/wallTile7.bmp", _tileSize, _tileSize);
+	IMAGEMANAGER->addImage("wallTile8", "maptool/wall/wallTile8.bmp", _tileSize, _tileSize);
+
+	IMAGEMANAGER->addImage("wallTile9", "maptool/wall/wallTile9.bmp", _tileSize, _tileSize);
+	IMAGEMANAGER->addImage("wallTile10", "maptool/wall/wallTile10.bmp", _tileSize, _tileSize);
 
 	//TILE//
 	IMAGEMANAGER->addFrameImage("grass0", "maptool/tile/grass0.bmp", _tileSize * 3, _tileSize * 3, 3, 3, true);
@@ -769,13 +830,16 @@ void mapToolScene::UIRender()
 	case OPTION::SELECT_MENU:
 		imageRender("mapMenu", { 920,0 });
 		break;
+	case OPTION::MONSTER_MENU:
+		imageRender("monsterMenu", { 920,0 });
+		break;
 	}
 }
 
 void mapToolScene::textRender()
 {
-	ptOut(getMemDC(), _ptMouse, _ptMouse, BLUE);
-	
+	ptOut(getMemDC(), _ptMouse, _ptMouse, WHITE);
+
 	char str[126];
 	wsprintf(str, "_tileSize : %d", _tileSize);
 	TextOut(getMemDC(), 10, 70, str, strlen(str));
@@ -804,12 +868,12 @@ void mapToolScene::rcRender()
 		switch (option)
 		{
 		case OPTION::SELECT_MENU:
-			for (int i = 0; i < 3; i++) Rectangle(getMemDC(), mapOption[i]);
+			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), mapOption[i]);
 			break;
 		case OPTION::WALL_MENU:
 			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i]);
 			Rectangle(getMemDC(), dragButton.rc);
-			for (int i = 0; i < 10; i++) Rectangle(getMemDC(), wall[i].rc); // fix 6 -> 8
+			for (int i = 0; i < 18; i++) Rectangle(getMemDC(), wall[i].rc); // fix 10 - 16
 			break;
 		case OPTION::TILE_MENU:
 			for (int i = 0; i < 4; i++)	Rectangle(getMemDC(), icon[i]);
@@ -877,6 +941,13 @@ void mapToolScene::objectImgRender()
 		if (!colCheck(tile[i].rc, cam.rc) ||
 			(tile[i].kind != TERRAIN::WALL && tile[i].kind != TERRAIN::OBJECT))continue;
 
+		int w = MAXTILE_WIDTH;
+		int w2 = MAXTILE_WIDTH * 2;
+		int w3 = MAXTILE_WIDTH * 3;
+		int w4 = MAXTILE_WIDTH * 4;
+		int w5 = MAXTILE_WIDTH * 5;
+		int w6 = MAXTILE_WIDTH * 6;
+
 		switch (tile[i].kind)
 		{
 		case TERRAIN::WALL:
@@ -884,11 +955,6 @@ void mapToolScene::objectImgRender()
 
 			if (key == "topWall") // fix
 			{
-				int w = MAXTILE_WIDTH;
-				int w2 = MAXTILE_WIDTH * 2;
-				int w3 = MAXTILE_WIDTH * 3;
-				int w4 = MAXTILE_WIDTH * 4;
-
 				if ((key == tile[i + 1].keyName &&
 					key == tile[i - w].keyName && key == tile[i - w + 1].keyName &&
 					key == tile[i - w2].keyName && key == tile[i - w2 + 1].keyName &&
@@ -924,13 +990,6 @@ void mapToolScene::objectImgRender()
 
 			else if (key == "bottomWall") // fix
 			{
-				int w = MAXTILE_WIDTH;
-				int w2 = MAXTILE_WIDTH * 2;
-				int w3 = MAXTILE_WIDTH * 3;
-				int w4 = MAXTILE_WIDTH * 4;
-				int w5 = MAXTILE_WIDTH * 5;
-				int w6 = MAXTILE_WIDTH * 6;
-
 				if ((key == tile[i + 1].keyName &&
 					key == tile[i - w].keyName && key == tile[i - w + 1].keyName &&
 					key == tile[i - w2].keyName && key == tile[i - w2 + 1].keyName &&
@@ -967,7 +1026,9 @@ void mapToolScene::objectImgRender()
 				img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
 			}
 
-			else if (key == "leftWall" || key == "rightWall" || key == "wallTile")
+			else if (key == "leftWall" || key == "rightWall" || key == "wallTile" 
+				|| key == "wallTile5" || key == "wallTile6" || key == "wallTile7" 
+				|| key == "wallTile8" || key == "wallTile9" || key == "wallTile10")
 			{
 				float scale = (float)(tile[i].rc.right - tile[i].rc.left) / TILESIZE;
 
@@ -978,11 +1039,6 @@ void mapToolScene::objectImgRender()
 
 			else if (key == "shopWall0" || key == "shopWall1")
 			{
-				int w = MAXTILE_WIDTH;
-				int w2 = MAXTILE_WIDTH * 2;
-				int w3 = MAXTILE_WIDTH * 3;
-				int w4 = MAXTILE_WIDTH * 4;
-				int w5 = MAXTILE_WIDTH * 5;
 
 				height = 5 * _tileSize;
 
@@ -1011,6 +1067,20 @@ void mapToolScene::objectImgRender()
 					img = IMAGEMANAGER->findImage(key);
 					img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
 				}
+			}
+
+			else if (key == "shopWall2" || key == "shopWall3")
+			{
+				if ((key == tile[i + 1].keyName &&
+					key == tile[i - w].keyName && key == tile[i - w + 1].keyName &&
+					key == tile[i - w2].keyName && key == tile[i - w2 + 1].keyName) == false)
+				{
+					continue;
+				}
+				height = 2 * _tileSize;
+
+				img = IMAGEMANAGER->findImage(key);
+				img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
 			}
 
 			else
@@ -1187,7 +1257,7 @@ void mapToolScene::controller()
 	{
 		if (!isMiniMap)
 		{
-			curTileSize =_tileSize;
+			curTileSize = _tileSize;
 			_tileSize = 6;
 			_mouseWheel = 0;
 			isMiniMap = true;
@@ -1216,7 +1286,7 @@ void mapToolScene::controller()
 		{
 		case OPTION::WALL_MENU:
 			//get wall
-			for (int i = 0; i < 10; i++) // fix 6 - > 10
+			for (int i = 0; i < 18; i++) // fix 10 - > 18
 			{
 				if (PtInRect(&wall[i].rc, _ptMouse) && user.delay == 10)
 				{
@@ -1327,7 +1397,9 @@ void mapToolScene::controller()
 							}
 						}
 
-						else if (user.KeyName == "leftWall" || user.KeyName == "rightWall" || user.KeyName == "wallTile")
+						else if (user.KeyName == "leftWall" || user.KeyName == "rightWall" || user.KeyName == "wallTile" ||
+							user.KeyName == "wallTile5" || user.KeyName == "wallTile6" || user.KeyName == "wallTile7" ||
+							user.KeyName == "wallTile8" || user.KeyName == "wallTile9" || user.KeyName == "wallTile10")
 						{
 							tile[i].keyName = user.KeyName;
 							tile[i].kind = user.kind;
@@ -1358,8 +1430,20 @@ void mapToolScene::controller()
 
 								if (q == 5)
 								{
-									tile[(i+1) + (MAXTILE_WIDTH * q) - 1].keyName = user.KeyName;
-									tile[(i+1) + (MAXTILE_WIDTH * q) - 1].kind = user.kind;
+									tile[(i + 1) + (MAXTILE_WIDTH * q) - 1].keyName = user.KeyName;
+									tile[(i + 1) + (MAXTILE_WIDTH * q) - 1].kind = user.kind;
+								}
+							}
+						}
+
+						else if (user.KeyName == "shopWall2" || user.KeyName == "shopWall3")
+						{
+							for (int q = 0; q < 3; q++)
+							{
+								for (int k = 0; k < 2; k++)
+								{
+									tile[i + MAXTILE_WIDTH * q + k].keyName = user.KeyName;
+									tile[i + MAXTILE_WIDTH * q + k].kind = user.kind;
 								}
 							}
 						}
