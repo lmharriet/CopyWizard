@@ -64,7 +64,14 @@ void mainGame::update()
 	//사운드매니져 업데이트 (이게 없으면 사운드매니져 제대로 동작하지 않는다!!!)
 	SOUNDMANAGER->update();
 
-	
+	if(INPUT->GetKeyDown(0x31)) // 1
+		SCENEMANAGER->loadScene("시작화면");
+	if(INPUT->GetKeyDown(0x32)) // 2
+		SCENEMANAGER->loadScene("맵툴제작");
+	if(INPUT->GetKeyDown(0x33)) // 3
+		SCENEMANAGER->loadScene("인게임");
+	if(INPUT->GetKeyDown(0x34)) // 4
+		SCENEMANAGER->loadScene("보스방");
 }
 
 //=============================================================
