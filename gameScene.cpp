@@ -325,14 +325,20 @@ void gameScene::playerAttack()
 		for (int j = 0; j < enemy->getMinion().size(); j++)
 		{
 			if (0 >= enemy->getMinion()[j]->getHp())continue;
-			if (colCheck(_player->getMeteor()->getMeteorVec()[i].rc, enemy->getMinion()[j]->getRC()))
+			
+			//조건 수정하는 중 (미완성)
+			if (colCheck(_player->getMeteor()->getMeteorVec()[i].rc, enemy->getMinion()[j]->getRC()) )
 			{
+			
+
 				enemy->getMinion()[j]->hit(_player->getMeteor()->getMeteorVec()[i].atkPower,
 					_player->getMeteor()->getMeteorVec()[i].angle, 30.f, _player->getMeteor()->getSkillNum());
 
 
 				break;
 			}
+
+
 		}
 	}
 	//rush
