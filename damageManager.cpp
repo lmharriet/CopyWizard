@@ -3,6 +3,7 @@
 
 HRESULT damageManager::init()
 {
+
 	time = 0;
 	return S_OK;
 }
@@ -68,7 +69,7 @@ void damageManager::render(HDC hdc)
 		if (vDamage[i].lifeTime == 0) vDamage.erase(vDamage.begin() + i);
 		else
 		{
-			if(time % 3 == 0) vDamage[i].size -= 0.1f;
+			if(time % 3 == 0) vDamage[i].size -= 0.07f;
 
 			vDamage[i].lifeTime--;
 			i++;
@@ -86,7 +87,7 @@ void damageManager::generator(POINT pt, int damage, bool isLeft)
 
 	Damage.upForce = 7;
 	Damage.gravity = 0;
-	Damage.size = 1.f;
+	Damage.size = 1.5f;
 
 	Damage.isUp = true;
 	Damage.isLeft = isLeft;
