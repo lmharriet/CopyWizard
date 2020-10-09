@@ -5,7 +5,6 @@
 #include "colorNode.h"
 #include "enemyManager.h"
 
-
 class gameScene : public gameNode
 {
 private:
@@ -22,6 +21,8 @@ private:
 
 	//맵타일 정보
 	tagTile tile[MAXTILE];
+	tagTile subTile[MAXTILE];
+
 	// 메모리 관리용
 	vector<int> vTile;
 
@@ -47,7 +48,8 @@ public:
 	void playerAttack();
 	void enemyAttack();
 	//맵 로드
-	void loadMap(const char* mapFileName);
+	void loadMap(int index);
+	//void loadMap(const char* mapFileName);
 
 	void viewText();
 	//sound

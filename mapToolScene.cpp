@@ -460,11 +460,13 @@ void mapToolScene::initTile()
 		tile[i].uKind = UNIT_KIND::NONE;
 		tile[i].keyName = "";
 		tile[i].frame = { 0,0 };
+		tile[i].pos = { 0,0 };
 
 		obTile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
 		obTile[i].kind = TERRAIN::NONE;
 		obTile[i].uKind = UNIT_KIND::NONE;
 		obTile[i].keyName = "";
+		obTile[i].pos = { obTile[i].rc.left,obTile[i].rc.top };
 	}
 }
 
@@ -732,28 +734,36 @@ void mapToolScene::addImage()
 
 void mapToolScene::mapSave(int index)
 {
-	char str[50];
+	char str[50], str1[50], str2[50];
 	sprintf(str, "mapData/map%d.map", index);
+	sprintf(str1, "mapData/object%d.map", index);
 
 	HANDLE file;
 	DWORD write;
 
 	file = CreateFile(str, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	WriteFile(file, tile, sizeof(tagTile) * MAXTILE, &write, NULL);
+	CloseHandle(file);
+
+	file = CreateFile(str1, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	WriteFile(file, obTile, sizeof(tagTile) * MAXTILE, &write, NULL);
 	CloseHandle(file);
 }
 
 void mapToolScene::mapLoad(int index)
 {
-	char str[50];
+	char str[50], str1[50], str2[50];
 	sprintf(str, "mapData/map%d.map", index);
+	sprintf(str1, "mapData/object%d.map", index);
 
 	HANDLE file;
 	DWORD read;
 
 	file = CreateFile(str, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	ReadFile(file, tile, sizeof(tagTile) * MAXTILE, &read, NULL);
+	CloseHandle(file);
+
+	file = CreateFile(str1, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	ReadFile(file, obTile, sizeof(tagTile) * MAXTILE, &read, NULL);
 	CloseHandle(file);
 }
@@ -1703,8 +1713,8 @@ void mapToolScene::controller()
 
 					user.KeyName = other[i].keyName;
 					user.kind = TERRAIN::UNIT;
-					//user.uKind = other[i].unit;
-					// 브러쉬 아이콘에 check 표시
+					user.uKind = (UNIT_KIND)i;
+
 					tool = TOOL::DRAW;
 				}
 			}
@@ -1721,18 +1731,20 @@ void mapToolScene::controller()
 					{
 						obTile[i].keyName = user.KeyName;
 						obTile[i].kind = user.kind;
+						obTile[i].uKind = user.uKind;
 					}
 				}
 				break;
 			case TOOL::ERASE:
 				for (int i = 0; i < MAXTILE; i++)
 				{
-					if (tile[i].kind != TERRAIN::UNIT)continue;
+					if (obTile[i].kind != TERRAIN::UNIT)continue;
 
 					if (PtInRect(&tile[i].rc, _ptMouse))
 					{
-						tile[i].keyName = "";
-						tile[i].kind = TERRAIN::NONE;
+						obTile[i].keyName = "";
+						obTile[i].kind = TERRAIN::NONE;
+						obTile[i].uKind = UNIT_KIND::NONE;
 					}
 				}
 				break;

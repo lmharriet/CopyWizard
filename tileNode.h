@@ -71,7 +71,9 @@ typedef struct tagTile
 	RECT rc;
 	TERRAIN kind;
 	string keyName;
+
 	UNIT_KIND uKind;
+	POINT pos;
 
 	POINT frame;
 

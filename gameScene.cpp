@@ -12,7 +12,7 @@ HRESULT gameScene::init()
 	uiImg = IMAGEMANAGER->addImage("UI", "Images/gameUI.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 	playerImg = IMAGEMANAGER->findImage("playerFrame");
 
-	loadMap("mapData/map0.map");
+	loadMap(0);
 	_player->setTileAd(tile);
 	_player->setTileAd0(vTile);
 
@@ -34,6 +34,7 @@ HRESULT gameScene::init()
 
 	//sound
 	soundInit();
+
 	return S_OK;
 }
 
@@ -403,13 +404,22 @@ void gameScene::enemyAttack()
 	}
 }
 
-void gameScene::loadMap(const char* mapFileName)
+void gameScene::loadMap(int index)
 {
+	char str[50], str1[50];
+
+	sprintf(str, "mapData/map%d.map", index);
+	sprintf(str1, "mapData/object%d.map", index);
+
 	HANDLE file;
 	DWORD read;
 
-	file = CreateFile(mapFileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	file = CreateFile(str, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	ReadFile(file, tile, sizeof(tagTile) * MAXTILE, &read, NULL);
+	CloseHandle(file);
+
+	file = CreateFile(str1, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	ReadFile(file, subTile, sizeof(tagTile) * MAXTILE, &read, NULL);
 	CloseHandle(file);
 }
 
