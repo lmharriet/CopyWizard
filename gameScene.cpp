@@ -33,8 +33,7 @@ HRESULT gameScene::init()
 	UI->setHp(PLAYERDATA->getHp());
 
 	//sound
-	isIngameBGM = true;
-	fadeIn = 0.f;
+	soundInit();
 	return S_OK;
 }
 
@@ -413,4 +412,28 @@ void gameScene::loadMap(const char* mapFileName)
 void gameScene::viewText()
 {
 	//
+}
+
+void gameScene::soundInit()
+{
+	isIngameBGM = true;
+	fadeIn = 0.f;
+
+	//몬스터
+	SOUNDMANAGER->addSound("golemAtk", "Sound/golem_atk.mp3");
+	SOUNDMANAGER->addSound("golemWalkL", "Sound/golem_walkL.mp3");
+	SOUNDMANAGER->addSound("golemWalkR", "Sound/golem_walkR.mp3");
+	SOUNDMANAGER->addSound("golemDie", "Sound/golem_die.mp3");
+	SOUNDMANAGER->addSound("golemHit", "Sound/golem_hit.mp3");
+	SOUNDMANAGER->addSound("knightAtk0", "Sound/knight_atk0.mp3");
+	SOUNDMANAGER->addSound("knightAtk1", "Sound/knight_atk1.mp3");
+	SOUNDMANAGER->addSound("knightAtk2", "Sound/knight_atk2.mp3");
+	SOUNDMANAGER->addSound("knightAtk3", "Sound/knight_atk3.mp3");
+	SOUNDMANAGER->addSound("knightWalkL", "Sound/knight_walkL.mp3");
+	SOUNDMANAGER->addSound("knightWalkR", "Sound/knight_walkR.mp3");
+	SOUNDMANAGER->addSound("knightDie", "Sound/knight_die.mp3");
+	SOUNDMANAGER->addSound("knightHit", "Sound/knight_hit.mp3");
+
+	//플레이어
+	SOUNDMANAGER->addSound("playerHit", "Sound/player_hit.mp3");
 }

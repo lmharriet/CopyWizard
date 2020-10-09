@@ -50,5 +50,7 @@ public:
 	void loadMap(const char* mapFileName);
 
 	void viewText();
+	//sound
+	void soundInit();
 
 };
