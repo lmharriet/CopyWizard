@@ -15,7 +15,7 @@ enum class OPTION
 	WALL_MENU,
 	TILE_MENU,
 	OBJECT_MENU,
-	MONSTER_MENU,
+	OTHER_MENU,
 	SELECT_MENU
 };
 
@@ -44,9 +44,8 @@ enum class TERRAIN
 	OBJECT,
 	IMG,
 	DECO,
-
+	UNIT,
 	NONE
-
 };
 enum class NODESTATE
 {
@@ -54,6 +53,17 @@ enum class NODESTATE
 	NODE_END,
 	NODE_WALL,
 	NODE_EMPTY
+};
+enum class UNIT_KIND
+{
+	PLAYER,
+
+	KNIGHT,
+	MAGE,
+	GOLEM,
+	GHOUL,
+	SLIMEkING,
+	NONE
 };
 
 typedef struct tagTile
@@ -95,6 +105,7 @@ enum class TOOL
 struct tagUser
 {
 	TERRAIN kind;
+	UNIT_KIND uKind;
 	string KeyName;
 
 	int transY;
@@ -114,9 +125,20 @@ struct tagCam
 	POINT pt;
 };
 
-
-
 struct tagSpawn
 {
+	RECT rc;
+	string keyName;
+	TERRAIN kind;
+
+	UNIT_KIND unit;
+};
+
+struct tagSpawnUnit
+{
+	RECT rc;
+
+	string keyName;
 	POINT pt;
+	UNIT_KIND unit;
 };

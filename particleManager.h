@@ -16,9 +16,15 @@ struct tagParticle
 	int delay;
 
 	int time;
+	bool isFrameDel;
+	int lifeTime;
 
 	bool isBack;
 	int backTime;
+
+	//collect
+	bool isCollect;
+	float endX, endY;
 };
 
 struct tagParticlePoint
@@ -35,10 +41,15 @@ struct tagParticlePoint
 	float particleSpeed;//파티클이 angle로 날라가는 속도
 	int frameDelay;		//파티클 프레임 이미지 딜레이
 
+	bool isFrameDel;	//파티클이 프레임 끝이되면 삭제되는지? -> false면 시간을 정해준 만큼 살아있는다.
+	int particleEndTime;
+
 	int currentTime;
 	int lifeTime;
+	int createDelay;
 
 	bool isBack;
+	bool isCollect;
 };
 
 class particleManager : public singletonBase<particleManager>
@@ -53,11 +64,15 @@ public:
 
 	void pointGenerate(string keyName, float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius, float particleSpeed, int frameDelay);
 
-	void explosionGenerate(string keyName, float x, float y, int maxAngle, float radius, float particleSpeed, int frameDelay, bool isBack = false);
+	void explosionGenerate(string keyName, float x, float y, int maxAngle, float radius, float particleSpeed, int frameDelay, bool isFrameDel, int particleEndTime = 50,bool isBack = false);
+
+	void collectingGenerate(string keyName, float x, float y, int maxAngle, float radius, float particleSpeed, int frameDelay, int lifeTime, int createDelay);
 
 	void pointActive();
 	void explosionActive();
-	void generate(string keyName, float x, float y, float angle, int delay, float speed, bool isBack = false, int backTime = 0);
+
+	void generate(string keyName, float x, float y, float angle, int delay, float speed, bool isFrameDel, int particleEndTime = 50, bool isBack = false, int backTime = 0);
+	void generate2(string keyName, float x, float y, float angle, int delay, float speed, float endX, float endY, bool isCollect = true);
 
 	void potionParticlePlay(float x, float y);
 	void explosionParticlePlay(float x, float y);

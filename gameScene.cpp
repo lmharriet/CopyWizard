@@ -80,7 +80,11 @@ void gameScene::update()
 
 	if (INPUT->GetKeyDown(VK_BACK))
 	{
-		PARTICLE->potionParticlePlay(_player->getX(), _player->getY());
+		//PARTICLE->potionParticlePlay(_player->getX(), _player->getY());
+
+		PARTICLE->collectingGenerate("stoneX2", _player->getX(), _player->getY(), 18, 80.f, 2.f, 50, 100, 10);
+
+		//PARTICLE->bossJumpParticlePlay(_player->getX(), _player->getY());
 	}
 
 	PARTICLE->pointActive();
@@ -298,7 +302,7 @@ void gameScene::playerAttack()
 			{
 
 				PARTICLE->explosionGenerate("explosionParticle", _player->getBlaze()->getBullet()[i].x + 20,
-					_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1);
+					_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
 				enemy->getMinion()[j]->hit(_player->getBlaze()->getBullet()[i].atkPower,
 					_player->getBlaze()->getBullet()[i].angle, 20.f, 0);
 
