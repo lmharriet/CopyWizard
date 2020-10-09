@@ -28,8 +28,10 @@ HRESULT bossScene::init()
 	_boss->getPlayerInfo(_player);
 
 	PARTICLE->init();
-	UI->setCoin(PLAYERDATA->getCoin());
-	UI->setHp(PLAYERDATA->getHp());
+
+
+	//UI->setCoin(PLAYERDATA->getCoin());
+	//UI->setHp(PLAYERDATA->getHp());
 
 
 	//sound
@@ -46,10 +48,7 @@ void bossScene::release()
 
 void bossScene::update()
 {
-	UI->setCoin(PLAYERDATA->getCoin());
-	UI->setHp(PLAYERDATA->getHp());
-	PLAYERDATA->setX(_player->getX());
-	PLAYERDATA->setY(_player->getY());
+	PLAYERDATA->update();
 
 
 	//sound 
@@ -157,13 +156,37 @@ void bossScene::attackBoss()
 	{
 		if (colCheck(_player->getDashFire()->getRect(i), _boss->getBossRect()))
 		{
-			//hit
-			/*int count = 0;
-			count++;
-			cout << count << " 번 충돌" << '\n';*/
-
+			//cout << "dashHit" << '\n';
 		}
 	}
 
-	//   _player->getDashFire();
+	//blaze
+	for (int i = 0; i < _player->getBlaze()->getSize(); i++)
+	{
+		if (colCheck(_player->getBlaze()->getBullet()[i].rc, _boss->getBossRect()))
+		{
+			//cout << "blaze hit" << '\n';
+		}
+	}
+
+	//inferno
+
+	//게이징 + 무브 상태가 아닐 때 inferno와 보스 충돌 체크
+	if (colCheck(_player->getRect(), _boss->getBossRect()))
+	{
+		if (!_player->getInferno()->getActive() && _player->getInferno()->CheckCollision(_boss->getBossRect()))
+		{
+			//충돌되면 그 자리에서 공격
+			if (PLAYERDATA->getGaugeTime() < 70)
+			{
+				PLAYERDATA->setGaugeTime(70);
+				_player->getInferno()->setActive(true);
+			}
+		}
+		else if (PLAYERDATA->getGaugeTime() >= 70)
+		{
+			//cout << "inferno" << '\n';
+			//수정 필요
+		}
+	}
 }
