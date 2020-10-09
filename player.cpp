@@ -356,6 +356,8 @@ void player::dashFunction()
 	if (speed == 8 || speed == 11 || speed == 14 || speed == 17)
 		searingRush->fire(posX, posY);
 
+	if (speed == 20)UI->addCoolTime("searingDash");
+
 	if (dashLeft)
 	{
 		if (dashUp)
@@ -438,6 +440,7 @@ void player::blazeSetUp()
 {
 	if (INPUT->GetKeyDown(VK_LBUTTON))
 	{
+		UI->addCoolTime(0);
 		basic = true;
 	}
 	if (stateCool == 0 && basic)

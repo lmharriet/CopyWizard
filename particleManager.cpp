@@ -43,6 +43,8 @@ void particleManager::render(HDC hdc)
 			{
 				float angle = getAngle(vParticle[i].x, vParticle[i].y, PLAYERDATA->getX(), PLAYERDATA->getY());
 
+				vParticle[i].speed *= 1.05f;
+
 				vParticle[i].x += cosf(angle) * vParticle[i].speed * 1.3f;
 				vParticle[i].y -= sinf(angle) * vParticle[i].speed * 1.3f;
 			}
@@ -72,6 +74,21 @@ void particleManager::render(HDC hdc)
 			//CAMERAMANAGER->Rectangle(hdc, rc2);
 
 			if(colCheck(rc1,rc2) || vParticle[i].time > 50) vParticle.erase(vParticle.begin() + i);
+			else i++;
+		}
+
+		else if (vParticle[i].isBack)
+		{
+			RECT rc1 = RectMakeCenter(vParticle[i].x, vParticle[i].y, 10, 10);
+			RECT rc2 = RectMakeCenter(PLAYERDATA->getX(), PLAYERDATA->getY(), 20, 20);
+
+			if (vParticle[i].backTime != 0)
+			{
+				i++;
+				continue;
+			}
+
+			if (colCheck(rc1, rc2) || vParticle[i].time > 300)vParticle.erase(vParticle.begin() + i);
 			else i++;
 		}
 
@@ -218,6 +235,7 @@ void particleManager::explosionActive()
 		{
 			float angle = (((2.f * PI) / vExplosion[i].maxAngle) * k) + RANDOM->range(-0.4f, 0.4f);
 			float speed = vExplosion[i].particleSpeed + RANDOM->range(-1.f, 1.f);
+			if (speed <= 0.f)speed = 0.3f;
 			float delay = vExplosion[i].frameDelay + RANDOM->range(0, 4);
 
 			float x = vExplosion[i].x + cosf(angle) * vExplosion[i].radius;
@@ -227,7 +245,7 @@ void particleManager::explosionActive()
 			if(vExplosion[i].isCollect) culAngle = getAngle(x, y, vExplosion[i].x, vExplosion[i].y);
 
 			if (vExplosion[i].isCollect) generate2(vExplosion[i].keyName, x, y, culAngle, delay, speed, vExplosion[i].x, vExplosion[i].y);
-			else generate(vExplosion[i].keyName, x, y, angle, delay, speed, vExplosion[i].isFrameDel, vExplosion[i].particleEndTime, vExplosion[i].isBack, 35);
+			else generate(vExplosion[i].keyName, x, y, angle, delay, speed, vExplosion[i].isFrameDel, vExplosion[i].particleEndTime, vExplosion[i].isBack, 37);
 		}
 
 		//Á¦°Å
@@ -309,11 +327,11 @@ void particleManager::generate2(string keyName, float x, float y, float angle, i
 
 void particleManager::potionParticlePlay(float x, float y)
 {
-	PARTICLE->explosionGenerate("healBallParticle", x, y, 15, 1.f, 4.f, 15, false, 0, true);
-	PARTICLE->explosionGenerate("healBallParticle", x, y, 12, 1.f, 3.f, 13, false, 0, true);
-	PARTICLE->explosionGenerate("healBallParticle", x, y, 9, 1.f, 2.f, 11, false, 0, true);
-	PARTICLE->explosionGenerate("healBallParticle", x, y, 6, 1.f, 3.f, 9, false, 0, true);
-	PARTICLE->explosionGenerate("healBallParticle", x, y, 3, 1.f, 4.f, 7, false, 0, true);
+	PARTICLE->explosionGenerate("healBallParticle", x, y, 18, 1.f, 2.f, 15, false, 210, true);
+	PARTICLE->explosionGenerate("healBallParticle", x, y, 15, 1.f, 1.f, 13, false, 200, true);
+	PARTICLE->explosionGenerate("healBallParticle", x, y, 12, 1.f, 0.7f, 11, false, 190, true);
+	PARTICLE->explosionGenerate("healBallParticle", x, y, 8, 1.f, 0.4f, 9, false, 180, true);
+	PARTICLE->explosionGenerate("healBallParticle", x, y, 5, 1.f, 0.3f, 7, false, 170, true);
 }
 
 void particleManager::explosionParticlePlay(float x, float y)
