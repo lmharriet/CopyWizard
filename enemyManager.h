@@ -17,13 +17,14 @@ private:
 
 	bullet* _bullet; //공용총알
 public:
-	HRESULT init(tagTile* _tile);
+	HRESULT init(tagTile* _tile, tagTile* _subTile);
 	void release();
 	void update();
 	void render();
 
+
 	//미니언 세팅 => 초기화에 넣는다
-	void setMinion();
+	void setMinion(tagTile* _subTile);
 	//void setBoss();
 	//미니언 총알발사
 	void minionBulletFire(float aimX, float aimY);

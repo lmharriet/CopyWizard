@@ -22,9 +22,10 @@ HRESULT gameScene::init()
 
 	PARTICLE->init();
 	EFFECT->init();
-
+	//cout << "x : " <<_player->getX()<< endl;
+	//cout << "y : " <<_player->getY()<< endl;
 	enemy = new enemyManager;
-	enemy->init(tile);
+	enemy->init(tile,subTile);
 
 	//vTile.clear();
 	collisionTile();
