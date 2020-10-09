@@ -10,7 +10,6 @@ HRESULT player::init()
 	IMAGEMANAGER->addFrameImage("flame", "resource/player/flame1.bmp", 4096, 128, 32, 1);
 	IMAGEMANAGER->addFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
 	posX = WINSIZEX / 2;
-
 	posY = WINSIZEY / 2;
 	rc = RectMakeCenter(posX, posY, 100, 100);
 
@@ -260,7 +259,7 @@ void player::invenRender()
 void player::bulletClassInit()
 {
 	blaze = new bomb;
-	blaze->init(3, 200);
+	blaze->init(3, 350);
 
 	flares = new cleaver;
 	flares->init(100);

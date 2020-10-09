@@ -214,6 +214,8 @@ HRESULT bomb::init(int bulletMax, float range)
 	_range = range;
 	_bulletMax = bulletMax;
 
+	ranAtk = 5;
+	criticalHit = 20;
 	count = index = 0;
 	return S_OK;
 }
@@ -224,7 +226,16 @@ void bomb::release()
 
 void bomb::update()
 {
+	
 	count++;
+
+	ranAtk = RANDOM->range(5, 12);
+	if (ranAtk > 10 &&count %3 ==0)
+	{
+		ranAtk = criticalHit;
+	}
+
+
 	if (count % 2 == 0)
 	{
 		index++;
@@ -265,7 +276,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	bullet.speed = speed;
 	bullet.angle = angle;
 	bullet.radius = radius;
-	bullet.atkPower = 12;
+	bullet.atkPower = ranAtk;
 	bullet.collision = false;
 	bullet.rc = RectMakeCenter(bullet.x, bullet.y, radius * 2, radius * 2);
 
@@ -393,10 +404,11 @@ void meteor::makeCircle(float x, float y)
 
 void meteor::creatMeteor(float x, float y, float angle)
 {
+	
 	tagMeteor meteor;
 	//meteor.angle = PI_2;
 	meteor.endY = y;
-	meteor.atkPower = 7;
+	meteor.atkPower =22;
 	meteor.img = IMAGEMANAGER->findImage("meteor");
 
 	float cul = 110 * (PI / 180);
@@ -560,6 +572,7 @@ void RagingInferno::update(int* gaugeTime)
 
 	if (isCoolTime)
 	{
+		
 		currentCoolTime++;
 
 		if (currentCoolTime == coolTime)
@@ -567,7 +580,10 @@ void RagingInferno::update(int* gaugeTime)
 			isCoolTime = false;
 			currentCoolTime = 0;
 		}
+	
 	}
+
+	
 }
 
 void RagingInferno::render()
@@ -623,7 +639,7 @@ void RagingInferno::fire(float x, float y, float angle, int* gaugeTime)
 	inferno.y = inferno.fireY = y - sinf(angle) * inferno.speed;
 	inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
 	inferno.lifeTime = 100;
-	inferno.atkPower = 30;
+	inferno.atkPower = 7;
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
@@ -643,6 +659,7 @@ void RagingInferno::move(int gaugeTime)
 
 			inferno.x = inferno.x + cosf(inferno.angle) * 20.0f;
 			inferno.y = inferno.y - sinf(inferno.angle) * 20.0f;
+			inferno.atkPower = RANDOM->range(7,20);
 			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 50, 50);
 			gauging = false;
 			if (gaugeTime % 3 == 0) PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);

@@ -111,6 +111,9 @@ private:
 	float _range;			//ÃÑ¾Ë »ç°Å¸®
 	int _bulletMax;			//ÃÑ¾Ë ÃÖ´ë°¹¼ö
 	int count, index;
+
+	int ranAtk;
+	int criticalHit;
 public:
 	HRESULT init(int bulletMax, float range);
 	void release();

@@ -17,10 +17,16 @@ HRESULT uiManager::init()
 	//skill//
 	IMAGEMANAGER->addImage("nonSkill", "Images/ui/skill/nonSkill.bmp", 34, 34);
 
+
 	//fire
 	IMAGEMANAGER->addImage("default1", "Images/ui/skill/defaultAttack.bmp", 34, 34);
-	IMAGEMANAGER->addImage("dash1", "Images/ui/skill/fireDash.bmp", 34, 34);
+	IMAGEMANAGER->addImage("searingDash", "Images/ui/skill/fireDash.bmp", 34, 34);
 	IMAGEMANAGER->addImage("fireDragon", "Images/ui/skill/fireDragon.bmp", 34, 34);
+
+	IMAGEMANAGER->addImage("blazeIcon", "Images/ui/skill/blaze.bmp", 34, 34);
+	IMAGEMANAGER->addImage("infernoIcon", "Images/ui/skill/inferno.bmp", 34, 34);
+	IMAGEMANAGER->addImage("meteorIcon", "Images/ui/skill/meteor.bmp", 34, 34);
+
 
 	IMAGEMANAGER->addImage("coolTime", "Images/ui/coolTime.bmp", 34, 34);
 

@@ -378,10 +378,8 @@ void gameScene::playerAttack()
 				float y = enemyY - sinf(angle) * 4.5f;
 
 				enemy->getMinion()[i]->setPt(x, y);
-
-				enemy->getMinion()[i]->hit(1, 0, 0.f, 3);
+				enemy->getMinion()[i]->hit(_player->getInferno()->getInf().atkPower, 0, 0.f, 3);
 			}
-
 		}
 	}
 }

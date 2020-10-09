@@ -30,3 +30,4 @@ void bossManager::render(HDC hdc)
 		_vBossSkill[i]->render(hdc);
 	}
 }
+
