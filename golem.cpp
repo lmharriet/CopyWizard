@@ -9,7 +9,7 @@ void golem::addInit()
     kind = MONSTERKIND::GOLEM;
     atk = 15;
     armour = 8;
-    speed = 3.f;
+    speed = 2.f;
     hp = 50;
     img = IMAGEMANAGER->findImage("golem");
     skillImg = IMAGEMANAGER->findImage("smallSlash");
@@ -56,20 +56,22 @@ void golem::update()
                 atkDirection[MONSTER_DOWN] = true;
             }
         }
-        else if(!isDie )
+        else if(!isDie &&!isATK)
         {
             state = STATEIMAGE::ATK;
             isATK = true;
-            //SOUNDMANAGER->play("golemAtk", false);
+            SOUNDMANAGER->play("golemAtk", false);
         }
        
     }
-    else //길찾기 off
+    else//길찾기 off
     { 
+        if(!isHit)
         state = STATEIMAGE::IDLE;
     }
 
-    
+   
+   
    
 }
 
@@ -96,6 +98,7 @@ void golem::stateImageRender()
         break;
     case STATEIMAGE::DIE:
         stateDIE();
+      
         break;
     
     }
@@ -103,7 +106,8 @@ void golem::stateImageRender()
 
 void golem::stateIDLE()
 {
-  
+    isATK = false;
+    
     if (atkDirection[MONSTER_LEFT])
     {
         frameIndexL[STATEIMAGE::IDLE].x = 5;
@@ -145,7 +149,7 @@ void golem::stateATK()
     {
         frameIndexL[ATK].y = 0;
         count++;
-        if (count % 30 == 0)
+        if (count % 40 == 0)
         {
             count = 0;
             frameIndexL[ATK].x--;
@@ -174,7 +178,7 @@ void golem::stateATK()
     {
         frameIndexR[ATK].y = 0;
         count++;
-        if (count % 30 == 0)
+        if (count % 40 == 0)
         {
             count = 0;
             frameIndexR[ATK].x++;
@@ -398,6 +402,7 @@ void golem::stateWalk()
             frameIndexL[WALK].x--;
             if (frameIndexL[WALK].x < 0)
             {
+                SOUNDMANAGER->play("golemWalkL", false);
                 frameIndexL[WALK].x = 5;
             }
         }
@@ -416,6 +421,7 @@ void golem::stateWalk()
             frameIndexR[WALK].x++;
             if (frameIndexR[WALK].x > 5)
             {
+                SOUNDMANAGER->play("golemWalkR", false);
                 frameIndexR[WALK].x = 0;
             }
         }

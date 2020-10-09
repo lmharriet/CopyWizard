@@ -59,12 +59,13 @@ void knight::update()
     }
     else //±æÃ£±â off
     {
-        if (!isHit)
+        if (!isHit && !isDie)
         {
             state = STATEIMAGE::IDLE;
         }
     }
 
+   
     
 
 }
@@ -112,6 +113,9 @@ void knight::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
         {
             count = 0;
             frameIndexL[STATEIMAGE::WALK].x--;
+            if (frameIndexL[STATEIMAGE::WALK].x == 3)
+                SOUNDMANAGER->play("knightWalkL", false);
+
             if (frameIndexL[STATEIMAGE::WALK].x < indexX_R)
                 frameIndexL[STATEIMAGE::WALK].x = indexX_L;
         }
@@ -120,13 +124,17 @@ void knight::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
     else
     {
         frameIndexR[STATEIMAGE::WALK].y = indexY_R;
+
         count++;
         if (count % 10 == 0)
         {
             count = 0;
             frameIndexR[STATEIMAGE::WALK].x++;
+            if(frameIndexR[STATEIMAGE::WALK].x ==1)
+                SOUNDMANAGER->play("knightWalkR", false);
+
             if (frameIndexR[STATEIMAGE::WALK].x > indexX_L)
-                frameIndexR[STATEIMAGE::WALK].x = indexX_R;
+                frameIndexR[STATEIMAGE::WALK].x = indexX_R; 
 
         }
         img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::WALK].x, frameIndexR[STATEIMAGE::WALK].y);
@@ -172,11 +180,16 @@ void knight::stateIDLE()
 
 void knight::stateATK()
 {
+    char str[50];
+    sprintf(str, "knightAtk%d", RANDOM->range(4));
+
+
     if (atkDirection[MONSTER_UP] && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 40)
     {
         if (delay == 0)
         {
             EFFECT->setEffect("knightSlashUp", { pos.x + 60 ,pos.y + 30 }, true);
+            SOUNDMANAGER->play(str, false);
             bulletDirection[MONSTER_DOWN] = false;
             bulletDirection[MONSTER_UP] = true;
             bulletDirection[MONSTER_LEFT] = false;
@@ -191,6 +204,7 @@ void knight::stateATK()
         if (delay == 0)
         {
             EFFECT->setEffect("knightSlashDown", { pos.x + 60,pos.y + 150 }, true);
+            SOUNDMANAGER->play(str, false);
             bulletDirection[MONSTER_DOWN] = true;
             bulletDirection[MONSTER_UP] = false;
             bulletDirection[MONSTER_LEFT] = false;
@@ -213,6 +227,7 @@ void knight::stateATK()
                 if (delay == 0)
                 {
                     EFFECT->setEffect("knightSlashL", { pos.x  ,pos.y + 90 }, true);
+                    SOUNDMANAGER->play(str, false);
                     bulletDirection[MONSTER_DOWN] = false;
                     bulletDirection[MONSTER_UP] = false;
                     bulletDirection[MONSTER_LEFT] = true;
@@ -245,6 +260,7 @@ void knight::stateATK()
                 if (delay == 0)
                 {
                     EFFECT->setEffect("knightSlashR", { pos.x + 90,pos.y + 90 }, true);
+                    SOUNDMANAGER->play(str, false);
                     bulletDirection[MONSTER_DOWN] = false;
                     bulletDirection[MONSTER_UP] = false;
                     bulletDirection[MONSTER_LEFT] = false;

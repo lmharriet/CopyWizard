@@ -396,7 +396,12 @@ void monster::commonUpdate()
 	cul.x = CAMERAMANAGER->GetRelativeX(pos.x);
 	cul.y = CAMERAMANAGER->GetRelativeY(pos.y);
 
-	die();
+	if(!isDie)
+		die();
+	else
+	{
+		state = STATEIMAGE::DIE;
+	}
 }
 
 void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum)
@@ -424,7 +429,21 @@ void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum)
 		state = STATEIMAGE::HIT;
 
 	isHit = true;
-
+	//hit sound
+	
+	switch (kind)
+	{
+	case MONSTERKIND::GOLEM:
+		//SOUNDMANAGER->play("golemHit", false);
+		break;
+	case MONSTERKIND::KNIGHT:
+		//SOUNDMANAGER->play("knightHit", false,0.3f);
+		break;
+	case MONSTERKIND::SUMMONER:
+		//SOUNDMANAGER->play("golemHit", false); //hit sound change
+		break;
+	
+	}
 }
 
 bool monster::hitCheck(int skillNum)
@@ -487,8 +506,23 @@ void monster::die()
 {
 	if (hp <= 0)
 	{
-		state = STATEIMAGE::DIE;
+		
 		isDie = true;
+		
+		switch (kind)
+		{
+		case MONSTERKIND::GOLEM:
+			SOUNDMANAGER->play("golemDie", false);
+			break;
+		case MONSTERKIND::KNIGHT:
+			SOUNDMANAGER->play("knightDie", false);
+			break;
+		case MONSTERKIND::SUMMONER:
+			//SOUNDMANAGER->play("golemDie", false); //hit sound change
+			break;
+
+		}
+		
 	}
 }
 

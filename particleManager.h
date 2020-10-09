@@ -78,5 +78,6 @@ public:
 	void explosionParticlePlay(float x, float y);
 	void explosionParticle2Play(float x, float y);
 	void bossJumpParticlePlay(float x, float y);
+	void crashRockParticlePlay(float x, float y);
 	void smokeParticlePlay(float x, float y);
 };

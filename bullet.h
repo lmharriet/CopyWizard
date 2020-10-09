@@ -80,7 +80,7 @@ public:
 	void render();
 	
 	//총알발사
-	void fire(float x, float y, float angle, float speed, int damage, MONSTERKIND kind, bool image = false);
+	void fire(float x, float y, float angle, float speed, int damage, MONSTERKIND kind);
 	//총알무브
 	void move();
 	//총알 비어있는지 확인

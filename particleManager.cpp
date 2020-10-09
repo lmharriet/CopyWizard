@@ -360,6 +360,13 @@ void particleManager::bossJumpParticlePlay(float x, float y)
 	explosionGenerate("stoneX2", x, y, 6, 5.f, 4.f, 7, false, 10);
 }
 
+void particleManager::crashRockParticlePlay(float x, float y)
+{
+	
+	explosionGenerate("stoneX2", x, y, 9, 5.f, 3.f, 3, false, 20);
+	explosionGenerate("stoneX2", x, y, 6, 5.f, 4.f, 2, false, 10);
+}
+
 void particleManager::smokeParticlePlay(float x, float y)
 {
 	generate("smokeX2", x - 25, y - 35, 0.f, 6, 0.f, true);

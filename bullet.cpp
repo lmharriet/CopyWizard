@@ -32,12 +32,16 @@ void bullet::render()
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
 		if (_vBullet[i].bulletImage)
-			CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage, _vBullet[i].x, _vBullet[i].y,
+			CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage,
+				_vBullet[i].x - _vBullet[i].bulletImage->getFrameWidth() / 2,
+				_vBullet[i].y - _vBullet[i].bulletImage->getFrameHeight() / 2,
 				_vBullet[i].FrameX, _vBullet[i].FrameY);
+
+		//CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
 	}
 }
 
-void bullet::fire(float x, float y, float angle, float speed, int damage, MONSTERKIND kind, bool image)
+void bullet::fire(float x, float y, float angle, float speed, int damage, MONSTERKIND kind)
 {
 	//총알 벡터에 담는것을 제한한다
 	//if (_bulletMax < _vBullet.size() + 1) return;
@@ -49,9 +53,14 @@ void bullet::fire(float x, float y, float angle, float speed, int damage, MONSTE
 	//구조체 변수들의 값을 한번에 0으로 초기화 시켜준다
 	//ZeroMemory(&bullet, sizeof(tagBullet));
 	//bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
-	if (image)
+	if (kind == MONSTERKIND::SUMMONER)
+	{
 		bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
-	else bullet.bulletImage = NULL;
+	}
+	else 
+	{
+		bullet.bulletImage = NULL; 
+	}
 	bullet.kind = kind;
 	bullet.speed = speed;
 	bullet.angle = angle;
@@ -91,7 +100,7 @@ void bullet::move()
 				_vBullet.erase(_vBullet.begin() + i);
 			break;
 		case MONSTERKIND::SUMMONER:
-			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 60, 60);
+			_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
 			float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
 				_vBullet[i].x, _vBullet[i].y);
 			if (_range < distance)//총알이 사거리 보다 커졌을때

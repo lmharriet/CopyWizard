@@ -11,7 +11,7 @@ HRESULT enemyManager::init(tagTile* _tile, tagTile* _subTile, POINT _monPt)
 	IMAGEMANAGER->addFrameImage("knight", "resource/enemy/knight.bmp", 650, 1123, 6, 8);
 
 	//스킬 이펙트 이미지
-	IMAGEMANAGER->addFrameImage("smallSlash", "resource/enemyEffect/smallSlash.bmp", 300, 600, 3, 6);
+	IMAGEMANAGER->addFrameImage("smallSlash", "resource/enemyEffect/smallSlash.bmp", 600, 1200, 3, 6);
 	IMAGEMANAGER->addFrameImage("knightSlashL", "resource/enemyEffect/knightSlashL.bmp", 246, 82, 3, 1);
 	IMAGEMANAGER->addFrameImage("knightSlashR", "resource/enemyEffect/knightSlashR.bmp", 246, 82, 3, 1);
 	IMAGEMANAGER->addFrameImage("knightSlashUp", "resource/enemyEffect/knightSlashUp.bmp", 246, 82, 3, 1);
@@ -104,23 +104,6 @@ void enemyManager::setMinion(tagTile* _subTile, POINT _monPt)
 	}
 	
 	
-	/*monster* _golem1 = new golem;
-	_golem1->init(tile,{ 220,320 });
-	_vMinion.push_back(_golem1);
-	
-	monster* _knight = new knight;
-	_knight->init(tile,  { 320, 350 });
-	_vMinion.push_back(_knight);
-
-	monster* _summoner = new summoner;
-	_summoner->init(nullptr, { 500,300 });
-	_vMinion.push_back(_summoner);
-
-	monster* _summoner1 = new summoner;
-	_summoner1->init(nullptr, { 800,300 });
-	_vMinion.push_back(_summoner1);*/
-
-	
 	
 }
 
@@ -211,11 +194,11 @@ void enemyManager::knightBullet(float angle)
 
 void enemyManager::summonerBullet(float angle)
 {
-	_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72,
-		angle, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind(), true);
-	_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72,
-		angle + PI / 4, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind(), true);
-	_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72,
-		angle - PI / 4, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind(), true);
+	_bullet->fire((float)(*_viMinion)->getPos().x + 50, (float)(*_viMinion)->getPos().y - 52,
+		angle, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
+	_bullet->fire((float)(*_viMinion)->getPos().x + 50, (float)(*_viMinion)->getPos().y - 52,
+		angle + PI / 4, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
+	_bullet->fire((float)(*_viMinion)->getPos().x + 50, (float)(*_viMinion)->getPos().y - 52,
+		angle - PI / 4, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
 	(*_viMinion)->setFx(false);
 }

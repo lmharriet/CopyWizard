@@ -286,8 +286,8 @@ void gameScene::render()
 
 	viewText();
 
-	//_golem->render(); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
-	//_golem2->render(); //Å×½ºÆ®Áß (¸ó½ºÅÍ°ñ·½)
+	
+	
 
 
 }
@@ -405,8 +405,10 @@ void gameScene::enemyAttack()
 		if (colCheck(enemy->getBullet()->getRect(i), _player->getRect()))
 		{
 			_player->damage(enemy->getBullet()->getBullet()[i].atkPower, enemy->getBullet()->getBullet()[i].angle);
-			if(enemy->getBullet()->getBullet()[i].kind == MONSTERKIND::SUMMONER)
-				PARTICLE->bossJumpParticlePlay(_player->getX(), _player->getY());
+			if (enemy->getBullet()->getBullet()[i].kind == MONSTERKIND::SUMMONER)
+			{
+				PARTICLE->crashRockParticlePlay(_player->getX(), _player->getY());
+			}
 			enemy->getBullet()->removeBullet(i);
 		}
 		else
@@ -456,7 +458,7 @@ void gameScene::soundInit()
 	SOUNDMANAGER->addSound("knightAtk2", "Sound/knight_atk2.mp3");
 	SOUNDMANAGER->addSound("knightAtk3", "Sound/knight_atk3.mp3");
 	SOUNDMANAGER->addSound("knightWalkL", "Sound/knight_walkL.mp3");
-	SOUNDMANAGER->addSound("knightWalkR", "Sound/knight_walkR.mp3");
+	SOUNDMANAGER->addSound("knightWalkR", "Sound/knignt_walkR.mp3");
 	SOUNDMANAGER->addSound("knightDie", "Sound/knight_die.mp3");
 	SOUNDMANAGER->addSound("knightHit", "Sound/knight_hit.mp3");
 
