@@ -433,6 +433,7 @@ void meteor::move()
 		//이동
 		vMeteor[i].x += cosf(vMeteor[i].angle) * vMeteor[i].speed;
 		vMeteor[i].y -= sinf(vMeteor[i].angle) * vMeteor[i].speed;
+		vMeteor[i].atkPower = 22;
 		vMeteor[i].rc = RectMakeCenter(vMeteor[i].x, vMeteor[i].y, 100, 100);
 
 		//삭제
@@ -528,7 +529,7 @@ void dashFire::singleRender(int index)
 		_vDash[index].x - img->getFrameWidth() / 2,
 		_vDash[index].y - img->getFrameHeight() / 2-20, _vDash[index].frameX, 0);
 
-	CAMERAMANAGER->Ellipse(getMemDC(), _vDash[index].rc);
+	if(INPUT->GetToggleKey('L'))	CAMERAMANAGER->Ellipse(getMemDC(), _vDash[index].rc);
 	if (_vDash[index].lifeTime == 180)
 	{
 		_vDash.erase(_vDash.begin() + index);
@@ -581,7 +582,7 @@ void RagingInferno::release()
 void RagingInferno::update(int* gaugeTime)
 {
 	count++;
-	ranAtkPower = RANDOM->range(7, 12);
+	ranAtkPower = RANDOM->range(13, 20);
 
 	if (count % 3 == 0)
 	{

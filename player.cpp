@@ -489,8 +489,6 @@ void player::blazeSetUp()
 
 void player::standardSetUp()
 {
-
-	//쿨타임 수정하기 *******
 	if (INPUT->GetKeyDown(VK_RBUTTON) && !inferno->getCool() && meteorStateCool == 0)
 	{
 		standard = true;
