@@ -99,9 +99,7 @@ void bullet::move()
 				_vBullet.erase(_vBullet.begin() + i);
 			}
 			break;
-
 		}
-
 	}
 }
 
@@ -226,7 +224,6 @@ void bomb::release()
 
 void bomb::update()
 {
-
 	count++;
 
 	ranAtk = RANDOM->range(5, 12);
@@ -234,7 +231,6 @@ void bomb::update()
 	{
 		ranAtk = criticalHit;
 	}
-
 
 	if (count % 2 == 0)
 	{
@@ -253,9 +249,7 @@ void bomb::render()
 			_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight() / 2), index, 0);
 
 		CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 20, 20));
-
 	}
-
 }
 
 void bomb::fire(float x, float y, float speed, float angle, float radius)
@@ -442,7 +436,6 @@ void meteor::move()
 		vMeteor[i].y -= sinf(vMeteor[i].angle) * vMeteor[i].speed;
 		vMeteor[i].rc = RectMakeCenter(vMeteor[i].x, vMeteor[i].y, 100, 100);
 
-
 		//»èÁ¦
 		if (vMeteor[i].y > vMeteor[i].endY)
 		{
@@ -452,6 +445,8 @@ void meteor::move()
 			isAttack = true;
 			if (isAttack) rc = RectMakeCenter(vCircle[i].x, vCircle[i].y, 100, 100);
 
+
+			CAMERAMANAGER->Shake(20, 20, 2);
 
 			vMeteor.erase(vMeteor.begin() + i);
 			index = 0;

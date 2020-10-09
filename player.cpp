@@ -4,8 +4,6 @@
 
 HRESULT player::init()
 {
-
-
 	IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
 	IMAGEMANAGER->addFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
 	IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 1200, 250, 6, 1);
@@ -92,7 +90,6 @@ void player::release()
 void player::update()
 {
 	PLAYERDATA->update();
-
 	if (!isDead)
 	{
 		blaze->update();
@@ -228,7 +225,6 @@ void player::other_update()
 
 		//don't touch!
 		buttonDown();
-
 	}
 }
 
@@ -261,8 +257,6 @@ void player::render()
 	inferno->render();
 
 	viewText();
-
-
 }
 
 void player::invenRender()
@@ -457,7 +451,7 @@ void player::dashFunction()
 
 void player::blazeSetUp()
 {
-	if (INPUT->GetKeyDown(VK_LBUTTON))
+	if (INPUT->GetKeyDown(VK_LBUTTON) && !inferno->getGauging() && !signature)
 	{
 		UI->addCoolTime(0);
 		basic = true;
@@ -490,21 +484,18 @@ void player::blazeSetUp()
 			blaze->removeBomb(i);
 		}
 	}
-
-
 	//	// 저장된 앵글 방향으로 움직이기
 	//	/*posX += cosf(saveAngle);
 	//	posY += -sinf(saveAngle);*/
 	//}
 	//else basic = false;
-
 }
 
 void player::standardSetUp()
 {
 
 	//쿨타임 수정하기 *******
-	if (INPUT->GetKeyDown(VK_RBUTTON) && !inferno->getCool())
+	if (INPUT->GetKeyDown(VK_RBUTTON) && !inferno->getCool() &&!signature)
 	{
 		standard = true;
 		saveAngle2 = attackAngle;
@@ -517,14 +508,13 @@ void player::standardSetUp()
 	if (inferno->getGauging())
 		state = STATE::STANDARD;
 
-
 }
 
 void player::signatureSetUp()
 {
 	float mouseX = CAMERAMANAGER->GetAbsoluteX(_ptMouse.x);
 	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
-	if (signature && meteorStateCool == 0 && !Meteor->getCool())
+	if (signature && meteorStateCool == 0 && !Meteor->getCool() && !inferno->getGauging())
 	{
 		meteorStateCool = 30;
 
@@ -550,6 +540,7 @@ void player::takeCoin()
 		}
 	}
 }
+
 void player::takeHealball()
 {
 	for (int i = 0; i < DROP->getBallVec().size(); i++)
