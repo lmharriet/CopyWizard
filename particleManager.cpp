@@ -9,6 +9,7 @@ HRESULT particleManager::init()
 	IMAGEMANAGER->addFrameImage("bossJumpParticle", "Images/particle/stone.bmp", 60, 15, 4, 1);
 	
 	IMAGEMANAGER->addFrameImage("stoneX2", "Images/particle/stoneX2.bmp", 34, 122, 1, 4);
+	IMAGEMANAGER->addFrameImage("smokeX2", "Images/particle/smokeParticle.bmp", 480, 320, 6, 4);
 	return S_OK;
 }
 
@@ -327,34 +328,45 @@ void particleManager::generate2(string keyName, float x, float y, float angle, i
 
 void particleManager::potionParticlePlay(float x, float y)
 {
-	PARTICLE->explosionGenerate("healBallParticle", x, y, 18, 1.f, 2.f, 15, false, 210, true);
-	PARTICLE->explosionGenerate("healBallParticle", x, y, 15, 1.f, 1.f, 13, false, 200, true);
-	PARTICLE->explosionGenerate("healBallParticle", x, y, 12, 1.f, 0.7f, 11, false, 190, true);
-	PARTICLE->explosionGenerate("healBallParticle", x, y, 8, 1.f, 0.4f, 9, false, 180, true);
-	PARTICLE->explosionGenerate("healBallParticle", x, y, 5, 1.f, 0.3f, 7, false, 170, true);
+	explosionGenerate("healBallParticle", x, y, 18, 1.f, 2.f, 15, false, 210, true);
+	explosionGenerate("healBallParticle", x, y, 15, 1.f, 1.f, 13, false, 200, true);
+	explosionGenerate("healBallParticle", x, y, 12, 1.f, 0.7f, 11, false, 190, true);
+	explosionGenerate("healBallParticle", x, y, 8, 1.f, 0.4f, 9, false, 180, true);
+	explosionGenerate("healBallParticle", x, y, 5, 1.f, 0.3f, 7, false, 170, true);
 }
 
 void particleManager::explosionParticlePlay(float x, float y)
 {
-	PARTICLE->explosionGenerate("explosionParticle", x, y, 18, 1.f, 4.f, 9, true);
-	PARTICLE->explosionGenerate("explosionParticle", x, y, 15, 1.f, 3.f, 7, true);
-	PARTICLE->explosionGenerate("explosionParticle", x, y, 12, 1.f, 2.f, 5, true);
-	PARTICLE->explosionGenerate("explosionParticle", x, y, 9, 1.f, 3.f, 4, true);
-	PARTICLE->explosionGenerate("explosionParticle", x, y, 6, 1.f, 4.f, 2, true);
+	explosionGenerate("explosionParticle", x, y, 18, 1.f, 4.f, 9, true);
+	explosionGenerate("explosionParticle", x, y, 15, 1.f, 3.f, 7, true);
+	explosionGenerate("explosionParticle", x, y, 12, 1.f, 2.f, 5, true);
+	explosionGenerate("explosionParticle", x, y, 9, 1.f, 3.f, 4, true);
+	explosionGenerate("explosionParticle", x, y, 6, 1.f, 4.f, 2, true);
 }
 
 void particleManager::explosionParticle2Play(float x, float y)
 {
-	PARTICLE->explosionGenerate("explosionParticle", x, y, 30, 1.f, 4.f, 3, true);
-	PARTICLE->explosionGenerate("explosionParticle", x, y, 24, 1.f, 3.f, 5, true);
-	PARTICLE->explosionGenerate("explosionParticle", x, y, 6, 1.f, 2.f, 6, true);
+	explosionGenerate("explosionParticle", x, y, 30, 1.f, 4.f, 3, true);
+	explosionGenerate("explosionParticle", x, y, 24, 1.f, 3.f, 5, true);
+	explosionGenerate("explosionParticle", x, y, 6, 1.f, 2.f, 6, true);
 }
 
 void particleManager::bossJumpParticlePlay(float x, float y)
 {
-	PARTICLE->explosionGenerate("stoneX2", x, y, 18, 5.f, 4.f, 15, false, 40);
-	PARTICLE->explosionGenerate("stoneX2", x, y, 15, 5.f, 3.f, 13, false, 40);
-	PARTICLE->explosionGenerate("stoneX2", x, y, 12, 5.f, 2.f, 11, false, 20);
-	PARTICLE->explosionGenerate("stoneX2", x, y, 9, 5.f, 3.f, 9, false, 20);
-	PARTICLE->explosionGenerate("stoneX2", x, y, 6, 5.f, 4.f, 7, false, 10);
+	explosionGenerate("stoneX2", x, y, 18, 5.f, 4.f, 15, false, 40);
+	explosionGenerate("stoneX2", x, y, 15, 5.f, 3.f, 13, false, 40);
+	explosionGenerate("stoneX2", x, y, 12, 5.f, 2.f, 11, false, 20);
+	explosionGenerate("stoneX2", x, y, 9, 5.f, 3.f, 9, false, 20);
+	explosionGenerate("stoneX2", x, y, 6, 5.f, 4.f, 7, false, 10);
+}
+
+void particleManager::smokeParticlePlay(float x, float y)
+{
+	generate("smokeX2", x - 25, y - 35, 0.f, 6, 0.f, true);
+	for (int i = 0; i < 6; i++)
+	{
+		int ranX = RANDOM->range(-10, 20) * 3;
+		int ranY = RANDOM->range(-10, 20) * 2;
+		generate("smokeX2", x - 45 + ranX, y - 55 + ranY, 0.f, 6, 0.f, true);
+	}
 }
