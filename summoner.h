@@ -5,6 +5,8 @@ class summoner : public monster
 {
 private:
 	bool isCasting;
+	bool isCharging;
+	float imgSize;
 	int randomTime;
 public:
 	void addInit()override;
@@ -16,5 +18,7 @@ public:
 	void stateIDLE() override;
 	void stateATK()	override;
 	void stateDIE()	override;
+
+	
 
 };

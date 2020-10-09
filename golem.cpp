@@ -7,7 +7,7 @@ void golem::addInit()
     smallSlashIndex = { 0,0 };
     hitImg = IMAGEMANAGER->addFrameImage("golemHit", "resource/enemy/golemHit.bmp", 1080, 630, 6, 3);
     kind = MONSTERKIND::GOLEM;
-    atk = 10;
+    atk = 15;
     armour = 8;
     speed = 3.f;
     hp = 50;

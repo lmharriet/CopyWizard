@@ -97,14 +97,6 @@ void gameScene::update()
 	//checkArea = RectMakeCenter(_player->getX(), _player->getY(), 400, 400);
 	checkArea = RectMake(_player->getX() - 100, _player->getY() - WINSIZEY / 2 + 420, 200, 500);
 
-	if (INPUT->GetKeyDown(VK_BACK))
-	{
-		//PARTICLE->potionParticlePlay(_player->getX(), _player->getY());
-	
-		PARTICLE->collectingGenerate("stoneX2", _player->getX(), _player->getY(), 18, 80.f, 2.f, 50, 100, 10);
-
-		//PARTICLE->bossJumpParticlePlay(_player->getX(), _player->getY());
-	}
 	CAMERAMANAGER->update();
 	PARTICLE->pointActive();
 	PARTICLE->explosionActive();
@@ -413,6 +405,8 @@ void gameScene::enemyAttack()
 		if (colCheck(enemy->getBullet()->getRect(i), _player->getRect()))
 		{
 			_player->damage(enemy->getBullet()->getBullet()[i].atkPower, enemy->getBullet()->getBullet()[i].angle);
+			if(enemy->getBullet()->getBullet()[i].kind == MONSTERKIND::SUMMONER)
+				PARTICLE->bossJumpParticlePlay(_player->getX(), _player->getY());
 			enemy->getBullet()->removeBullet(i);
 		}
 		else

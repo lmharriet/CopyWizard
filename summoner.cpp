@@ -11,19 +11,22 @@ void summoner::addInit()
     skillImg = IMAGEMANAGER->findImage("stoneFly");
 
     kind = MONSTERKIND::SUMMONER;
-    atk = 30;
+    atk = 10;
     armour = 0;
     speed = 0.f;
     hp = 50;
     img = IMAGEMANAGER->findImage("summoner");
+    
+    imgSize = 0.f;
     isKnockBack = true;
     isRanger = true;
+    isCharging = false;
 }
 
 
 void summoner::update()
 {
-
+    if(isFindWayOn)
     atkTime++;
     if (!isATK && !isDie && !isHit) 
     {
@@ -55,6 +58,8 @@ void summoner::update()
     {
         state = STATEIMAGE::ATK;
         isATK = true;
+        PARTICLE->collectingGenerate("stoneX2", pos.x + 55, pos.y - 45, 18, 60.f, 2.f, 50, 20, 5);
+        
     }
     
     if (isATK&& !isHit)
@@ -63,7 +68,8 @@ void summoner::update()
         {
             randomTime = RANDOM->range(90, 120);
             atkTime = 0;
-            isFxAppear = true;
+            isFxAppear = true; // 불렛 발사 시점.
+            
         }
     }
 }
@@ -91,6 +97,8 @@ void summoner::stateImageRender()
         break;
     case STATEIMAGE::HIT:
         stateHIT({ 4,7 }, { 0,7 });
+        imgSize = 0.f;
+        atkTime = 0;
         break;
 
     }
@@ -125,8 +133,29 @@ void summoner::stateIDLE()
 
 void summoner::stateATK()
 {
+    if (!isCharging)
+    {
+       
+       // PARTICLE->bossJumpParticlePlay(pos.x, pos.y);
+        isCharging = true;
+    }
     if (!isCasting)
-        skillImg->frameRender(getMemDC(), cul.x + 20, cul.y - 72, 0, 0);
+    {
+
+        imgSize += 0.02f;
+        if (imgSize > 1.0f)
+        {
+            imgSize = 1.0f;
+           
+        }
+        
+        CAMERAMANAGER->StretchFrameRender(getMemDC(), skillImg, pos.x + 20, pos.y - 72, 0, 0, imgSize);
+    }
+        //skillImg->frameRender(getMemDC(), cul.x + 20, cul.y - 72, 0, 0);
+
+        
+    
+    
    
     if (atkDirection[MONSTER_LEFT])
     {
@@ -140,7 +169,7 @@ void summoner::stateATK()
             count = 0;
             frameIndexL[STATEIMAGE::ATK].x++;
             if (frameIndexL[STATEIMAGE::ATK].y == 1 && frameIndexL[STATEIMAGE::ATK].x == 1)
-                isCasting = true;
+                 isCasting = true;
 
             if (frameIndexL[STATEIMAGE::ATK].y == 1 && frameIndexL[STATEIMAGE::ATK].x > 4)
             {
@@ -151,6 +180,8 @@ void summoner::stateATK()
                 {
                     isATK = false;
                     isCasting = false;
+                    isCharging = false;
+                    imgSize =0.f;
                     delay = 0;
                     frameIndexL[STATEIMAGE::ATK].x = 0;
                     frameIndexL[STATEIMAGE::ATK].y = 0;
@@ -200,7 +231,9 @@ void summoner::stateATK()
                     {
                         isATK = false;
                         isCasting = false;
+                        isCharging = false;
                         delay = 0;
+                        imgSize = 0.f;
                         frameIndexR[STATEIMAGE::ATK].x = 0;
                         frameIndexR[STATEIMAGE::ATK].y = 2;
                     }
