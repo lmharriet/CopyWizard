@@ -347,7 +347,7 @@ void meteor::update()
 		}
 	}
 
-
+	
 }
 
 void meteor::render()
@@ -421,7 +421,7 @@ void meteor::creatMeteor(float x, float y, float angle)
 	vMeteor.push_back(meteor);
 	makeCircle(x, y);
 	isCoolTime = true;
-
+	UI->addCoolTime("meteorIcon");
 }
 
 void meteor::move()
@@ -648,6 +648,7 @@ void RagingInferno::fire(float x, float y, float angle, int* gaugeTime)
 	gauging = true;
 
 	isCoolTime = true;
+	UI->addCoolTime("infernoIcon");
 }
 
 void RagingInferno::move(int gaugeTime)

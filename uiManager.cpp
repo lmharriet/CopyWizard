@@ -37,8 +37,17 @@ HRESULT uiManager::init()
 		skillSlot[i].available = true;
 	}
 
-	skillSlot[3].keyName = "fireDragon";
-	skillSlot[3].maxCoolTime = 120; // 2초
+	skillSlot[0].keyName = "blazeIcon";
+	skillSlot[0].maxCoolTime = 10;
+
+	skillSlot[1].keyName = "searingDash";
+	skillSlot[1].maxCoolTime = 180;	// 3초
+
+	skillSlot[2].keyName = "infernoIcon";
+	skillSlot[2].maxCoolTime = 180; // 3초
+
+	skillSlot[3].keyName = "meteorIcon";
+	skillSlot[3].maxCoolTime = 300; // 5초
 
 	coin = 0;
 	hp = 0;
@@ -177,4 +186,18 @@ void uiManager::setSkillSlot(string keyName, int sec)
 		skillSlot[i].keyName = keyName;
 		skillSlot[i].maxCoolTime = time;
 	}
+}
+
+void uiManager::addCoolTime(string keyName)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		if (keyName == skillSlot[i].keyName)
+		{
+			skillSlot[i].available = false;
+			return;
+		}
+	}
+
+	cout << keyName << "이라는 스킬은 없습니다." << '\n';
 }

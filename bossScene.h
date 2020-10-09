@@ -27,4 +27,5 @@ public:
 	void render();
 
 	void soundInit();
+	void attackBoss();
 };
