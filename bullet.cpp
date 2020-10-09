@@ -328,7 +328,6 @@ void meteor::update()
 	count++;
 
 
-
 	move();
 
 	if (isCoolTime)
@@ -446,7 +445,7 @@ void meteor::move()
 			if (isAttack) rc = RectMakeCenter(vCircle[i].x, vCircle[i].y, 100, 100);
 
 
-			CAMERAMANAGER->Shake(20, 20, 2);
+			CAMERAMANAGER->Shake(20, 20, 4);
 
 			vMeteor.erase(vMeteor.begin() + i);
 			index = 0;
@@ -486,7 +485,6 @@ void dashFire::update()
 		{
 			isCoolTime = false;
 			currentCoolTime = 0;
-
 		}
 	}
 }
@@ -567,9 +565,11 @@ HRESULT RagingInferno::init()
 	distance = 0;
 	currentCoolTime = 0;
 	coolTime = 300;
+	ranAtkPower = 0;
 
 	isFire = gauging = isActive = false;
 	isCoolTime = false;
+	
 	index = count = 0;
 	return S_OK;
 }
@@ -581,27 +581,26 @@ void RagingInferno::release()
 void RagingInferno::update(int* gaugeTime)
 {
 	count++;
+	ranAtkPower = RANDOM->range(7, 12);
 
 	if (count % 3 == 0)
 	{
 		index++;
+
 		if (index > 2) index = 0;
 	}
 
 	distance = getDistance(inferno.x, inferno.y, inferno.fireX, inferno.fireY);
 
 	move(*gaugeTime);
-	if (isActive && *gaugeTime < 70)
+	if (isActive && *gaugeTime < 50)
 	{
-		*gaugeTime = 70;
+		*gaugeTime = 50;
 		inferno.lifeTime--;
 	}
 
-
-
 	if (isCoolTime)
 	{
-
 		currentCoolTime++;
 
 		if (currentCoolTime == coolTime)
@@ -623,7 +622,7 @@ void RagingInferno::render()
 			inferno.x - (inferno.img->getFrameWidth() / 2),
 			inferno.y - (inferno.img->getFrameHeight() / 2), index, 0);
 
-		if (PLAYERDATA->getGaugeTime() >= 70)
+		if (PLAYERDATA->getGaugeTime() >= 50)
 		{
 			for (int i = 0; i < vTail.size();)
 			{
@@ -684,25 +683,25 @@ void RagingInferno::move(int gaugeTime)
 {
 	if (isFire)
 	{
-		if (gaugeTime > 50 && gaugeTime < 70)
+		if (gaugeTime > 30 && gaugeTime < 50)
 		{
 
 			inferno.x = inferno.x + cosf(inferno.angle) * 20.0f;
 			inferno.y = inferno.y - sinf(inferno.angle) * 20.0f;
-			inferno.atkPower = RANDOM->range(7, 20);
+			inferno.atkPower = ranAtkPower;
 			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 50, 50);
 			gauging = false;
 			if (gaugeTime % 3 == 0) PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);
 		}
 		else isActive = false;
-		if (gaugeTime == 70)
+		if (gaugeTime == 50)
 		{
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 3, 3.f, 0.8f, 10);
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 5, 5.f, 0.7f, 10);
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 7, 7.f, 0.6f, 10);
 		}
 
-		if (gaugeTime >= 70)
+		if (gaugeTime >= 50)
 		{
 			isActive = true;
 			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 150, 150);

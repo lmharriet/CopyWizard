@@ -255,6 +255,9 @@ private:
 
 	int time;
 
+	int ranAtkPower;
+
+	//cool Time
 	bool isCoolTime;	// 스킬 쿨타임이 돌고있는지 아닌지
 
 	int coolTime;		// 몇초간 스킬 사용을 금할지

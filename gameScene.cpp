@@ -384,14 +384,14 @@ void gameScene::playerAttack()
 			if (!_player->getInferno()->getActive() && _player->getInferno()->CheckCollision(enemy->getMinion()[i]->getRC()))
 			{
 				//충돌되면 그 자리에서 공격
-				if (PLAYERDATA->getGaugeTime() < 70)
+				if (PLAYERDATA->getGaugeTime() < 50)
 				{
-					PLAYERDATA->setGaugeTime(70);
+					PLAYERDATA->setGaugeTime(50);
 					_player->getInferno()->setActive(true);
 				}
 			}
 
-			else if (PLAYERDATA->getGaugeTime() >= 70)
+			else if (PLAYERDATA->getGaugeTime() >= 50)
 			{
 				float angle = getAngle(enemyX + 40, enemyY + 40,
 					_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);

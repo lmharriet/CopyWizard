@@ -111,7 +111,7 @@ void player::update()
 		attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 		angleTenth = (int)(saveAngle * (18 / PI));
 
-		if (speed == 0 && stateCool == 0 && !isDead && !inferno->getGauging())
+		if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && !isDead && !inferno->getGauging())
 		{
 			controller();
 		}
@@ -177,14 +177,13 @@ void player::other_update()
 		dashCount++;
 		atkCount++;
 
-
 		// angle(mouse-player), angleTenth
 		attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 		angleTenth = (int)(saveAngle * (18 / PI));
 
 
 
-		if (speed == 0 && stateCool == 0 && !isDead && !inferno->getGauging())
+		if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && !isDead && !inferno->getGauging())
 		{
 
 			controller();
@@ -365,7 +364,7 @@ void player::dashFunction()
 		(speed == 8 || speed == 11 || speed == 14 || speed == 17))
 		searingRush->fire(posX, posY);
 
-	if (speed ==7)
+	if (speed == 7)
 	{
 		UI->addCoolTime("searingDash");
 		searingRush->setIsCoolTime(true);
@@ -420,7 +419,6 @@ void player::dashFunction()
 				posX += speed;
 				posY += speed;
 			}
-
 		}
 		else // 그냥 순수 RIGHT
 		{
@@ -451,7 +449,7 @@ void player::dashFunction()
 
 void player::blazeSetUp()
 {
-	if (INPUT->GetKeyDown(VK_LBUTTON) && !inferno->getGauging() && !signature)
+	if (INPUT->GetKeyDown(VK_LBUTTON) && !inferno->getGauging() && meteorStateCool==0)
 	{
 		UI->addCoolTime(0);
 		basic = true;
@@ -466,8 +464,6 @@ void player::blazeSetUp()
 		float y = -sinf(attackAngle) * 50.f + posY;
 
 		blaze->fire(x, y, 10, attackAngle, 2);
-
-
 	}
 
 	if (stateCool > 0)
@@ -495,7 +491,7 @@ void player::standardSetUp()
 {
 
 	//쿨타임 수정하기 *******
-	if (INPUT->GetKeyDown(VK_RBUTTON) && !inferno->getCool() &&!signature)
+	if (INPUT->GetKeyDown(VK_RBUTTON) && !inferno->getCool() && meteorStateCool == 0)
 	{
 		standard = true;
 		saveAngle2 = attackAngle;
@@ -1028,8 +1024,9 @@ void player::damagedCool()
 {
 	if (isDamaged)
 	{
-		state = STATE::DAMAGED;
 		frozenTime++;
+		if (state == STATE::DASH || state == STATE::SIGNATURE || state == STATE::STANDARD) return;
+		state = STATE::DAMAGED;
 	}
 	if (frozenTime > 6)
 	{
