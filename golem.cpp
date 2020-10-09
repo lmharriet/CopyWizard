@@ -5,7 +5,7 @@
 void golem::addInit()
 {
     smallSlashIndex = { 0,0 };
-    hitImg = IMAGEMANAGER->addFrameImage("golemHit", "resource/enemy/golemHit.bmp", 720, 420, 6, 3);
+    hitImg = IMAGEMANAGER->addFrameImage("golemHit", "resource/enemy/golemHit.bmp", 1080, 630, 6, 3);
     kind = MONSTERKIND::GOLEM;
     atk = 10;
     armour = 8;
@@ -60,6 +60,7 @@ void golem::update()
         {
             state = STATEIMAGE::ATK;
             isATK = true;
+            //SOUNDMANAGER->play("golemAtk", false);
         }
        
     }
@@ -102,6 +103,7 @@ void golem::stateImageRender()
 
 void golem::stateIDLE()
 {
+  
     if (atkDirection[MONSTER_LEFT])
     {
         frameIndexL[STATEIMAGE::IDLE].x = 5;
@@ -213,7 +215,12 @@ void golem::stateATK()
 
     if (isFxAppear)
     {
+       /* char str[50];
+        sprintf(str, "knight_atk%d", RANDOM->range(4));
+        SOUNDMANAGER->play(str, false);*/
+        
         int frameSpeed = 6;
+       // cout << frameSpeed << endl;
         if (atkDirection[MONSTER_UP] && atkDirection[MONSTER_LEFT] && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 40)
         {
             bulletDirection[MONSTER_UP] = true;
@@ -231,8 +238,8 @@ void golem::stateATK()
                 }
 
             }
-
-            skillImg->frameRender(getMemDC(), cul.x + 10, cul.y - 30, smallSlashIndex.x, smallSlashIndex.y);
+            //EFFECT->setEffect("samllSlash", { cul.x + 10, cul.y - 30 });
+           skillImg->frameRender(getMemDC(), cul.x + 10, cul.y - 30, smallSlashIndex.x, smallSlashIndex.y);
         }
         else if (atkDirection[MONSTER_UP] && atkDirection[MONSTER_RIGHT] && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 40)
         {
@@ -270,7 +277,7 @@ void golem::stateATK()
                     bulletDirection[MONSTER_DOWN] = false;
                 }
             }
-            skillImg->frameRender(getMemDC(), cul.x + 10, cul.y + 30, smallSlashIndex.x, smallSlashIndex.y);
+            skillImg->frameRender(getMemDC(), cul.x + 10, cul.y + 50, smallSlashIndex.x, smallSlashIndex.y);
         }
         else if (atkDirection[MONSTER_DOWN] && atkDirection[MONSTER_RIGHT] && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 80)
         {
@@ -288,7 +295,7 @@ void golem::stateATK()
                     bulletDirection[MONSTER_DOWN] = false;
                 }
             }
-            skillImg->frameRender(getMemDC(), cul.x + 10, cul.y + 30, smallSlashIndex.x, smallSlashIndex.y);
+            skillImg->frameRender(getMemDC(), cul.x + 10, cul.y + 50, smallSlashIndex.x, smallSlashIndex.y);
         }
         else if (atkDirection[MONSTER_RIGHT])
         {

@@ -7,7 +7,7 @@ HRESULT enemyManager::init(tagTile* _tile, tagTile* _subTile, POINT _monPt)
 {
 	//몬스터 이미지
 	IMAGEMANAGER->addFrameImage("summoner", "resource/enemy/SummonerSource.bmp", 500, 800, 5, 8);
-	IMAGEMANAGER->addFrameImage("golem", "resource/enemy/Golem.bmp", 720, 700, 6, 5);
+	IMAGEMANAGER->addFrameImage("golem", "resource/enemy/Golem.bmp", 1080, 1050, 6, 5);
 	IMAGEMANAGER->addFrameImage("knight", "resource/enemy/knight.bmp", 650, 1123, 6, 8);
 
 	//스킬 이펙트 이미지
