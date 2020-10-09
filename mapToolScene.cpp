@@ -158,6 +158,20 @@ void mapToolScene::render()
 
 
 	objectImgRender();
+
+	////유닛 그리기
+	//for (int i = 0; i < vUnit.size(); i++)
+	//{
+	//	image* img = IMAGEMANAGER->findImage(vUnit[i].keyName);
+
+	//	img->renderResize(getMemDC(),
+	//		vUnit[i].pt.x - img->getWidth() / 2,
+	//		vUnit[i].pt.y - img->getHeight() / 2,
+	//		img->getWidth(), img->getHeight(), vUnit[i].rc, TILESIZE);
+
+	//	FrameRect(getMemDC(), vUnit[i].rc, RED);
+	//}
+
 	//타일 그리기
 	tileRender();
 	//옵션의 상태에 따른 UI이미지 변경
@@ -269,7 +283,7 @@ void mapToolScene::buttonCheck()
 		this->saveCheck();
 		this->loadCheck();
 		break;
-	case OPTION::MONSTER_MENU:
+	case OPTION::OTHER_MENU:
 		if (PtInRect(&BACK, _ptMouse) && isLeftDown)
 		{
 			user.KeyName = "";
@@ -484,6 +498,7 @@ void mapToolScene::initUser()
 	user.kind = TERRAIN::NONE;
 	user.delay = 0;
 	user.transY = 0;
+	user.uKind = UNIT_KIND::NONE;
 	tool = TOOL::NONE;
 }
 
@@ -555,8 +570,8 @@ void mapToolScene::initSelectTerrain()
 
 	wall[15].rc = RectMake(1107, 478, 38, 38);
 	wall[15].kind = TERRAIN::WALL;
-	wall[15].keyName = "wallTile8";	
-	
+	wall[15].keyName = "wallTile8";
+
 	wall[16].rc = RectMake(1058, 500, 38, 38);
 	wall[16].kind = TERRAIN::WALL;
 	wall[16].keyName = "wallTile9";
@@ -599,6 +614,20 @@ void mapToolScene::initSelectTerrain()
 		deco[i].kind = TERRAIN::DECO;
 	}
 
+	//OTHER
+
+	string otherName[6] = { "knightCard","mageCard","golemCard","ghoulCard","slimeKingCard","playerCard" };
+	for (int i = 0; i < 6; i++)
+	{
+		other[i].kind = TERRAIN::UNIT;
+		other[i].keyName = otherName[i];
+
+		if(i == 5)  other[i].rc = RectMake(928, 170 + 210, 105, 95);
+		else if(i == 4) other[i].rc = RectMake(928 + 2 * 120, 132 + (i / 3) * 115, 105, 95);
+		else other[i].rc = RectMake(928 + (i % 3) * 120, 132 + (i / 3) * 115, 105, 95);
+
+		other[i].unit = UNIT_KIND(i);
+	}
 }
 
 void mapToolScene::initCam()
@@ -623,7 +652,7 @@ void mapToolScene::addImage()
 {
 	//UI//
 	IMAGEMANAGER->addImage("mapMenu", "maptool/ui/maptoolmenu.bmp", 360, 720);
-	IMAGEMANAGER->addImage("monsterMenu", "maptool/ui/monsterMenu.bmp", 360, 720);
+	IMAGEMANAGER->addImage("otherMenu", "maptool/ui/otherMenu.bmp", 360, 720);
 	IMAGEMANAGER->addImage("wallMenu", "maptool/ui/wallmenu1.bmp", 360, 720);
 	IMAGEMANAGER->addImage("tileMenu", "maptool/ui/tilemenu1.bmp", 360, 720);
 	IMAGEMANAGER->addImage("objectMenu", "maptool/ui/objectmenu1.bmp", 360, 720);
@@ -688,6 +717,15 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addImage("window0", "maptool/deco/window0.bmp", 82, 74, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("window1", "maptool/deco/window1.bmp", 82, 74, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("flag0", "maptool/deco/flag0.bmp", 68, 96, true, RGB(255, 0, 255));
+
+	//OTHER//
+	IMAGEMANAGER->addImage("ghoulCard", "maptool/other/ghoul.bmp", 48, 73, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("knightCard", "maptool/other/knight.bmp", 48, 73, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("mageCard", "maptool/other/mage.bmp", 48, 73, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("playerCard", "maptool/other/player.bmp", 48, 73, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("golemCard", "maptool/other/golem.bmp", 96, 146, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("slimeKingCard", "maptool/other/slimeKing.bmp", 96, 146, true, RGB(255, 0, 255));
+
 }
 
 void mapToolScene::mapSave(int index)
@@ -759,11 +797,7 @@ void mapToolScene::tileRender()
 			if (tile[i].kind == TERRAIN::NONE)
 			{
 				FrameRect(getMemDC(), tile[i].rc, DARKGREEN);
-				//char num[10];
-				//textOut(getMemDC(), tile[i].rc.left, tile[i].rc.top, itoa(i, num, 10), GREEN);
 			}
-
-			//if (tile[i].keyName != "") imageFrameRender(tile[i].keyName, { tile[i].rc.left,tile[i].rc.top }, tile[i].frame.x, tile[i].frame.y);
 
 			if (tile[i].kind != TERRAIN::NONE)
 			{
@@ -787,7 +821,7 @@ void mapToolScene::tileRender()
 
 		if (colCheck(obTile[i].rc, cam.rc))
 		{
-			if (obTile[i].kind == TERRAIN::DECO)
+			if (obTile[i].kind == TERRAIN::DECO || obTile[i].kind == TERRAIN::UNIT)
 			{
 				FrameRect(getMemDC(), obTile[i].rc, WHITE);
 			}
@@ -830,8 +864,8 @@ void mapToolScene::UIRender()
 	case OPTION::SELECT_MENU:
 		imageRender("mapMenu", { 920,0 });
 		break;
-	case OPTION::MONSTER_MENU:
-		imageRender("monsterMenu", { 920,0 });
+	case OPTION::OTHER_MENU:
+		imageRender("otherMenu", { 920,0 }); // fix
 		break;
 	}
 }
@@ -889,6 +923,9 @@ void mapToolScene::rcRender()
 			for (int i = 0; i < 9; i++) Rectangle(getMemDC(), deco[i].rc);
 			Rectangle(getMemDC(), dragButton.rc);
 			break;
+		case OPTION::OTHER_MENU:
+			for (int i = 0; i < 6; i++)Rectangle(getMemDC(), other[i].rc);
+			break;
 		}
 	}
 }
@@ -924,13 +961,21 @@ void mapToolScene::objectImgRender()
 	//object image render
 	for (int i = 0; i < MAXTILE; i++)
 	{
-		if (!colCheck(tile[i].rc, cam.rc) || obTile[i].kind != TERRAIN::DECO) continue;
+		if (!colCheck(tile[i].rc, cam.rc) || (obTile[i].kind != TERRAIN::DECO && obTile[i].kind != TERRAIN::UNIT)) continue;
 
-		float scale = (float)(obTile[i].rc.right - obTile[i].rc.left) / TILESIZE;
+		if (obTile[i].kind == TERRAIN::DECO)
+		{
+			image* img = IMAGEMANAGER->findImage(obTile[i].keyName);
 
-		image* img = IMAGEMANAGER->findImage(obTile[i].keyName);
+			img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
+		}
 
-		img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
+		else if (obTile[i].kind == TERRAIN::UNIT)
+		{
+			image* img = IMAGEMANAGER->findImage(obTile[i].keyName);
+
+			img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
+		}
 	}
 
 	string key;
@@ -1026,8 +1071,8 @@ void mapToolScene::objectImgRender()
 				img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top - height, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
 			}
 
-			else if (key == "leftWall" || key == "rightWall" || key == "wallTile" 
-				|| key == "wallTile5" || key == "wallTile6" || key == "wallTile7" 
+			else if (key == "leftWall" || key == "rightWall" || key == "wallTile"
+				|| key == "wallTile5" || key == "wallTile6" || key == "wallTile7"
 				|| key == "wallTile8" || key == "wallTile9" || key == "wallTile10")
 			{
 				float scale = (float)(tile[i].rc.right - tile[i].rc.left) / TILESIZE;
@@ -1646,8 +1691,63 @@ void mapToolScene::controller()
 				}
 				break;
 			}
+		case OPTION::OTHER_MENU:
+			//get tile
+			for (int i = 0; i < 6; i++)
+			{
+				if (PtInRect(&other[i].rc, _ptMouse) && user.delay == 10)
+				{
+					user.delay = 0;
+
+					user.KeyName = other[i].keyName;
+					user.kind = TERRAIN::UNIT;
+					//user.uKind = other[i].unit;
+					// 브러쉬 아이콘에 check 표시
+					tool = TOOL::DRAW;
+				}
+			}
+			
+			//set
+			switch (tool)
+			{
+			case TOOL::DRAW:
+				for (int i = 0; i < MAXTILE; i++)
+				{
+					if (maptool.isCol)continue;
+
+					if (PtInRect(&obTile[i].rc, _ptMouse))
+					{
+						obTile[i].keyName = user.KeyName;
+						obTile[i].kind = user.kind;
+
+						//tagSpawnUnit sUnit;
+						//sUnit.pt = { tile[i].rc.left,tile[i].rc.top };
+						//sUnit.unit = user.uKind;
+						//sUnit.keyName = user.KeyName;
+						//image* img = IMAGEMANAGER->findImage(user.KeyName);
+						//sUnit.rc = RectMakeCenter(sUnit.pt.x, sUnit.pt.y, img->getWidth(), img->getHeight());
+
+						//vUnit.push_back(sUnit);
+					}
+				}
+				break;
+			case TOOL::ERASE:
+				for (int i = 0; i < MAXTILE; i++)
+				{
+					if (tile[i].kind != TERRAIN::UNIT)continue;
+
+					if (PtInRect(&tile[i].rc, _ptMouse))
+					{
+						tile[i].keyName = "";
+						tile[i].kind = TERRAIN::NONE;
+					}
+				}
+				break;
+			}
+			break;
 		}
 	}
+
 	if (isLeft && option != OPTION::SELECT_MENU)
 	{
 		switch (tool)

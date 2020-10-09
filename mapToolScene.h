@@ -45,7 +45,8 @@ private:
 
 	tagTile object[5];
 	tagTile deco[9];
-
+	
+	tagSpawn other[6]; // 10/08
 	/// CAMERA ///
 	tagCam cam;
 
