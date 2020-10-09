@@ -164,6 +164,13 @@ private:
 
 	int coolTime;		// 몇초간 스킬 사용을 금할지
 	int currentCoolTime;	// 쿨타임이 다 돌면 isCoolTime을 false
+
+	RECT rc; // 충돌용 렉트
+	int collisionCount;
+	bool isAttack;
+
+
+
 public:
 	HRESULT init();
 	void release();
@@ -189,6 +196,11 @@ class dashFire :public gameNode
 {
 private:
 	vector<tagArcana> _vDash;
+
+	int coolTime;
+	int currentCoolTime;
+
+	bool isCoolTime;
 public:
 	HRESULT init();
 	void release();
@@ -207,6 +219,9 @@ public:
 	int getSkillNum() { return 2; }
 	float getY(int index) { return _vDash[index].y; }
 
+	bool getIsCoolTime() { return isCoolTime; }
+
+	void setIsCoolTime(bool temp) { isCoolTime = temp; }
 
 };
 

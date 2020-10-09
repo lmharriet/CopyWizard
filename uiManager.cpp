@@ -41,10 +41,10 @@ HRESULT uiManager::init()
 	skillSlot[0].maxCoolTime = 10;
 
 	skillSlot[1].keyName = "searingDash";
-	skillSlot[1].maxCoolTime = 180;	// 3段
+	skillSlot[1].maxCoolTime = 240;	// 4段
 
 	skillSlot[2].keyName = "infernoIcon";
-	skillSlot[2].maxCoolTime = 180; // 3段
+	skillSlot[2].maxCoolTime = 240; // 4段
 
 	skillSlot[3].keyName = "meteorIcon";
 	skillSlot[3].maxCoolTime = 300; // 5段

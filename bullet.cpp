@@ -226,11 +226,11 @@ void bomb::release()
 
 void bomb::update()
 {
-	
+
 	count++;
 
 	ranAtk = RANDOM->range(5, 12);
-	if (ranAtk > 10 &&count %3 ==0)
+	if (ranAtk > 10 && count % 3 == 0)
 	{
 		ranAtk = criticalHit;
 	}
@@ -315,10 +315,11 @@ HRESULT meteor::init()
 	IMAGEMANAGER->addFrameImage("circle", "resource/player/castingCircle1.bmp", 3072, 128, 24, 1, true, RGB(255, 0, 0));
 
 	currentCoolTime = 0;
-	coolTime = 180;
+	coolTime = 300;
 	isCoolTime = false;
+	isAttack = false;
 
-	count = index = 0;
+	count = index = collisionCount = 0;
 	circleCount = CircleIndex = 0;
 
 	return S_OK;
@@ -333,8 +334,8 @@ void meteor::update()
 	count++;
 
 
-	move();
 
+	move();
 
 	if (isCoolTime)
 	{
@@ -346,13 +347,19 @@ void meteor::update()
 			currentCoolTime = 0;
 		}
 	}
+	if (isAttack)
+	{
+		if (collisionCount < 60)
+			collisionCount++;
+		if (collisionCount == 60)
+			isAttack = false;
+	}
 
-	
 }
 
 void meteor::render()
 {
-	//test
+
 	image* img = IMAGEMANAGER->findImage("circle");
 
 	char temp[126];
@@ -384,7 +391,8 @@ void meteor::render()
 			index, 0);
 		//CAMERAMANAGER->Ellipse(getMemDC(), vMeteor[i].rc);
 	}
-
+	if (isAttack)
+		CAMERAMANAGER->Ellipse(getMemDC(), rc);
 }
 
 void meteor::makeCircle(float x, float y)
@@ -404,11 +412,10 @@ void meteor::makeCircle(float x, float y)
 
 void meteor::creatMeteor(float x, float y, float angle)
 {
-	
+
 	tagMeteor meteor;
-	//meteor.angle = PI_2;
 	meteor.endY = y;
-	meteor.atkPower =22;
+	meteor.atkPower = 22;
 	meteor.img = IMAGEMANAGER->findImage("meteor");
 
 	float cul = 110 * (PI / 180);
@@ -428,14 +435,23 @@ void meteor::move()
 {
 	for (int i = 0; i < vMeteor.size();)
 	{
+		if (count % 2 == 0)PARTICLE->smokeParticlePlay(vMeteor[i].x, vMeteor[i].y);
+
 		//이동
 		vMeteor[i].x += cosf(vMeteor[i].angle) * vMeteor[i].speed;
 		vMeteor[i].y -= sinf(vMeteor[i].angle) * vMeteor[i].speed;
 		vMeteor[i].rc = RectMakeCenter(vMeteor[i].x, vMeteor[i].y, 100, 100);
+
+
 		//삭제
 		if (vMeteor[i].y > vMeteor[i].endY)
 		{
 			PARTICLE->explosionParticle2Play(vMeteor[i].x, vMeteor[i].y);
+
+			//충돌 했을 때만 damage 넣기 위한 용도
+			isAttack = true;
+			if (isAttack) rc = RectMakeCenter(vCircle[i].x, vCircle[i].y, 100, 100);
+
 
 			vMeteor.erase(vMeteor.begin() + i);
 			index = 0;
@@ -453,6 +469,12 @@ void meteor::move()
 //DASH
 HRESULT dashFire::init()
 {
+
+	//gameScene 조건 바꾸기 , damage에 isCoolTime false일때 조건 넣기
+	isCoolTime = false;
+	coolTime = 240;
+	currentCoolTime = 0;
+
 	return S_OK;
 }
 
@@ -462,38 +484,49 @@ void dashFire::release()
 
 void dashFire::update()
 {
-
-}
-
-void dashFire::render()
-{
-	for (int i = 0; i < _vDash.size();)
+	if (isCoolTime)
 	{
-		_vDash[i].lifeTime++;
-
-		//CAMERAMANAGER->Ellipse(getMemDC(), _vDash[i].rc);
-		image* img = IMAGEMANAGER->findImage("flame");
-
-		CAMERAMANAGER->FrameRender(getMemDC(), img,
-			_vDash[i].x - img->getFrameWidth() / 2,
-			_vDash[i].y - img->getFrameHeight() / 2, _vDash[i].frameX, 0);
-
-		if (_vDash[i].lifeTime == 180)
+		currentCoolTime++;
+		if (currentCoolTime == coolTime)
 		{
-			_vDash.erase(_vDash.begin() + i);
-		}
-		else
-		{
-			if (_vDash[i].lifeTime % 5 == 0) _vDash[i].frameX++;
-			if (_vDash[i].frameX == img->getMaxFrameX()) _vDash[i].frameX = 0;
+			isCoolTime = false;
+			currentCoolTime = 0;
 
-			i++;
 		}
 	}
 }
 
+//사용X
+void dashFire::render()
+{
+	//for (int i = 0; i < _vDash.size();)
+	//{
+	//	_vDash[i].lifeTime++;
+
+	//	//CAMERAMANAGER->Ellipse(getMemDC(), _vDash[i].rc);
+	//	image* img = IMAGEMANAGER->findImage("flame");
+
+	//	CAMERAMANAGER->FrameRender(getMemDC(), img,
+	//		_vDash[i].x - img->getFrameWidth() / 2,
+	//		_vDash[i].y - img->getFrameHeight() / 2, _vDash[i].frameX, 0);
+
+	//	if (_vDash[i].lifeTime == 180)
+	//	{
+	//		_vDash.erase(_vDash.begin() + i);
+	//	}
+	//	else
+	//	{
+	//		if (_vDash[i].lifeTime % 5 == 0) _vDash[i].frameX++;
+	//		if (_vDash[i].frameX == img->getMaxFrameX()) _vDash[i].frameX = 0;
+
+	//		i++;
+	//	}
+	//}
+}
+
 void dashFire::singleRender(int index)
 {
+
 	_vDash[index].lifeTime++;
 
 	//CAMERAMANAGER->Ellipse(getMemDC(), _vDash[i].rc);
@@ -512,8 +545,9 @@ void dashFire::singleRender(int index)
 		if (_vDash[index].lifeTime % 5 == 0) _vDash[index].frameX++;
 		if (_vDash[index].frameX == img->getMaxFrameX()) _vDash[index].frameX = 0;
 	}
+	
 
-
+	
 }
 
 void dashFire::fire(float x, float y)
@@ -572,7 +606,7 @@ void RagingInferno::update(int* gaugeTime)
 
 	if (isCoolTime)
 	{
-		
+
 		currentCoolTime++;
 
 		if (currentCoolTime == coolTime)
@@ -580,10 +614,10 @@ void RagingInferno::update(int* gaugeTime)
 			isCoolTime = false;
 			currentCoolTime = 0;
 		}
-	
+
 	}
 
-	
+
 }
 
 void RagingInferno::render()
@@ -660,7 +694,7 @@ void RagingInferno::move(int gaugeTime)
 
 			inferno.x = inferno.x + cosf(inferno.angle) * 20.0f;
 			inferno.y = inferno.y - sinf(inferno.angle) * 20.0f;
-			inferno.atkPower = RANDOM->range(7,20);
+			inferno.atkPower = RANDOM->range(7, 20);
 			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 50, 50);
 			gauging = false;
 			if (gaugeTime % 3 == 0) PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);
