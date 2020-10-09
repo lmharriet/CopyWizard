@@ -100,12 +100,12 @@ void gameScene::update()
 	if (INPUT->GetKeyDown(VK_BACK))
 	{
 		//PARTICLE->potionParticlePlay(_player->getX(), _player->getY());
-
+	
 		PARTICLE->collectingGenerate("stoneX2", _player->getX(), _player->getY(), 18, 80.f, 2.f, 50, 100, 10);
 
 		//PARTICLE->bossJumpParticlePlay(_player->getX(), _player->getY());
 	}
-
+	CAMERAMANAGER->update();
 	PARTICLE->pointActive();
 	PARTICLE->explosionActive();
 
