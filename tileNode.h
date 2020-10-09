@@ -126,6 +126,15 @@ struct tagCam
 	POINT pt;
 };
 
+struct tagSpawn
+{
+	RECT rc;
+	string keyName;
+	TERRAIN kind;
+
+	UNIT_KIND unit;
+};
+
 struct tagSpawnUnit
 {
 	RECT rc;
