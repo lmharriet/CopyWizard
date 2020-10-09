@@ -457,11 +457,13 @@ void mapToolScene::initTile()
 	{
 		tile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
 		tile[i].kind = TERRAIN::NONE;
+		tile[i].uKind = UNIT_KIND::NONE;
 		tile[i].keyName = "";
 		tile[i].frame = { 0,0 };
 
 		obTile[i].rc = RectMake((i % MAXTILE_WIDTH * _tileSize), (i / MAXTILE_HEIGHT) * _tileSize, _tileSize, _tileSize);
 		obTile[i].kind = TERRAIN::NONE;
+		obTile[i].uKind = UNIT_KIND::NONE;
 		obTile[i].keyName = "";
 	}
 }
@@ -1719,15 +1721,6 @@ void mapToolScene::controller()
 					{
 						obTile[i].keyName = user.KeyName;
 						obTile[i].kind = user.kind;
-
-						//tagSpawnUnit sUnit;
-						//sUnit.pt = { tile[i].rc.left,tile[i].rc.top };
-						//sUnit.unit = user.uKind;
-						//sUnit.keyName = user.KeyName;
-						//image* img = IMAGEMANAGER->findImage(user.KeyName);
-						//sUnit.rc = RectMakeCenter(sUnit.pt.x, sUnit.pt.y, img->getWidth(), img->getHeight());
-
-						//vUnit.push_back(sUnit);
 					}
 				}
 				break;

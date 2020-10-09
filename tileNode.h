@@ -62,7 +62,7 @@ enum class UNIT_KIND
 	MAGE,
 	GOLEM,
 	GHOUL,
-	SLIMEkING,
+	SLIMEKING,
 	NONE
 };
 
@@ -71,6 +71,7 @@ typedef struct tagTile
 	RECT rc;
 	TERRAIN kind;
 	string keyName;
+	UNIT_KIND uKind;
 
 	POINT frame;
 
@@ -123,15 +124,6 @@ struct tagCam
 {
 	RECT rc;
 	POINT pt;
-};
-
-struct tagSpawn
-{
-	RECT rc;
-	string keyName;
-	TERRAIN kind;
-
-	UNIT_KIND unit;
 };
 
 struct tagSpawnUnit
