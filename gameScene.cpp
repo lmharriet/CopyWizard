@@ -3,7 +3,7 @@
 
 HRESULT gameScene::init()
 {
-	
+
 	UI->init();
 	DROP->init();
 
@@ -16,7 +16,8 @@ HRESULT gameScene::init()
 	_player->setTileAd(tile);
 	_player->setTileAd0(vTile);
 
-	cam = RectMakeCenter(0, 0, WINSIZEX, WINSIZEY);
+	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX + 15, WINSIZEY + 15);
+
 	checkArea = RectMakeCenter(WINSIZEX / 2, WINSIZEY / 2, 100, 100);
 	CAMERAMANAGER->init(_player->getX(), _player->getY(), MAXTILE, MAXTILE, -MAXTILE, -MAXTILE, WINSIZEX / 2, WINSIZEY / 2);
 
@@ -24,8 +25,6 @@ HRESULT gameScene::init()
 	EFFECT->init();
 	//cout << "x : " <<_player->getX()<< endl;
 	//cout << "y : " <<_player->getY()<< endl;
-	enemy = new enemyManager;
-	enemy->init(tile,subTile);
 
 	//vTile.clear();
 	collisionTile();
@@ -33,9 +32,27 @@ HRESULT gameScene::init()
 	UI->setCoin(PLAYERDATA->getCoin());
 	UI->setHp(PLAYERDATA->getHp());
 
+	oneTime = false;
+
+	//culPt
+	culPt = { 0,0 };
+	POINT ptZero = subTile[0].pos;
+	POINT ptCam = { 0,0 };
+
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (colCheck(cam, subTile[i].rc) == false)continue;
+		ptCam = subTile[i].pos;
+		break;
+	}
+
+	culPt = { ptCam.x - ptZero.x, ptCam.y - ptZero.y };
+
+	enemy = new enemyManager;
+	enemy->init(tile, subTile, culPt);
+
 	//sound
 	soundInit();
-
 	return S_OK;
 }
 
@@ -76,7 +93,7 @@ void gameScene::update()
 	enemy->update();
 
 
-	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX+15, WINSIZEY+15);
+	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX + 15, WINSIZEY + 15);
 	//checkArea = RectMakeCenter(_player->getX(), _player->getY(), 400, 400);
 	checkArea = RectMake(_player->getX() - 100, _player->getY() - WINSIZEY / 2 + 420, 200, 500);
 
@@ -325,20 +342,14 @@ void gameScene::playerAttack()
 		for (int j = 0; j < enemy->getMinion().size(); j++)
 		{
 			if (0 >= enemy->getMinion()[j]->getHp())continue;
-			
-			//조건 수정하는 중 (미완성)
-			if (colCheck(_player->getMeteor()->getMeteorVec()[i].rc, enemy->getMinion()[j]->getRC()) )
+			if (colCheck(_player->getMeteor()->getMeteorVec()[i].rc, enemy->getMinion()[j]->getRC()))
 			{
-			
-
 				enemy->getMinion()[j]->hit(_player->getMeteor()->getMeteorVec()[i].atkPower,
 					_player->getMeteor()->getMeteorVec()[i].angle, 30.f, _player->getMeteor()->getSkillNum());
 
 
 				break;
 			}
-
-
 		}
 	}
 	//rush
@@ -401,7 +412,7 @@ void gameScene::enemyAttack()
 	{
 		if (colCheck(enemy->getBullet()->getRect(i), _player->getRect()))
 		{
-			_player->damage(enemy->getBullet()->getBullet()[i].atkPower,enemy->getBullet()->getBullet()[i].angle);
+			_player->damage(enemy->getBullet()->getBullet()[i].atkPower, enemy->getBullet()->getBullet()[i].angle);
 			enemy->getBullet()->removeBullet(i);
 		}
 		else

@@ -3,7 +3,7 @@
 
 
 
-HRESULT enemyManager::init(tagTile* _tile, tagTile* _subTile)
+HRESULT enemyManager::init(tagTile* _tile, tagTile* _subTile, POINT _monPt)
 {
 	//몬스터 이미지
 	IMAGEMANAGER->addFrameImage("summoner", "resource/enemy/SummonerSource.bmp", 500, 800, 5, 8);
@@ -21,7 +21,7 @@ HRESULT enemyManager::init(tagTile* _tile, tagTile* _subTile)
 
 	tile = _tile;
 	//미니언 생성
-	this->setMinion(_subTile);
+	this->setMinion(_subTile, _monPt);
 
 	//공용총알 클래스 초기화
 	_bullet = new bullet;
@@ -72,7 +72,7 @@ void enemyManager::render()
 	_bullet->render();
 }
 
-void enemyManager::setMinion(tagTile* _subTile)
+void enemyManager::setMinion(tagTile* _subTile, POINT _monPt)
 {
 	for (int i = 0; i < MAXTILE; i++)
 	{
@@ -80,21 +80,18 @@ void enemyManager::setMinion(tagTile* _subTile)
 		{
 		case UNIT_KIND::KNIGHT:
 		{monster* _knight = new knight;
-		_knight->init(tile, 
-			_subTile[i].pos);
+		_knight->init(tile, {_subTile[i].pos.x - _monPt.x, _subTile[i].pos.y - _monPt.y});
 		_vMinion.push_back(_knight); }
 			break;
 
 		case UNIT_KIND::MAGE:
 		{monster* _summoner = new summoner;
-		_summoner->init(nullptr,
-			 _subTile[i].pos);
+		_summoner->init(nullptr, { _subTile[i].pos.x - _monPt.x, _subTile[i].pos.y - _monPt.y });
 		_vMinion.push_back(_summoner); }
 			break;
 		case UNIT_KIND::GOLEM:
 		{monster* _golem = new golem;
-		_golem->init(tile, 
-			 _subTile[i].pos);
+		_golem->init(tile, { _subTile[i].pos.x - _monPt.x, _subTile[i].pos.y - _monPt.y });
 		_vMinion.push_back(_golem); }
 			break;
 		//case UNIT_KIND::GHOUL:

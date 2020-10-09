@@ -441,6 +441,49 @@ void mapToolScene::iconCheck()
 			else dragButton.isCol = false;
 		}
 		break;
+	case OPTION::OTHER_MENU:
+		for (int i = 0; i < 4; i++)
+		{
+			if (PtInRect(&icon[i], _ptMouse) && isLeftDown)
+			{
+				switch (i)
+				{
+				case 0:
+					tool = TOOL::NONE;
+					resetUserData();
+					break;
+				case 1:
+					if (user.KeyName != "" && user.kind != TERRAIN::NONE)
+						tool = TOOL::DRAW;
+					break;
+				case 2:
+					tool = TOOL::ERASE;
+					resetUserData();
+					break;
+				case 3:
+					tool = TOOL::SPOID;
+					dragButton.isCol = false;
+					resetUserData();
+					break;
+				}
+			}
+		}
+		if (INPUT->GetKeyDown('E'))
+		{
+			tool = TOOL::ERASE;
+			resetUserData();
+		}
+		if (INPUT->GetKeyDown('M'))
+		{
+			if (!dragButton.isCol) dragButton.isCol = true;
+			else dragButton.isCol = false;
+		}
+		if (PtInRect(&dragButton.rc, _ptMouse) && isLeftDown && tool != TOOL::SPOID)
+		{
+			if (!dragButton.isCol) dragButton.isCol = true;
+			else dragButton.isCol = false;
+		}
+		break;
 	}
 }
 
@@ -936,6 +979,8 @@ void mapToolScene::rcRender()
 			Rectangle(getMemDC(), dragButton.rc);
 			break;
 		case OPTION::OTHER_MENU:
+			for (int i = 0; i < 4; i++) Rectangle(getMemDC(), icon[i]);
+
 			for (int i = 0; i < 6; i++)Rectangle(getMemDC(), other[i].rc);
 			break;
 		}
@@ -1699,6 +1744,7 @@ void mapToolScene::controller()
 					{
 						obTile[i].keyName = "";
 						obTile[i].kind = TERRAIN::NONE;
+						obTile[i].uKind = UNIT_KIND::NONE;
 					}
 				}
 				break;
@@ -1713,7 +1759,22 @@ void mapToolScene::controller()
 
 					user.KeyName = other[i].keyName;
 					user.kind = TERRAIN::UNIT;
-					user.uKind = (UNIT_KIND)i;
+
+					switch (i)
+					{
+					case 0:
+						user.uKind = UNIT_KIND::KNIGHT;
+						break;
+					case 1:
+						user.uKind = UNIT_KIND::MAGE;
+						break;
+					case 2:
+						user.uKind = UNIT_KIND::GOLEM;
+						break;
+					case 3:
+						user.uKind = UNIT_KIND::GHOUL;
+						break;
+					}
 
 					tool = TOOL::DRAW;
 				}
@@ -1738,9 +1799,9 @@ void mapToolScene::controller()
 			case TOOL::ERASE:
 				for (int i = 0; i < MAXTILE; i++)
 				{
-					if (obTile[i].kind != TERRAIN::UNIT)continue;
+					if (obTile[i].uKind != UNIT_KIND::NONE)continue;
 
-					if (PtInRect(&tile[i].rc, _ptMouse))
+					if (PtInRect(&obTile[i].rc, _ptMouse))
 					{
 						obTile[i].keyName = "";
 						obTile[i].kind = TERRAIN::NONE;

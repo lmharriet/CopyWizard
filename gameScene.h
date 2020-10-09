@@ -30,6 +30,9 @@ private:
 	RECT cam;
 	RECT checkArea;
 
+	POINT culPt;
+	bool oneTime;
+
 	 int atkCount;
 
 	 //»ç¿îµå
