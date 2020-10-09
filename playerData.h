@@ -13,6 +13,7 @@ private:
 public:
 	HRESULT init();
 	void release();
+	void update();
 
 	int getMaxHp() { return maxHp; }
 	int getHp() { return hp; }

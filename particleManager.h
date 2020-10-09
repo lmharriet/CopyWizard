@@ -61,5 +61,6 @@ public:
 
 	void potionParticlePlay(float x, float y);
 	void explosionParticlePlay(float x, float y);
+	void explosionParticle2Play(float x, float y);
 	void bossJumpParticlePlay(float x, float y);
 };

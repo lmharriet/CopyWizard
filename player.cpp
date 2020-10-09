@@ -90,6 +90,8 @@ void player::release()
 
 void player::update()
 {
+	PLAYERDATA->update();
+
 	blaze->update();
 	flares->update();
 	Meteor->update();
@@ -141,7 +143,7 @@ void player::update()
 	damagedCool();
 	//
 	takeCoin();
-
+	takeHealball();
 
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
@@ -152,6 +154,8 @@ void player::update()
 
 void player::other_update()
 {
+	PLAYERDATA->update();
+
 	blaze->update();
 	flares->update();
 	Meteor->update();
@@ -203,7 +207,7 @@ void player::other_update()
 	damagedCool();
 	//
 	takeCoin();
-
+	takeHealball();
 
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
@@ -211,6 +215,8 @@ void player::other_update()
 
 	//don't touch!
 	buttonDown();
+	UI->setHp(PLAYERDATA->getHp());
+	UI->setCoin(PLAYERDATA->getCoin());
 }
 
 void player::render()
@@ -515,289 +521,302 @@ void player::takeCoin()
 		if (colCheck(rc, DROP->getCoinRect(i)))
 		{
 			PLAYERDATA->setCoin(PLAYERDATA->getCoin() + DROP->getCoinVec()[i].money);
-			UI->setCoin(PLAYERDATA->getCoin());
-			//UI->setCoin(UI->getCoin()+ DROP->getCoinVec()[i].money);
+			//UI->setCoin(PLAYERDATA->getCoin());
 
 			DROP->delCoin(i);
 		}
 	}
+}
+void player::takeHealball()
+{
+	for (int i = 0; i < DROP->getBallVec().size(); i++)
+	{
+		if (colCheck(rc, DROP->getHealRect(i)))
+		{
+			PLAYERDATA->setHp(PLAYERDATA->getHp() + DROP->getBallVec()[i].heal);
+			PARTICLE->potionParticlePlay(posX, posY);
+			DROP->delHeal(i);
+		}
+
+	}
+
 }
 
 void player::animation()
 {
 	int tempAngle = saveAngle2 * (18 / PI);
 
-	switch (state)
-	{
-	case STATE::IDLE:
-
-		if (move == MOVE::LEFT)frameAnimation(3, 0);
-		else if (move == MOVE::RIGHT) frameAnimation(2, 0);
-		else if (move == MOVE::UP) frameAnimation(1, 0);
-		else frameAnimation(0, 0);
-
-		break;
-	case STATE::RUN:
-		if (move == MOVE::LEFT || move == MOVE::LEFT_TOP || move == MOVE::LEFT_DOWN)
+		switch (state)
 		{
-			if (count % 6 == 0)
+		case STATE::IDLE:
+
+			if (move == MOVE::LEFT)frameAnimation(3, 0);
+			else if (move == MOVE::RIGHT) frameAnimation(2, 0);
+			else if (move == MOVE::UP) frameAnimation(1, 0);
+			else frameAnimation(0, 0);
+
+			break;
+		case STATE::RUN:
+			if (move == MOVE::LEFT || move == MOVE::LEFT_TOP || move == MOVE::LEFT_DOWN)
 			{
-				index--;
-				if (index < 0)index = 4;
+				if (count % 6 == 0)
+				{
+					index--;
+					if (index < 0)index = 4;
+				}
+				frameAnimation(index, 4);
 			}
-			frameAnimation(index, 4);
-		}
-		else if (move == MOVE::RIGHT || move == MOVE::RIGHT_TOP || move == MOVE::RIGHT_DOWN)
-		{
-			if (count % 6 == 0)
+			else if (move == MOVE::RIGHT || move == MOVE::RIGHT_TOP || move == MOVE::RIGHT_DOWN)
 			{
+				if (count % 6 == 0)
+				{
+					index++;
+					if (index > 4) index = 0;
+				}
+				frameAnimation(index, 3);
+			}
+			else if (move == MOVE::UP)
+			{
+				if (count % 5 == 0)
+				{
+					index++;
+					if (index > 9)index = 0;
+				}
+				frameAnimation(index, 2);
+			}
+			else if (move == MOVE::DOWN)
+			{
+				if (count % 5 == 0)
+				{
+					index++;
+					if (index > 9)index = 0;
+				}
+				frameAnimation(index, 1);
+			}
+			break;
+		case STATE::DASH:
+			if (dashLeft)
+			{
+				if (dashCount % 3 == 0)
+				{
+					dashIndex++;
+					if (dashIndex > 9) dashIndex = 0;
+				}
+				frameAnimation(dashIndex, 8);
+			}
+			else if (dashRight)
+			{
+				if (dashCount % 3 == 0)
+				{
+					dashIndex++;
+					if (dashIndex > 9 || speed == 0)dashIndex = 0;
+				}
+				frameAnimation(dashIndex, 7);
+			}
+			else if (dashUp)
+			{
+				if (dashCount % 3 == 0)
+				{
+					dashIndex++;
+					if (dashIndex > 9 || speed == 0)dashIndex = 0;
+				}
+				frameAnimation(dashIndex, 18);
+			}
+			else if (dashDown)
+			{
+				if (dashCount % 5 == 0)
+				{
+					dashIndex++;
+					if (dashIndex > 9 || speed == 0)dashIndex = 0;
+				}
+				frameAnimation(dashIndex, 19);
+			}
+			break;
+		case STATE::DAMAGED:
+
+			frameAnimation(6, 0);
+			if (!isDamaged) move = MOVE::LEFT;
+
+			//각도별로 
+
+			//if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
+			//{
+			//	frameAnimation(6, 0);
+			//	if (!isDamaged) move = MOVE::LEFT;
+			//}
+			//else if (damageAngleTenth <= 4 || damageAngleTenth > 32) //right
+			//{
+			//	frameAnimation(7, 0);
+			//	if (!isDamaged) move = MOVE::RIGHT;
+			//}
+			//else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //up
+			//{
+			//	frameAnimation(5, 0);
+			//	if (!isDamaged) move = MOVE::UP;
+			//}
+			//else if (damageAngleTenth > 23 && damageAngleTenth <= 32) //down
+			//{
+			//	frameAnimation(4, 0);
+			//	if (!isDamaged)	move = MOVE::DOWN;
+			//}
+			break;
+		case STATE::DIE:
+			if (index < 5 && count % 30 == 0)
 				index++;
-				if (index > 4) index = 0;
-			}
-			frameAnimation(index, 3);
-		}
-		else if (move == MOVE::UP)
-		{
-			if (count % 5 == 0)
-			{
+
+			if (index >= 5 && count % 7 == 0)
 				index++;
-				if (index > 9)index = 0;
-			}
-			frameAnimation(index, 2);
-		}
-		else if (move == MOVE::DOWN)
-		{
-			if (count % 5 == 0)
-			{
-				index++;
-				if (index > 9)index = 0;
-			}
-			frameAnimation(index, 1);
-		}
-		break;
-	case STATE::DASH:
-		if (dashLeft)
-		{
-			if (dashCount % 3 == 0)
-			{
-				dashIndex++;
-				if (dashIndex > 9) dashIndex = 0;
-			}
-			frameAnimation(dashIndex, 8);
-		}
-		else if (dashRight)
-		{
-			if (dashCount % 3 == 0)
-			{
-				dashIndex++;
-				if (dashIndex > 9 || speed == 0)dashIndex = 0;
-			}
-			frameAnimation(dashIndex, 7);
-		}
-		else if (dashUp)
-		{
-			if (dashCount % 3 == 0)
-			{
-				dashIndex++;
-				if (dashIndex > 9 || speed == 0)dashIndex = 0;
-			}
-			frameAnimation(dashIndex, 18);
-		}
-		else if (dashDown)
-		{
-			if (dashCount % 5 == 0)
-			{
-				dashIndex++;
-				if (dashIndex > 9 || speed == 0)dashIndex = 0;
-			}
-			frameAnimation(dashIndex, 19);
-		}
-		break;
-	case STATE::DAMAGED:
 
-		frameAnimation(6, 0);
-		if (!isDamaged) move = MOVE::LEFT;
+			if (index > 9) index = 9;
+			frameAnimation(index, 9);
+			break;
+		case STATE::BASIC:
 
-		//각도별로 
-
-		//if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
-		//{
-		//	frameAnimation(6, 0);
-		//	if (!isDamaged) move = MOVE::LEFT;
-		//}
-		//else if (damageAngleTenth <= 4 || damageAngleTenth > 32) //right
-		//{
-		//	frameAnimation(7, 0);
-		//	if (!isDamaged) move = MOVE::RIGHT;
-		//}
-		//else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //up
-		//{
-		//	frameAnimation(5, 0);
-		//	if (!isDamaged) move = MOVE::UP;
-		//}
-		//else if (damageAngleTenth > 23 && damageAngleTenth <= 32) //down
-		//{
-		//	frameAnimation(4, 0);
-		//	if (!isDamaged)	move = MOVE::DOWN;
-		//}
-		break;
-	case STATE::DIE:
-		if (index < 5 && count % 30 == 0)
-			index++;
-
-		if (index >= 5 && count % 7 == 0)
-			index++;
-
-		if (index > 9) index = 9;
-		frameAnimation(index, 9);
-		break;
-	case STATE::BASIC:
-
-		if (angleTenth > 14 && angleTenth <= 23)//left
-		{
-			if (count % 3 == 0)
+			if (angleTenth > 14 && angleTenth <= 23)//left
 			{
-				index++;
-				if (index > 7 || stateCool == 0) index = 0;
+				if (count % 3 == 0)
+				{
+					index++;
+					if (index > 7 || stateCool == 0) index = 0;
+				}
+				frameAnimation(index, 5);
+				//왼쪽 공격 끝나면 왼쪽 향하기
+				if (stateCool == 0)
+					move = MOVE::LEFT;
 			}
-			frameAnimation(index, 5);
-			//왼쪽 공격 끝나면 왼쪽 향하기
-			if (stateCool == 0)
-				move = MOVE::LEFT;
-		}
-		else if (angleTenth <= 4 || angleTenth > 32) //right
-		{
-			if (count % 3 == 0)
+			else if (angleTenth <= 4 || angleTenth > 32) //right
 			{
-				index++;
-				if (index > 7 || stateCool == 0) index = 0;
-			}
-			frameAnimation(index, 6);
+				if (count % 3 == 0)
+				{
+					index++;
+					if (index > 7 || stateCool == 0) index = 0;
+				}
+				frameAnimation(index, 6);
 
-			// 오른쪽 공격 끝나면 오른쪽 향하기
-			if (stateCool == 0)
-				move = MOVE::RIGHT;
-		}
-		else if (angleTenth > 4 && angleTenth <= 14) //up
-		{
-			if (count % 3 == 0)
-			{
-				index++;
-				if (index > 7)index = 0;
+				// 오른쪽 공격 끝나면 오른쪽 향하기
+				if (stateCool == 0)
+					move = MOVE::RIGHT;
 			}
-			frameAnimation(index, 14);
-			//위쪽 공격 끝나면 위쪽 향하기
-			if (stateCool == 0)
-				move = MOVE::UP;
-		}
-		else if (angleTenth > 23 && angleTenth <= 32) //down
-		{
-			if (count % 3 == 0)
+			else if (angleTenth > 4 && angleTenth <= 14) //up
 			{
-				index++;
-				if (index > 7)index = 0;
+				if (count % 3 == 0)
+				{
+					index++;
+					if (index > 7)index = 0;
+				}
+				frameAnimation(index, 14);
+				//위쪽 공격 끝나면 위쪽 향하기
+				if (stateCool == 0)
+					move = MOVE::UP;
 			}
-			frameAnimation(index, 6);
-			//아래쪽 공격 끝나면 아래쪽 향하기
-			if (stateCool == 0)
-				move = MOVE::DOWN;
-		}
-		break;
-	case STATE::STANDARD:
+			else if (angleTenth > 23 && angleTenth <= 32) //down
+			{
+				if (count % 3 == 0)
+				{
+					index++;
+					if (index > 7)index = 0;
+				}
+				frameAnimation(index, 6);
+				//아래쪽 공격 끝나면 아래쪽 향하기
+				if (stateCool == 0)
+					move = MOVE::DOWN;
+			}
+			break;
+		case STATE::STANDARD:
 
-		if (tempAngle > 14 && tempAngle <= 23)//left
-		{
-			if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
-			else
+			if (tempAngle > 14 && tempAngle <= 23)//left
 			{
-				atkIndex++;
-				if (atkIndex > 3) atkIndex = 3;
-			}
-			frameAnimation(atkIndex, 6);
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+				frameAnimation(atkIndex, 6);
 
 
-			//왼쪽 공격 끝나면 왼쪽 향하기
-			if (gaugeTime > 50) move = MOVE::LEFT;
-		}
-		else if (tempAngle <= 4 || tempAngle > 32) //right
-		{
-			if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
-			else
+				//왼쪽 공격 끝나면 왼쪽 향하기
+				if (gaugeTime > 50) move = MOVE::LEFT;
+			}
+			else if (tempAngle <= 4 || tempAngle > 32) //right
 			{
-				atkIndex++;
-				if (atkIndex > 3) atkIndex = 3;
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+
+				frameAnimation(atkIndex, 5);
+				// 오른쪽 공격 끝나면 오른쪽 향하기
+				if (gaugeTime > 50) move = MOVE::RIGHT;
+			}
+			else if (tempAngle > 4 && tempAngle <= 12) //up
+			{
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+				frameAnimation(atkIndex, 14);
+				//위쪽 공격 끝나면 위쪽 향하기
+				if (gaugeTime > 50) move = MOVE::UP;
+			}
+			else if (tempAngle > 23 && tempAngle <= 32) //down
+			{
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+				frameAnimation(atkIndex, 6);
+				//아래쪽 공격 끝나면 아래쪽 향하기
+				if (gaugeTime > 50) move = MOVE::DOWN;
 			}
 
-			frameAnimation(atkIndex, 5);
-			// 오른쪽 공격 끝나면 오른쪽 향하기
-			if (gaugeTime > 50) move = MOVE::RIGHT;
-		}
-		else if (tempAngle > 4 && tempAngle <= 12) //up
-		{
-			if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
-			else
-			{
-				atkIndex++;
-				if (atkIndex > 3) atkIndex = 3;
-			}
-			frameAnimation(atkIndex, 14);
-			//위쪽 공격 끝나면 위쪽 향하기
-			if (gaugeTime > 50) move = MOVE::UP;
-		}
-		else if (tempAngle > 23 && tempAngle <= 32) //down
-		{
-			if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
-			else
-			{
-				atkIndex++;
-				if (atkIndex > 3) atkIndex = 3;
-			}
-			frameAnimation(atkIndex, 6);
-			//아래쪽 공격 끝나면 아래쪽 향하기
-			if (gaugeTime > 50) move = MOVE::DOWN;
-		}
+			break;
+		case STATE::SIGNATURE:
 
-		break;
-	case STATE::SIGNATURE:
-
-		if (move == MOVE::LEFT)
-		{
-			if (atkCount % 10 == 0)
+			if (move == MOVE::LEFT)
 			{
-				atkIndex++;
-				if (atkIndex > 9)atkIndex = 0;
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				frameAnimation(atkIndex, 10);
 			}
-			frameAnimation(atkIndex, 10);
-		}
-		else if (move == MOVE::RIGHT)
-		{
-			if (atkCount % 10 == 0)
+			else if (move == MOVE::RIGHT)
 			{
-				atkIndex++;
-				if (atkIndex > 9)atkIndex = 0;
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				frameAnimation(atkIndex, 20);
 			}
-			frameAnimation(atkIndex, 20);
-		}
-		else if (move == MOVE::UP || move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
-		{
-			if (atkCount % 10 == 0)
+			else if (move == MOVE::UP || move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
 			{
-				atkIndex++;
-				if (atkIndex > 9)atkIndex = 0;
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				frameAnimation(atkIndex, 20);
 			}
-			frameAnimation(atkIndex, 20);
-		}
-		else if (move == MOVE::DOWN || move == MOVE::LEFT_DOWN || move == MOVE::RIGHT_DOWN)
-		{
-			if (atkCount % 10 == 0)
+			else if (move == MOVE::DOWN || move == MOVE::LEFT_DOWN || move == MOVE::RIGHT_DOWN)
 			{
-				atkIndex++;
-				if (atkIndex > 9)atkIndex = 0;
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				frameAnimation(atkIndex, 10);
 			}
-			frameAnimation(atkIndex, 10);
+			break;
 		}
-		break;
-	}
 
 }
 
@@ -1004,6 +1023,7 @@ void player::damagedCool()
 		frozenTime = 0;
 	}
 }
+
 
 
 //del

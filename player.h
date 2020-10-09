@@ -82,6 +82,7 @@ public:
 	void signatureSetUp();
 
 	void takeCoin();
+	void takeHealball();
 	//collision detection
 	void tileCol();
 	void colorCheck(image* img);

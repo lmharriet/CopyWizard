@@ -200,6 +200,13 @@ void particleManager::explosionParticlePlay(float x, float y)
 	PARTICLE->explosionGenerate("explosionParticle", x, y, 6, 1.f, 4.f, 2);
 }
 
+void particleManager::explosionParticle2Play(float x, float y)
+{
+	PARTICLE->explosionGenerate("explosionParticle", x, y, 30, 1.f, 4.f, 3);
+	PARTICLE->explosionGenerate("explosionParticle", x, y, 24, 1.f, 3.f, 5);
+	PARTICLE->explosionGenerate("explosionParticle", x, y, 6, 1.f, 2.f, 6);
+}
+
 void particleManager::bossJumpParticlePlay(float x, float y)
 {
 	PARTICLE->explosionGenerate("bossJumpParticle", x, y, 18, 5.f, 4.f, 15);

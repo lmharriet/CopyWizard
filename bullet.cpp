@@ -423,11 +423,14 @@ void meteor::move()
 		//»èÁ¦
 		if (vMeteor[i].y > vMeteor[i].endY)
 		{
+			PARTICLE->explosionParticle2Play(vMeteor[i].x, vMeteor[i].y);
+
 			vMeteor.erase(vMeteor.begin() + i);
 			index = 0;
 
 			vCircle.erase(vCircle.begin() + i);
 			CircleIndex = 0;
+
 		}
 		else i++;
 	}

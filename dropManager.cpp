@@ -85,7 +85,7 @@ void dropManager::dropPoint(POINT pt, int minCoin, int maxCoin, float healBallPe
         ball.pt = pt;
         ball.heal = 50;
         ball.currentFrameX = 0;
-
+        ball.rc = RectMakeCenter(pt.x, pt.y, 50, 50);
         vHealBall.push_back(ball);
     }
 }
