@@ -125,10 +125,6 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 	{
 		*angle = getAngle(startNode->rc.left, startNode->rc.top, finalList[0]->rc.left, finalList[0]->rc.top);
 	}
-
-	
-
-
 }
 
 

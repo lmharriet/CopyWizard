@@ -13,7 +13,7 @@ private:
 	vector<int> vTile;
 	
 	bomb* blaze;
-	homingFlares* flares;
+	cleaver* flares;
 	meteor* Meteor;
 	dashFire* searingRush;
 	RagingInferno* inferno;
@@ -52,15 +52,7 @@ private:
 	int damageAngleTenth;
 	int frozenTime;
 	bool isDamaged;
-
-
-	//cooltime ¼öÁ¤ Áß
-	int standardCool, signatureCool;
-	int standardTiemer, signatureTimer;
 	
-	int infernoCool;
-	bool infernoReady;
-
 	//dash
 	bool dashLeft, dashRight, dashUp, dashDown;
 	

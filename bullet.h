@@ -44,6 +44,19 @@ struct tagArcana
 	MOVE dir;
 };
 
+struct tagMeteor
+{
+	image* img;
+	float x, y;
+	float angle;
+	RECT rc;
+	float speed;
+	int atkPower;
+
+	//삭제 조건
+	float endY;
+};
+
 //=============================================================
 //	## bullet ## (공용총알)
 //=============================================================
@@ -138,49 +151,31 @@ struct tagCircle
 class meteor :public gameNode
 {
 private:
-	vector<tagArcana> vMeteor;
+	vector<tagMeteor> vMeteor;
 	vector<tagCircle> vCircle;
-
-
-	float angleRange;
-	float _range;
-
-
-	//ult
-	int meteorCount;
-	bool isUlt;
-	tagArcana ult;
-
-	int ranCount;
 
 	int count, index;
 	int circleCount, CircleIndex;
-	int timer;
 
-	bool isCol;
+	bool isCoolTime;	// 스킬 쿨타임이 돌고있는지 아닌지
+
+	int coolTime;		// 몇초간 스킬 사용을 금할지
+	int currentCoolTime;	// 쿨타임이 다 돌면 isCoolTime을 false
 public:
-	HRESULT init(float range);
+	HRESULT init();
 	void release();
 	void update();
 	void render();
+	
+	void makeCircle(float x, float y);
+	void creatMeteor(float x, float y,float angle);
 
-
-
-	void makeCircle(float x, float y, float radius, MOVE direction);
-	void creatMeteor(float x, float y,float angle, float radius, MOVE direction);
-
-
-
-	void meteorFire(float x, float y, float speed, MOVE dir, float range);
-	void meteorUlt();
-	void meteorUltFire(float x, float y, float speed, MOVE dir, float range);
+	
 	void move();
-	
-	
+	bool getCool() { return isCoolTime; }
 	int getSkillNum() { return 1; }
-	bool getCol() { return isCol; }
 
-	vector<tagArcana> getMeteorVec() { return vMeteor; }
+	vector<tagMeteor> getMeteorVec() { return vMeteor; }
 };
 
 
@@ -241,6 +236,12 @@ private:
 	bool gauging;
 
 	int time;
+
+	bool isCoolTime;	// 스킬 쿨타임이 돌고있는지 아닌지
+
+	int coolTime;		// 몇초간 스킬 사용을 금할지
+	int currentCoolTime;	// 쿨타임이 다 돌면 isCoolTime을 false
+
 public:
 	HRESULT init();
 	void release();
@@ -256,6 +257,7 @@ public:
 	bool getCol() { return inferno.Collision; }
 	bool getGauging() { return gauging; }
 	bool getActive() { return isActive; }
+	bool getCool() { return isCoolTime; }
 
 	tagArcana getInf() { return inferno; }
 	void setX(float X) { inferno.x = X; }
@@ -268,7 +270,7 @@ public:
 //=============================================================
 //	## homingFlares ## 
 //=============================================================
-class homingFlares : public gameNode
+class cleaver : public gameNode
 {
 private:
 	//총알 구조체를 담을 벡터선언
