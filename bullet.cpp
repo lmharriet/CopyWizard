@@ -522,13 +522,13 @@ void dashFire::singleRender(int index)
 
 	_vDash[index].lifeTime++;
 
-	//CAMERAMANAGER->Ellipse(getMemDC(), _vDash[i].rc);
 	image* img = IMAGEMANAGER->findImage("flame");
 
 	CAMERAMANAGER->FrameRender(getMemDC(), img,
 		_vDash[index].x - img->getFrameWidth() / 2,
-		_vDash[index].y - img->getFrameHeight() / 2, _vDash[index].frameX, 0);
+		_vDash[index].y - img->getFrameHeight() / 2-20, _vDash[index].frameX, 0);
 
+	CAMERAMANAGER->Ellipse(getMemDC(), _vDash[index].rc);
 	if (_vDash[index].lifeTime == 180)
 	{
 		_vDash.erase(_vDash.begin() + index);
@@ -546,7 +546,7 @@ void dashFire::singleRender(int index)
 void dashFire::fire(float x, float y)
 {
 	tagArcana dash;
-	dash.rc = RectMakeCenter(x, y, 128, 128);
+	dash.rc = RectMakeCenter(x, y, 50, 50);
 	dash.x = x;
 	dash.y = y;
 	dash.frameX = 0;
