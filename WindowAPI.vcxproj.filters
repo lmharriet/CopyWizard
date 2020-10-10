@@ -263,9 +263,6 @@
     <ClInclude Include="effectManager.h">
       <Filter>GameFramework\매니져\이펙트</Filter>
     </ClInclude>
-    <ClInclude Include="startScene.h">
-      <Filter>MainGame\씬 모음\시작</Filter>
-    </ClInclude>
     <ClInclude Include="mapToolScene.h">
       <Filter>MainGame\씬 모음\맵툴</Filter>
     </ClInclude>
@@ -311,6 +308,9 @@
     </ClInclude>
     <ClInclude Include="boss.h">
       <Filter>MainGame\씬 모음\보스</Filter>
+    </ClInclude>
+    <ClInclude Include="startScene.h">
+      <Filter>MainGame\씬 모음\시작</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

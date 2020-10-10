@@ -48,14 +48,18 @@ struct tagArcana
 struct tagMeteor
 {
 	image* img;
+	RECT rc;
+	
 	float x, y;
 	float angle;
-	RECT rc;
 	float speed;
 	int atkPower;
+	int lifeTime;
 
 	//삭제 조건
 	float endY;
+	
+
 };
 
 //=============================================================
@@ -150,14 +154,13 @@ struct tagCircle
 
 	int lifeTime;
 	bool isCol;
-
 };
 class meteor :public gameNode
 {
 private:
 	vector<tagMeteor> vMeteor;
 	vector<tagCircle> vCircle;
-
+	vector<tagMeteor> vDamage;
 	int count, index;
 	int circleCount, CircleIndex;
 
@@ -165,12 +168,6 @@ private:
 
 	int coolTime;		// 몇초간 스킬 사용을 금할지
 	int currentCoolTime;	// 쿨타임이 다 돌면 isCoolTime을 false
-
-	RECT rc; // 충돌용 렉트
-	int collisionCount;
-	bool isAttack;
-
-
 
 public:
 	HRESULT init();
@@ -185,8 +182,14 @@ public:
 	void move();
 	bool getCool() { return isCoolTime; }
 	int getSkillNum() { return 1; }
-
+	//생성된 메테오용
 	vector<tagMeteor> getMeteorVec() { return vMeteor; }
+	//충돌 + 데미지용
+	int  getColSize() { return vDamage.size(); }
+	int getAtkPower(int index) { return vDamage[index].atkPower; }
+	float getAngle(int angle) { return vDamage[index].angle; }
+	RECT getColRect(int index) { return vDamage[index].rc; }
+
 };
 
 

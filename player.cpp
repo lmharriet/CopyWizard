@@ -456,18 +456,19 @@ void player::blazeSetUp()
 		UI->addCoolTime(0);
 		blazeCount = 3;
 		basic = true;
+		saveAngle = attackAngle;
 	}
 
 	if (stateCool == 0 && basic)
 	{
 		//basic 공격 할 때 앵글을 저장
-		saveAngle = attackAngle;
+	
 		stateCool = 10;
 
 		float x = cosf(attackAngle) * 50.f + posX;
 		float y = -sinf(attackAngle) * 50.f + posY;
 
-		blaze->fire(x, y, 10, attackAngle, 2);
+		blaze->fire(x, y, 10, saveAngle, 2);
 		blazeCount--;
 	}
 
@@ -475,6 +476,7 @@ void player::blazeSetUp()
 	{
 		state = STATE::BASIC;
 		stateCool--;
+		
 	}
 
 	if (blazeCount == 0)basic = false;
@@ -696,7 +698,7 @@ void player::animation()
 
 		if (angleTenth > 14 && angleTenth <= 23)//left
 		{
-			if (count % 3 == 0)
+			if (count % 5 == 0)
 			{
 				index++;
 				if (index > 7 || stateCool == 0) index = 0;
@@ -708,7 +710,7 @@ void player::animation()
 		}
 		else if (angleTenth <= 4 || angleTenth > 32) //right
 		{
-			if (count % 3 == 0)
+			if (count % 5 == 0)
 			{
 				index++;
 				if (index > 7 || stateCool == 0) index = 0;
@@ -721,7 +723,7 @@ void player::animation()
 		}
 		else if (angleTenth > 4 && angleTenth <= 14) //up
 		{
-			if (count % 3 == 0)
+			if (count % 5 == 0)
 			{
 				index++;
 				if (index > 7)index = 0;
@@ -733,7 +735,7 @@ void player::animation()
 		}
 		else if (angleTenth > 23 && angleTenth <= 32) //down
 		{
-			if (count % 3 == 0)
+			if (count % 5 == 0)
 			{
 				index++;
 				if (index > 7)index = 0;
@@ -859,7 +861,7 @@ void player::tileCol()
 	{
 		int num = vWall[i];
 
-		if (tile[num].keyName != "" && tile[num].kind != TERRAIN::WALL ) continue;
+		if (tile[num].keyName != "" && tile[num].kind != TERRAIN::WALL) continue;
 		for (int j = 0; j < 8; j++)
 		{
 			if (colCheck(tileCheck[j].rc, tile[num].rc))

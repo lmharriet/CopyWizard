@@ -313,7 +313,7 @@ void bomb::move()
 				break;
 			}
 		}
-		
+
 	}
 }
 //폭탄삭제
@@ -333,9 +333,8 @@ HRESULT meteor::init()
 	currentCoolTime = 0;
 	coolTime = 300;
 	isCoolTime = false;
-	isAttack = false;
 
-	count = index = collisionCount = 0;
+	count = index = 0;
 	circleCount = CircleIndex = 0;
 
 	return S_OK;
@@ -349,7 +348,6 @@ void meteor::update()
 {
 	count++;
 
-
 	move();
 
 	if (isCoolTime)
@@ -362,19 +360,22 @@ void meteor::update()
 			currentCoolTime = 0;
 		}
 	}
-	if (isAttack)
-	{
-		if (collisionCount < 60)
-			collisionCount++;
-		if (collisionCount == 60)
-			isAttack = false;
-	}
 
+	//데미지 넣을 용도
+	for (int i = 0; i < vDamage.size();)
+	{
+		vDamage[i].lifeTime--;
+		if (vDamage[i].lifeTime == 0)
+		{
+			vDamage.erase(vDamage.begin() + i);
+		}
+		else
+			i++;
+	}
 }
 
 void meteor::render()
 {
-
 	image* img = IMAGEMANAGER->findImage("circle");
 
 	char temp[126];
@@ -404,10 +405,13 @@ void meteor::render()
 			vMeteor[i].x - vMeteor[i].img->getFrameWidth() / 2 - 10,
 			vMeteor[i].y - vMeteor[i].img->getFrameHeight() / 2 - 50,
 			index, 0);
-		//CAMERAMANAGER->Ellipse(getMemDC(), vMeteor[i].rc);
+	
 	}
-	if (isAttack)
-		CAMERAMANAGER->Ellipse(getMemDC(), rc);
+
+	for (int i = 0; i < vDamage.size(); i++)
+	{
+		CAMERAMANAGER->Ellipse(getMemDC(), vDamage[i].rc);
+	}
 }
 
 void meteor::makeCircle(float x, float y)
@@ -463,9 +467,15 @@ void meteor::move()
 		{
 			PARTICLE->explosionParticle2Play(vMeteor[i].x, vMeteor[i].y);
 
-			//충돌 했을 때만 damage 넣기 위한 용도
-			isAttack = true;
-			if (isAttack) rc = RectMakeCenter(vCircle[i].x, vCircle[i].y, 100, 100);
+			//데미지 넣을 용도
+			tagMeteor damage;
+			damage.x = vCircle[i].x;
+			damage.y = vCircle[i].y;
+			damage.angle = vMeteor[i].angle; //메테오 방향으로 넉백시킬 때 사용
+			damage.lifeTime = 30;
+			damage.atkPower = 22;
+			damage.rc = RectMakeCenter(damage.x, damage.y, 100, 100);
+			vDamage.push_back(damage);
 
 
 			CAMERAMANAGER->Shake(20, 20, 4);

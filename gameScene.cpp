@@ -50,6 +50,7 @@ HRESULT gameScene::init()
 	enemy->init(tile, subTile, culPt);
 
 
+
 	
 	//벽 타입만 저장
 	for (int i = 0; i < MAXTILE; i++)
@@ -515,17 +516,17 @@ void gameScene::playerAttack()
 			}
 		}
 	}
+
 	//meteor
-	for (int i = 0; i < _player->getMeteor()->getMeteorVec().size(); i++)
+	for (int i = 0; i < _player->getMeteor()->getColSize(); i++)
 	{
 		for (int j = 0; j < enemy->getMinion().size(); j++)
 		{
 			if (0 >= enemy->getMinion()[j]->getHp())continue;
-			if (colCheck(_player->getMeteor()->getMeteorVec()[i].rc, enemy->getMinion()[j]->getRC()))
+			if (colCheck(_player->getMeteor()->getColRect(i), enemy->getMinion()[j]->getRC()))
 			{
-				enemy->getMinion()[j]->hit(_player->getMeteor()->getMeteorVec()[i].atkPower,
-					_player->getMeteor()->getMeteorVec()[i].angle, 30.f, _player->getMeteor()->getSkillNum());
-
+				enemy->getMinion()[j]->hit(_player->getMeteor()->getAtkPower(i),
+					_player->getMeteor()->getAngle(i), 30.f, _player->getMeteor()->getSkillNum());
 
 				break;
 			}
