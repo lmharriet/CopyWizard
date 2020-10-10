@@ -11,7 +11,7 @@ HRESULT player::init()
 	IMAGEMANAGER->addFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
 	posX = WINSIZEX / 2;
 	posY = WINSIZEY / 2;
-	rc = RectMakeCenter(posX, posY, 100, 100);
+	rc = RectMakeCenter(posX, posY, 50, 50);
 
 
 	//enum 초기화
@@ -22,16 +22,15 @@ HRESULT player::init()
 	memset(diagonalCheck, 0, sizeof(diagonalCheck));
 
 	//colision detection Rect
-	makeCol((int)DIRECTION::TOP, 0, -55);
+	makeCol((int)DIRECTION::TOP, 0, -30);
 	makeCol((int)DIRECTION::BOTTOM, 0, 60);
-	makeCol((int)DIRECTION::LEFT, -45, 0);
-	makeCol((int)DIRECTION::RIGHT, +45, 0);
+	makeCol((int)DIRECTION::LEFT, -45, 20);
+	makeCol((int)DIRECTION::RIGHT, +45, 20);
 
-	makeCol((int)DIRECTION::LEFT_TOP, -25, -30);
-	makeCol((int)DIRECTION::RIGHT_TOP, 25, -30);
-	makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
-	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
-
+	makeCol((int)DIRECTION::LEFT_TOP, -15, -5);
+	makeCol((int)DIRECTION::RIGHT_TOP, 15, -5);
+	makeCol((int)DIRECTION::LEFT_DOWN, -15, 35);
+	makeCol((int)DIRECTION::RIGHT_DOWN, 15, 35);
 	//3차..
 	//diagonal collision detection Rect
 	makeCol2(0, -45, -55);
@@ -117,15 +116,15 @@ void player::update()
 
 	tileCol();
 
-	makeCol((int)DIRECTION::TOP, 0, -60);
+	makeCol((int)DIRECTION::TOP, 0, -30);
 	makeCol((int)DIRECTION::BOTTOM, 0, 60);
-	makeCol((int)DIRECTION::LEFT, -45, 0);
-	makeCol((int)DIRECTION::RIGHT, +45, 0);
+	makeCol((int)DIRECTION::LEFT, -45, 20);
+	makeCol((int)DIRECTION::RIGHT, +45, 20);
 
-	makeCol((int)DIRECTION::LEFT_TOP, -25, -30);
-	makeCol((int)DIRECTION::RIGHT_TOP, 25, -30);
-	makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
-	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
+	makeCol((int)DIRECTION::LEFT_TOP, -15, -5);
+	makeCol((int)DIRECTION::RIGHT_TOP, 15, -5);
+	makeCol((int)DIRECTION::LEFT_DOWN, -15, 35);
+	makeCol((int)DIRECTION::RIGHT_DOWN, 15, 35);
 
 	makeCol2(0, -45, -55);
 	makeCol2(1, 45, -55);
@@ -149,8 +148,6 @@ void player::update()
 	death();
 	//don't touch!
 	buttonDown();
-
-
 
 }
 
@@ -180,7 +177,6 @@ void player::other_update()
 	angleTenth = (int)(saveAngle * (18 / PI));
 
 
-
 	if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && !isDead && !inferno->getGauging())
 	{
 
@@ -189,14 +185,14 @@ void player::other_update()
 
 	//tileCol(); 
 
-	makeCol((int)DIRECTION::TOP, 0, -60);
+	makeCol((int)DIRECTION::TOP, 0, -30);
 	makeCol((int)DIRECTION::BOTTOM, 0, 60);
 	makeCol((int)DIRECTION::LEFT, -45, 0);
 	makeCol((int)DIRECTION::RIGHT, +45, 0);
 
-	makeCol((int)DIRECTION::LEFT_TOP, -25, -30);
+	makeCol((int)DIRECTION::LEFT_TOP, -20, -30);
 	makeCol((int)DIRECTION::RIGHT_TOP, 25, -30);
-	makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
+	makeCol((int)DIRECTION::LEFT_DOWN, -20, 35);
 	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
 
 	makeCol2(0, -45, -55);
@@ -237,7 +233,6 @@ void player::render()
 		CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i + 4].rc);
 		CAMERAMANAGER->Rectangle(getMemDC(), diagonalCheck[i].rc);
 	}
-
 
 	bool isRender = false;
 
@@ -291,26 +286,30 @@ void player::controller()
 	//왼쪽
 	if (isLeft)
 	{
-		rc = RectMakeCenter(posX, posY, 100, 100);
-		if (!tileCheck[(int)DIRECTION::LEFT].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol)posX -= 8;
+		rc = RectMakeCenter(posX, posY, 50, 50);
+		if (!tileCheck[(int)DIRECTION::LEFT].isCol /*&& !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol*/)
+			posX -= 8;
 	}
 	//오른쪽
 	if (isRight)
 	{
-		rc = RectMakeCenter(posX, posY, 100, 100);
-		if (!tileCheck[(int)DIRECTION::RIGHT].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol) posX += 8;
+		rc = RectMakeCenter(posX, posY, 50, 50);
+		if (!tileCheck[(int)DIRECTION::RIGHT].isCol /*&& !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol*/)
+			posX += 8;
 	}
 	//위
 	if (isUp)
 	{
-		rc = RectMakeCenter(posX, posY, 100, 100);
-		if (!tileCheck[(int)DIRECTION::TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol) posY -= 8;
+		rc = RectMakeCenter(posX, posY, 50, 50);
+		if (/*!tileCheck[(int)DIRECTION::TOP].isCol &&*/ !tileCheck[(int)DIRECTION::LEFT_TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol)
+			posY -= 8;
 	}
 	//아래
 	if (isDown)
 	{
-		rc = RectMakeCenter(posX, posY, 100, 100);
-		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol) posY += 8;
+		rc = RectMakeCenter(posX, posY, 50, 50);
+		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol)
+			posY += 8;
 	}
 
 	//DASH
@@ -427,7 +426,6 @@ void player::dashFunction()
 		{
 			if (!tileCheck[(int)DIRECTION::RIGHT].isCol)
 				posX += speed;
-
 		}
 	}
 
@@ -526,12 +524,17 @@ void player::signatureSetUp()
 
 void player::takeCoin()
 {
+	//float speed = 0.01f;
+
 	for (int i = 0; i < DROP->getCoinVec().size(); i++)
 	{
-		float angle = getAngle(posX, posY, DROP->getCoinPt(i).x, DROP->getCoinPt(i).y);
 
-		DROP->setCoinPt(i, -cosf(angle) * 10.f, +sinf(angle) * 10.f);
-		DROP->setRect(i);
+		//speed *= 1.01f;
+		//float angle = getAngle(posX, posY, DROP->getCoinPt(i).x, DROP->getCoinPt(i).y);
+
+		//DROP->setCoinPt(i, -cosf(angle) * speed, +sinf(angle) * speed);
+		//DROP->setRect(i);
+
 		if (colCheck(rc, DROP->getCoinRect(i)))
 		{
 			PLAYERDATA->setCoin(PLAYERDATA->getCoin() + DROP->getCoinVec()[i].money);
@@ -1049,8 +1052,17 @@ void player::viewText()
 {
 	char str[126];
 
-	//wsprintf(str, "state(4 ==damaged  : %d) , isDamaged : %d ,frozenTime : %d", state, isDamaged, frozenTime);
-	//textOut(getMemDC(), 10, 200, str, WHITE);
+
+	for (int i = 0; i < 8; i++)
+	{
+		wsprintf(str, " tilecheck[%d] : %d", i, tileCheck[i].isCol);
+		textOut(getMemDC(), 10, 150 + (i * 20), str, WHITE);
+		if (i < 4)
+		{
+			wsprintf(str, "dianoanl[%d] : %d", i, diagonalCheck[i].isCol);
+			textOut(getMemDC(), 10, 300 + (i * 20), str, WHITE);
+		}
+	}
 
 	//wsprintf(str, "damageAngle : %d", damageAngle);
 	//textOut(getMemDC(), 100, 230, str, WHITE);

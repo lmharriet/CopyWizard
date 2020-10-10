@@ -1,6 +1,7 @@
 #pragma once
 #include "gameNode.h"
 #include "unitNode.h"
+#include "tileNode.h"
 //총알 구조체
 struct tagBullet
 {
@@ -106,7 +107,11 @@ private:
 	//총알 구조체를 담을 벡터선언
 	vector<tagBullet> _vBullet;
 	vector<tagBullet>::iterator _viBullet;
-
+	
+	//벽 충돌예정
+	vector<int> vTile;
+	tagTile tile;
+	
 private:
 	float _range;			//총알 사거리
 	int _bulletMax;			//총알 최대갯수

@@ -19,6 +19,7 @@ struct tagCoin
 	POINT pt;
 	RECT rc;
 	int money;
+	float speed;//follow
 	
 	int currentFrameX;
 	int frameY;

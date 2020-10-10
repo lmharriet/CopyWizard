@@ -24,10 +24,21 @@ void dropManager::render(HDC hdc)
     vector<tagCoin>::iterator iter = vCoin.begin();
     for (iter; iter != vCoin.end(); ++iter)
     {
+        //플레이어 쪽으로 이동하기
+        float angle = getAngle(iter->pt.x, iter->pt.y, PLAYERDATA->getX(), PLAYERDATA->getY());
+
+        iter->pt.x += cosf(angle) * iter->speed;
+        iter->pt.y += -sinf(angle) * iter->speed;
+
+        //rc 그리기
+        iter->rc = RectMakeCenter(iter->pt.x, iter->pt.y, 20, 20);
+
         CAMERAMANAGER->FrameRender(hdc, img, 
             iter->pt.x - img->getFrameWidth() / 2, 
             iter->pt.y - img->getFrameHeight() / 2,
             iter->currentFrameX, iter->frameY);
+
+        iter->speed *= 1.06f;
 
         if (dtime % 8 == 0)
         {
@@ -69,7 +80,6 @@ void dropManager::dropPoint(POINT pt, int minCoin, int maxCoin, float healBallPe
     int sCoin = ranCoin / 5;
     ranCoin -= (sCoin * 5);
     int bCoin = ranCoin;
-    
 
     vTransfer.push_back({ gCoin,sCoin,bCoin,pt });
 
@@ -112,7 +122,9 @@ void dropManager::coinGenerator()
             pos.x += RANDOM->range(-20, 20);
             pos.y += RANDOM->range(-10, 10);
 
-            vCoin.push_back({ pos,RectMakeCenter(pos.x,pos.y,20,20),10,0,2 });
+            vCoin.push_back({ pos,RectMakeCenter(pos.x,pos.y,20,20),10,
+            0.2f,
+            0,2 });
         }
 
         for (int j = 0; j < iter->sCoin; j++)
@@ -121,7 +133,9 @@ void dropManager::coinGenerator()
             pos.x += RANDOM->range(-20, 20);
             pos.y += RANDOM->range(-10, 10);
 
-            vCoin.push_back({ pos,RectMakeCenter(pos.x,pos.y,20,20),5,0,1 });
+            vCoin.push_back({ pos,RectMakeCenter(pos.x,pos.y,20,20),5,
+            0.2f,
+            0,1 });
         }       
         
         for (int j = 0; j < iter->bCoin; j++)
@@ -130,7 +144,9 @@ void dropManager::coinGenerator()
             pos.x += RANDOM->range(-20, 20);
             pos.y += RANDOM->range(-10, 10);
 
-            vCoin.push_back({ pos,RectMakeCenter(pos.x,pos.y,20,20),1,0,0 });
+            vCoin.push_back({ pos,RectMakeCenter(pos.x,pos.y,20,20),1,
+            0.2f,
+            0,0 });
         }
 
 
