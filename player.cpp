@@ -45,7 +45,7 @@ HRESULT player::init()
 	basic = standard = signature = false;
 
 	speed = gaugeTime = 0;
-	atkCount = atkIndex = index = dashIndex = count = dashCount = 0;
+	atkCount = atkIndex = index = dashIndex = count = dashCount = blazeCount = 0;
 	stateCool = infernoStateCool = meteorStateCool = 0;
 
 
@@ -149,6 +149,7 @@ void player::update()
 	//don't touch!
 	buttonDown();
 
+	//cout << vTile[0] << '\n';
 }
 
 void player::other_update()
@@ -453,8 +454,10 @@ void player::blazeSetUp()
 	if (INPUT->GetKeyDown(VK_LBUTTON) && !inferno->getGauging() && meteorStateCool == 0)
 	{
 		UI->addCoolTime(0);
+		blazeCount = 3;
 		basic = true;
 	}
+
 	if (stateCool == 0 && basic)
 	{
 		//basic 공격 할 때 앵글을 저장
@@ -465,6 +468,7 @@ void player::blazeSetUp()
 		float y = -sinf(attackAngle) * 50.f + posY;
 
 		blaze->fire(x, y, 10, attackAngle, 2);
+		blazeCount--;
 	}
 
 	if (stateCool > 0)
@@ -473,11 +477,13 @@ void player::blazeSetUp()
 		stateCool--;
 	}
 
+	if (blazeCount == 0)basic = false;
+
 	for (int i = 0; i < blaze->getSize(); i++)
 	{
 		if (blaze->getCol(i))
 		{
-			basic = false;
+			//basic = false;
 			blaze->removeBomb(i);
 		}
 	}
@@ -849,11 +855,11 @@ void player::tileCol()
 		if (i < 4) diagonalCheck[i].isCol = false;
 	}
 
-	for (int i = 0; i < vTile.size(); i++)
+	for (int i = 0; i < vWall.size(); i++)
 	{
-		int num = vTile[i];
+		int num = vWall[i];
 
-		if (tile[num].keyName != "" && tile[num].kind != TERRAIN::WALL) continue;
+		if (tile[num].keyName != "" && tile[num].kind != TERRAIN::WALL ) continue;
 		for (int j = 0; j < 8; j++)
 		{
 			if (colCheck(tileCheck[j].rc, tile[num].rc))

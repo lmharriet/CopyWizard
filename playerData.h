@@ -1,6 +1,6 @@
 #pragma once
 #include "singletonBase.h"
-
+#include "tileNode.h"
 class playerData : public singletonBase <playerData>
 {
 private:
@@ -10,6 +10,13 @@ private:
 	int maxHp;
 
 	int _gaugeTime;
+
+	
+	tagTile* tile;
+	vector<int> vTile;
+
+	tagTile* wallTile;
+	vector<int> vWall;
 public:
 	HRESULT init();
 	void release();
@@ -27,6 +34,19 @@ public:
 	void setX(float x) { _x = x; }
 	void setY(float y) { _y = y; }
 	void setGaugeTime(int time) { _gaugeTime = time; }
+
+	void setTile(vector<int> tile) { vTile = tile; }
+	vector<int> getTile() { return vTile; }
+
+
+	void setWall(vector<int> wall) { vWall = wall; }
+	vector<int> getWall() { return vWall; }
+
+	void setWallTile(tagTile* _wallTile) { wallTile = _wallTile; }
+	tagTile* getWallTile() { return wallTile; }
+
+	void setTile(tagTile* _tile) { tile = _tile; }
+	tagTile* _getTile() { return tile; }
 
 	playerData() {}
 	~playerData() {}

@@ -108,10 +108,6 @@ private:
 	vector<tagBullet> _vBullet;
 	vector<tagBullet>::iterator _viBullet;
 	
-	//벽 충돌예정
-	vector<int> vTile;
-	tagTile tile;
-	
 private:
 	float _range;			//총알 사거리
 	int _bulletMax;			//총알 최대갯수

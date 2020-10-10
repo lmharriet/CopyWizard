@@ -26,6 +26,8 @@ private:
 	// 메모리 관리용
 	vector<int> vTile;
 
+	vector<int> vWall;
+
 	//test cam(수정해도됨)
 	RECT cam;
 	RECT checkArea;

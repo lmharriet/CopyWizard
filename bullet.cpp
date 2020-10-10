@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "bullet.h"
-
 //=============================================================
 //	## bullet ## (°ø¿ëÃÑ¾Ë)
 //=============================================================
@@ -57,9 +56,9 @@ void bullet::fire(float x, float y, float angle, float speed, int damage, MONSTE
 	{
 		bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
 	}
-	else 
+	else
 	{
-		bullet.bulletImage = NULL; 
+		bullet.bulletImage = NULL;
 	}
 	bullet.kind = kind;
 	bullet.speed = speed;
@@ -301,6 +300,20 @@ void bomb::move()
 			//_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
 			_vBullet[i].collision = true;
 		}
+
+		//Ãæµ¹
+		for (int j = 0; j < PLAYERDATA->getWall().size(); j++)
+		{
+			int num = PLAYERDATA->getWall()[j];
+
+			if (colCheck(PLAYERDATA->_getTile()[num].rc, _vBullet[i].rc))
+			{
+				PARTICLE->explosionGenerate("explosionParticle", _vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3, true);
+				_vBullet.erase(_vBullet.begin() + i);
+				break;
+			}
+		}
+		
 	}
 }
 //ÆøÅº»èÁ¦
@@ -536,9 +549,9 @@ void dashFire::singleRender(int index)
 
 	CAMERAMANAGER->FrameRender(getMemDC(), img,
 		_vDash[index].x - img->getFrameWidth() / 2,
-		_vDash[index].y - img->getFrameHeight() / 2-20, _vDash[index].frameX, 0);
+		_vDash[index].y - img->getFrameHeight() / 2 - 20, _vDash[index].frameX, 0);
 
-	if(INPUT->GetToggleKey('L'))	CAMERAMANAGER->Ellipse(getMemDC(), _vDash[index].rc);
+	if (INPUT->GetToggleKey('L'))	CAMERAMANAGER->Ellipse(getMemDC(), _vDash[index].rc);
 	if (_vDash[index].lifeTime == 180)
 	{
 		_vDash.erase(_vDash.begin() + index);
@@ -548,9 +561,9 @@ void dashFire::singleRender(int index)
 		if (_vDash[index].lifeTime % 5 == 0) _vDash[index].frameX++;
 		if (_vDash[index].frameX == img->getMaxFrameX()) _vDash[index].frameX = 0;
 	}
-	
 
-	
+
+
 }
 
 void dashFire::fire(float x, float y)
@@ -579,7 +592,7 @@ HRESULT RagingInferno::init()
 
 	isFire = gauging = isActive = false;
 	isCoolTime = false;
-	
+
 	index = count = 0;
 	return S_OK;
 }

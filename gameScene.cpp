@@ -13,8 +13,6 @@ HRESULT gameScene::init()
 	playerImg = IMAGEMANAGER->findImage("playerFrame");
 
 	loadMap(0);
-	_player->setTileAd(tile);
-	_player->setTileAd0(vTile);
 
 	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX + 15, WINSIZEY + 15);
 
@@ -50,6 +48,25 @@ HRESULT gameScene::init()
 
 	enemy = new enemyManager;
 	enemy->init(tile, subTile, culPt);
+
+
+	
+	//벽 타입만 저장
+	for (int i = 0; i < MAXTILE; i++)
+	{
+		if (tile[i].kind == TERRAIN::WALL)
+		{
+			vWall.push_back(i);
+		}
+	}
+
+	PLAYERDATA->setTile(tile);
+	PLAYERDATA->setWall(vWall);
+	
+	_player->setTileAd(tile);
+	_player->setTileAd0(vTile);
+	_player->setTileAd1(vWall);
+
 
 	//sound
 	soundInit();
@@ -466,6 +483,9 @@ void gameScene::collisionTile()
 	{
 		if (colCheck(cam, tile[i].rc)) vTile.push_back(i);
 	}
+
+	_player->setTileAd0(vTile);
+	PLAYERDATA->setTile(vTile);
 }
 
 void gameScene::playerAttack()
@@ -523,7 +543,6 @@ void gameScene::playerAttack()
 
 				enemy->getMinion()[j]->hit(_player->getDashFire()->getAtk(i),
 					70.f, 20.f, _player->getDashFire()->getSkillNum());
-
 
 			}
 		}

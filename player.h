@@ -11,6 +11,7 @@ class player : public gameNode
 private:
 	tagTile* tile;
 	vector<int> vTile;
+	vector<int> vWall;
 	
 	bomb* blaze;
 	cleaver* flares;
@@ -43,6 +44,9 @@ private:
 	int stateCool;
 	int infernoStateCool;
 	int meteorStateCool;
+	
+	int blazeCount;
+	
 	int dashCount,dashIndex;
 	int atkCount, atkIndex;
 	int count, index;
@@ -129,12 +133,10 @@ public:
 	void reposRect() { rc = RectMakeCenter(posX, posY, 100, 100); }
 	void setStateIDLE() { state = STATE::IDLE; }
 	void setDamaged(bool temp) { isDamaged = temp; }
-
-
-	//tile address
-	void setTileAd(tagTile* _tile) { tile = _tile; }
-	void setTileAd0(vector<int> v1) { vTile = v1; }
 	
+	void setTileAd(tagTile* _tile) { tile = _tile; }
+	void setTileAd0(vector<int> _vTile) { vTile = _vTile; }
+	void setTileAd1(vector<int> _vWall) { vWall = _vWall; }
 
 	player() {}
 	~player() {}
