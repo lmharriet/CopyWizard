@@ -183,15 +183,35 @@ void gameScene::render()
 		if (!colCheck(tile[i].rc, cam) ||
 			(tile[i].kind != TERRAIN::WALL && tile[i].kind != TERRAIN::OBJECT))continue;
 
-		if (!isRender &&
-			(colCheck(checkArea, tile[i].rc) ||
-				colCheck(checkArea, tile[i + 15].rc) ||
-				colCheck(checkArea, tile[i - MAXTILE_WIDTH * 4 + 10].rc) ||
-				colCheck(checkArea, tile[i - MAXTILE_WIDTH * 4 + 5].rc))
-			)
+		if (!isRender)
 		{
-			isRender = true;
-			_player->render();
+			bool canCheck[4] = { false, };
+
+			if (i >= 0)
+			{
+				canCheck[0] = colCheck(checkArea, tile[i].rc);
+			}
+			if (i + 15 >= 0)
+			{
+				canCheck[1] = colCheck(checkArea, tile[i + 15].rc);
+			}
+			if (i - MAXTILE_WIDTH * 4 + 10 >= 0)
+			{
+				canCheck[2] = colCheck(checkArea, tile[i - MAXTILE_WIDTH * 4 + 10].rc);
+			}
+			if (i - MAXTILE_WIDTH * 4 + 5 >= 0)
+			{
+				canCheck[3] = colCheck(checkArea, tile[i - MAXTILE_WIDTH * 4 + 5].rc);
+			}
+
+			for (int i = 0; i < 4; i++)
+			{
+				if (canCheck[i])
+				{
+					isRender = true;
+					_player->render();
+				}
+			}
 		}
 
 		int w = MAXTILE_WIDTH;
