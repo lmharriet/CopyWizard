@@ -111,6 +111,9 @@ struct tagUser
 	UNIT_KIND uKind;
 	string KeyName;
 
+	bool isFrame;
+	POINT frame;
+
 	int transY;
 	int delay;
 };

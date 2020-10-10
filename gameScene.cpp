@@ -296,13 +296,16 @@ void gameScene::render()
 				else CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
 			}
 
-			else if (key == "leftWall" || key == "rightWall" || key == "wallTile"
-				|| key == "wallTile5" || key == "wallTile6" || key == "wallTile7"
-				|| key == "wallTile8" || key == "wallTile9" || key == "wallTile10")
+			else if (key == "wallFrame0" || key == "wallFrame1" || key == "wallFrame2")
 			{
+				float scale = (float)(tile[i].rc.right - tile[i].rc.left) / TILESIZE;
+
 				image* img = IMAGEMANAGER->findImage(tile[i].keyName);
 
-				CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top);
+				//img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
+				
+				CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
+				//img->frameRender(getMemDC(), tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y, scale);
 			}
 
 			else if (key == "shopWall0" || key == "shopWall1")
