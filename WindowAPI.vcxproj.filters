@@ -19,9 +19,6 @@
     <Filter Include="GameFramework\이미지">
       <UniqueIdentifier>{1e616e04-3329-41d7-b6ed-02b7d269f51f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework\총알">
-      <UniqueIdentifier>{0850c6c3-b3ea-4bbc-818b-2f7be3085366}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameFramework\싱글톤데이터">
       <UniqueIdentifier>{4f9c286a-e4c3-42c7-9fce-71a675503514}</UniqueIdentifier>
     </Filter>
@@ -87,6 +84,9 @@
     </Filter>
     <Filter Include="GameFramework\매니져\데미지\UI">
       <UniqueIdentifier>{a21989a8-ed51-4ccf-9b08-291ec7a11245}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\총알">
+      <UniqueIdentifier>{0850c6c3-b3ea-4bbc-818b-2f7be3085366}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

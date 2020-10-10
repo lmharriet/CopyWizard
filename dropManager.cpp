@@ -38,7 +38,7 @@ void dropManager::render(HDC hdc)
             iter->pt.y - img->getFrameHeight() / 2,
             iter->currentFrameX, iter->frameY);
 
-        iter->speed *= 1.06f;
+        if(iter->speed < 10.f) iter->speed *= 1.06f;
 
         if (dtime % 8 == 0)
         {

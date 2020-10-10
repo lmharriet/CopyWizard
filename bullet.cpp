@@ -234,11 +234,11 @@ void bomb::update()
 {
 	count++;
 
-	ranAtk = RANDOM->range(5, 12);
-	if (ranAtk > 10 && count % 3 == 0)
-	{
-		ranAtk = criticalHit;
-	}
+	//
+	//if (ranAtk > 10 && count % 3 == 0)
+	//{
+	//	ranAtk = criticalHit;
+	//}
 
 	if (count % 2 == 0)
 	{
@@ -278,11 +278,12 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	bullet.speed = speed;
 	bullet.angle = angle;
 	bullet.radius = radius;
-	bullet.atkPower = ranAtk;
+	bullet.atkPower = RANDOM->range(5, 12);
 	bullet.collision = false;
 	bullet.rc = RectMakeCenter(bullet.x, bullet.y, radius * 2, radius * 2);
 
 	_vBullet.push_back(bullet);
+	
 }
 
 void bomb::move()
