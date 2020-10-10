@@ -134,7 +134,7 @@ void mainGame::soundInit()
 	//SFX_Sound
 	SOUNDMANAGER->addSound("playerHit", "Sound/player/hit.mp3");
 	SOUNDMANAGER->addSound("playerNomalDash", "Sound/player/NomalDash.mp3");
-	//SOUNDMANAGER->addSound("playerNomalDash", "Sound/player/.mp3");
+	SOUNDMANAGER->addSound("playerFoot", "Sound/player/footstep.mp3");
 	//SOUNDMANAGER->addSound("playerNomalDash", "Sound/player/.mp3");
 	//SOUNDMANAGER->addSound("playerNomalDash", "Sound/player/.mp3");
 	
