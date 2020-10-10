@@ -1823,7 +1823,9 @@ void mapToolScene::controller()
 
 			if (user.KeyName == "bottomWall" || user.KeyName == "topWall")break; // fix
 
-			if (user.KeyName != "wall0" && user.KeyName != "wall1" && user.KeyName != "wall2")break;
+			if (user.KeyName != "wall0" && user.KeyName != "wall1" && user.KeyName != "wall2" &&
+				user.KeyName != "wallTile5" && user.KeyName != "wallTile6" && user.KeyName != "wallTile7" &&
+				user.KeyName != "wallTile8" && user.KeyName != "wallTile9" && user.KeyName != "wallTile10") break;//wallTile 5 - 10
 
 			if (!dragButton.isCol)
 			{
