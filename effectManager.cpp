@@ -279,9 +279,6 @@ void effectManager::setEffect(string keyName, POINT pt, bool isFrameImg, int fra
         else effect.imgCount = effect.maxFrame;
     }
 
-    cout << effect.imgCount << '\n';
-    cout << effect.maxFrame << '\n';
-
     vEft.push_back(effect);
 }
 
