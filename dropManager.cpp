@@ -35,8 +35,9 @@ void dropManager::render(HDC hdc)
         }
 
         if (iter->currentFrameX == IMAGEMANAGER->findImage("coin")->getMaxFrameX())iter->currentFrameX = 0;
+       // CAMERAMANAGER->Ellipse(hdc, iter->rc);
     }
-
+   
     //ball render
     img = IMAGEMANAGER->findImage("healBall");
     for (int i = 0; i < vHealBall.size(); i++)

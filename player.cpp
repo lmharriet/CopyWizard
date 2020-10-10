@@ -90,141 +90,139 @@ void player::release()
 void player::update()
 {
 	PLAYERDATA->update();
-	if (!isDead)
+
+	blaze->update();
+	flares->update();
+	Meteor->update();
+	searingRush->update();
+
+	inferno->update(&gaugeTime);
+
+	inven->update();
+	//animation count
+	count++;
+	dashCount++;
+	atkCount++;
+
+	gaugeTime++;
+	PLAYERDATA->setGaugeTime(gaugeTime);
+	// angle(mouse-player), angleTenth
+	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
+	angleTenth = (int)(saveAngle * (18 / PI));
+
+	if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && !isDead && !inferno->getGauging())
 	{
-		blaze->update();
-		flares->update();
-		Meteor->update();
-		searingRush->update();
-
-		inferno->update(&gaugeTime);
-
-		inven->update();
-		//animation count
-		count++;
-		dashCount++;
-		atkCount++;
-
-		gaugeTime++;
-		PLAYERDATA->setGaugeTime(gaugeTime);
-		// angle(mouse-player), angleTenth
-		attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
-		angleTenth = (int)(saveAngle * (18 / PI));
-
-		if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && !isDead && !inferno->getGauging())
-		{
-			controller();
-		}
-
-		tileCol();
-
-		makeCol((int)DIRECTION::TOP, 0, -60);
-		makeCol((int)DIRECTION::BOTTOM, 0, 60);
-		makeCol((int)DIRECTION::LEFT, -45, 0);
-		makeCol((int)DIRECTION::RIGHT, +45, 0);
-
-		makeCol((int)DIRECTION::LEFT_TOP, -25, -30);
-		makeCol((int)DIRECTION::RIGHT_TOP, 25, -30);
-		makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
-		makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
-
-		makeCol2(0, -45, -55);
-		makeCol2(1, 45, -55);
-		makeCol2(2, -45, 60);
-		makeCol2(3, 45, 60);
-
-
-		dashFunction();
-		changeState();
-		blazeSetUp();
-		standardSetUp();
-		signatureSetUp();
-
-		damagedCool();
-		//
-		takeCoin();
-		takeHealball();
-
-		// camera가 따라가는 대상
-		CAMERAMANAGER->MovePivot(posX, posY);
-		death();
-		//don't touch!
-		buttonDown();
-
+		controller();
 	}
+
+	tileCol();
+
+	makeCol((int)DIRECTION::TOP, 0, -60);
+	makeCol((int)DIRECTION::BOTTOM, 0, 60);
+	makeCol((int)DIRECTION::LEFT, -45, 0);
+	makeCol((int)DIRECTION::RIGHT, +45, 0);
+
+	makeCol((int)DIRECTION::LEFT_TOP, -25, -30);
+	makeCol((int)DIRECTION::RIGHT_TOP, 25, -30);
+	makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
+	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
+
+	makeCol2(0, -45, -55);
+	makeCol2(1, 45, -55);
+	makeCol2(2, -45, 60);
+	makeCol2(3, 45, 60);
+
+
+	dashFunction();
+	changeState();
+	blazeSetUp();
+	standardSetUp();
+	signatureSetUp();
+
+	damagedCool();
+	//
+	takeCoin();
+	takeHealball();
+
+	// camera가 따라가는 대상
+	CAMERAMANAGER->MovePivot(posX, posY);
+	death();
+	//don't touch!
+	buttonDown();
+
+
 
 }
 
 void player::other_update()
 {
-	if (!isDead)
+
+	PLAYERDATA->update();
+
+	blaze->update();
+	flares->update();
+	Meteor->update();
+	searingRush->update();
+
+	inferno->update(&gaugeTime);
+	gaugeTime++;
+
+
+	inven->update();
+
+	//animation count
+	count++;
+	dashCount++;
+	atkCount++;
+
+	// angle(mouse-player), angleTenth
+	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
+	angleTenth = (int)(saveAngle * (18 / PI));
+
+
+
+	if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && !isDead && !inferno->getGauging())
 	{
-		PLAYERDATA->update();
 
-		blaze->update();
-		flares->update();
-		Meteor->update();
-		searingRush->update();
-
-		inferno->update(&gaugeTime);
-		gaugeTime++;
-
-
-		inven->update();
-
-		//animation count
-		count++;
-		dashCount++;
-		atkCount++;
-
-		// angle(mouse-player), angleTenth
-		attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
-		angleTenth = (int)(saveAngle * (18 / PI));
-
-
-
-		if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && !isDead && !inferno->getGauging())
-		{
-
-			controller();
-		}
-
-		//tileCol(); 
-
-		makeCol((int)DIRECTION::TOP, 0, -60);
-		makeCol((int)DIRECTION::BOTTOM, 0, 60);
-		makeCol((int)DIRECTION::LEFT, -45, 0);
-		makeCol((int)DIRECTION::RIGHT, +45, 0);
-
-		makeCol((int)DIRECTION::LEFT_TOP, -25, -30);
-		makeCol((int)DIRECTION::RIGHT_TOP, 25, -30);
-		makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
-		makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
-
-		makeCol2(0, -45, -55);
-		makeCol2(1, 45, -55);
-		makeCol2(2, -45, 60);
-		makeCol2(3, 45, 60);
-
-
-		dashFunction();
-		changeState();
-		blazeSetUp();
-		standardSetUp();
-
-		signatureSetUp();
-		damagedCool();
-		//
-		takeCoin();
-		takeHealball();
-
-		// camera가 따라가는 대상
-		CAMERAMANAGER->MovePivot(posX, posY);
-		death();
-
-		//don't touch!
-		buttonDown();
+		controller();
 	}
+
+	//tileCol(); 
+
+	makeCol((int)DIRECTION::TOP, 0, -60);
+	makeCol((int)DIRECTION::BOTTOM, 0, 60);
+	makeCol((int)DIRECTION::LEFT, -45, 0);
+	makeCol((int)DIRECTION::RIGHT, +45, 0);
+
+	makeCol((int)DIRECTION::LEFT_TOP, -25, -30);
+	makeCol((int)DIRECTION::RIGHT_TOP, 25, -30);
+	makeCol((int)DIRECTION::LEFT_DOWN, -25, 35);
+	makeCol((int)DIRECTION::RIGHT_DOWN, 25, 35);
+
+	makeCol2(0, -45, -55);
+	makeCol2(1, 45, -55);
+	makeCol2(2, -45, 60);
+	makeCol2(3, 45, 60);
+
+
+	dashFunction();
+	changeState();
+	blazeSetUp();
+	standardSetUp();
+
+	signatureSetUp();
+	damagedCool();
+	//
+	takeCoin();
+	takeHealball();
+
+	// camera가 따라가는 대상
+	CAMERAMANAGER->MovePivot(posX, posY);
+	death();
+
+	//don't touch!
+	buttonDown();
+
 }
 
 void player::render()
@@ -232,6 +230,13 @@ void player::render()
 	int tempAngle = attackAngle * (18 / PI);
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
 	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, tempAngle, 0, 50);
+
+	for (int i = 0; i < 4; i++)
+	{
+		CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i].rc);
+		CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i + 4].rc);
+		CAMERAMANAGER->Rectangle(getMemDC(), diagonalCheck[i].rc);
+	}
 
 
 	bool isRender = false;
@@ -381,7 +386,6 @@ void player::dashFunction()
 				posY -= speed;
 
 			}
-
 		}
 		else if (dashDown)
 		{
@@ -391,7 +395,6 @@ void player::dashFunction()
 				posX -= speed;
 				posY += speed;
 			}
-
 		}
 		else // 그냥 순수 LEFT
 		{
@@ -449,7 +452,7 @@ void player::dashFunction()
 
 void player::blazeSetUp()
 {
-	if (INPUT->GetKeyDown(VK_LBUTTON) && !inferno->getGauging() && meteorStateCool==0)
+	if (INPUT->GetKeyDown(VK_LBUTTON) && !inferno->getGauging() && meteorStateCool == 0)
 	{
 		UI->addCoolTime(0);
 		basic = true;
@@ -525,11 +528,13 @@ void player::takeCoin()
 {
 	for (int i = 0; i < DROP->getCoinVec().size(); i++)
 	{
+		float angle = getAngle(posX, posY, DROP->getCoinPt(i).x, DROP->getCoinPt(i).y);
+
+		DROP->setCoinPt(i, -cosf(angle) * 10.f, +sinf(angle) * 10.f);
+		DROP->setRect(i);
 		if (colCheck(rc, DROP->getCoinRect(i)))
 		{
 			PLAYERDATA->setCoin(PLAYERDATA->getCoin() + DROP->getCoinVec()[i].money);
-			//UI->setCoin(PLAYERDATA->getCoin());
-
 			DROP->delCoin(i);
 		}
 	}
@@ -1010,8 +1015,13 @@ void player::damage(int damage, float attackAngle)
 	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
 	DAMAGE->generator({ (long)posX, (long)posY }, damage, true);
 
-	//수정 필요 벽에 닿으면 넉백 안되도록
-	if (standard && signature && basic)return;
+
+	if (inferno->getGauging() && meteorStateCool != 0 && basic)return;
+
+	int index;
+	for (int i = 0; i < 4; i++)	index = i;
+	if (tileCheck[index].isCol || tileCheck[index + 4].isCol || diagonalCheck[index].isCol)return;
+
 	posX += cosf(attackAngle) * 3.f;
 	posY -= sinf(attackAngle) * 3.f;
 

@@ -57,10 +57,14 @@ public:
 	void dropPoint(POINT pt, int minCoin, int maxCoin, float healBallpercentage = 0.f);
 	bool checkPercentage(int persentage);
 	void coinGenerator();
-	
+
 	vector<tagCoin> getCoinVec() { return vCoin; }
 	RECT getCoinRect(int index) { return vCoin[index].rc; }
 	void delCoin(int index) { vCoin.erase(vCoin.begin() + index); }
+
+	POINT getCoinPt(int index) { return vCoin[index].pt; }
+	void setCoinPt(int index, int valueX, int valueY) { vCoin[index].pt.x += valueX, vCoin[index].pt.y += valueY; }
+	void setRect(int index) { vCoin[index].rc = RectMakeCenter(vCoin[index].pt.x,vCoin[index].pt.y, 20, 20); }
 
 	vector<tagHealBall> getBallVec() { return vHealBall; }
 	RECT getHealRect(int index) { return vHealBall[index].rc; }
