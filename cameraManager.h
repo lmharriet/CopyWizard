@@ -86,6 +86,8 @@ public:
 
 	void StretchFrameRender(HDC hdc, image* ig, int destX, int destY, int frameX, int frameY, float scale);
 
+	void StretchRender(HDC hdc, image* ig, int destX, int destY, float scale);
+
 	void TextDraw(HDC hdc, int destX, int destY, LPCSTR lpstring, int c);
 	void AlphaRender(HDC hdc, image* ig, int destX, int destY, BYTE alpha);
 	void MovePivot(float x, float y);

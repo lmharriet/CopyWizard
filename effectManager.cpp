@@ -47,53 +47,100 @@ void effectManager::render(HDC hdc)
     for (iter = vEft.begin(); iter != vEft.end();)
     {
         image* img = IMAGEMANAGER->findImage(iter->keyName);
-        CAMERAMANAGER->FrameRender(hdc, img, 
-            iter->pos.x - img->getFrameWidth()/2,
-            iter->pos.y - img->getFrameHeight()/2,
-            iter->imgCount, 0);
 
-        if (iter->flipImg == false)
+        if (iter->isFrame) // 프레임 이미지인지?
         {
-            if (time % 5 == 0 && iter->imgCount < iter->maxFrame) iter->imgCount++;
 
-            if (iter->isEraseTime == false)
-            {
-                if (iter->imgCount == iter->maxFrame) iter = vEft.erase(iter);
-                else iter++;
-            }
+            //CAMERAMANAGER->FrameRender(hdc, img,
+            //    iter->pos.x - img->getFrameWidth() / 2,
+            //    iter->pos.y - img->getFrameHeight() / 2,
+            //    iter->imgCount, 0);
 
-            else
+            CAMERAMANAGER->StretchFrameRender(hdc, img, 
+                iter->pos.x - img->getFrameWidth() * iter->currentSize / 2,
+                iter->pos.y - img->getFrameHeight() * iter->currentSize / 2,
+                iter->imgCount, 0, iter->currentSize);
+
+            if (iter->flipImg == false) // 애니메이션 정방향 출력
             {
-                if (iter->currentTime == iter->eraseTime) iter = vEft.erase(iter);
-                else
+                if (time % iter->frameDelay == 0 && iter->imgCount < iter->maxFrame) iter->imgCount++;
+
+                if (iter->isEraseSize) // 삭제조건 : 사이즈
                 {
-                    iter->currentTime++;
+                    iter->currentSize += iter->increaseSize;
 
-                    iter++;
+                    float cul = abs(iter->currentSize - iter->endSize);
+
+                    if (cul < 0.01)iter = vEft.erase(iter);
+                    else iter++;
+                }
+
+                else if (iter->isEraseTime == false) // 삭제조건 : 프레임
+                {
+                    if (iter->imgCount == iter->maxFrame) iter = vEft.erase(iter);
+                    else iter++;
+                }
+
+                else // 삭제조건 : 시간
+                {
+                    if (iter->currentTime == iter->eraseTime) iter = vEft.erase(iter);
+                    else
+                    {
+                        iter->currentTime++;
+
+                        iter++;
+                    }
                 }
             }
+
+            else // 애니메이션 역방향 출력
+            {
+                if (time % iter->frameDelay == 0 && iter->imgCount > 0) iter->imgCount--;
+
+                if (iter->isEraseSize) // 삭제조건 : 사이즈
+                {
+                    float cul = abs(iter->currentSize - iter->endSize);
+
+                    if (cul < 0.01)iter = vEft.erase(iter);
+                    else iter++;
+                }
+
+                else if (iter->isEraseTime == false) // 삭제조건 : 프레임
+                {
+                    if (iter->imgCount == 0) iter = vEft.erase(iter);
+                    else iter++;
+                }
+
+                else // 삭제조건 : 시간
+                {
+                    if (iter->currentTime == iter->eraseTime) iter = vEft.erase(iter);
+                    else
+                    {
+                        iter->currentTime++;
+
+                        iter++;
+                    }
+                }
+            }
+
         }
 
-        else
+        else // 프레임 이미지가 아님 (size로 삭제)
         {
-            if (time % 5 == 0 && iter->imgCount > 0) iter->imgCount--;
+            //출력
+            CAMERAMANAGER->StretchRender(hdc, img, 
+                iter->pos.x - (img->getWidth() * iter->currentSize / 2),
+                iter->pos.y - (img->getHeight() * iter->currentSize / 2),
+                iter->currentSize);
 
-            if (iter->isEraseTime == false)
-            {
-                if (iter->imgCount == 0) iter = vEft.erase(iter);
-                else iter++;
-            }
+            //사이즈 변경
+            iter->currentSize += iter->increaseSize;
 
-            else
-            {
-                if (iter->currentTime == iter->eraseTime) iter = vEft.erase(iter);
-                else
-                {
-                    iter->currentTime++;
+            //삭제
+            float cul = abs(iter->currentSize - iter->endSize);
 
-                    iter++;
-                }
-            }
+            if (cul < 0.01) iter = vEft.erase(iter);
+            else iter++;
         }
     }
 }
@@ -129,6 +176,7 @@ void effectManager::addImage()
     IMAGEMANAGER->addFrameImage("dashLDRD", "Images/effect/dashLDRD.bmp", 395, 158, 5, 2);
 
     //other
+    IMAGEMANAGER->addImage("noFrameStone", "Images/effect/notFrame/stone.bmp", 50, 56, true, RGB(255, 0, 255));
 
     //damage
     IMAGEMANAGER->addFrameImage("damageEffect", "Images/effect/monster/damageEffect.bmp", 300, 300, 4, 4);
@@ -175,7 +223,7 @@ void effectManager::setDash(string keyName, int frameY, bool flip, POINT pt)
     effect.frameY = frameY;
     effect.flipImg = flip;
     effect.maxFrame = IMAGEMANAGER->findImage(keyName)->getMaxFrameX();
-
+    
     if (!flip) effect.imgCount = 0;
     else effect.imgCount = effect.maxFrame;
 
@@ -185,19 +233,53 @@ void effectManager::setDash(string keyName, int frameY, bool flip, POINT pt)
 }
 
 //이펙트를 실행 시키기 전 addImage(frame)가 되어있는지 확인해야한다.
-void effectManager::setEffect(string keyName, POINT pt, bool flip, bool isEraseTime, int eraseTime)
+void effectManager::setEffect(string keyName, POINT pt, bool flip, bool isEraseTime, int eraseTime, int frameDelay)
 {
     tagEffect effect;
     effect.keyName = keyName;
     effect.pos = pt;
+    effect.isFrame = true;
     effect.flipImg = flip;
     effect.isEraseTime = isEraseTime;
     effect.currentTime = 0;
     effect.eraseTime = eraseTime;
     effect.maxFrame = IMAGEMANAGER->findImage(keyName)->getMaxFrameX();
+    effect.frameDelay = frameDelay;
+
+    effect.currentSize = 1.f;
 
     if (!flip) effect.imgCount = 0;
     else effect.imgCount = effect.maxFrame;
+
+    vEft.push_back(effect);
+}
+
+void effectManager::setEffect(string keyName, POINT pt, bool isFrameImg, int frameDelay, bool flip, float increaseSize, float startSize, float endSize)
+{
+    tagEffect effect;
+    effect.keyName = keyName;
+    effect.pos = pt;
+    effect.isFrame = isFrameImg;
+    effect.flipImg = flip;
+    effect.isEraseTime = false;
+    effect.currentTime = 0;
+    effect.eraseTime = 0;
+
+    effect.isEraseSize = true;
+    effect.increaseSize = increaseSize;
+    effect.currentSize = startSize;
+    effect.endSize = endSize;
+
+    if (effect.isFrame)
+    {
+        effect.maxFrame = IMAGEMANAGER->findImage(keyName)->getMaxFrameX();
+        effect.frameDelay = frameDelay;
+        if (!flip) effect.imgCount = 0;
+        else effect.imgCount = effect.maxFrame;
+    }
+
+    cout << effect.imgCount << '\n';
+    cout << effect.maxFrame << '\n';
 
     vEft.push_back(effect);
 }

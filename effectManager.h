@@ -15,8 +15,17 @@ struct tagDashEffect
 struct tagEffect
 {
 	string keyName;		// 출력할 이미지
+
+	bool isFrame;		// 프레임 이미지 인지?
+
 	int imgCount;		// 프레임렌더에 필요한 카운트
+	int frameDelay;		// 프레임 딜레이를 몇 줄지
 	bool flipImg;		// 오른쪽에서 왼쪽으로 출력?
+
+	bool isEraseSize;	// 지정 사이즈가 되면 지워질지
+	float increaseSize;	// update 한번당 사이즈 증갓값
+	float currentSize;	// 시작 사이즈
+	float endSize;		// 최종 제한 사이즈
 
 	bool isEraseTime;	// 시간이 지나면 지워질지, 프레임이 끝나면 지워질지
 	int eraseTime;		// 몇초 뒤에 지워질지
@@ -57,7 +66,9 @@ public:
 	void dashEffect(MOVE direction, POINT pos);
 
 	void setDash(string keyName, int frameY, bool flip, POINT pt);
-	void setEffect(string keyName, POINT pt, bool flip = false, bool isEraseTime = false, int eraseTime = 0);
+	void setEffect(string keyName, POINT pt, bool flip = false, bool isEraseTime = false, int eraseTime = 0, int frameDelay = 5);
+
+	void setEffect(string keyName, POINT pt, bool isFrameImg , int frameDelay ,bool flip, float increaseSize, float startSize, float endSize);
 
 	void damageEffect(POINT pt);
 };

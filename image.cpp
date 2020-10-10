@@ -395,36 +395,8 @@ void image::stretchRender(HDC hdc, int destX, int destY, float scale)
 
 	if (_isTrans) //배경색 없애고 출력
 	{
-		BitBlt(_stretchImage->hMemDC, 0, 0, _imageInfo->width, _imageInfo->height,
-			hdc, 0, 0, SRCCOPY);
-
-		// 먼저 늘이거나 줄이고
-		StretchBlt(
-			_stretchImage->hMemDC,
-			0,
-			0,
-			_imageInfo->width * scale,
-			_imageInfo->height * scale,
-			_imageInfo->hMemDC,
-			0, 0,
-			_imageInfo->width,
-			_imageInfo->height,
-			SRCCOPY
-		);
-
-		// 그 뒤에 투명화한다
-		GdiTransparentBlt(
-			hdc,
-			destX,
-			destY,
-			_imageInfo->width * scale,
-			_imageInfo->height * scale,
-			_stretchImage->hMemDC,
-			0,
-			0,
-			_imageInfo->width * scale,
-			_imageInfo->height * scale,
-			_transColor);
+		GdiTransparentBlt(hdc, destX, destY, _imageInfo->width * scale, _imageInfo->height * scale,
+			_imageInfo->hMemDC, 0, 0, _imageInfo->width, _imageInfo->height, _transColor);
 	}
 	else//원본 이미지 그대로 출력
 	{
