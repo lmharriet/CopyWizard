@@ -246,6 +246,7 @@ void effectManager::setEffect(string keyName, POINT pt, bool flip, bool isEraseT
     effect.maxFrame = IMAGEMANAGER->findImage(keyName)->getMaxFrameX();
     effect.frameDelay = frameDelay;
 
+    effect.isEraseSize = false;
     effect.currentSize = 1.f;
 
     if (!flip) effect.imgCount = 0;
