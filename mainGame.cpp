@@ -12,13 +12,9 @@ HRESULT mainGame::init()
 	/*앞으로 메인게임은 각각의 씬들만 관리를 한다*/
 	/*이곳에서 각각의 씬들을 추가하고 현재씬을 설정한다*/
 
-	//BGM_Sound
-	SOUNDMANAGER->addSound("titleBGM", "Sound/TitleScreen.mp3", true, true);
-	SOUNDMANAGER->addSound("mapToolBGM", "Sound/MapToolBGM.mp3", true, true);
-	SOUNDMANAGER->addSound("ingameBGM", "Sound/IngameBGM.mp3", true, true);
-	SOUNDMANAGER->addSound("bossBGM", "Sound/BossBGM.mp3", true, true);
-	volume = 0.5f;
+	soundInit();
 
+	
 	/*씬추가*/
 	SCENEMANAGER->addScene("시작화면", new startScene);
 	//SCENEMANAGER->addScene("픽셀충돌", new pixelCollisionScene);
@@ -31,9 +27,9 @@ HRESULT mainGame::init()
 	maptool->addImage();
 	/*현재씬*/
 
-	//SCENEMANAGER->loadScene("인게임");
+	SCENEMANAGER->loadScene("인게임");
 	//SCENEMANAGER->loadScene("시작화면");
-	SCENEMANAGER->loadScene("맵툴제작");
+	//SCENEMANAGER->loadScene("맵툴제작");
 	//SCENEMANAGER->loadScene("보스방");
 
 	ShowCursor(false);
@@ -122,4 +118,25 @@ void mainGame::volumeControl()
 			SOUNDMANAGER->setBackGroundVolume("bossBGM", volume);
 		}
 	}
+}
+
+void mainGame::soundInit()
+{
+	
+	//BGM_Sound
+	SOUNDMANAGER->addSound("titleBGM", "Sound/TitleScreen.mp3", true, true);
+	SOUNDMANAGER->addSound("mapToolBGM", "Sound/MapToolBGM.mp3", true, true);
+	SOUNDMANAGER->addSound("ingameBGM", "Sound/IngameBGM.mp3", true, true);
+	SOUNDMANAGER->addSound("bossBGM", "Sound/BossBGM.mp3", true, true);
+	
+	volume = 0.5f;
+	
+	//SFX_Sound
+	SOUNDMANAGER->addSound("playerHit", "Sound/player/hit.mp3");
+	SOUNDMANAGER->addSound("playerNomalDash", "Sound/player/NomalDash.mp3");
+	//SOUNDMANAGER->addSound("playerNomalDash", "Sound/player/.mp3");
+	//SOUNDMANAGER->addSound("playerNomalDash", "Sound/player/.mp3");
+	//SOUNDMANAGER->addSound("playerNomalDash", "Sound/player/.mp3");
+	
+
 }

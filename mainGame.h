@@ -20,4 +20,6 @@ public:
 	void render();
 
 	void volumeControl();
+	void soundInit();
+
 };

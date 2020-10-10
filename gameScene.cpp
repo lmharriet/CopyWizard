@@ -631,6 +631,5 @@ void gameScene::soundInit()
 	SOUNDMANAGER->addSound("knightHit0", "Sound/knight_hit0.mp3");
 	SOUNDMANAGER->addSound("knightHit1", "Sound/knight_hit1.mp3");
 
-	//플레이어
-	SOUNDMANAGER->addSound("playerHit", "Sound/player_hit.mp3");
+	
 }
