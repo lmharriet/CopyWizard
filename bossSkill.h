@@ -8,6 +8,7 @@ private:
 	int _count;
 	int _deleteTime;
 	int _type;
+	bool _isHit;
 	image* _wallImg;
 	image* _niddleImg;
 	image* _bossCircleImg;
@@ -22,12 +23,19 @@ public:
 	void render(HDC hdc);
 
 	void animation();
+	void collCheck();
 
 	int getCount() {
 		return _count;
 	}
 	int getDeleteTime() {
 		return _deleteTime;
+	}
+	int getType() {
+		return _type;
+	}
+	RECT getRect() {
+		return temp;
 	}
 };
 

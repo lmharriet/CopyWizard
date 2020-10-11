@@ -10,5 +10,8 @@ public:
 	void release();
 	void update();
 	void render(HDC hdc);
+	vector<bossSkill*> getVector() {
+		return _vBossSkill;
+	}
 };
 

@@ -3,6 +3,8 @@
 
 HRESULT bossSkill::init(float x, float y, int deleteTime, int type)
 {
+	//_player = new player;
+
 	_posX = x;
 	_posY = y;
 	_deleteTime = deleteTime;
@@ -37,9 +39,11 @@ HRESULT bossSkill::init(float x, float y, int deleteTime, int type)
 
 		_bossCircleImg = IMAGEMANAGER->findImage("bossCircle");
 
-		temp = RectMake(_posX, _posY, 256, 256);
 		_frameX = 0;
 		_frameY = 0;
+		break;
+	case 3:
+		temp = RectMake(_posX, _posY, 256, 256);
 		break;
 	}
 
@@ -54,6 +58,7 @@ void bossSkill::update()
 {
 	_count++;
 	this->animation();
+	this->collCheck();
 }
 
 void bossSkill::render(HDC hdc)
@@ -63,13 +68,17 @@ void bossSkill::render(HDC hdc)
 	case 0:
 		//_wallImg->frameRender(hdc, _posX, _posY, _frameX, _frameY);
 		CAMERAMANAGER->FrameRender(hdc, _wallImg, _posX, _posY, _frameX, _frameY);
+		//CAMERAMANAGER->Rectangle(hdc, temp);
 		break;
 	case 1:
 		//_niddleImg->frameRender(hdc, _posX, _posY, _frameX, _frameY);
 		CAMERAMANAGER->FrameRender(hdc, _niddleImg, _posX, _posY, _frameX, _frameY);
+		//CAMERAMANAGER->Rectangle(hdc, temp);
 		break;
 	case 2:
 		CAMERAMANAGER->AlphaFrameRender(hdc, _bossCircleImg, _posX, _posY, _frameX, _frameY, 7);
+		//CAMERAMANAGER->Rectangle(hdc, temp);
+		break;
 	}
 }
 
@@ -106,4 +115,12 @@ void bossSkill::animation()
 		break;
 	}
 
+}
+
+void bossSkill::collCheck()
+{
+	RECT _temp;
+	/*if (IntersectRect(&_temp, &temp, &_player->getRect)) {
+		cout << "Ãæµ¹" << endl;
+	}*/
 }
