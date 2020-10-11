@@ -175,6 +175,9 @@ void player::other_update()
 	dashCount++;
 	atkCount++;
 
+	gaugeTime++;
+	PLAYERDATA->setGaugeTime(gaugeTime);
+
 	// angle(mouse-player), angleTenth
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
@@ -483,7 +486,8 @@ void player::dashFunction()
 
 void player::blazeSetUp()
 {
-	if (INPUT->GetKeyDown(VK_LBUTTON) && !inferno->getGauging() && meteorStateCool == 0)
+	if (INPUT->GetKeyDown(VK_LBUTTON) &&!blaze->getCool()&&
+		!inferno->getGauging() && meteorStateCool == 0)
 	{
 		UI->addCoolTime(0);
 		blazeCount = 3;
@@ -517,7 +521,6 @@ void player::blazeSetUp()
 	{
 		if (blaze->getCol(i))
 		{
-			//basic = false;
 			blaze->removeBomb(i);
 		}
 	}

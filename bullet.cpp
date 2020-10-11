@@ -220,9 +220,13 @@ HRESULT bomb::init(int bulletMax, float range)
 	_range = range;
 	_bulletMax = bulletMax;
 
-	ranAtk = 5;
-	criticalHit = 20;
+	ranAtk = 10;
+	criticalHit = 25;
 	count = index = 0;
+
+	isCoolTime = false;
+	coolTime = 30;
+	currentCoolTime = 0;
 	return S_OK;
 }
 
@@ -246,6 +250,16 @@ void bomb::update()
 		if (index > 3)index = 0;
 	}
 	this->move();
+
+	if (isCoolTime)
+	{
+		currentCoolTime++;
+		if (currentCoolTime == coolTime)
+		{
+			isCoolTime = false;
+			currentCoolTime = 0;
+		}
+	}
 }
 
 void bomb::render()
@@ -256,7 +270,7 @@ void bomb::render()
 			_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth() / 2),
 			_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight() / 2), index, 0);
 
-		CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 20, 20));
+		if (INPUT->GetToggleKey('L'))CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 20, 20));
 	}
 }
 
@@ -270,7 +284,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	//총알 구조체 초기화
 	//제로메모리, 멤셋
 	//구조체 변수들의 값을 한번에 0으로 초기화 시켜준다
-
+	ranAtk = RANDOM->range(10, 18);
 
 	bullet.bulletImage = IMAGEMANAGER->addFrameImage("blaze", "resource/player/blaze.bmp", 288, 96, 3, 1, true, RGB(255, 0, 255));
 	bullet.x = bullet.fireX = x;
@@ -278,15 +292,23 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	bullet.speed = speed;
 	bullet.angle = angle;
 	bullet.radius = radius;
-	bullet.atkPower = RANDOM->range(5, 12);
 	bullet.collision = false;
 	bullet.rc = RectMakeCenter(bullet.x, bullet.y, radius * 2, radius * 2);
 
+	//크리티컬 데미지
+	if (ranAtk > 12 && count % 5 == 0)
+		bullet.atkPower = criticalHit;
+	//랜덤 데미지
+	else
+		bullet.atkPower = ranAtk;
+
 	_vBullet.push_back(bullet);
 
+	isCoolTime = true;
+
 	//sound
-	SOUNDMANAGER->play("blazeFire", false,0.3f);
-	
+	SOUNDMANAGER->play("blazeFire", false, 0.3f);
+
 }
 
 void bomb::move()
@@ -326,7 +348,7 @@ void bomb::move()
 //폭탄삭제
 void bomb::removeBomb(int index)
 {
-	
+
 	_vBullet.erase(_vBullet.begin() + index);
 }
 
@@ -345,6 +367,8 @@ HRESULT meteor::init()
 	count = index = 0;
 	circleCount = CircleIndex = 0;
 
+	ranAtk = 20;
+	criticalHit = 45;
 	return S_OK;
 }
 
@@ -372,13 +396,25 @@ void meteor::update()
 	//데미지 넣을 용도
 	for (int i = 0; i < vDamage.size();)
 	{
-		vDamage[i].lifeTime--;
+		if (vDamage[i].lifeTime > 0)
+		{
+			ranAtk = RANDOM->range(20, 35);
+			//크리티컬
+			if (ranAtk > 30 && count % 3 == 0)
+				vDamage[i].atkPower = criticalHit;
+			//랜덤 데미지
+			else vDamage[i].atkPower = ranAtk;
+			
+			vDamage[i].lifeTime--;
+		}
 		if (vDamage[i].lifeTime == 0)
 		{
 			vDamage.erase(vDamage.begin() + i);
 		}
 		else
+		{
 			i++;
+		}
 	}
 }
 
@@ -413,7 +449,6 @@ void meteor::render()
 			vMeteor[i].x - vMeteor[i].img->getFrameWidth() / 2 - 10,
 			vMeteor[i].y - vMeteor[i].img->getFrameHeight() / 2 - 50,
 			index, 0);
-	
 	}
 
 	for (int i = 0; i < vDamage.size(); i++)
@@ -442,7 +477,6 @@ void meteor::creatMeteor(float x, float y, float angle)
 
 	tagMeteor meteor;
 	meteor.endY = y;
-	meteor.atkPower = 22;
 	meteor.img = IMAGEMANAGER->findImage("meteor");
 
 	float cul = 110 * (PI / 180);
@@ -467,7 +501,6 @@ void meteor::move()
 		//이동
 		vMeteor[i].x += cosf(vMeteor[i].angle) * vMeteor[i].speed;
 		vMeteor[i].y -= sinf(vMeteor[i].angle) * vMeteor[i].speed;
-		vMeteor[i].atkPower = 22;
 		vMeteor[i].rc = RectMakeCenter(vMeteor[i].x, vMeteor[i].y, 100, 100);
 
 		//삭제
@@ -481,7 +514,6 @@ void meteor::move()
 			damage.y = vCircle[i].y;
 			damage.angle = vMeteor[i].angle; //메테오 방향으로 넉백시킬 때 사용
 			damage.lifeTime = 30;
-			damage.atkPower = 22;
 			damage.rc = RectMakeCenter(damage.x, damage.y, 100, 100);
 			vDamage.push_back(damage);
 
@@ -495,21 +527,21 @@ void meteor::move()
 			CircleIndex = 0;
 
 		}
-		else i++;
+		else
+			i++;
 	}
-
 }
 
 
 //DASH
 HRESULT dashFire::init()
 {
-
-	//gameScene 조건 바꾸기 , damage에 isCoolTime false일때 조건 넣기
 	isCoolTime = false;
 	coolTime = 240;
 	currentCoolTime = 0;
 
+	ranAtk = 7;
+	criticalHit = 20;
 	return S_OK;
 }
 
@@ -560,28 +592,32 @@ void dashFire::render()
 
 void dashFire::singleRender(int index)
 {
+	vDash[index].lifeTime++;
 
-	_vDash[index].lifeTime++;
+	ranAtk = RANDOM->range(7, 15);
+	if (ranAtk > 12 && vDash[index].lifeTime % 9 == 0)
+		vDash[index].atkPower = criticalHit;
+	else vDash[index].atkPower = ranAtk;
+
+	//cout << vDash[index].atkPower << '\n';
+
 
 	image* img = IMAGEMANAGER->findImage("flame");
 
 	CAMERAMANAGER->FrameRender(getMemDC(), img,
-		_vDash[index].x - img->getFrameWidth() / 2,
-		_vDash[index].y - img->getFrameHeight() / 2 - 20, _vDash[index].frameX, 0);
+		vDash[index].x - img->getFrameWidth() / 2,
+		vDash[index].y - img->getFrameHeight() / 2 - 20, vDash[index].frameX, 0);
 
-	if (INPUT->GetToggleKey('L'))	CAMERAMANAGER->Ellipse(getMemDC(), _vDash[index].rc);
-	if (_vDash[index].lifeTime == 180)
+	if (INPUT->GetToggleKey('L'))	CAMERAMANAGER->Ellipse(getMemDC(), vDash[index].rc);
+	if (vDash[index].lifeTime == 180)
 	{
-		_vDash.erase(_vDash.begin() + index);
+		vDash.erase(vDash.begin() + index);
 	}
 	else
 	{
-		if (_vDash[index].lifeTime % 5 == 0) _vDash[index].frameX++;
-		if (_vDash[index].frameX == img->getMaxFrameX()) _vDash[index].frameX = 0;
+		if (vDash[index].lifeTime % 5 == 0) vDash[index].frameX++;
+		if (vDash[index].frameX == img->getMaxFrameX()) vDash[index].frameX = 0;
 	}
-
-
-
 }
 
 void dashFire::fire(float x, float y)
@@ -592,9 +628,9 @@ void dashFire::fire(float x, float y)
 	dash.y = y;
 	dash.frameX = 0;
 	dash.lifeTime = 0;
-	dash.atkPower = 7;
-	_vDash.push_back(dash);
-	
+	dash.atkPower = ranAtk;
+	vDash.push_back(dash);
+
 }
 
 //추가 스킬 RAGING INFERNO
@@ -607,7 +643,8 @@ HRESULT RagingInferno::init()
 	distance = 0;
 	currentCoolTime = 0;
 	coolTime = 300;
-	ranAtkPower = 0;
+	ranAtkPower = 15;
+	criticalHit = 30;
 
 	isFire = gauging = isActive = false;
 	isCoolTime = false;
@@ -650,10 +687,7 @@ void RagingInferno::update(int* gaugeTime)
 			isCoolTime = false;
 			currentCoolTime = 0;
 		}
-
 	}
-
-
 }
 
 void RagingInferno::render()
@@ -698,7 +732,6 @@ void RagingInferno::render()
 	{
 		if (vTail.empty() == false)vTail.clear();
 	}
-
 }
 
 void RagingInferno::fire(float x, float y, float angle, int* gaugeTime)
@@ -708,7 +741,7 @@ void RagingInferno::fire(float x, float y, float angle, int* gaugeTime)
 	inferno.x = inferno.fireX = x + cosf(angle) * inferno.speed;
 	inferno.y = inferno.fireY = y - sinf(angle) * inferno.speed;
 	inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
-	inferno.lifeTime = 100;
+	inferno.lifeTime = 80;
 	inferno.atkPower = 7;
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
@@ -743,7 +776,7 @@ void RagingInferno::move(int gaugeTime)
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 5, 5.f, 0.7f, 10);
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 7, 7.f, 0.6f, 10);
 			SOUNDMANAGER->play("RagingInfernoExp", false);
-			
+
 		}
 
 		if (gaugeTime >= 50)
@@ -752,8 +785,14 @@ void RagingInferno::move(int gaugeTime)
 			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 150, 150);
 
 			inferno.lifeTime--;
+			ranAtkPower = RANDOM->range(15, 22);
+			
+			if (ranAtkPower > 20 && time % 10 == 0)
+				inferno.atkPower = criticalHit;
+			else inferno.atkPower = ranAtkPower;
+			cout << inferno.atkPower << '\n';
 
-			if (time % 35 == 0)
+			if (time % 30 == 0)
 			{
 				tagTail tail;
 				tail.currentTime = 0;
@@ -788,7 +827,7 @@ void RagingInferno::move(int gaugeTime)
 		if (inferno.lifeTime == 0)
 		{
 			PARTICLE->explosionParticlePlay(inferno.x, inferno.y);
-			
+
 			inferno.x = inferno.fireX;
 			inferno.y = inferno.fireY;
 			isFire = false;

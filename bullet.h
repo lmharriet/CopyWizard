@@ -119,6 +119,12 @@ private:
 
 	int ranAtk;
 	int criticalHit;
+
+	bool isCoolTime;	// 스킬 쿨타임이 돌고있는지 아닌지
+
+	int coolTime;		// 몇초간 스킬 사용을 금할지
+	int currentCoolTime;	// 쿨타임이 다 돌면 isCoolTime을 false
+
 public:
 	HRESULT init(int bulletMax, float range);
 	void release();
@@ -136,6 +142,7 @@ public:
 	//총알벡터 가져오기
 	vector<tagBullet> getBullet() { return _vBullet; }
 
+	bool getCool() { return isCoolTime; }
 	bool getCol(int index) { return _vBullet[index].collision; }
 	int getSize() { return _vBullet.size(); }
 
@@ -161,13 +168,18 @@ private:
 	vector<tagMeteor> vMeteor;
 	vector<tagCircle> vCircle;
 	vector<tagMeteor> vDamage;
-	int count, index;
-	int circleCount, CircleIndex;
+
 
 	bool isCoolTime;	// 스킬 쿨타임이 돌고있는지 아닌지
 
 	int coolTime;		// 몇초간 스킬 사용을 금할지
 	int currentCoolTime;	// 쿨타임이 다 돌면 isCoolTime을 false
+
+	int ranAtk;
+	int criticalHit;
+
+	int count, index;
+	int circleCount, CircleIndex;
 
 public:
 	HRESULT init();
@@ -199,12 +211,17 @@ public:
 class dashFire :public gameNode
 {
 private:
-	vector<tagArcana> _vDash;
+	vector<tagArcana> vDash;
+
+	int ranAtk;
+	int criticalHit;
 
 	int coolTime;
 	int currentCoolTime;
 
 	bool isCoolTime;
+
+
 public:
 	HRESULT init();
 	void release();
@@ -217,11 +234,11 @@ public:
 
 	//getter, setter
 	
-	RECT getRect(int index) { return _vDash[index].rc; }
-	int getSize() { return _vDash.size(); }
-	int getAtk(int index) { return _vDash[index].atkPower; }
+	RECT getRect(int index) { return vDash[index].rc; }
+	int getSize() { return vDash.size(); }
+	int getAtk(int index) { return vDash[index].atkPower; }
 	int getSkillNum() { return 2; }
-	float getY(int index) { return _vDash[index].y; }
+	float getY(int index) { return vDash[index].y; }
 
 	bool getIsCoolTime() { return isCoolTime; }
 
@@ -260,6 +277,7 @@ private:
 	int time;
 
 	int ranAtkPower;
+	int criticalHit;
 
 	//cool Time
 	bool isCoolTime;	// 스킬 쿨타임이 돌고있는지 아닌지
