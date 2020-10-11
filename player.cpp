@@ -232,14 +232,7 @@ void player::render()
 	int tempAngle = attackAngle * (18 / PI);
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
 	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, tempAngle, 0, 50);
-
-	for (int i = 0; i < 4; i++)
-	{
-		CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i].rc);
-		CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i + 4].rc);
-		CAMERAMANAGER->Rectangle(getMemDC(), diagonalCheck[i].rc);
-	}
-
+	
 	bool isRender = false;
 
 	// DASH FIRE RENDER
@@ -260,6 +253,16 @@ void player::render()
 	flares->render();
 	Meteor->render();
 	inferno->render();
+
+	if (INPUT->GetToggleKey('L'))
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i].rc);
+			CAMERAMANAGER->Rectangle(getMemDC(), tileCheck[i + 4].rc);
+			CAMERAMANAGER->Rectangle(getMemDC(), diagonalCheck[i].rc);
+		}
+	}
 
 	viewText();
 }
@@ -296,9 +299,9 @@ void player::controller()
 		if (!tileCheck[(int)DIRECTION::LEFT].isCol /*&& !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol*/)
 			posX -= 8;
 		walkCount++;
-		if (walkCount== 16)
+		if (walkCount == 16)
 		{
-			SOUNDMANAGER->play("playerFoot", false,0.15f);
+			SOUNDMANAGER->play("playerFoot", false, 0.15f);
 			walkCount = 0;
 		}
 	}
@@ -311,7 +314,7 @@ void player::controller()
 		walkCount++;
 		if (walkCount == 16)
 		{
-			SOUNDMANAGER->play("playerFoot", false,0.15f);
+			SOUNDMANAGER->play("playerFoot", false, 0.15f);
 			walkCount = 0;
 		}
 	}
@@ -347,7 +350,7 @@ void player::controller()
 	{
 		//대쉬 이펙트 생성
 		EFFECT->dashEffect(move, { (long)posX,(long)posY });
-		SOUNDMANAGER->play("playerNomalDash",false,0.7f);
+		SOUNDMANAGER->play("playerNomalDash", false, 0.7f);
 		state = STATE::DASH;
 
 		switch (move)
@@ -397,10 +400,10 @@ void player::dashFunction()
 
 	if (!searingRush->getIsCoolTime() &&
 		(speed == 8 || speed == 11 || speed == 14 || speed == 17))
-	
+
 		searingRush->fire(posX, posY);
-	
-	if(!searingRush->getIsCoolTime() && speed==17) //sound
+
+	if (!searingRush->getIsCoolTime() && speed == 17) //sound
 		SOUNDMANAGER->play("playerfireDash", false);
 
 	if (speed == 7)
@@ -486,8 +489,8 @@ void player::dashFunction()
 
 void player::blazeSetUp()
 {
-	if (INPUT->GetKeyDown(VK_LBUTTON) &&!blaze->getCool()&&
-		!inferno->getGauging() && meteorStateCool == 0)
+	if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool() &&
+		!inferno->getGauging() && meteorStateCool == 0 && speed == 0)
 	{
 		UI->addCoolTime(0);
 		blazeCount = 3;
@@ -498,7 +501,7 @@ void player::blazeSetUp()
 	if (stateCool == 0 && basic)
 	{
 		//basic 공격 할 때 앵글을 저장
-	
+
 		stateCool = 10;
 
 		float x = cosf(attackAngle) * 50.f + posX;
@@ -512,7 +515,7 @@ void player::blazeSetUp()
 	{
 		state = STATE::BASIC;
 		stateCool--;
-		
+
 	}
 
 	if (blazeCount == 0)basic = false;
@@ -533,7 +536,8 @@ void player::blazeSetUp()
 
 void player::standardSetUp()
 {
-	if (INPUT->GetKeyDown(VK_RBUTTON) && !inferno->getCool() && meteorStateCool == 0)
+	if (INPUT->GetKeyDown(VK_RBUTTON) &&
+		!inferno->getCool() && meteorStateCool == 0 && speed == 0)
 	{
 		standard = true;
 		saveAngle2 = attackAngle;
@@ -552,7 +556,8 @@ void player::signatureSetUp()
 {
 	float mouseX = CAMERAMANAGER->GetAbsoluteX(_ptMouse.x);
 	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
-	if (signature && meteorStateCool == 0 && !Meteor->getCool() && !inferno->getGauging())
+	if (signature && meteorStateCool == 0 &&
+		!Meteor->getCool() && !inferno->getGauging() && speed == 0)
 	{
 		meteorStateCool = 30;
 
@@ -1093,19 +1098,8 @@ void player::damagedCool()
 //del
 void player::viewText()
 {
-	char str[126];
 
 
-	for (int i = 0; i < 8; i++)
-	{
-		wsprintf(str, " tilecheck[%d] : %d", i, tileCheck[i].isCol);
-		textOut(getMemDC(), 10, 150 + (i * 20), str, WHITE);
-		if (i < 4)
-		{
-			wsprintf(str, "dianoanl[%d] : %d", i, diagonalCheck[i].isCol);
-			textOut(getMemDC(), 10, 300 + (i * 20), str, WHITE);
-		}
-	}
 
 	//wsprintf(str, "damageAngle : %d", damageAngle);
 	//textOut(getMemDC(), 100, 230, str, WHITE);

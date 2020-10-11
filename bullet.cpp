@@ -599,8 +599,6 @@ void dashFire::singleRender(int index)
 		vDash[index].atkPower = criticalHit;
 	else vDash[index].atkPower = ranAtk;
 
-	//cout << vDash[index].atkPower << '\n';
-
 
 	image* img = IMAGEMANAGER->findImage("flame");
 
@@ -741,7 +739,7 @@ void RagingInferno::fire(float x, float y, float angle, int* gaugeTime)
 	inferno.x = inferno.fireX = x + cosf(angle) * inferno.speed;
 	inferno.y = inferno.fireY = y - sinf(angle) * inferno.speed;
 	inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
-	inferno.lifeTime = 80;
+	inferno.lifeTime = 100;
 	inferno.atkPower = 7;
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
@@ -790,9 +788,8 @@ void RagingInferno::move(int gaugeTime)
 			if (ranAtkPower > 20 && time % 10 == 0)
 				inferno.atkPower = criticalHit;
 			else inferno.atkPower = ranAtkPower;
-			cout << inferno.atkPower << '\n';
 
-			if (time % 30 == 0)
+			if (time % 35 == 0)
 			{
 				tagTail tail;
 				tail.currentTime = 0;
