@@ -522,7 +522,7 @@ void gameScene::playerAttack()
 			if (0 >= enemy->getMinion()[j]->getHp())continue;
 			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRC()))
 			{
-
+				SOUNDMANAGER->play("blazeExp", false,0.3f);
 				PARTICLE->explosionGenerate("explosionParticle", _player->getBlaze()->getBullet()[i].x + 20,
 					_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
 				enemy->getMinion()[j]->hit(_player->getBlaze()->getBullet()[i].atkPower,

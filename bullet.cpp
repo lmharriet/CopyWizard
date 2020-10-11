@@ -285,7 +285,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	_vBullet.push_back(bullet);
 
 	//sound
-	SOUNDMANAGER->play("blazeFire", false);
+	SOUNDMANAGER->play("blazeFire", false,0.3f);
 	
 }
 
