@@ -397,7 +397,7 @@ void player::dashFunction()
 	
 		searingRush->fire(posX, posY);
 	
-	if(speed==17) //sound
+	if(!searingRush->getIsCoolTime() && speed==17) //sound
 		SOUNDMANAGER->play("playerfireDash", false);
 
 	if (speed == 7)
