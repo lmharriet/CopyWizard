@@ -283,6 +283,9 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	bullet.rc = RectMakeCenter(bullet.x, bullet.y, radius * 2, radius * 2);
 
 	_vBullet.push_back(bullet);
+
+	//sound
+	SOUNDMANAGER->play("blazeFire", false);
 	
 }
 
@@ -298,6 +301,7 @@ void bomb::move()
 		if (_range < distance)
 		{
 			PARTICLE->explosionGenerate("explosionParticle", _vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3, true);
+			SOUNDMANAGER->play("blazeExp", false);
 			//_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
 			_vBullet[i].collision = true;
 		}
@@ -310,6 +314,8 @@ void bomb::move()
 			if (colCheck(PLAYERDATA->_getTile()[num].rc, _vBullet[i].rc))
 			{
 				PARTICLE->explosionGenerate("explosionParticle", _vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3, true);
+				//sound
+				SOUNDMANAGER->play("blazeExp", false);
 				_vBullet.erase(_vBullet.begin() + i);
 				break;
 			}
@@ -320,6 +326,7 @@ void bomb::move()
 //ÆøÅº»èÁ¦
 void bomb::removeBomb(int index)
 {
+	
 	_vBullet.erase(_vBullet.begin() + index);
 }
 
@@ -587,6 +594,7 @@ void dashFire::fire(float x, float y)
 	dash.lifeTime = 0;
 	dash.atkPower = 7;
 	_vDash.push_back(dash);
+	
 }
 
 //Ãß°¡ ½ºÅ³ RAGING INFERNO
@@ -705,6 +713,7 @@ void RagingInferno::fire(float x, float y, float angle, int* gaugeTime)
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
+	SOUNDMANAGER->play("RagingInfernoFire", false);
 	*gaugeTime = 0;
 	isFire = true;
 	gauging = true;
@@ -733,6 +742,8 @@ void RagingInferno::move(int gaugeTime)
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 3, 3.f, 0.8f, 10);
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 5, 5.f, 0.7f, 10);
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 7, 7.f, 0.6f, 10);
+			SOUNDMANAGER->play("RagingInfernoExp", false);
+			
 		}
 
 		if (gaugeTime >= 50)
@@ -777,7 +788,7 @@ void RagingInferno::move(int gaugeTime)
 		if (inferno.lifeTime == 0)
 		{
 			PARTICLE->explosionParticlePlay(inferno.x, inferno.y);
-
+			
 			inferno.x = inferno.fireX;
 			inferno.y = inferno.fireY;
 			isFire = false;

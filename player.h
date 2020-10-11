@@ -50,6 +50,8 @@ private:
 	int dashCount,dashIndex;
 	int atkCount, atkIndex;
 	int count, index;
+
+	
 	
 	//damage
 	float damageAngle;
@@ -67,6 +69,9 @@ private:
 	bool isLeft, isRight, isUp, isDown;
 	
 	bool isDead;
+
+	//sound
+	int walkCount;
 
 public:
 	HRESULT init();

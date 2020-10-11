@@ -65,6 +65,8 @@ HRESULT player::init()
 	isDamaged = false;
 	isDead = false;
 
+	//sound
+	walkCount = 0;
 
 	return S_OK;
 }
@@ -290,6 +292,12 @@ void player::controller()
 		rc = RectMakeCenter(posX, posY, 50, 50);
 		if (!tileCheck[(int)DIRECTION::LEFT].isCol /*&& !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol*/)
 			posX -= 8;
+		walkCount++;
+		if (walkCount== 16)
+		{
+			SOUNDMANAGER->play("playerFoot", false,0.15f);
+			walkCount = 0;
+		}
 	}
 	//오른쪽
 	if (isRight)
@@ -297,6 +305,12 @@ void player::controller()
 		rc = RectMakeCenter(posX, posY, 50, 50);
 		if (!tileCheck[(int)DIRECTION::RIGHT].isCol /*&& !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol*/)
 			posX += 8;
+		walkCount++;
+		if (walkCount == 16)
+		{
+			SOUNDMANAGER->play("playerFoot", false,0.15f);
+			walkCount = 0;
+		}
 	}
 	//위
 	if (isUp)
@@ -304,6 +318,12 @@ void player::controller()
 		rc = RectMakeCenter(posX, posY, 50, 50);
 		if (/*!tileCheck[(int)DIRECTION::TOP].isCol &&*/ !tileCheck[(int)DIRECTION::LEFT_TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol)
 			posY -= 8;
+		walkCount++;
+		if (walkCount == 16)
+		{
+			SOUNDMANAGER->play("playerFoot", false, 0.15f);
+			walkCount = 0;
+		}
 	}
 	//아래
 	if (isDown)
@@ -311,6 +331,12 @@ void player::controller()
 		rc = RectMakeCenter(posX, posY, 50, 50);
 		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol && !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol)
 			posY += 8;
+		walkCount++;
+		if (walkCount == 16)
+		{
+			SOUNDMANAGER->play("playerFoot", false, 0.15f);
+			walkCount = 0;
+		}
 	}
 
 	//DASH
@@ -318,6 +344,7 @@ void player::controller()
 	{
 		//대쉬 이펙트 생성
 		EFFECT->dashEffect(move, { (long)posX,(long)posY });
+		SOUNDMANAGER->play("playerNomalDash",false,0.7f);
 		state = STATE::DASH;
 
 		switch (move)
@@ -367,12 +394,17 @@ void player::dashFunction()
 
 	if (!searingRush->getIsCoolTime() &&
 		(speed == 8 || speed == 11 || speed == 14 || speed == 17))
+	
 		searingRush->fire(posX, posY);
+	
+	if(speed==17) //sound
+		SOUNDMANAGER->play("playerfireDash", false);
 
 	if (speed == 7)
 	{
 		UI->addCoolTime("searingDash");
 		searingRush->setIsCoolTime(true);
+		//cout << "cc" << endl;
 	}
 
 	if (dashLeft)
