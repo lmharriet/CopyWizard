@@ -24,7 +24,7 @@ struct tagBlock
 	float angle;
 	int type;
 	int blockCount;
-	bool isNear;
+	bool isFire;
 };
 class player;
 class boss : public gameNode
@@ -37,9 +37,11 @@ public:
 	}
 private:
 	tagBoss boss;
-	tagBlock block[3];
+	//tagBlock block[3];
 	tagBlock drillBlcok;
-	tagBlock niddleBlock[5];
+	//tagBlock niddleBlock[5];
+	vector<tagBlock*> niddleBlock;
+	vector<tagBlock*> punchBlock;
 	vector<tagBlock> wallBlock;
 
 	int count, timer;
@@ -88,6 +90,9 @@ public:
 	void middleWood();
 	void wall(int patternType);
 	void bossPattern();
+	void collCheck();
+	void punchSet();
+	void punchRectMove();
 
 	RECT getBossRect() {
 		return boss.rc;
