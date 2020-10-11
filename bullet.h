@@ -161,6 +161,10 @@ struct tagCircle
 
 	int lifeTime;
 	bool isCol;
+
+
+	int count;
+	int index;
 };
 class meteor :public gameNode
 {
@@ -179,7 +183,14 @@ private:
 	int criticalHit;
 
 	int count, index;
-	int circleCount, CircleIndex;
+
+	
+	//upgrade용
+	POINT save;
+	int ranCount;
+	int meteorCount;
+	bool upgrade;
+	bool isReady;
 
 public:
 	HRESULT init();
@@ -191,6 +202,7 @@ public:
 	void creatMeteor(float x, float y,float angle);
 
 	
+	
 	void move();
 	bool getCool() { return isCoolTime; }
 	int getSkillNum() { return 1; }
@@ -199,7 +211,7 @@ public:
 	//충돌 + 데미지용
 	int  getColSize() { return vDamage.size(); }
 	int getAtkPower(int index) { return vDamage[index].atkPower; }
-	float getAngle(int angle) { return vDamage[index].angle; }
+	float getAngle(int index) { return vDamage[index].angle; }
 	RECT getColRect(int index) { return vDamage[index].rc; }
 
 };

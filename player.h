@@ -45,8 +45,13 @@ private:
 	int infernoStateCool;
 	int meteorStateCool;
 	
-	int blazeCount;
-	
+	int blazeCount, meteorCount;
+
+	//skill upgrade
+	int power;
+	bool upgrade;
+
+	//animation count , index
 	int dashCount,dashIndex;
 	int atkCount, atkIndex;
 	int count, index;
@@ -87,8 +92,8 @@ public:
 	void dashFunction();
 	void resetKey();
 	void blazeSetUp();
-	void standardSetUp();
-	void signatureSetUp();
+	void infernoSetUp();
+	void meteorSetUp();
 
 	void takeCoin();
 	void takeHealball();

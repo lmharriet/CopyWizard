@@ -543,7 +543,6 @@ void gameScene::playerAttack()
 				_player->getBlaze()->setCol(i, true);
 
 				break;
-
 			}
 		}
 	}
@@ -556,8 +555,16 @@ void gameScene::playerAttack()
 			if (0 >= enemy->getMinion()[j]->getHp())continue;
 			if (colCheck(_player->getMeteor()->getColRect(i), enemy->getMinion()[j]->getRC()))
 			{
-				enemy->getMinion()[j]->hit(_player->getMeteor()->getAtkPower(i),
-					_player->getMeteor()->getAngle(i), 30.f, _player->getMeteor()->getSkillNum());
+				//데미지 계산
+				int damage = _player->getMeteor()->getAtkPower(i) + RANDOM->range(0, 5);
+
+				//크리티컬?
+				if (PLAYERDATA->criAppear()) damage = (float)damage * PLAYERDATA->getStat().criDamage;
+
+				else damage = (float)damage * PLAYERDATA->getStat().damage;
+
+				enemy->getMinion()[j]->hit(damage, _player->getMeteor()->getAngle(i),
+					30.f, _player->getMeteor()->getSkillNum());
 
 				break;
 			}

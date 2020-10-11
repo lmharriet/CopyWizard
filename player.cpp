@@ -47,7 +47,7 @@ HRESULT player::init()
 	speed = gaugeTime = 0;
 
 	//animation count ,index
-	atkCount = atkIndex = index = dashIndex = count = dashCount = basicCount =basicIndex  = 0;
+	atkCount = atkIndex = index = dashIndex = count = dashCount = basicCount = basicIndex = 0;
 	stateCool = infernoStateCool = meteorStateCool = 0;
 
 
@@ -143,8 +143,8 @@ void player::update()
 	dashFunction();
 	changeState();
 	blazeSetUp();
-	standardSetUp();
-	signatureSetUp();
+	infernoSetUp();
+	meteorSetUp();
 
 	damagedCool();
 	//
@@ -217,10 +217,12 @@ void player::other_update()
 	dashFunction();
 	changeState();
 	blazeSetUp();
-	standardSetUp();
+	infernoSetUp();
+	meteorSetUp();
 
-	signatureSetUp();
 	damagedCool();
+
+
 	//
 	takeCoin();
 	takeHealball();
@@ -239,7 +241,7 @@ void player::render()
 	int tempAngle = attackAngle * (18 / PI);
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
 	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, tempAngle, 0, 50);
-	
+
 	bool isRender = false;
 
 	// DASH FIRE RENDER
@@ -478,7 +480,8 @@ void player::dashFunction()
 	else if (dashUp)
 	{
 		//순수 UP
-		if (!tileCheck[(int)DIRECTION::TOP].isCol)
+		if (!tileCheck[(int)DIRECTION::TOP].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol 
+			&& !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol)
 			posY -= speed;
 
 	}
@@ -486,7 +489,7 @@ void player::dashFunction()
 	else if (dashDown)
 	{
 		//순수 DOWN
-		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol)
+		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol&&!diagonalCheck[2].isCol && !diagonalCheck[3].isCol)
 			posY += speed;
 	}
 
@@ -541,7 +544,7 @@ void player::blazeSetUp()
 	//else basic = false;
 }
 
-void player::standardSetUp()
+void player::infernoSetUp()
 {
 	if (INPUT->GetKeyDown(VK_RBUTTON) &&
 		!inferno->getCool() && meteorStateCool == 0 && speed == 0)
@@ -559,37 +562,37 @@ void player::standardSetUp()
 
 }
 
-void player::signatureSetUp()
+void player::meteorSetUp()
 {
 	float mouseX = CAMERAMANAGER->GetAbsoluteX(_ptMouse.x);
 	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
-	if (signature && meteorStateCool == 0 &&
-		!Meteor->getCool() && !inferno->getGauging() && speed == 0)
+	//Attack
+	if (INPUT->GetKeyDown('Q')
+		&& !Meteor->getCool() && !inferno->getGauging() && speed == 0)
 	{
-		meteorStateCool = 30;
+		signature = true;
 
-		Meteor->creatMeteor(mouseX, mouseY, 0);
+		if (meteorStateCool == 0)
+		{
+			meteorStateCool = 30;
+			Meteor->creatMeteor(mouseX, mouseY, 0);
+		}
+
 	}
+
 	if (meteorStateCool > 0)
 	{
 		state = STATE::SIGNATURE;
 		meteorStateCool--;
+
+		if (meteorStateCool == 0) signature = false;
 	}
 }
 
 void player::takeCoin()
 {
-	//float speed = 0.01f;
-
 	for (int i = 0; i < DROP->getCoinVec().size(); i++)
 	{
-
-		//speed *= 1.01f;
-		//float angle = getAngle(posX, posY, DROP->getCoinPt(i).x, DROP->getCoinPt(i).y);
-
-		//DROP->setCoinPt(i, -cosf(angle) * speed, +sinf(angle) * speed);
-		//DROP->setRect(i);
-
 		if (colCheck(rc, DROP->getCoinRect(i)))
 		{
 			PLAYERDATA->setCoin(PLAYERDATA->getCoin() + DROP->getCoinVec()[i].money);
@@ -608,9 +611,7 @@ void player::takeHealball()
 			PARTICLE->potionParticlePlay(posX, posY);
 			DROP->delHeal(i);
 		}
-
 	}
-
 }
 
 void player::animation()
@@ -773,7 +774,7 @@ void player::animation()
 			if (basicCount % 5 == 0)
 			{
 				basicIndex++;
-				if (basicIndex > 6 || stateCool ==0)basicIndex = 0;
+				if (basicIndex > 6 || stateCool == 0)basicIndex = 0;
 			}
 			frameAnimation(basicIndex, 14);
 			//위쪽 공격 끝나면 위쪽 향하기
@@ -785,7 +786,7 @@ void player::animation()
 			if (basicCount % 5 == 0)
 			{
 				basicIndex++;
-				if (basicIndex > 6 || stateCool ==0)basicIndex = 0;
+				if (basicIndex > 6 || stateCool == 0)basicIndex = 0;
 			}
 			frameAnimation(basicIndex, 6);
 			//아래쪽 공격 끝나면 아래쪽 향하기
@@ -1051,9 +1052,7 @@ void player::buttonDown()
 	if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))isDown = true;
 	else isDown = false;
 
-	//Attack
-	if (INPUT->GetKeyDown('Q'))	signature = true;
-	else signature = false;
+
 }
 
 void player::death()

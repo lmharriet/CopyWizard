@@ -84,7 +84,7 @@ void dropManager::dropPoint(POINT pt, int minCoin, int maxCoin, float healBallPe
     vTransfer.push_back({ gCoin,sCoin,bCoin,pt });
 
     //포션 생성 (후에 플레이어 포션 드랍율을 매개변수로 받아와 포션 드랍 유/무를 정한다)
-    float sum = 0.1f + healBallPercentage;
+    float sum = 0.1f + PLAYERDATA->getStat().potionDropChance;
     //최대 100%
     if (sum > 1.0f)sum = 1.0f;
 

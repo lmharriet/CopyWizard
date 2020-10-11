@@ -244,7 +244,7 @@ void astarManager::pathFinding()
 		}
 
 		
-		addOpenList(curNode->idx + 1, curNode->idy + 1);	//¿ìÇÏ
+	 	addOpenList(curNode->idx + 1, curNode->idy + 1);	//¿ìÇÏ
 		addOpenList(curNode->idx - 1, curNode->idy + 1);	//ÁÂÇÏ
 		addOpenList(curNode->idx - 1, curNode->idy - 1);	//ÁÂ»ó
 		addOpenList(curNode->idx + 1, curNode->idy - 1);	//¿ì»ó

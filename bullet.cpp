@@ -308,10 +308,16 @@ HRESULT meteor::init()
 	isCoolTime = false;
 
 	count = index = 0;
-	circleCount = CircleIndex = 0;
 
 	ranAtk = 20;
 	criticalHit = 45;
+
+	//upgrade용
+	upgrade = false;
+	ranCount = 5;
+	save = { 0,0 };
+	meteorCount = 0;
+	
 	return S_OK;
 }
 
@@ -339,26 +345,50 @@ void meteor::update()
 	//데미지 넣을 용도
 	for (int i = 0; i < vDamage.size();)
 	{
-		if (vDamage[i].lifeTime > 0)
-		{
-			ranAtk = RANDOM->range(20, 35);
-			//크리티컬
-			if (ranAtk > 30 && count % 3 == 0)
-				vDamage[i].atkPower = criticalHit;
-			//랜덤 데미지
-			else vDamage[i].atkPower = ranAtk;
+		vDamage[i].lifeTime--;
 
-			vDamage[i].lifeTime--;
-		}
 		if (vDamage[i].lifeTime == 0)
 		{
-			vDamage.erase(vDamage.begin() + i);
+			vDamage.erase(vDamage.begin());
 		}
 		else
 		{
 			i++;
 		}
 	}
+
+	//upgrade meteor
+	if (meteorCount>0)
+	{
+		//count = 7 % 5 == 2
+		if ( count % ranCount == 0)
+		{
+			ranCount = RANDOM->range(10, 20);
+
+			float ranX = RANDOM->range(-150.f, 150.f);
+			float ranY = RANDOM->range(-150.f, 150.f);
+			tagMeteor meteor;
+			meteor.endY = save.y + ranY;
+			meteor.img = IMAGEMANAGER->findImage("meteor");
+
+			float cul = 110 * (PI / 180);
+			meteor.x = (save.x + ranX) + cosf(cul) * 600.f;
+			meteor.y = (save.y + ranY) - sinf(cul) * 600.f;
+			meteor.rc = RectMakeCenter(meteor.x, meteor.y, 100, 100);
+			meteor.angle = 290 * (PI / 180);
+			meteor.speed = 15.f;
+
+			vMeteor.push_back(meteor);
+			makeCircle(save.x + ranX, save.y + ranY);
+
+			isCoolTime = true;
+			UI->addCoolTime("meteorIcon");
+			meteorCount--;
+		}
+		
+	}
+
+	
 }
 
 void meteor::render()
@@ -369,16 +399,16 @@ void meteor::render()
 
 	for (int i = 0; i < vCircle.size(); i++)
 	{
-		circleCount++;
-		if (circleCount % 3 == 0)
+		vCircle[i].count++;
+		if (vCircle[i].count % 3 == 0)
 		{
-			if (CircleIndex < 23)
-				CircleIndex++;
+			if (vCircle[i].index < 23)
+				vCircle[i].index++;
 		}
 
 		//CAMERAMANAGER->Ellipse(getMemDC(), vCircle[i].rc);
 		CAMERAMANAGER->FrameRender(getMemDC(), img,
-			vCircle[i].x - img->getFrameWidth() / 2, vCircle[i].y - img->getFrameHeight() / 2, CircleIndex, 0);
+			vCircle[i].x - img->getFrameWidth() / 2, vCircle[i].y - img->getFrameHeight() / 2, vCircle[i].index, 0);
 	}
 	for (int i = 0; i < vMeteor.size(); i++)
 	{
@@ -404,13 +434,13 @@ void meteor::render()
 
 void meteor::makeCircle(float x, float y)
 {
-	//플레이어 기준으로 왼쪽 오른쪽 위 아래 마법진 생성
-
 	tagCircle circle;
 
 	circle.angle = 0;
 	circle.x = x;
 	circle.y = y;
+	circle.count = 0;
+	circle.index = 0;
 	circle.rc = RectMakeCenter(circle.x, circle.y, 100, 100);
 	circle.lifeTime = 0;
 
@@ -419,23 +449,35 @@ void meteor::makeCircle(float x, float y)
 
 void meteor::creatMeteor(float x, float y, float angle)
 {
+	if (upgrade == true)
+	{
+		tagMeteor meteor;
+		meteor.endY = y;
+		meteor.img = IMAGEMANAGER->findImage("meteor");
 
-	tagMeteor meteor;
-	meteor.endY = y;
-	meteor.img = IMAGEMANAGER->findImage("meteor");
+		float cul = 110 * (PI / 180);
+		meteor.x = x + cosf(cul) * 600.f;
+		meteor.y = y - sinf(cul) * 600.f;
+		meteor.rc = RectMakeCenter(meteor.x, meteor.y, 100, 100);
+		meteor.angle = 290 * (PI / 180);
+		meteor.speed = 15.f;
 
-	float cul = 110 * (PI / 180);
-	meteor.x = x + cosf(cul) * 600.f;
-	meteor.y = y - sinf(cul) * 600.f;
-	meteor.rc = RectMakeCenter(meteor.x, meteor.y, 100, 100);
-	meteor.angle = 290 * (PI / 180);
-	meteor.speed = 15.f;
+		vMeteor.push_back(meteor);
+		makeCircle(x, y);
+		isCoolTime = true;
+		UI->addCoolTime("meteorIcon");
+	}
 
-	vMeteor.push_back(meteor);
-	makeCircle(x, y);
-	isCoolTime = true;
-	UI->addCoolTime("meteorIcon");
+	else
+	{
+		save = { (long)x,(long)y };
+		meteorCount = 5;
+		ranCount = 5;
+	}
+
 }
+
+
 
 void meteor::move()
 {
@@ -455,24 +497,23 @@ void meteor::move()
 
 			//데미지 넣을 용도
 			tagMeteor damage;
+
 			damage.x = vCircle[i].x;
 			damage.y = vCircle[i].y;
 			damage.angle = vMeteor[i].angle; //메테오 방향으로 넉백시킬 때 사용
 			damage.lifeTime = 30;
 			damage.rc = RectMakeCenter(damage.x, damage.y, 100, 100);
+			damage.atkPower = 20;
+
 			vDamage.push_back(damage);
 
 			CAMERAMANAGER->Shake(20, 20, 4);
 
-			vMeteor.erase(vMeteor.begin() + i);
 			index = 0;
-
+			vMeteor.erase(vMeteor.begin() + i);
 			vCircle.erase(vCircle.begin() + i);
-			CircleIndex = 0;
-
 		}
-		else
-			i++;
+		else i++;
 	}
 }
 
@@ -577,6 +618,7 @@ void dashFire::fire(float x, float y)
 
 HRESULT RagingInferno::init()
 {
+
 	inferno.img = IMAGEMANAGER->addFrameImage("inferno", "resource/player/inferno.bmp", 240, 80, 3, 1);
 
 	time = 0;

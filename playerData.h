@@ -1,13 +1,29 @@
 #pragma once
 #include "singletonBase.h"
 #include "tileNode.h"
+struct tagStat
+{
+	float damage;			//데미지
+	float criDamage;		//크리티컬 데미지
+	float criChance;		//크리티컬 확률
+
+	float potionDropChance;	//포션 드랍율
+	float defenceChance;	//공격 방어율
+	float burnChance;		//불태울 확률
+
+	bool vampireBlood;		//흡혈기능
+};
 class playerData : public singletonBase <playerData>
 {
 private:
+	//stat//
 	int hp;
+	int maxHp;	
+	
+	tagStat stat;
+	////////
 	int coin;
 	float _x, _y;
-	int maxHp;
 
 	int _gaugeTime;
 
@@ -35,9 +51,15 @@ public:
 	void setY(float y) { _y = y; }
 	void setGaugeTime(int time) { _gaugeTime = time; }
 
+
+	tagStat getStat() { return stat; }
+	void setStat(string statName, float value);
+
+	bool criAppear();
+
+
 	void setTile(vector<int> tile) { vTile = tile; }
 	vector<int> getTile() { return vTile; }
-
 
 	void setWall(vector<int> wall) { vWall = wall; }
 	vector<int> getWall() { return vWall; }
@@ -51,4 +73,3 @@ public:
 	playerData() {}
 	~playerData() {}
 };
-
