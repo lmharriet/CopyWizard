@@ -41,7 +41,7 @@ private:
 	tagTile bigTile[6];
 	//tagTile miniTile[4];
 	
-	tagTile wall[22]; // 18 - 22
+	tagTile wall[26]; // 22 - 26
 
 	tagTile object[5];
 	tagTile deco[9];

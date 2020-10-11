@@ -316,7 +316,7 @@ void gameScene::render()
 				else CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
 			}
 
-			else if (key == "wallFrame0" || key == "wallFrame1" || key == "wallFrame2")
+			else if (key == "wallFrame0" || key == "wallFrame1" || key == "wallFrame2" || key == "wallFrame3")
 			{
 				float scale = (float)(tile[i].rc.right - tile[i].rc.left) / TILESIZE;
 
