@@ -50,7 +50,7 @@ private:
 	int dashCount,dashIndex;
 	int atkCount, atkIndex;
 	int count, index;
-
+	int basicCount, basicIndex;
 	
 	
 	//damage

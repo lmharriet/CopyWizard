@@ -53,20 +53,20 @@ HRESULT gameScene::init()
 
 	
 	//벽 타입만 저장
-	for (int i = 0; i < MAXTILE; i++)
-	{
-		if (tile[i].kind == TERRAIN::WALL)
-		{
-			vWall.push_back(i);
-		}
-	}
+	//for (int i = 0; i < MAXTILE; i++)
+	//{
+	//	if (tile[i].kind == TERRAIN::WALL)
+	//	{
+	//		vWall.push_back(i);
+	//	}
+	//}
 
 	PLAYERDATA->setTile(tile);
-	PLAYERDATA->setWall(vWall);
+	//PLAYERDATA->setWall(vWall);
 	
 	_player->setTileAd(tile);
 	_player->setTileAd0(vTile);
-	_player->setTileAd1(vWall);
+	//_player->setTileAd1(vWall);
 
 
 	//sound
@@ -503,13 +503,21 @@ void gameScene::render()
 void gameScene::collisionTile()
 {
 	vTile.clear();
+	vWall.clear();
 	for (int i = 0; i < MAXTILE; i++)
 	{
-		if (colCheck(cam, tile[i].rc)) vTile.push_back(i);
+		if (colCheck(cam, tile[i].rc))
+		{
+			vTile.push_back(i);
+
+			if(tile[i].kind == TERRAIN::WALL)vWall.push_back(i);
+		}
 	}
 
 	_player->setTileAd0(vTile);
 	PLAYERDATA->setTile(vTile);
+	_player->setTileAd1(vWall);
+	PLAYERDATA->setWall(vWall);
 }
 
 void gameScene::playerAttack()

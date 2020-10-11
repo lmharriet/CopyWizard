@@ -45,9 +45,14 @@ HRESULT player::init()
 	basic = standard = signature = false;
 
 	speed = gaugeTime = 0;
-	atkCount = atkIndex = index = dashIndex = count = dashCount = blazeCount = 0;
+
+	//animation count ,index
+	atkCount = atkIndex = index = dashIndex = count = dashCount = basicCount =basicIndex  = 0;
 	stateCool = infernoStateCool = meteorStateCool = 0;
 
+
+	//blaze 3번 발사 용도
+	blazeCount = 0;
 
 	//불렛 클래스
 	bulletClassInit();
@@ -104,6 +109,7 @@ void player::update()
 	count++;
 	dashCount++;
 	atkCount++;
+	basicCount++;
 
 	gaugeTime++;
 	PLAYERDATA->setGaugeTime(gaugeTime);
@@ -174,6 +180,7 @@ void player::other_update()
 	count++;
 	dashCount++;
 	atkCount++;
+	basicCount++;
 
 	gaugeTime++;
 	PLAYERDATA->setGaugeTime(gaugeTime);
@@ -738,49 +745,49 @@ void player::animation()
 
 		if (angleTenth > 14 && angleTenth <= 23)//left
 		{
-			if (count % 5 == 0)
+			if (basicCount % 5 == 0)
 			{
-				index++;
-				if (index > 7 || stateCool == 0) index = 0;
+				basicIndex++;
+				if (basicIndex > 6 || stateCool == 0) basicIndex = 0;
 			}
-			frameAnimation(index, 5);
+			frameAnimation(basicIndex, 5);
 			//왼쪽 공격 끝나면 왼쪽 향하기
 			if (stateCool == 0)
 				move = MOVE::LEFT;
 		}
 		else if (angleTenth <= 4 || angleTenth > 32) //right
 		{
-			if (count % 5 == 0)
+			if (basicCount % 5 == 0)
 			{
-				index++;
-				if (index > 7 || stateCool == 0) index = 0;
+				basicIndex++;
+				if (basicIndex > 6 || stateCool == 0) basicIndex = 0;
 			}
-			frameAnimation(index, 6);
+			frameAnimation(basicIndex, 6);
 
 			// 오른쪽 공격 끝나면 오른쪽 향하기
-			if (stateCool == 0)
+			if (basicCount == 0)
 				move = MOVE::RIGHT;
 		}
 		else if (angleTenth > 4 && angleTenth <= 14) //up
 		{
-			if (count % 5 == 0)
+			if (basicCount % 5 == 0)
 			{
-				index++;
-				if (index > 7)index = 0;
+				basicIndex++;
+				if (basicIndex > 6 || stateCool ==0)basicIndex = 0;
 			}
-			frameAnimation(index, 14);
+			frameAnimation(basicIndex, 14);
 			//위쪽 공격 끝나면 위쪽 향하기
 			if (stateCool == 0)
 				move = MOVE::UP;
 		}
 		else if (angleTenth > 23 && angleTenth <= 32) //down
 		{
-			if (count % 5 == 0)
+			if (basicCount % 5 == 0)
 			{
-				index++;
-				if (index > 7)index = 0;
+				basicIndex++;
+				if (basicIndex > 6 || stateCool ==0)basicIndex = 0;
 			}
-			frameAnimation(index, 6);
+			frameAnimation(basicIndex, 6);
 			//아래쪽 공격 끝나면 아래쪽 향하기
 			if (stateCool == 0)
 				move = MOVE::DOWN;

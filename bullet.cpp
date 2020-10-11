@@ -118,31 +118,12 @@ void bullet::removeBullet(int index)
 }
 
 //=============================================================
-//	## homingFlares ## (homingFlares[0] -> 배열처럼 미리 장전해두고 총알발사)
+//	## cleaver ## (homingFlares[0] -> 배열처럼 미리 장전해두고 총알발사)
 //=============================================================
 
 HRESULT cleaver::init(float range)
 {
-	_range = range;
 
-	////총알의 갯수만큼 구조체를 초기화 한 후 벡터에 담기
-	//for (int i = 0; i < bulletMax; i++)
-	//{
-	//	//총알 구조체 선언
-	//	tagBullet bullet;
-	//	//총알 구조체 초기화
-	//	//제로메모리, 멤셋
-	//	//구조체 변수들의 값을 한번에 0으로 초기화 시켜준다
-	//	ZeroMemory(&bullet, sizeof(tagBullet));
-	//	//bullet.bulletImage = IMAGEMANAGER->findImage();
-	//	bullet.bulletImage = new image;
-	//	bullet.bulletImage->init("Images/missile.bmp", 26, 124, true, RGB(255, 0, 255));
-	//	bullet.speed = 5.0f;
-	//	bullet.fire = false;
-
-	//	//벡터에 담기
-	//	_vBullet.push_back(bullet);
-	//}
 
 	return S_OK;
 }
@@ -159,55 +140,18 @@ void cleaver::update()
 
 void cleaver::render()
 {
-	/*for (int i = 0; i < _vFlares.size(); i++)
-	{
-		CAMERAMANAGER->Ellipse(getMemDC(), _vFlares[i].rc);
-		CAMERAMANAGER->Ellipse(getMemDC(), _vRange[i] .rc);
-	}*/
-
 
 }
 //총알발사
 void cleaver::fire(float x, float y, float angle)
 {
 
-
-	/*tagArcana flares;
-	flares.angle = angle;
-	flares.speed = 20.f;
-	flares.x = flares.fireX = x + cosf(flares.angle) * (flares.speed);
-	flares.y = flares.fireY = y - sinf(flares.angle) * (flares.speed);
-	flares.rc = RectMakeCenter(flares.x, flares.y, 30, 30);
-
-	_vFlares.push_back(flares);
-
-	tagArcana range;
-	range.angle = angle;
-	range.speed = 100;
-	range.x = range.fireX = x + cosf(range.angle) * range.speed;
-	range.y = range.fireY = y - sinf(range.angle) * range.speed;
-	range.rc = RectMakeCenter(range.x, range.y, 40, 40);
-
-	_vRange.push_back(range);
-*/
-
 }
 
 //총알무브
 void cleaver::move()
 {
-	/*for (int i = 0; i < _vFlares.size(); i++)
-	{
-		_vFlares[i].x = _vFlares[i].x + cosf(_vFlares[i].angle) * 5.f;
-		_vFlares[i].y = _vFlares[i].y - sinf(_vFlares[i].angle) * 5.f;
-		_vFlares[i].rc = RectMakeCenter(_vFlares[i].x, _vFlares[i].y, 30, 30);
 
-		if (colCheck(_vFlares[i].rc, _vRange[i].rc))
-		{
-
-
-		}
-	}*/
 }
 
 //수정 중(player flame strike)
@@ -333,12 +277,11 @@ void bomb::move()
 		{
 			int num = PLAYERDATA->getWall()[j];
 
-			if (colCheck(PLAYERDATA->_getTile()[num].rc, _vBullet[i].rc))
+			if (colCheck(PLAYERDATA->_getTile()[num].rc, _vBullet[0].rc))
 			{
 				PARTICLE->explosionGenerate("explosionParticle", _vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3, true);
-				//sound
 				SOUNDMANAGER->play("blazeExp", false);
-				_vBullet.erase(_vBullet.begin() + i);
+				_vBullet.erase(_vBullet.begin());
 				break;
 			}
 		}
@@ -404,7 +347,7 @@ void meteor::update()
 				vDamage[i].atkPower = criticalHit;
 			//랜덤 데미지
 			else vDamage[i].atkPower = ranAtk;
-			
+
 			vDamage[i].lifeTime--;
 		}
 		if (vDamage[i].lifeTime == 0)
@@ -450,10 +393,12 @@ void meteor::render()
 			vMeteor[i].y - vMeteor[i].img->getFrameHeight() / 2 - 50,
 			index, 0);
 	}
-
-	for (int i = 0; i < vDamage.size(); i++)
+	if (INPUT->GetToggleKey('L'))
 	{
-		CAMERAMANAGER->Ellipse(getMemDC(), vDamage[i].rc);
+		for (int i = 0; i < vDamage.size(); i++)
+		{
+			CAMERAMANAGER->Ellipse(getMemDC(), vDamage[i].rc);
+		}
 	}
 }
 
@@ -516,7 +461,6 @@ void meteor::move()
 			damage.lifeTime = 30;
 			damage.rc = RectMakeCenter(damage.x, damage.y, 100, 100);
 			vDamage.push_back(damage);
-
 
 			CAMERAMANAGER->Shake(20, 20, 4);
 
@@ -597,7 +541,6 @@ void dashFire::singleRender(int index)
 	ranAtk = RANDOM->range(7, 15);
 	if (ranAtk > 12 && vDash[index].lifeTime % 9 == 0)
 		vDash[index].atkPower = criticalHit;
-	else vDash[index].atkPower = ranAtk;
 
 
 	image* img = IMAGEMANAGER->findImage("flame");
@@ -628,7 +571,6 @@ void dashFire::fire(float x, float y)
 	dash.lifeTime = 0;
 	dash.atkPower = ranAtk;
 	vDash.push_back(dash);
-
 }
 
 //추가 스킬 RAGING INFERNO
@@ -686,6 +628,10 @@ void RagingInferno::update(int* gaugeTime)
 			currentCoolTime = 0;
 		}
 	}
+
+	//충돌
+
+
 }
 
 void RagingInferno::render()
@@ -784,7 +730,7 @@ void RagingInferno::move(int gaugeTime)
 
 			inferno.lifeTime--;
 			ranAtkPower = RANDOM->range(15, 22);
-			
+
 			if (ranAtkPower > 20 && time % 10 == 0)
 				inferno.atkPower = criticalHit;
 			else inferno.atkPower = ranAtkPower;
@@ -830,6 +776,9 @@ void RagingInferno::move(int gaugeTime)
 			isFire = false;
 			isActive = false;
 		}
+
+
+
 	}
 }
 
