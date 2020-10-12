@@ -155,7 +155,7 @@ void soundManager::resume(string keyName)
 
 bool soundManager::isPlaySound(string keyName)
 {
-	bool isPlay;
+	bool isPlay = false;
 	int count = 0;
 	arrSoundIter iter = _mTotalSound.begin();
 	for (iter; iter != _mTotalSound.end(); ++iter, count++)
