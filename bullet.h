@@ -62,6 +62,21 @@ struct tagMeteor
 
 };
 
+struct tagDragon
+{
+	RECT rc;
+	image* img;
+	float x, y;
+	float speed;
+	float angle;
+	float saveAngle;
+
+	int frameY;
+	int index;
+	int lifeTime;
+	int currentTime;
+};
+
 //=============================================================
 //	## bullet ## (°ø¿ëÃÑ¾Ë)
 //=============================================================
@@ -313,17 +328,7 @@ public:
 	void setActive(bool temp) { isActive = temp; }
 };
 
-struct tagDragon
-{
-	RECT rc;
-	float x, y;
-	float speed;
-	float angle;
-	float saveAngle;
 
-	int lifeTime;
-	int currentTime;
-};
 //¹Ì¿Ï¼º
 //=============================================================
 //	##dragonArc## 
@@ -337,8 +342,7 @@ private:
 	//	vector<tagBullet>::iterator _viBullet;
 
 private:
-	float _range;			//ÃÑ¾Ë »ç°Å¸®
-	int _bulletMax;			//ÃÑ¾Ë ÃÖ´ë°¹¼ö
+	int count, index;
 
 public:
 	HRESULT init();

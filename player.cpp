@@ -224,6 +224,8 @@ void player::other_update()
 	infernoSetUp();
 	meteorSetUp();
 
+	dragonArcSetUp();
+
 	damagedCool();
 
 
@@ -498,7 +500,9 @@ void player::dashFunction()
 	else if (dashDown)
 	{
 		//¼ø¼ö DOWN
-		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol&&!diagonalCheck[2].isCol && !diagonalCheck[3].isCol)
+		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol
+			&& !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol)
+
 			posY += speed;
 	}
 
@@ -602,10 +606,11 @@ void player::dragonArcSetUp()
 {
 	if (INPUT->GetKeyDown('E'))
 	{
-		dragon->fire(posX, posY, attackAngle);
+		float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY( _ptMouse.y));
+
+		dragon->fire(posX, posY, angle);
 	}
 }
-
 
 void player::takeCoin()
 {
@@ -1127,9 +1132,6 @@ void player::damagedCool()
 //del
 void player::viewText()
 {
-
-
-
 	//wsprintf(str, "damageAngle : %d", damageAngle);
 	//textOut(getMemDC(), 100, 230, str, WHITE);
 
