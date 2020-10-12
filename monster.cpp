@@ -404,7 +404,7 @@ void monster::commonUpdate()
 	}
 }
 
-void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum)
+void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum, bool isCritical)
 {
 	if (hitCheck(skillNum) == false)return;
 
@@ -417,9 +417,9 @@ void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum)
 		hp -= allDamage;
 
 	if(cos(_hitAngle)*2.f>0)
-		DAMAGE->generator(pt, allDamage,false);
+		DAMAGE->generator(pt, allDamage,false, isCritical);
 	else
-		DAMAGE->generator(pt, allDamage,true);
+		DAMAGE->generator(pt, allDamage,true, isCritical);
 
 	hitAngle = _hitAngle;
 	knockBack = _knockBack;

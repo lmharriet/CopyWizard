@@ -182,7 +182,7 @@ public:
 	inline void setBulletFire(bool isFire) { isBulletFire = isFire; }
 	//inline void setBulletEmpty(bool isEmpty) { isBulletEmpty = isEmpty; }
 	
-	void hit(int damage, float _hitAngle, float _knockBack, int skillNum);
+	void hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical = false);
 	bool hitCheck(int skillNum);
 
 	void hitCul();

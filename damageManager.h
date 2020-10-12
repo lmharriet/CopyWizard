@@ -8,6 +8,8 @@ struct tagDamage
 	int upForce;
 	int gravity;
 
+	bool isCritical;
+
 	float size;
 
 	bool isUp;
@@ -22,7 +24,7 @@ public:
 	HRESULT init();
 	void render(HDC hdc);
 
-	void generator(POINT pt, int damage = 0, bool isLeft = true);
+	void generator(POINT pt, int damage = 0, bool isLeft = true, bool isCritical = false);
 
 	
 };
