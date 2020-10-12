@@ -643,7 +643,7 @@ void gameScene::enemyAttack()
 				PARTICLE->crashRockParticlePlay(_player->getX(), _player->getY());
 			}
 			enemy->getBullet()->removeBullet(i);
-			SOUNDMANAGER->play("playerHit", false);
+			SOUNDMANAGER->play("playerHit", false,-0.18f);
 		}
 		else
 		{

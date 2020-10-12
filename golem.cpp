@@ -402,7 +402,7 @@ void golem::stateWalk()
             frameIndexL[WALK].x--;
             if (frameIndexL[WALK].x < 0)
             {
-                SOUNDMANAGER->play("golemWalkL", false);
+                SOUNDMANAGER->play("golemWalkL", false,-0.2f);
                 frameIndexL[WALK].x = 5;
             }
         }
@@ -421,7 +421,7 @@ void golem::stateWalk()
             frameIndexR[WALK].x++;
             if (frameIndexR[WALK].x > 5)
             {
-                SOUNDMANAGER->play("golemWalkR", false);
+                SOUNDMANAGER->play("golemWalkR", false, -0.2f);
                 frameIndexR[WALK].x = 0;
             }
         }
