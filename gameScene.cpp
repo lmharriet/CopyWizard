@@ -149,17 +149,17 @@ void gameScene::render()
 		CAMERAMANAGER->FrameRender(getMemDC(), img, tile[num].rc.left, tile[num].rc.top, tile[num].frame.x, tile[num].frame.y);
 	}
 
-	//deco image render
-	for (int f = 0; f < vTile.size(); f++)
-	{
-		int i = vTile[f];
+	////deco image render
+	//for (int f = 0; f < vTile.size(); f++)
+	//{
+	//	int i = vTile[f];
 
-		if (!colCheck(tile[i].rc, cam) || (subTile[i].kind != TERRAIN::DECO)) continue;
+	//	if (subTile[i].kind != TERRAIN::DECO) continue;
 
-		image* img = IMAGEMANAGER->findImage(subTile[i].keyName);
+	//	image* img = IMAGEMANAGER->findImage(subTile[i].keyName);
 
-		CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top);
-	}
+	//	CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top);
+	//}
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), checkArea);
 	//Rectangle(getMemDC(), checkArea);
@@ -191,8 +191,7 @@ void gameScene::render()
 	{
 		int i = vTile[f];
 
-		if (!colCheck(tile[i].rc, cam) ||
-			(tile[i].kind != TERRAIN::WALL && tile[i].kind != TERRAIN::OBJECT))continue;
+		if (tile[i].kind != TERRAIN::WALL && tile[i].kind != TERRAIN::OBJECT)continue;
 
 		if (!isRender)
 		{
@@ -270,15 +269,7 @@ void gameScene::render()
 
 				img = IMAGEMANAGER->findImage(key);
 
-				//CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-
-				if (tile[i].rc.bottom > (_player->getY() + 30) &&
-					((colCheck(checkArea, tile[i].rc) || colCheck(checkArea, tile[i + 15].rc) ||
-						colCheck(checkArea, tile[i - w4 + 10].rc) || colCheck(checkArea, tile[i - w4 + 5].rc))))
-				{
-					CAMERAMANAGER->AlphaRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height, 150);
-				}
-				else CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
+				CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
 
 			}
 
@@ -318,74 +309,14 @@ void gameScene::render()
 
 				img = IMAGEMANAGER->findImage(key);
 
-				//CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-				if (tile[i].rc.bottom > (_player->getY() + 30) &&
-					(colCheck(checkArea, tile[i].rc) || colCheck(checkArea, tile[i + 15].rc)))
-				{
-					CAMERAMANAGER->AlphaRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height, 150);
-				}
-				else CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
+				CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
 			}
 
 			else if (key == "wallFrame0" || key == "wallFrame1" || key == "wallFrame2" || key == "wallFrame3")
 			{
-				float scale = (float)(tile[i].rc.right - tile[i].rc.left) / TILESIZE;
-
 				image* img = IMAGEMANAGER->findImage(tile[i].keyName);
 
-				//img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
-
 				CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
-				//img->frameRender(getMemDC(), tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y, scale);
-			}
-
-			else if (key == "shopWall0" || key == "shopWall1")
-			{
-
-				height = 5 * TILESIZE;
-
-				if (key == "shopWall0")
-				{
-					if ((key == tile[i + 1].keyName && key == tile[i - w].keyName && key == tile[i - w2].keyName &&
-						key == tile[i - w3].keyName && key == tile[i - w4].keyName && key == tile[i - w5].keyName) == false)
-					{
-						continue;
-					}
-
-					img = IMAGEMANAGER->findImage(key);
-
-					CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-				}
-
-				if (key == "shopWall1")
-				{
-					//예외 처리
-					if ((key == tile[i + 1].keyName && key == tile[i + 1 - w].keyName && key == tile[i + 1 - w2].keyName &&
-						key == tile[i + 1 - w3].keyName && key == tile[i + 1 - w4].keyName && key == tile[i + 1 - w5].keyName) == false)
-					{
-						continue;
-					}
-
-
-					img = IMAGEMANAGER->findImage(key);
-
-					CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-				}
-			}
-
-			else if (key == "shopWall2" || key == "shopWall3")
-			{
-				if ((key == tile[i + 1].keyName &&
-					key == tile[i - w].keyName && key == tile[i - w + 1].keyName &&
-					key == tile[i - w2].keyName && key == tile[i - w2 + 1].keyName) == false)
-				{
-					continue;
-				}
-				height = 2 * TILESIZE;
-
-				img = IMAGEMANAGER->findImage(key);
-
-				CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
 			}
 
 			else
@@ -444,39 +375,6 @@ void gameScene::render()
 			break;
 		}
 	}
-
-	for (int f = 0; f < vTile.size(); f++)
-	{
-		int i = vTile[f];
-
-		if (tile[i].kind != TERRAIN::OBJECT) continue;
-
-		// 1x? 이거나 다른 특수한 오브젝트 처리
-
-		string key;
-		int height;
-		if (tile[i].keyName == "pillar0") // 가로 : 1
-		{
-			key = "pillar0";
-
-			height = 3 * TILESIZE;
-			image* img = IMAGEMANAGER->findImage(key);
-
-			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-		}
-		else if (tile[i].keyName == "bossDoor")
-		{
-			if (tile[i + 5].keyName != "bossDoor")continue;
-
-			key = "bossDoor";
-
-			height = 7 * TILESIZE;
-			image* img = IMAGEMANAGER->findImage(key);
-
-			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-		}
-	}
-
 
 	enemy->render();
 

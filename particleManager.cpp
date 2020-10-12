@@ -11,6 +11,7 @@ HRESULT particleManager::init()
 	
 	IMAGEMANAGER->addFrameImage("stoneX2", "Images/particle/stoneX2.bmp", 34, 122, 1, 4);
 	IMAGEMANAGER->addFrameImage("smokeX2", "Images/particle/smokeParticle.bmp", 480, 320, 6, 4);
+	IMAGEMANAGER->addFrameImage("smokeX4", "Images/particle/smokeParticle.bmp", 480/2, 320/2, 6, 4);
 	return S_OK;
 }
 
@@ -355,6 +356,13 @@ void particleManager::explosionParticle2Play(float x, float y)
 void particleManager::burningParticlePlay(float x, float y)
 {
 	explosionGenerate("frameParticle", x, y, 5, 1.f, 2.f, 3, true);
+}
+
+void particleManager::burningParticle2Play(float x, float y)
+{
+	//explosionGenerate("frameParticle", x, y, 30, 1.f, 4.f, 3, true);
+	//explosionGenerate("explosionParticle2", x, y, 6, 5.f, 0.f, 2, true);
+	//explosionGenerate("frameParticle", x, y, 6, 10.f, 0.f, 3, true);
 }
 
 void particleManager::bossJumpParticlePlay(float x, float y)
