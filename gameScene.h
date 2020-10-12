@@ -4,6 +4,7 @@
 #include "tileNode.h"
 #include "colorNode.h"
 #include "enemyManager.h"
+#include "shop.h"
 
 class gameScene : public gameNode
 {
@@ -17,7 +18,7 @@ private:
 	image* playerImg;			//플레이어이미지
 	image* uiImg;
 
-
+	shop* _shop;
 
 	//맵타일 정보
 	tagTile tile[MAXTILE];

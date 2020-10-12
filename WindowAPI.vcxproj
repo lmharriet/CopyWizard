@@ -172,6 +172,7 @@
     <ClInclude Include="mainGame.h" />
     <ClInclude Include="mapToolScene.h" />
     <ClInclude Include="knight.h" />
+    <ClInclude Include="shop.h" />
     <ClInclude Include="summoner.h" />
     <ClInclude Include="monster.h" />
     <ClInclude Include="particleManager.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="mapToolScene.cpp" />
     <ClCompile Include="knight.cpp" />
+    <ClCompile Include="shop.cpp" />
     <ClCompile Include="summoner.cpp" />
     <ClCompile Include="monster.cpp" />
     <ClCompile Include="particleManager.cpp" />

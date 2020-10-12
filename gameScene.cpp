@@ -70,6 +70,14 @@ HRESULT gameScene::init()
 
 	EFFECT->setPortalEffect({ (long)_player->getX(),(long)_player->getY() });
 	SOUNDMANAGER->play("portalWarp", false);
+
+	//npc
+	_shop = new shop;
+	_shop->init();
+
+	POINT ptArr[3] = { { -2040,-1509 },{ 2075,-35 },{ 1176,2134 } };
+	_shop->generate(ptArr);
+
 	//sound
 	soundInit();
 	return S_OK;
@@ -156,6 +164,7 @@ void gameScene::render()
 	//CAMERAMANAGER->Rectangle(getMemDC(), checkArea);
 	//Rectangle(getMemDC(), checkArea);
 	//_player->render();
+	_shop->render();
 
 	DROP->render(getMemDC());
 	EFFECT->pRender(getMemDC());
