@@ -3,7 +3,8 @@
 
 HRESULT damageManager::init()
 {
-
+	IMAGEMANAGER->addImage("critical", "Images/effect/critical.bmp", 96, 65, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("rNumbers", "Images/ui/rNumbers.bmp", 264, 29, 13, 1);
 	time = 0;
 	return S_OK;
 }
@@ -11,9 +12,13 @@ HRESULT damageManager::init()
 void damageManager::render(HDC hdc)
 {
 	time++;
-	image* img = IMAGEMANAGER->findImage("numbers");
+
+	image* cri = IMAGEMANAGER->findImage("critical");
+
 	for (int i = 0; i < vDamage.size();)
 	{
+		image* img = IMAGEMANAGER->findImage(vDamage[i].keyName);
+
 		int first = vDamage[i].damage % 10; // 일의 자리
 		int second = vDamage[i].damage / 10; // 십의 자리
 
@@ -51,18 +56,51 @@ void damageManager::render(HDC hdc)
 		//출력
 		if (second > 0)
 		{
-			CAMERAMANAGER->StretchFrameRender(hdc, img, vDamage[i].x - 5 - img->getFrameWidth()/2,
-				vDamage[i].y - img->getFrameHeight()/2, second, 0, vDamage[i].size);
+			if (vDamage[i].isCritical == false)
+			{
+				CAMERAMANAGER->StretchFrameRender(hdc, img, vDamage[i].x - 5 - img->getFrameWidth() / 2,
+					vDamage[i].y - img->getFrameHeight() / 2, second, 0, vDamage[i].size);
 
-			CAMERAMANAGER->StretchFrameRender(hdc, img, vDamage[i].x + 5 - img->getFrameWidth() / 2,
-				vDamage[i].y - img->getFrameHeight() / 2, first, 0, vDamage[i].size);
+				CAMERAMANAGER->StretchFrameRender(hdc, img, vDamage[i].x + 5 - img->getFrameWidth() / 2,
+					vDamage[i].y - img->getFrameHeight() / 2, first, 0, vDamage[i].size);
+			}
+
+			else // critical == true
+			{
+				//cri render
+				CAMERAMANAGER->StretchRender(hdc, cri, vDamage[i].x - cri->getWidth() / 2,
+					vDamage[i].y - cri->getHeight() / 2, vDamage[i].size);
+				
+				//number render
+				CAMERAMANAGER->StretchFrameRender(hdc, img, vDamage[i].x - 5 - img->getFrameWidth() / 2,
+					vDamage[i].y - img->getFrameHeight() / 2, second, 0, vDamage[i].size);
+
+				CAMERAMANAGER->StretchFrameRender(hdc, img, vDamage[i].x + 5 - img->getFrameWidth() / 2,
+					vDamage[i].y - img->getFrameHeight() / 2, first, 0, vDamage[i].size);
+			}
 		}
 		else
 		{
-			CAMERAMANAGER->StretchFrameRender(hdc, img, 
-				vDamage[i].x - img->getFrameWidth()/2,
-				vDamage[i].y - img->getFrameHeight()/2,
-				first, 0, vDamage[i].size);
+			if (vDamage[i].isCritical == false)
+			{
+				CAMERAMANAGER->StretchFrameRender(hdc, img,
+					vDamage[i].x - img->getFrameWidth() / 2,
+					vDamage[i].y - img->getFrameHeight() / 2,
+					first, 0, vDamage[i].size);
+			}
+
+			else // critical == true
+			{
+				//cri render
+				CAMERAMANAGER->StretchRender(hdc, cri, vDamage[i].x - cri->getWidth() / 2,
+					vDamage[i].y - cri->getHeight() / 2, vDamage[i].size);
+
+				//number render
+				CAMERAMANAGER->StretchFrameRender(hdc, img,
+					vDamage[i].x - img->getFrameWidth() / 2,
+					vDamage[i].y - img->getFrameHeight() / 2,
+					first, 0, vDamage[i].size);
+			}
 		}
 		
 		//삭제
@@ -77,9 +115,10 @@ void damageManager::render(HDC hdc)
 	}
 }
 
-void damageManager::generator(POINT pt, int damage, bool isLeft)
+void damageManager::generator(POINT pt, string keyName, int damage, bool isLeft, bool isCritical)
 {
 	tagDamage Damage;
+	Damage.keyName = keyName;
 
 	Damage.x = pt.x;
 	Damage.y = pt.y;
@@ -87,6 +126,9 @@ void damageManager::generator(POINT pt, int damage, bool isLeft)
 
 	Damage.upForce = 7;
 	Damage.gravity = 0;
+
+	Damage.isCritical = isCritical;
+
 	Damage.size = 1.5f;
 
 	Damage.isUp = true;

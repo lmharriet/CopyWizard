@@ -9,6 +9,8 @@ HRESULT player::init()
 	IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 1200, 250, 6, 1);
 	IMAGEMANAGER->addFrameImage("flame", "resource/player/flame1.bmp", 4096, 128, 32, 1);
 	IMAGEMANAGER->addFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
+	IMAGEMANAGER->addImage("infernoGauging", "Images/ui/gaugingBar.bmp", 50, 10);
+
 	posX = WINSIZEX / 2;
 	posY = WINSIZEY / 2;
 	rc = RectMakeCenter(posX, posY, 50, 50);
@@ -146,6 +148,8 @@ void player::update()
 	infernoSetUp();
 	meteorSetUp();
 
+	dragonArcSetUp();
+
 	damagedCool();
 	//
 	takeCoin();
@@ -262,6 +266,11 @@ void player::render()
 	dragon->render();
 	Meteor->render();
 	inferno->render();
+
+	if (inferno->getGauging())
+	{
+		CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("infernoGauging"), posX, posY - 70);
+	}
 
 	if (INPUT->GetToggleKey('L'))
 	{
@@ -537,11 +546,11 @@ void player::blazeSetUp()
 			blaze->removeBomb(i);
 		}
 	}
-	//	// 저장된 앵글 방향으로 움직이기
-	//	/*posX += cosf(saveAngle);
-	//	posY += -sinf(saveAngle);*/
-	//}
-	//else basic = false;
+//	//	// 저장된 앵글 방향으로 움직이기
+//	//	/*posX += cosf(saveAngle);
+//	//	posY += -sinf(saveAngle);*/
+//	//}
+//	//else basic = false;
 }
 
 void player::infernoSetUp()
@@ -588,6 +597,15 @@ void player::meteorSetUp()
 		if (meteorStateCool == 0) signature = false;
 	}
 }
+
+void player::dragonArcSetUp()
+{
+	if (INPUT->GetKeyDown('E'))
+	{
+		dragon->fire(posX, posY, attackAngle);
+	}
+}
+
 
 void player::takeCoin()
 {
@@ -1070,7 +1088,12 @@ void player::damage(int damage, float attackAngle)
 	isDamaged = true;
 
 	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
-	DAMAGE->generator({ (long)posX, (long)posY }, damage, true);
+
+	float angle = attackAngle * (180 / PI);
+
+	bool checkAngle = angle > 90 && angle < 270;
+
+	DAMAGE->generator({ (long)posX, (long)posY }, "rNumbers", damage, checkAngle);
 
 
 	if (inferno->getGauging() && meteorStateCool != 0 && basic)return;

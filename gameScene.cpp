@@ -532,14 +532,15 @@ void gameScene::playerAttack()
 			{
 				int damage = _player->getBlaze()->getBullet()[i].atkPower + RANDOM->range(0, 3);
 
-				if (PLAYERDATA->criAppear()) damage = (float)damage * PLAYERDATA->getStat().criDamage;
-				else damage = (float)damage * PLAYERDATA->getStat().damage;
+				bool isCri = PLAYERDATA->criAppear();
 
+				if (isCri) damage = (float)damage * PLAYERDATA->getStat().criDamage;
+				else damage = (float)damage * PLAYERDATA->getStat().damage;
 
 				SOUNDMANAGER->play("blazeExp", false);
 				PARTICLE->explosionGenerate("explosionParticle", _player->getBlaze()->getBullet()[i].x + 20,
 					_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
-				enemy->getMinion()[j]->hit(damage, _player->getBlaze()->getBullet()[i].angle, 20.f, 0);
+				enemy->getMinion()[j]->hit(damage, _player->getBlaze()->getBullet()[i].angle, 20.f, 0, isCri);
 
 				_player->getBlaze()->setCol(i, true);
 
@@ -560,12 +561,13 @@ void gameScene::playerAttack()
 				int damage = _player->getMeteor()->getAtkPower(i) + RANDOM->range(0, 5);
 
 				//크리티컬?
-				if (PLAYERDATA->criAppear()) damage = (float)damage * PLAYERDATA->getStat().criDamage;
+				bool isCri = PLAYERDATA->criAppear();
+				if (isCri) damage = (float)damage * PLAYERDATA->getStat().criDamage;
 
 				else damage = (float)damage * PLAYERDATA->getStat().damage;
 
 				enemy->getMinion()[j]->hit(damage, _player->getMeteor()->getAngle(i),
-					30.f, _player->getMeteor()->getSkillNum());
+					30.f, _player->getMeteor()->getSkillNum(), isCri);
 
 				break;
 			}
@@ -580,12 +582,14 @@ void gameScene::playerAttack()
 			if (colCheck(_player->getDashFire()->getRect(i), enemy->getMinion()[j]->getRC()))
 			{
 				int damage = _player->getDashFire()->getAtk(i) + RANDOM->range(0, 5);
+				bool isCri = PLAYERDATA->criAppear();
 
-				if (PLAYERDATA->criAppear()) damage = (float)damage * PLAYERDATA->getStat().criDamage;
+				if (isCri) damage = (float)damage * PLAYERDATA->getStat().criDamage;
 				else damage = (float)damage * PLAYERDATA->getStat().damage;
+
 				if (0 >= enemy->getMinion()[j]->getHp())continue;
 
-				enemy->getMinion()[j]->hit(damage,70.f, 20.f, _player->getDashFire()->getSkillNum());
+				enemy->getMinion()[j]->hit(damage,70.f, 20.f, _player->getDashFire()->getSkillNum(), isCri);
 
 			}
 		}
@@ -615,7 +619,10 @@ void gameScene::playerAttack()
 			else if (PLAYERDATA->getGaugeTime() >= 50)
 			{
 				int damage = _player->getInferno()->getInf().atkPower;
-				if (PLAYERDATA->criAppear()) damage = (float)damage * PLAYERDATA->getStat().criDamage;
+
+				bool isCri = PLAYERDATA->criAppear();
+
+				if (isCri) damage = (float)damage * PLAYERDATA->getStat().criDamage;
 				else damage = (float)damage * PLAYERDATA->getStat().damage;
 				
 				float angle = getAngle(enemyX + 40, enemyY + 40,
@@ -625,7 +632,7 @@ void gameScene::playerAttack()
 				float y = enemyY - sinf(angle) * 4.5f;
 
 				enemy->getMinion()[i]->setPt(x, y);
-				enemy->getMinion()[i]->hit(damage, 0, 0.f, 3);
+				enemy->getMinion()[i]->hit(damage, 0, 0.f, 3, isCri);
 			}
 		}
 	}

@@ -2,11 +2,15 @@
 #include "singletonBase.h"
 struct tagDamage
 {
+	string keyName;
+
 	float x, y;
 	int damage;
 
 	int upForce;
 	int gravity;
+
+	bool isCritical;
 
 	float size;
 
@@ -22,7 +26,7 @@ public:
 	HRESULT init();
 	void render(HDC hdc);
 
-	void generator(POINT pt, int damage = 0, bool isLeft = true);
+	void generator(POINT pt, string keyName, int damage = 0, bool isLeft = true, bool isCritical = false);
 
 	
 };
