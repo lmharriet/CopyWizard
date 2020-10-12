@@ -136,7 +136,7 @@ public:
 	//»ç¸Á ÆÇÁ¤
 	void death();
 
-	void damage(int damage, float attackAngle);
+	void damage(int damage, float attackAngle, float knockBackX, float knockBackY);
 
 	void damagedCool();
 
