@@ -387,7 +387,7 @@ void effectManager::lightEffect(POINT pt, int maxEffect)
     for (int i = 0; i < maxEffect; i++)
     {
         int ranX = RANDOM->range(-50,50);
-        int ranY = RANDOM->range(-200,50);
+        int ranY = RANDOM->range(-300,50);
         int ranTime = RANDOM->range(50, 100);
 
         string str = "lightEffect";
