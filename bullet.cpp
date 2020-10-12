@@ -206,7 +206,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	isCoolTime = true;
 
 	//sound
-	SOUNDMANAGER->play("blazeFire", false);
+	if(SOUNDMANAGER->isPlaySound("RagingInfernoFire") == false) SOUNDMANAGER->play("RagingInfernoFire", false);
 
 }
 
@@ -614,9 +614,6 @@ void RagingInferno::update(int* gaugeTime)
 		}
 	}
 
-		
-
-
 }
 
 void RagingInferno::render()
@@ -675,7 +672,7 @@ void RagingInferno::fire(float x, float y, float angle, int* gaugeTime)
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
-	SOUNDMANAGER->play("RagingInfernoFire", false);
+	if (SOUNDMANAGER->isPlaySound("RagingInfernoFire") == false) SOUNDMANAGER->play("RagingInfernoFire", false);
 	*gaugeTime = 0;
 	isFire = true;
 	gauging = true;
@@ -704,7 +701,6 @@ void RagingInferno::move(int gaugeTime)
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 5, 5.f, 0.7f, 10);
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 7, 7.f, 0.6f, 10);
 			SOUNDMANAGER->play("RagingInfernoExp", false);
-
 		}
 
 		if (gaugeTime >= 50)
@@ -792,8 +788,6 @@ void dragonArc::update()
 
 	move();
 
-	
-
 }
 
 void dragonArc::render()
@@ -819,7 +813,7 @@ void dragonArc::fire(float x, float y, float angle)
 		dragon.y = y;
 		dragon.currentTime = 0;
 		dragon.lifeTime = 88;
-		dragon.speed = 10.f;
+		dragon.speed = 15.f;
 		dragon.rc = RectMakeCenter(dragon.x, dragon.y, 20, 20);
 
 		dragon.frameY = 1;
@@ -842,18 +836,13 @@ void dragonArc::move()
 
 	for (int i = 0; i < vDragon.size();)
 	{
-		if (i % 2 == 0 && count %3 ==0)
+		if (count % 3 == 0)
 		{
 			vDragon[i].index++;
 			if (vDragon[i].index > 35)
 				vDragon[i].index = 0;
 		}
-		else if( i%2 !=0 && count %3 ==0)
-		{
-			vDragon[i].index--;
-			if (vDragon[i].index < 0)
-				vDragon[i].index = 35;
-		}
+
 
 		if (vDragon[i].currentTime < 35 || vDragon[i].currentTime > 69)
 		{
@@ -863,12 +852,10 @@ void dragonArc::move()
 			if (i % 2 == 0)
 			{
 				vDragon[i].angle -= sinf(0.05f);
-
 			}
 			else
 			{
-				vDragon[i].angle += sinf(0.05f);	
-	
+				vDragon[i].angle += sinf(0.05f);
 			}
 
 			if (vDragon[i].currentTime == 34)
@@ -905,8 +892,6 @@ void dragonArc::move()
 			}
 		}
 
-		
-		
 		if (vDragon[i].currentTime == vDragon[i].lifeTime) vDragon.erase(vDragon.begin() + i);
 		else
 		{
