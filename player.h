@@ -95,6 +95,8 @@ public:
 	void infernoSetUp();
 	void meteorSetUp();
 
+	void dragonArcSetUp();
+
 	void takeCoin();
 	void takeHealball();
 	//collision detection

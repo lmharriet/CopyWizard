@@ -313,7 +313,17 @@ public:
 	void setActive(bool temp) { isActive = temp; }
 };
 
+struct tagDragon
+{
+	RECT rc;
+	float x, y;
+	float speed;
+	float angle;
+	float saveAngle;
 
+	int lifeTime;
+	int currentTime;
+};
 //미완성
 //=============================================================
 //	##dragonArc## 
@@ -322,7 +332,7 @@ class dragonArc : public gameNode
 {
 private:
 	//총알 구조체를 담을 벡터선언
-	vector<tagArcana> dragon;
+	vector<tagDragon> vDragon;
 	
 	//	vector<tagBullet>::iterator _viBullet;
 

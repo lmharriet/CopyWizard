@@ -795,16 +795,80 @@ void dragonArc::update()
 
 void dragonArc::render()
 {
-
+	for (int i = 0; i < vDragon.size(); i++)
+	{
+		CAMERAMANAGER->Ellipse(getMemDC(), vDragon[i].rc);
+	}
 }
 //ÃÑ¾Ë¹ß»ç
 void dragonArc::fire(float x, float y, float angle)
 {
+	tagDragon dragon;
 
+	//float ptAngle = getAngle(x,y, _ptMouse.x, _ptMouse.y);
+
+	dragon.x = x;
+	dragon.y = y;
+	dragon.currentTime = 0;
+	dragon.lifeTime = 88;
+	dragon.speed = 15.f;
+	dragon.rc = RectMakeCenter(dragon.x, dragon.y, 20, 20);
+
+	dragon.angle = .7f + angle;
+	dragon.saveAngle = -.7f + angle;
+
+	vDragon.push_back(dragon);
+
+	dragon.angle = -.7f + angle;
+	dragon.saveAngle = .7f + angle;
+	vDragon.push_back(dragon);
 }
 
 //ÃÑ¾Ë¹«ºê
 void dragonArc::move()
 {
+	for (int i = 0; i < vDragon.size();)
+	{
+		if (vDragon[i].currentTime < 35 || vDragon[i].currentTime > 69)
+		{
+			vDragon[i].x += cosf(vDragon[i].angle) * vDragon[i].speed;
+			vDragon[i].y -= sinf(vDragon[i].angle) * vDragon[i].speed;
 
+			if (i % 2 == 0) vDragon[i].angle -= sinf(0.05f);
+			else vDragon[i].angle += sinf(0.05f);
+
+			if (vDragon[i].currentTime == 34)
+			{
+				vDragon[i].angle = vDragon[i].saveAngle;
+
+				vDragon[i].speed -= 2.6f;
+			}
+		}
+		else
+		{
+			vDragon[i].x += cosf(vDragon[i].angle) * vDragon[i].speed;
+			vDragon[i].y -= sinf(vDragon[i].angle) * vDragon[i].speed;
+
+			if (i % 2 == 0) vDragon[i].angle += sinf(0.05f);
+			else vDragon[i].angle -= sinf(0.05f);
+
+			if (vDragon[i].currentTime == 69)
+			{
+				vDragon[i].angle = vDragon[i].saveAngle;
+
+				if (i % 2 == 0)vDragon[i].angle = vDragon[i].saveAngle + PI / 2;
+				else vDragon[i].angle = vDragon[i].saveAngle - PI / 2;
+
+				vDragon[i].speed += 1.6f;
+			}
+		}
+
+		if (vDragon[i].currentTime == vDragon[i].lifeTime) vDragon.erase(vDragon.begin() + i);
+		else
+		{
+			vDragon[i].currentTime++;
+
+			i++;
+		}
+	}
 }
