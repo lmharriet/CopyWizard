@@ -4,6 +4,7 @@
 HRESULT damageManager::init()
 {
 	IMAGEMANAGER->addImage("critical", "Images/effect/critical.bmp", 96, 65, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("rNumbers", "Images/ui/rNumbers.bmp", 264, 29, 13, 1);
 	time = 0;
 	return S_OK;
 }
@@ -11,10 +12,13 @@ HRESULT damageManager::init()
 void damageManager::render(HDC hdc)
 {
 	time++;
-	image* img = IMAGEMANAGER->findImage("numbers");
+
 	image* cri = IMAGEMANAGER->findImage("critical");
+
 	for (int i = 0; i < vDamage.size();)
 	{
+		image* img = IMAGEMANAGER->findImage(vDamage[i].keyName);
+
 		int first = vDamage[i].damage % 10; // 일의 자리
 		int second = vDamage[i].damage / 10; // 십의 자리
 
@@ -111,9 +115,10 @@ void damageManager::render(HDC hdc)
 	}
 }
 
-void damageManager::generator(POINT pt, int damage, bool isLeft, bool isCritical)
+void damageManager::generator(POINT pt, string keyName, int damage, bool isLeft, bool isCritical)
 {
 	tagDamage Damage;
+	Damage.keyName = keyName;
 
 	Damage.x = pt.x;
 	Damage.y = pt.y;

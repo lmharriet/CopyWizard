@@ -417,9 +417,9 @@ void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum, 
 		hp -= allDamage;
 
 	if(cos(_hitAngle)*2.f>0)
-		DAMAGE->generator(pt, allDamage,false, isCritical);
+		DAMAGE->generator(pt, "numbers", allDamage,false, isCritical);
 	else
-		DAMAGE->generator(pt, allDamage,true, isCritical);
+		DAMAGE->generator(pt, "numbers", allDamage,true, isCritical);
 
 	hitAngle = _hitAngle;
 	knockBack = _knockBack;
