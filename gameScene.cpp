@@ -613,6 +613,7 @@ void gameScene::playerAttack()
 				//충돌되면 그 자리에서 공격
 				if (PLAYERDATA->getGaugeTime() < 50)
 				{
+					SOUNDMANAGER->play("RagingInfernoExp", false);
 					PLAYERDATA->setGaugeTime(50);
 					_player->getInferno()->setActive(true);
 				}

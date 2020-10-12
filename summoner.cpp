@@ -151,11 +151,6 @@ void summoner::stateATK()
         
         CAMERAMANAGER->StretchFrameRender(getMemDC(), skillImg, pos.x + 20, pos.y - 72, 0, 0, imgSize);
     }
-        //skillImg->frameRender(getMemDC(), cul.x + 20, cul.y - 72, 0, 0);
-
-        
-    
-    
    
     if (atkDirection[MONSTER_LEFT])
     {

@@ -633,6 +633,7 @@ void player::takeHealball()
 			PLAYERDATA->setHp(PLAYERDATA->getHp() + DROP->getBallVec()[i].heal);
 			PARTICLE->potionParticlePlay(posX, posY);
 			DROP->delHeal(i);
+			SOUNDMANAGER->play("healBall", false);
 		}
 	}
 }

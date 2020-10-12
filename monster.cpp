@@ -442,7 +442,7 @@ void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum, 
 		SOUNDMANAGER->play(str, false,-0.38f);
 		break;
 	case MONSTERKIND::SUMMONER:
-		//SOUNDMANAGER->play("golemHit", false); //hit sound change
+		SOUNDMANAGER->play("golemHit", false,-0.3f); //hit sound change
 		break;
 	
 	}

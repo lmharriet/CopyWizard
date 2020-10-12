@@ -159,6 +159,7 @@ void mainGame::soundInit()
 	SOUNDMANAGER->addSound("blazeExp", "Sound/player/blaze_exp.mp3");
 	SOUNDMANAGER->addSound("RagingInfernoExp", "Sound/player/RagingInferno_exp.mp3");
 	SOUNDMANAGER->addSound("RagingInfernoFire", "Sound/player/RagingInferno_fire.mp3");
+	SOUNDMANAGER->addSound("healBall", "Sound/healBall.mp3");
 	
 	sfxVolume = 0.5f;
 }
