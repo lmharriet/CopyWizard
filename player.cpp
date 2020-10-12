@@ -1088,7 +1088,12 @@ void player::damage(int damage, float attackAngle)
 	isDamaged = true;
 
 	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
-	DAMAGE->generator({ (long)posX, (long)posY }, "rNumbers", damage, true);
+
+	float angle = attackAngle * (180 / PI);
+
+	bool checkAngle = angle > 90 && angle < 270;
+
+	DAMAGE->generator({ (long)posX, (long)posY }, "rNumbers", damage, checkAngle);
 
 
 	if (inferno->getGauging() && meteorStateCool != 0 && basic)return;
