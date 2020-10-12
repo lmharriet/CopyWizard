@@ -61,7 +61,7 @@ void enemyManager::update()
 	}
 	
 	//미니언 총알발사
-	this->minionBulletFire(CAMERAMANAGER->GetRelativeX(playerRC.left)-20, CAMERAMANAGER->GetRelativeY(playerRC.top));
+	this->minionBulletFire(CAMERAMANAGER->GetRelativeX(playerRC.left), CAMERAMANAGER->GetRelativeY(playerRC.top));
 
 	
 }
@@ -123,10 +123,14 @@ void enemyManager::minionBulletFire(float aimX, float aimY)
 			break;
 		case MONSTERKIND::KNIGHT:
 			knightBullet(angle);
+
 			break;
 			
 		case MONSTERKIND::SUMMONER:
+			angle = getAngle((float)(*_viMinion)->getCulPos().x+50, (float)(*_viMinion)->getCulPos().y-52, 
+				(float)aimX, (float)aimY);
 			summonerBullet(angle);
+			SOUNDMANAGER->play("summonerFire", false,-0.3f);
 			break;
 		}
 		

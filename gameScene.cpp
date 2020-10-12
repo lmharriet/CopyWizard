@@ -141,27 +141,7 @@ void gameScene::render()
 		CAMERAMANAGER->FrameRender(getMemDC(), img, tile[num].rc.left, tile[num].rc.top, tile[num].frame.x, tile[num].frame.y);
 	}
 
-	//CAMERAMANAGER->Rectangle(getMemDC(), checkArea);
-	//Rectangle(getMemDC(), checkArea);
-	//_player->render();
-
-	DROP->render(getMemDC());
-	EFFECT->pRender(getMemDC());
-
-	bool enemyProRender = false;
-	for (int i = 0; i < enemy->getMinion().size(); i++)
-	{
-		if (_player->getY() >= enemy->getMinion()[i]->getCenterY())
-		{
-			enemy->getMinion()[i]->render();
-		}
-	}
-
-	bool isRender = false;
-
-	//CAMERAMANAGER->Rectangle(getMemDC(), cam);
-
-	//object image render
+	//deco image render
 	for (int f = 0; f < vTile.size(); f++)
 	{
 		int i = vTile[f];
@@ -172,6 +152,28 @@ void gameScene::render()
 
 		CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top);
 	}
+
+	//CAMERAMANAGER->Rectangle(getMemDC(), checkArea);
+	//Rectangle(getMemDC(), checkArea);
+	//_player->render();
+
+	DROP->render(getMemDC());
+	EFFECT->pRender(getMemDC());
+
+	bool* eRender = new bool[enemy->getMinion().size()];
+
+	for (int i = 0; i < enemy->getMinion().size(); i++)
+	{
+		if (_player->getY() >= enemy->getMinion()[i]->getCenterY())
+		{
+			enemy->getMinion()[i]->render();
+			eRender[i] = true;
+		}
+	}
+
+	bool isRender = false;
+
+	//CAMERAMANAGER->Rectangle(getMemDC(), cam);
 
 	string key;
 	image* img;
@@ -470,12 +472,12 @@ void gameScene::render()
 	enemy->render();
 
 	if (!isRender) _player->render();
+
 	for (int i = 0; i < enemy->getMinion().size(); i++)
 	{
-		if (_player->getY() < enemy->getMinion()[i]->getCenterY())
-		{
-			enemy->getMinion()[i]->render();
-		}
+		if (eRender[i] == true)continue;
+		
+		enemy->getMinion()[i]->render();
 	}
 
 	//PARTICLE->render(getMemDC(), CAMERAMANAGER->getRect());
@@ -648,6 +650,7 @@ void gameScene::enemyAttack()
 			if (enemy->getBullet()->getBullet()[i].kind == MONSTERKIND::SUMMONER)
 			{
 				PARTICLE->crashRockParticlePlay(_player->getX(), _player->getY());
+				SOUNDMANAGER->play("summonerAtk", false, -0.18f);
 			}
 			enemy->getBullet()->removeBullet(i);
 			SOUNDMANAGER->play("playerHit", false,-0.18f);
@@ -704,5 +707,10 @@ void gameScene::soundInit()
 	SOUNDMANAGER->addSound("knightHit0", "Sound/knight_hit0.mp3");
 	SOUNDMANAGER->addSound("knightHit1", "Sound/knight_hit1.mp3");
 
+	SOUNDMANAGER->addSound("summonerCasting", "Sound/summoner_casting.mp3");
+	SOUNDMANAGER->addSound("summonerFire", "Sound/summoner_fire.mp3");
+	SOUNDMANAGER->addSound("summonerAtk", "Sound/summoner_atk.mp3");
+	
+	
 
 }
