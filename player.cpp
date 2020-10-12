@@ -628,6 +628,7 @@ void player::takeCoin()
 		{
 			PLAYERDATA->setCoin(PLAYERDATA->getCoin() + DROP->getCoinVec()[i].money);
 			DROP->delCoin(i);
+			SOUNDMANAGER->play("coinGet", false, 0.13f);
 		}
 	}
 }
