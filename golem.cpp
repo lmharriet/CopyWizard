@@ -31,7 +31,7 @@ void golem::update()
             state = STATEIMAGE::WALK;
             pos.x += cos(angle) * speed;
             pos.y += -sin(angle) * speed;
-            if (0 < cos(angle) * speed)
+            if (rc.left + img->getFrameWidth() / 2 < playerRC.left)
             {
                 atkDirection[MONSTER_LEFT] = false;
                 atkDirection[MONSTER_RIGHT] = true;
@@ -43,7 +43,7 @@ void golem::update()
                 atkDirection[MONSTER_LEFT] = true;
                 atkDirection[MONSTER_RIGHT] = false;
             }
-            if (0 < sin(angle) * speed)
+            if (rc.top + img->getFrameHeight() / 2 > playerRC.top)
             {
                
                 atkDirection[MONSTER_UP] = true;
@@ -78,8 +78,8 @@ void golem::update()
 void golem::render()
 {
     stateImageRender();
-   //FrameRect(getMemDC(), playerRC,RGB(255,255,255));
-   //FrameRect(getMemDC(), rc,RGB(255,255,255));
+   FrameRect(getMemDC(), playerRC,RGB(255,255,255));
+   FrameRect(getMemDC(), rc,RGB(255,255,255));
   // CAMERAMANAGER->Rectangle(getMemDC(), rc);
 }
 
@@ -225,7 +225,7 @@ void golem::stateATK()
         
         int frameSpeed = 6;
        // cout << frameSpeed << endl;
-        if (atkDirection[MONSTER_UP] && atkDirection[MONSTER_LEFT] && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 40)
+        if (atkDirection[MONSTER_UP] && atkDirection[MONSTER_LEFT] && playerRC.left > rc.left && playerRC.right < rc.right )
         {
             bulletDirection[MONSTER_UP] = true;
             bulletDirection[MONSTER_DOWN] = false;
@@ -265,7 +265,7 @@ void golem::stateATK()
             skillImg->frameRender(getMemDC(), cul.x + 10, cul.y - 30, smallSlashIndex.x, smallSlashIndex.y);
         }
 
-        else if (atkDirection[MONSTER_DOWN] && atkDirection[MONSTER_LEFT] && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 80)
+        else if (atkDirection[MONSTER_DOWN] && atkDirection[MONSTER_LEFT] && playerRC.left > rc.left&& playerRC.right > rc.right )
         {
             bulletDirection[MONSTER_DOWN] = true;
             bulletDirection[MONSTER_UP] = false;

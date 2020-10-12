@@ -36,7 +36,7 @@ void bullet::render()
 				_vBullet[i].y - _vBullet[i].bulletImage->getFrameHeight() / 2,
 				_vBullet[i].FrameX, _vBullet[i].FrameY);
 
-		//CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
+		CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
 		
 	}
 }
@@ -88,15 +88,15 @@ void bullet::move()
 		switch (_vBullet[i].kind)
 		{
 		case MONSTERKIND::GOLEM:
-			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 90, 120);
+			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 130, 200);
 			_vBullet[i].count++;
-			if (_vBullet[i].count >= 10)
+			if (_vBullet[i].count >= 50)
 				_vBullet.erase(_vBullet.begin() + i);
 			break;
 		case MONSTERKIND::KNIGHT:
 			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 110, 150);
 			_vBullet[i].count++;
-			if (_vBullet[i].count >= 30)
+			if (_vBullet[i].count >= 5)
 				_vBullet.erase(_vBullet.begin() + i);
 			break;
 		case MONSTERKIND::SUMMONER:
