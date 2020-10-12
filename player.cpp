@@ -496,7 +496,7 @@ void player::dashFunction()
 	else if (dashUp)
 	{
 		//순수 UP
-		if (!tileCheck[(int)DIRECTION::TOP].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol 
+		if (!tileCheck[(int)DIRECTION::TOP].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol
 			&& !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol)
 			posY -= speed;
 
@@ -555,11 +555,11 @@ void player::blazeSetUp()
 			blaze->removeBomb(i);
 		}
 	}
-//	//	// 저장된 앵글 방향으로 움직이기
-//	//	/*posX += cosf(saveAngle);
-//	//	posY += -sinf(saveAngle);*/
-//	//}
-//	//else basic = false;
+	//	//	// 저장된 앵글 방향으로 움직이기
+	//	//	/*posX += cosf(saveAngle);
+	//	//	posY += -sinf(saveAngle);*/
+	//	//}
+	//	//else basic = false;
 }
 
 void player::infernoSetUp()
@@ -611,11 +611,11 @@ void player::dragonArcSetUp()
 {
 	if (INPUT->GetKeyDown('E'))
 	{
-		float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY( _ptMouse.y));
+		float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 
 		//dragon->fire(posX, posY, angle);
 		dragon->phoenixFire(posX, posY, angle);
-	
+
 	}
 
 }
@@ -1097,7 +1097,7 @@ void player::death()
 	}
 }
 //플레이어 피격 데미지
-void player::damage(int damage, float attackAngle)
+void player::damage(int damage, float attackAngle, bool bossScene)
 {
 	if (PLAYERDATA->getHp() <= 0) return;
 	isDamaged = true;
@@ -1116,10 +1116,17 @@ void player::damage(int damage, float attackAngle)
 	int index;
 	for (int i = 0; i < 4; i++)	index = i;
 	if (tileCheck[index].isCol || tileCheck[index + 4].isCol || diagonalCheck[index].isCol)return;
-
-	posX += cosf(attackAngle) * 3.f;
-	posY -= sinf(attackAngle) * 3.f;
-
+	
+	if (!bossScene)
+	{
+		posX += cosf(attackAngle) * 3.f;
+		posY -= sinf(attackAngle) * 3.f;
+	}
+	else
+	{
+		posX += cosf(attackAngle) * 6.f;
+		posY -= sinf(attackAngle) * 6.f;
+	}
 
 }
 
