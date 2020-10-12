@@ -1097,7 +1097,7 @@ void player::death()
 	}
 }
 //플레이어 피격 데미지
-void player::damage(int damage, float attackAngle, bool bossScene)
+void player::damage(int damage, float attackAngle, float knockBackX,float knockBackY)
 {
 	if (PLAYERDATA->getHp() <= 0) return;
 	isDamaged = true;
@@ -1115,18 +1115,12 @@ void player::damage(int damage, float attackAngle, bool bossScene)
 
 	int index;
 	for (int i = 0; i < 4; i++)	index = i;
+
 	if (tileCheck[index].isCol || tileCheck[index + 4].isCol || diagonalCheck[index].isCol)return;
-	
-	if (!bossScene)
-	{
-		posX += cosf(attackAngle) * 3.f;
-		posY -= sinf(attackAngle) * 3.f;
-	}
-	else
-	{
-		posX += cosf(attackAngle) * 6.f;
-		posY -= sinf(attackAngle) * 6.f;
-	}
+
+
+	posX += cosf(attackAngle) * knockBackX;
+	posY -= sinf(attackAngle) * knockBackY;
 
 }
 
