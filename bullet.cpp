@@ -37,6 +37,7 @@ void bullet::render()
 				_vBullet[i].FrameX, _vBullet[i].FrameY);
 
 		//CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
+		
 	}
 }
 
@@ -93,9 +94,9 @@ void bullet::move()
 				_vBullet.erase(_vBullet.begin() + i);
 			break;
 		case MONSTERKIND::KNIGHT:
-			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 90, 120);
+			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 110, 150);
 			_vBullet[i].count++;
-			if (_vBullet[i].count >= 5)
+			if (_vBullet[i].count >= 30)
 				_vBullet.erase(_vBullet.begin() + i);
 			break;
 		case MONSTERKIND::SUMMONER:
