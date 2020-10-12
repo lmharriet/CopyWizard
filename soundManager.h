@@ -25,7 +25,7 @@ private:
 	arrSound _mTotalSound;	//맵에 담아둘 사운드들
 
 	float _volumeBGM;
-
+	float _volumeSFX;
 public:
 	HRESULT init();
 	void release();
@@ -51,4 +51,5 @@ public:
 	void setBackGroundVolume(string keyName, float volume);
 	void fadeIn(string keyName, float voulme);
 	inline float getVolumeBGM(){ return _volumeBGM; }
+	inline void setVolumeSFX(float volume) { _volumeSFX = volume; }
 };

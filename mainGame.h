@@ -13,6 +13,7 @@ class mainGame : public gameNode
 {
 private:
 	float volume;
+	float sfxVolume;
 public:
 	HRESULT init();
 	void release();

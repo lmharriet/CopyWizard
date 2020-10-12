@@ -118,6 +118,20 @@ void mainGame::volumeControl()
 			SOUNDMANAGER->setBackGroundVolume("bossBGM", volume);
 		}
 	}
+
+	if (INPUT->GetKeyDown(VK_OEM_4))//down
+	{
+		if (sfxVolume >= -0.5f)
+			sfxVolume -= 0.05f;
+		SOUNDMANAGER->setVolumeSFX(sfxVolume);
+	}
+	if(INPUT->GetKeyDown(VK_OEM_6))//up
+	{
+		if (sfxVolume <= 0.5f)
+			sfxVolume += 0.05f;
+		SOUNDMANAGER->setVolumeSFX(sfxVolume);
+	}
+
 }
 
 void mainGame::soundInit()
@@ -141,5 +155,5 @@ void mainGame::soundInit()
 	SOUNDMANAGER->addSound("RagingInfernoExp", "Sound/player/RagingInferno_exp.mp3");
 	SOUNDMANAGER->addSound("RagingInfernoFire", "Sound/player/RagingInferno_fire.mp3");
 	
-
+	sfxVolume = 0.0f;
 }

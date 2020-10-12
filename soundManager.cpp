@@ -18,6 +18,7 @@ HRESULT soundManager::init()
 	memset(_channel, 0, sizeof(Channel*) * SOUNDBUFFER);
 
 	_volumeBGM = 0.5f;
+	_volumeSFX = 0.0f;
 
 	return S_OK;
 }
@@ -103,7 +104,9 @@ void soundManager::play(string keyName, bool isBGM, float volume)
 				_channel[count]->setVolume(0);
 
 			else
-				_channel[count]->setVolume(volume);
+			{
+				_channel[count]->setVolume( volume+_volumeSFX);
+			}
 		}
 	}
 }
