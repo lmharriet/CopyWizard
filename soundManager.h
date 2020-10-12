@@ -35,7 +35,7 @@ public:
 	void addSound(string keyName, string soundName, bool bgm = false, bool loop = false);
 
 	//사운드 재생
-	void play(string keyName, bool isBGM,float volume = 0.5f); //0.0f(min) ~ 1.0f(max)
+	void play(string keyName, bool isBGM,float volume = 0.0f); //0.0f(min) ~ 1.0f(max)
 	//사운드 정지
 	void stop(string keyName);
 	//사운드 일시정지

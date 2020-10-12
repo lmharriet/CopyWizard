@@ -536,7 +536,7 @@ void gameScene::playerAttack()
 				else damage = (float)damage * PLAYERDATA->getStat().damage;
 
 
-				SOUNDMANAGER->play("blazeExp", false, 0.3f);
+				SOUNDMANAGER->play("blazeExp", false);
 				PARTICLE->explosionGenerate("explosionParticle", _player->getBlaze()->getBullet()[i].x + 20,
 					_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
 				enemy->getMinion()[j]->hit(damage, _player->getBlaze()->getBullet()[i].angle, 20.f, 0);

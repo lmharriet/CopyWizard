@@ -18,7 +18,7 @@ HRESULT soundManager::init()
 	memset(_channel, 0, sizeof(Channel*) * SOUNDBUFFER);
 
 	_volumeBGM = 0.5f;
-	_volumeSFX = 0.0f;
+	_volumeSFX = 0.5f;
 
 	return S_OK;
 }
