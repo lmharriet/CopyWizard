@@ -88,6 +88,9 @@
     <Filter Include="GameFramework\총알">
       <UniqueIdentifier>{0850c6c3-b3ea-4bbc-818b-2f7be3085366}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameFramework\매니져\상점">
+      <UniqueIdentifier>{707daf58-cdbf-46b0-9ac5-38c78a8e7501}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
@@ -194,6 +197,7 @@
     <ClCompile Include="boss.cpp">
       <Filter>MainGame\씬 모음\보스</Filter>
     </ClCompile>
+    <ClCompile Include="shop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -312,5 +316,6 @@
     <ClInclude Include="startScene.h">
       <Filter>MainGame\씬 모음\시작</Filter>
     </ClInclude>
+    <ClInclude Include="shop.h" />
   </ItemGroup>
 </Project>
