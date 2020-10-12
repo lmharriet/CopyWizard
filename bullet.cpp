@@ -206,7 +206,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	isCoolTime = true;
 
 	//sound
-	SOUNDMANAGER->play("blazeFire", false, 0.3f);
+	SOUNDMANAGER->play("blazeFire", false);
 
 }
 
