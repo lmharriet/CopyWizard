@@ -42,6 +42,13 @@ struct infoTransfer
 	POINT pt;
 };
 
+struct tagCoinView
+{
+	bool isUp;
+	int currentTime;
+	int lifeTime;
+};
+
 class dropManager : public singletonBase<dropManager>
 {
 private:
