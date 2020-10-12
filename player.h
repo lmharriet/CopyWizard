@@ -6,6 +6,22 @@
 #include "unitNode.h"
 #include "inventory.h";
 
+//test
+enum class ARCANA
+{
+	EMPTY,
+	BASIC,
+	DASH,
+	STANDARD,
+	SIGNATURE
+};
+//test
+struct tagAllSkill
+{
+	string name;
+	ARCANA type;
+
+};
 class player : public gameNode
 {
 private:
@@ -13,6 +29,10 @@ private:
 	vector<int> vTile;
 	vector<int> vWall;
 	
+	//test
+	tagAllSkill arcana;
+
+
 	bomb* blaze;
 	dragonArc* dragon;
 	meteor* Meteor;
@@ -119,6 +139,8 @@ public:
 	void damage(int damage, float attackAngle);
 
 	void damagedCool();
+
+	void arcanaCheck();
 
 	void buttonDown();
 	void viewText();

@@ -72,6 +72,11 @@ HRESULT player::init()
 	isDamaged = false;
 	isDead = false;
 
+	//test
+	arcana.name = "nonSkill";
+	arcana.type = ARCANA::EMPTY;
+
+
 	//sound
 	walkCount = 0;
 
@@ -608,8 +613,11 @@ void player::dragonArcSetUp()
 	{
 		float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY( _ptMouse.y));
 
-		dragon->fire(posX, posY, angle);
+		//dragon->fire(posX, posY, angle);
+		dragon->phoenixFire(posX, posY, angle);
+	
 	}
+
 }
 
 void player::takeCoin()
@@ -1129,6 +1137,9 @@ void player::damagedCool()
 	}
 }
 
+void player::arcanaCheck()
+{
+}
 
 //del
 void player::viewText()

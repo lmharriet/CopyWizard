@@ -206,7 +206,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	isCoolTime = true;
 
 	//sound
-	if(SOUNDMANAGER->isPlaySound("RagingInfernoFire") == false) SOUNDMANAGER->play("RagingInfernoFire", false);
+	SOUNDMANAGER->play("blazeFire", false);
 
 }
 
@@ -402,7 +402,7 @@ void meteor::makeCircle(float x, float y)
 
 void meteor::creatMeteor(float x, float y, float angle)
 {
-	if (upgrade == true)
+	if (upgrade != true)
 	{
 		tagMeteor meteor;
 		meteor.endY = y;
@@ -775,6 +775,10 @@ HRESULT dragonArc::init()
 	IMAGEMANAGER->addFrameImage("dragon", "resource/player/dragonArc.bmp", 1800 * 3, 100 * 3, 36, 2);
 	count = index = 0;
 	return S_OK;
+
+	memset(&dragonHead, 0, sizeof(dragonHead));
+	upgrade = false;
+
 }
 
 void dragonArc::release()
@@ -786,7 +790,9 @@ void dragonArc::update()
 {
 	count++;
 
-	move();
+	//	move();
+
+	phoenixMove();
 
 }
 
@@ -807,11 +813,17 @@ void dragonArc::render()
 			vDragon[i].x - vDragon[i].img->getFrameWidth() / 2,
 			vDragon[i].y - vDragon[i].img->getFrameHeight() / 2, vDragon[i].index, vDragon[i].frameY);
 	}
+
+	if (dragonHead.isFire)Ellipse(getMemDC(), RectMakeCenter(dragonHead.x, dragonHead.y, 40, 40));
+	for (int i = 0; i < vWings.size(); i++)
+	{
+		Ellipse(getMemDC(), RectMakeCenter(vWings[i].x, vWings[i].y, 40, 40));
+	}
 }
 
 void dragonArc::fire(float x, float y, float angle)
 {
-	if (vDragon.size() < 4)
+	if (vDragon.size() < 2)
 	{
 		tagDragon dragon;
 
@@ -829,7 +841,7 @@ void dragonArc::fire(float x, float y, float angle)
 		dragon.index = angle * 18 / PI;//0-35
 
 		vDragon.push_back(dragon);
-	
+
 		dragon.index = 0;
 		dragon.angle = -.7f + angle;
 		dragon.saveAngle = .7f + angle;
@@ -846,7 +858,6 @@ void dragonArc::move()
 
 	for (int i = 0; i < vDragon.size();)
 	{
-
 		if (vDragon[i].currentTime < 35 || vDragon[i].currentTime > 69)
 		{
 			vDragon[i].x += cosf(vDragon[i].angle) * vDragon[i].speed;
@@ -911,6 +922,250 @@ void dragonArc::move()
 		else
 		{
 			vDragon[i].currentTime++;
+			i++;
+		}
+	}
+}
+
+void dragonArc::phoenixFire(float x, float y, float angle)
+{
+	if (upgrade)
+	{
+		//fire
+		if (dragonHead.isFire == false)
+		{
+			dragonHead.isFire = true;
+			dragonHead.currentTime = 0;
+			dragonHead.angle = angle;//getAngle(player.x, player.y, _ptMouse.x, _ptMouse.y);
+			dragonHead.x = x + cosf(dragonHead.angle) * -150.f;
+			dragonHead.y = y - sinf(dragonHead.angle) * 50.f;
+			dragonHead.lifeTime = 240;
+			dragonHead.speed = 7.f;
+			dragonHead.persent = 0.8f;
+
+			//bullet x 2
+			tagDragon wings;
+			wings.currentTime = 0;
+			wings.angle = dragonHead.angle;
+			wings.x = x;
+			wings.y = y;
+			wings.lifeTime = 240;
+			wings.speed = 7.f;
+
+			vWings.push_back(wings);
+			vWings.push_back(wings);
+
+			//bullet x 2
+			vWings.push_back(wings);
+			vWings.push_back(wings);
+
+			//bullet x 2
+			vWings.push_back(wings);
+			vWings.push_back(wings);
+		}
+	}
+}
+void dragonArc::phoenixMove()
+{
+	//move
+	if (dragonHead.isFire)
+	{
+		//pos
+		dragonHead.x += cosf(dragonHead.angle) * dragonHead.speed * dragonHead.persent;
+		dragonHead.y -= sinf(dragonHead.angle) * dragonHead.speed * dragonHead.persent;
+
+		//del
+		if (dragonHead.currentTime == dragonHead.lifeTime)dragonHead.isFire = false;
+
+		else dragonHead.currentTime++;
+	}
+
+	for (int i = 0; i < vWings.size();)
+	{
+		vWings[i].x += cosf(vWings[i].angle) * vWings[i].speed * dragonHead.persent;
+		vWings[i].y -= sinf(vWings[i].angle) * vWings[i].speed * dragonHead.persent;
+
+		if (vWings[i].currentTime < 20)
+		{
+			if (i == 0) // static
+			{
+				vWings[i].x += cosf(vWings[i].angle + PI / 2) * 3;
+				vWings[i].y -= sinf(vWings[i].angle + PI / 2) * 3;
+			}
+
+			else if (i == 1) // static
+			{
+				vWings[i].x += cosf(vWings[i].angle - PI / 2) * 3;
+				vWings[i].y -= sinf(vWings[i].angle - PI / 2) * 3;
+			}
+
+			else if (i == 2) // <<-, ->
+			{
+				vWings[i].x += cosf(vWings[i].angle + (290 * (PI / 180))) * 4;
+				vWings[i].y -= sinf(vWings[i].angle + (290 * (PI / 180))) * 4;
+			}
+
+			else if (i == 3) // <<-, ->
+			{
+				vWings[i].x += cosf(vWings[i].angle - (290 * (PI / 180))) * 4;
+				vWings[i].y -= sinf(vWings[i].angle - (290 * (PI / 180))) * 4;
+			}
+
+			else if (i == 4) // <-
+			{
+				vWings[i].x += cosf(vWings[i].angle + PI / 2) * 6;
+				vWings[i].y -= sinf(vWings[i].angle + PI / 2) * 6;
+			}
+
+			else if (i == 5) // <-
+			{
+				vWings[i].x += cosf(vWings[i].angle - PI / 2) * 6;
+				vWings[i].y -= sinf(vWings[i].angle - PI / 2) * 6;
+			}
+		}
+
+		else if (vWings[i].currentTime < 40)
+		{
+			//2,3 <<-
+			if (i == 2 || i == 3)
+			{
+				vWings[i].x += cosf(vWings[i].angle - PI) * 5;
+				vWings[i].y -= sinf(vWings[i].angle - PI) * 5;
+
+				if (i == 2)
+				{
+					vWings[i].x += cosf(vWings[i].angle + (290 * (PI / 180))) * 2;
+					vWings[i].y -= sinf(vWings[i].angle + (290 * (PI / 180))) * 2;
+				}
+
+				else
+				{
+					vWings[i].x += cosf(vWings[i].angle - (290 * (PI / 180))) * 2;
+					vWings[i].y -= sinf(vWings[i].angle - (290 * (PI / 180))) * 2;
+				}
+			}
+			//4,5 <-
+			else if (i == 4 || i == 5)
+			{
+				vWings[i].x += cosf(vWings[i].angle - PI) * 5.f;
+				vWings[i].y -= sinf(vWings[i].angle - PI) * 5.f;
+
+				if (i == 4)
+				{
+					vWings[i].x += cosf(vWings[i].angle + PI / 2) * 3;
+					vWings[i].y -= sinf(vWings[i].angle + PI / 2) * 3;
+				}
+
+				else
+				{
+					vWings[i].x += cosf(vWings[i].angle - PI / 2) * 3;
+					vWings[i].y -= sinf(vWings[i].angle - PI / 2) * 3;
+				}
+			}
+		}
+
+		else if (vWings[i].currentTime > 80 && vWings[i].currentTime < 100)
+		{
+			//2,3 ->>
+			if (i == 2 || i == 3)
+			{
+				vWings[i].x += cosf(vWings[i].angle) * 4;
+				vWings[i].y -= sinf(vWings[i].angle) * 4;
+
+				if (i == 2)
+				{
+					vWings[i].x += cosf(vWings[i].angle - (290 * (PI / 180))) * 2;
+					vWings[i].y -= sinf(vWings[i].angle - (290 * (PI / 180))) * 2;
+				}
+
+				else
+				{
+					vWings[i].x += cosf(vWings[i].angle + (290 * (PI / 180))) * 2;
+					vWings[i].y -= sinf(vWings[i].angle + (290 * (PI / 180))) * 2;
+				}
+			}
+			//4,5 ->
+			else if (i == 4 || i == 5)
+			{
+				vWings[i].x += cosf(vWings[i].angle) * 3;
+				vWings[i].y -= sinf(vWings[i].angle) * 3;
+
+				if (i == 4)
+				{
+					vWings[i].x += cosf(vWings[i].angle - PI / 2) * 3;
+					vWings[i].y -= sinf(vWings[i].angle - PI / 2) * 3;
+				}
+
+				else
+				{
+					vWings[i].x += cosf(vWings[i].angle + PI / 2) * 3;
+					vWings[i].y -= sinf(vWings[i].angle + PI / 2) * 3;
+				}
+			}
+		}
+
+		else if (vWings[i].currentTime > 100 && vWings[i].currentTime < 120)
+		{
+			//2,3 <<-
+			if (i == 2 || i == 3)
+			{
+				vWings[i].x += cosf(vWings[i].angle - PI) * 5;
+				vWings[i].y -= sinf(vWings[i].angle - PI) * 5;
+
+				if (i == 2)
+				{
+					vWings[i].x += cosf(vWings[i].angle + (290 * (PI / 180))) * 2;
+					vWings[i].y -= sinf(vWings[i].angle + (290 * (PI / 180))) * 2;
+				}
+
+				else
+				{
+					vWings[i].x += cosf(vWings[i].angle - (290 * (PI / 180))) * 2;
+					vWings[i].y -= sinf(vWings[i].angle - (290 * (PI / 180))) * 2;
+				}
+			}
+			//4,5 <-
+			else if (i == 4 || i == 5)
+			{
+				vWings[i].x += cosf(vWings[i].angle - PI) * 5.f;
+				vWings[i].y -= sinf(vWings[i].angle - PI) * 5.f;
+
+				if (i == 4)
+				{
+					vWings[i].x += cosf(vWings[i].angle + PI / 2) * 3;
+					vWings[i].y -= sinf(vWings[i].angle + PI / 2) * 3;
+				}
+
+				else
+				{
+					vWings[i].x += cosf(vWings[i].angle - PI / 2) * 3;
+					vWings[i].y -= sinf(vWings[i].angle - PI / 2) * 3;
+				}
+			}
+		}
+
+
+		if (vWings[i].currentTime < 20)
+		{
+			if (dragonHead.persent > 0.65f)dragonHead.persent -= 0.005f;
+		}
+		else if (vWings[i].currentTime < 40)
+		{
+			if (dragonHead.persent < 1.4f)dragonHead.persent += 0.02f;
+		}
+		else if (vWings[i].currentTime > 80 && vWings[i].currentTime < 100)
+		{
+			if (dragonHead.persent > 0.65f)dragonHead.persent -= 0.005f;
+		}
+		else if (vWings[i].currentTime > 100 && vWings[i].currentTime < 120)
+		{
+			if (dragonHead.persent < 1.4f)dragonHead.persent += 0.02f;
+		}
+
+		if (vWings[i].currentTime == vWings[i].lifeTime) vWings.erase(vWings.begin() + i);
+		else
+		{
+			vWings[i].currentTime++;
 			i++;
 		}
 	}

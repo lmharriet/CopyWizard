@@ -75,7 +75,13 @@ struct tagDragon
 	int index;
 	int lifeTime;
 	int currentTime;
+
+
+	float persent;
+
+	bool isFire;
 };
+
 
 //=============================================================
 //	## bullet ## (공용총알)
@@ -338,10 +344,12 @@ class dragonArc : public gameNode
 private:
 	//총알 구조체를 담을 벡터선언
 	vector<tagDragon> vDragon;
-	
-	//	vector<tagBullet>::iterator _viBullet;
 
-private:
+	vector<tagDragon> vWings;
+	tagDragon dragonHead;
+
+	bool upgrade;
+ private:
 	int count, index;
 
 public:
@@ -354,5 +362,7 @@ public:
 	void fire(float x, float y, float angle);
 	//총알무브
 	void move();
-
+	void phoenixFire(float x, float y, float angle);
+	void phoenixMove();
+	
 };
