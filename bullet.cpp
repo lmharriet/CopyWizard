@@ -772,7 +772,7 @@ bool RagingInferno::CheckCollision(RECT enemy)
 
 HRESULT dragonArc::init()
 {
-	IMAGEMANAGER->addFrameImage("dragon", "resource/player/dragonArc.bmp", 1800 * 2, 100 * 2, 36, 2);
+	IMAGEMANAGER->addFrameImage("dragon", "resource/player/dragonArc.bmp", 1800 * 3, 100 * 3, 36, 2);
 	count = index = 0;
 	return S_OK;
 }
@@ -796,6 +796,13 @@ void dragonArc::render()
 	for (int i = 0; i < vDragon.size(); i++)
 	{
 		CAMERAMANAGER->Ellipse(getMemDC(), vDragon[i].rc);
+
+		if (count % 2 == 0)
+		{
+			PARTICLE->explosionGenerate("explosionParticle2", vDragon[i].x, vDragon[i].y, 3, 0.75f, 0.f, 3, true);
+			PARTICLE->explosionGenerate("explosionParticle2", vDragon[i].x, vDragon[i].y, 5, 1.25f, 0.f, 1, true);
+		}
+
 		CAMERAMANAGER->FrameRender(getMemDC(), vDragon[i].img,
 			vDragon[i].x - vDragon[i].img->getFrameWidth() / 2,
 			vDragon[i].y - vDragon[i].img->getFrameHeight() / 2, vDragon[i].index, vDragon[i].frameY);
@@ -804,7 +811,7 @@ void dragonArc::render()
 
 void dragonArc::fire(float x, float y, float angle)
 {
-	if (vDragon.size() < 2)
+	if (vDragon.size() < 4)
 	{
 		tagDragon dragon;
 
@@ -816,17 +823,20 @@ void dragonArc::fire(float x, float y, float angle)
 		dragon.speed = 15.f;
 		dragon.rc = RectMakeCenter(dragon.x, dragon.y, 20, 20);
 
-		dragon.frameY = 1;
-		dragon.index = 0;
 		dragon.angle = .7f + angle;
 		dragon.saveAngle = -.7f + angle;
+		dragon.frameY = 0;
+		dragon.index = angle * 18 / PI;//0-35
 
 		vDragon.push_back(dragon);
-
-		dragon.frameY = 0;
+	
 		dragon.index = 0;
 		dragon.angle = -.7f + angle;
 		dragon.saveAngle = .7f + angle;
+
+		dragon.frameY = 1;
+		dragon.index = 36 - (angle * 18 / PI);//0-35
+
 		vDragon.push_back(dragon);
 	}
 }
@@ -836,13 +846,6 @@ void dragonArc::move()
 
 	for (int i = 0; i < vDragon.size();)
 	{
-		if (count % 3 == 0)
-		{
-			vDragon[i].index++;
-			if (vDragon[i].index > 35)
-				vDragon[i].index = 0;
-		}
-
 
 		if (vDragon[i].currentTime < 35 || vDragon[i].currentTime > 69)
 		{
@@ -862,6 +865,18 @@ void dragonArc::move()
 			{
 				vDragon[i].angle = vDragon[i].saveAngle;
 				vDragon[i].speed -= 2.6f;
+
+				if (i % 2 == 0)
+				{
+					vDragon[i].frameY = 1;
+					vDragon[i].index = abs(36 - vDragon[i].index);
+				}
+
+				else
+				{
+					vDragon[i].frameY = 0;
+					vDragon[i].index = abs(36 - vDragon[i].index);
+				}
 			}
 		}
 		else
