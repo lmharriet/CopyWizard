@@ -161,6 +161,7 @@ void mainGame::soundInit()
 	SOUNDMANAGER->addSound("RagingInfernoFire", "Sound/player/RagingInferno_fire.mp3");
 	SOUNDMANAGER->addSound("healBall", "Sound/healBall.mp3");
 	SOUNDMANAGER->addSound("portalWarp", "Sound/portalWarp.mp3");
+	SOUNDMANAGER->addSound("coinGet", "Sound/coinGet.mp3");
 	
 
 	sfxVolume = 0.5f;
