@@ -117,8 +117,6 @@ private:
 	int _bulletMax;			//총알 최대갯수
 	int count, index;
 
-	int ranAtk;
-	int criticalHit;
 
 	bool isCoolTime;	// 스킬 쿨타임이 돌고있는지 아닌지
 
@@ -179,8 +177,6 @@ private:
 	int coolTime;		// 몇초간 스킬 사용을 금할지
 	int currentCoolTime;	// 쿨타임이 다 돌면 isCoolTime을 false
 
-	int ranAtk;
-	int criticalHit;
 
 	int count, index;
 
@@ -225,8 +221,6 @@ class dashFire :public gameNode
 private:
 	vector<tagArcana> vDash;
 
-	int ranAtk;
-	int criticalHit;
 
 	int coolTime;
 	int currentCoolTime;
@@ -288,8 +282,7 @@ private:
 
 	int time;
 
-	int ranAtkPower;
-	int criticalHit;
+
 
 	//cool Time
 	bool isCoolTime;	// 스킬 쿨타임이 돌고있는지 아닌지
@@ -323,14 +316,14 @@ public:
 
 //미완성
 //=============================================================
-//	## homingFlares ## 
+//	##dragonArc## 
 //=============================================================
-class cleaver : public gameNode
+class dragonArc : public gameNode
 {
 private:
 	//총알 구조체를 담을 벡터선언
-	vector<tagArcana> cleaver;
-	vector<tagArcana> _vRange;
+	vector<tagArcana> dragon;
+	
 	//	vector<tagBullet>::iterator _viBullet;
 
 private:
@@ -338,7 +331,7 @@ private:
 	int _bulletMax;			//총알 최대갯수
 
 public:
-	HRESULT init(float range);
+	HRESULT init();
 	void release();
 	void update();
 	void render();

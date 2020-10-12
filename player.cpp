@@ -80,8 +80,8 @@ void player::release()
 {
 	blaze->release();
 	SAFE_DELETE(blaze);
-	flares->release();
-	SAFE_DELETE(flares);
+	dragon->release();
+	SAFE_DELETE(dragon);
 	Meteor->release();
 	SAFE_DELETE(Meteor);
 	searingRush->release();
@@ -98,7 +98,7 @@ void player::update()
 	PLAYERDATA->update();
 
 	blaze->update();
-	flares->update();
+	dragon->update();
 	Meteor->update();
 	searingRush->update();
 
@@ -166,7 +166,7 @@ void player::other_update()
 	PLAYERDATA->update();
 
 	blaze->update();
-	flares->update();
+	dragon->update();
 	Meteor->update();
 	searingRush->update();
 
@@ -259,7 +259,7 @@ void player::render()
 	if (!isRender)animation(); // z렌더 같은 눈속임.. (나중에 frame이 떨어지면 포기하는 기능..)
 
 	blaze->render();
-	flares->render();
+	dragon->render();
 	Meteor->render();
 	inferno->render();
 
@@ -286,8 +286,8 @@ void player::bulletClassInit()
 	blaze = new bomb;
 	blaze->init(3, 350);
 
-	flares = new cleaver;
-	flares->init(100);
+	dragon = new dragonArc;
+	dragon->init();
 
 	Meteor = new meteor;
 	Meteor->init();

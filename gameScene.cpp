@@ -51,7 +51,7 @@ HRESULT gameScene::init()
 
 
 
-	
+
 	//벽 타입만 저장
 	//for (int i = 0; i < MAXTILE; i++)
 	//{
@@ -63,7 +63,7 @@ HRESULT gameScene::init()
 
 	PLAYERDATA->setTile(tile);
 	//PLAYERDATA->setWall(vWall);
-	
+
 	_player->setTileAd(tile);
 	_player->setTileAd0(vTile);
 	//_player->setTileAd1(vWall);
@@ -260,15 +260,15 @@ void gameScene::render()
 				img = IMAGEMANAGER->findImage(key);
 
 				//CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-				
+
 				if (tile[i].rc.bottom > (_player->getY() + 30) &&
-				((colCheck(checkArea, tile[i].rc) || colCheck(checkArea, tile[i + 15].rc) ||
-				colCheck(checkArea, tile[i - w4 + 10].rc) || colCheck(checkArea, tile[i - w4 + 5].rc))))
+					((colCheck(checkArea, tile[i].rc) || colCheck(checkArea, tile[i + 15].rc) ||
+						colCheck(checkArea, tile[i - w4 + 10].rc) || colCheck(checkArea, tile[i - w4 + 5].rc))))
 				{
 					CAMERAMANAGER->AlphaRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height, 150);
 				}
 				else CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-				
+
 			}
 
 			else if (key == "bottomWall") // fix
@@ -323,7 +323,7 @@ void gameScene::render()
 				image* img = IMAGEMANAGER->findImage(tile[i].keyName);
 
 				//img->renderResize(getMemDC(), tile[i].rc.left, tile[i].rc.top, img->getWidth(), img->getHeight(), tile[i].rc, TILESIZE);
-				
+
 				CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
 				//img->frameRender(getMemDC(), tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y, scale);
 			}
@@ -510,7 +510,7 @@ void gameScene::collisionTile()
 		{
 			vTile.push_back(i);
 
-			if(tile[i].kind == TERRAIN::WALL)vWall.push_back(i);
+			if (tile[i].kind == TERRAIN::WALL)vWall.push_back(i);
 		}
 	}
 
@@ -530,15 +530,16 @@ void gameScene::playerAttack()
 			if (0 >= enemy->getMinion()[j]->getHp())continue;
 			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRC()))
 			{
-				SOUNDMANAGER->play("blazeExp", false,0.3f);
+				int damage = _player->getBlaze()->getBullet()[i].atkPower + RANDOM->range(0, 3);
+
+				if (PLAYERDATA->criAppear()) damage = (float)damage * PLAYERDATA->getStat().criDamage;
+				else damage = (float)damage * PLAYERDATA->getStat().damage;
+
+
+				SOUNDMANAGER->play("blazeExp", false, 0.3f);
 				PARTICLE->explosionGenerate("explosionParticle", _player->getBlaze()->getBullet()[i].x + 20,
 					_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
-				enemy->getMinion()[j]->hit(_player->getBlaze()->getBullet()[i].atkPower,
-					_player->getBlaze()->getBullet()[i].angle, 20.f, 0);
-
-				/*EFFECT->setEffect("flameStrike",
-					{ (long)_player->getBlaze()->getBullet()[i].x
-					,(long)_player->getBlaze()->getBullet()[i].y });*/
+				enemy->getMinion()[j]->hit(damage, _player->getBlaze()->getBullet()[i].angle, 20.f, 0);
 
 				_player->getBlaze()->setCol(i, true);
 
@@ -578,10 +579,13 @@ void gameScene::playerAttack()
 		{
 			if (colCheck(_player->getDashFire()->getRect(i), enemy->getMinion()[j]->getRC()))
 			{
+				int damage = _player->getDashFire()->getAtk(i) + RANDOM->range(0, 5);
+
+				if (PLAYERDATA->criAppear()) damage = (float)damage * PLAYERDATA->getStat().criDamage;
+				else damage = (float)damage * PLAYERDATA->getStat().damage;
 				if (0 >= enemy->getMinion()[j]->getHp())continue;
 
-				enemy->getMinion()[j]->hit(_player->getDashFire()->getAtk(i),
-					70.f, 20.f, _player->getDashFire()->getSkillNum());
+				enemy->getMinion()[j]->hit(damage,70.f, 20.f, _player->getDashFire()->getSkillNum());
 
 			}
 		}
@@ -610,6 +614,10 @@ void gameScene::playerAttack()
 
 			else if (PLAYERDATA->getGaugeTime() >= 50)
 			{
+				int damage = _player->getInferno()->getInf().atkPower;
+				if (PLAYERDATA->criAppear()) damage = (float)damage * PLAYERDATA->getStat().criDamage;
+				else damage = (float)damage * PLAYERDATA->getStat().damage;
+				
 				float angle = getAngle(enemyX + 40, enemyY + 40,
 					_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
 
@@ -617,7 +625,7 @@ void gameScene::playerAttack()
 				float y = enemyY - sinf(angle) * 4.5f;
 
 				enemy->getMinion()[i]->setPt(x, y);
-				enemy->getMinion()[i]->hit(_player->getInferno()->getInf().atkPower, 0, 0.f, 3);
+				enemy->getMinion()[i]->hit(damage, 0, 0.f, 3);
 			}
 		}
 	}
@@ -635,7 +643,7 @@ void gameScene::enemyAttack()
 				PARTICLE->crashRockParticlePlay(_player->getX(), _player->getY());
 			}
 			enemy->getBullet()->removeBullet(i);
-			SOUNDMANAGER->play("playerHit",false);
+			SOUNDMANAGER->play("playerHit", false);
 		}
 		else
 		{
@@ -689,5 +697,5 @@ void gameScene::soundInit()
 	SOUNDMANAGER->addSound("knightHit0", "Sound/knight_hit0.mp3");
 	SOUNDMANAGER->addSound("knightHit1", "Sound/knight_hit1.mp3");
 
-	
+
 }

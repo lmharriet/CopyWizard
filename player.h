@@ -14,7 +14,7 @@ private:
 	vector<int> vWall;
 	
 	bomb* blaze;
-	cleaver* flares;
+	dragonArc* dragon;
 	meteor* Meteor;
 	dashFire* searingRush;
 	RagingInferno* inferno;
