@@ -672,7 +672,7 @@ void RagingInferno::fire(float x, float y, float angle, int* gaugeTime)
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
-	if (SOUNDMANAGER->isPlaySound("RagingInfernoFire") == false) SOUNDMANAGER->play("RagingInfernoFire", false);
+	SOUNDMANAGER->play("RagingInfernoFire", false);
 	*gaugeTime = 0;
 	isFire = true;
 	gauging = true;
