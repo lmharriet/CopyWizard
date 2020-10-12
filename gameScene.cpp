@@ -69,7 +69,7 @@ HRESULT gameScene::init()
 	//_player->setTileAd1(vWall);
 
 	EFFECT->setPortalEffect({ (long)_player->getX(),(long)_player->getY() });
-
+	SOUNDMANAGER->play("portalWarp", false);
 	//sound
 	soundInit();
 	return S_OK;
