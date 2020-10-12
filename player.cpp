@@ -310,7 +310,7 @@ void player::controller()
 		walkCount++;
 		if (walkCount == 16)
 		{
-			SOUNDMANAGER->play("playerFoot", false, 0.15f);
+			SOUNDMANAGER->play("playerFoot", false);
 			walkCount = 0;
 		}
 	}
@@ -323,7 +323,7 @@ void player::controller()
 		walkCount++;
 		if (walkCount == 16)
 		{
-			SOUNDMANAGER->play("playerFoot", false, 0.15f);
+			SOUNDMANAGER->play("playerFoot", false);
 			walkCount = 0;
 		}
 	}
@@ -336,7 +336,7 @@ void player::controller()
 		walkCount++;
 		if (walkCount == 16)
 		{
-			SOUNDMANAGER->play("playerFoot", false, 0.15f);
+			SOUNDMANAGER->play("playerFoot", false);
 			walkCount = 0;
 		}
 	}
@@ -349,7 +349,7 @@ void player::controller()
 		walkCount++;
 		if (walkCount == 16)
 		{
-			SOUNDMANAGER->play("playerFoot", false, 0.15f);
+			SOUNDMANAGER->play("playerFoot", false);
 			walkCount = 0;
 		}
 	}
@@ -359,7 +359,7 @@ void player::controller()
 	{
 		//대쉬 이펙트 생성
 		EFFECT->dashEffect(move, { (long)posX,(long)posY });
-		SOUNDMANAGER->play("playerNomalDash", false, 0.7f);
+		SOUNDMANAGER->play("playerNomalDash", false);
 		state = STATE::DASH;
 
 		switch (move)
