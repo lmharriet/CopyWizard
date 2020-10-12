@@ -61,7 +61,7 @@ void enemyManager::update()
 	}
 	
 	//¹Ì´Ï¾ð ÃÑ¾Ë¹ß»ç
-	this->minionBulletFire(CAMERAMANAGER->GetRelativeX(playerRC.left)-20, CAMERAMANAGER->GetRelativeY(playerRC.top));
+	this->minionBulletFire(CAMERAMANAGER->GetRelativeX(playerRC.left), CAMERAMANAGER->GetRelativeY(playerRC.top));
 
 	
 }
@@ -70,6 +70,8 @@ void enemyManager::render()
 {
 	//°ø¿ëÃÑ¾Ë ·»´õ
 	_bullet->render();
+	/*Rectangle(getMemDC(), CAMERAMANAGER->GetRelativeX(playerRC.left), CAMERAMANAGER->GetRelativeY(playerRC.top), 
+		CAMERAMANAGER->GetRelativeX(playerRC.left)+100, CAMERAMANAGER->GetRelativeY(playerRC.top)+ 100);*/
 }
 
 void enemyManager::setMinion(tagTile* _subTile, POINT _monPt)
@@ -126,6 +128,8 @@ void enemyManager::minionBulletFire(float aimX, float aimY)
 			break;
 			
 		case MONSTERKIND::SUMMONER:
+			angle = getAngle((float)(*_viMinion)->getCulPos().x+50, (float)(*_viMinion)->getCulPos().y-52, 
+				(float)aimX, (float)aimY);
 			summonerBullet(angle);
 			break;
 		}
