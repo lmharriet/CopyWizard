@@ -351,6 +351,11 @@ void particleManager::explosionParticle2Play(float x, float y)
 	explosionGenerate("explosionParticle", x, y, 6, 1.f, 2.f, 6, true);
 }
 
+void particleManager::burningParticlePlay(float x, float y)
+{
+	explosionGenerate("frameParticle", x, y, 5, 1.f, 2.f, 3, true);
+}
+
 void particleManager::bossJumpParticlePlay(float x, float y)
 {
 	explosionGenerate("stoneX2", x, y, 18, 5.f, 4.f, 15, false, 40);
