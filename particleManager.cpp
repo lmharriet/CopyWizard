@@ -4,7 +4,8 @@
 HRESULT particleManager::init()
 {
 	IMAGEMANAGER->addFrameImage("frameParticle", "Images/particle/frameParticle.bmp", 240, 160, 6, 4);
-	IMAGEMANAGER->addFrameImage("explosionParticle", "Images/particle/explosionParticle.bmp", 960 / 2, 640 / 2, 6, 4);
+	IMAGEMANAGER->addFrameImage("explosionParticle", "Images/particle/explosionParticle.bmp", 480, 320, 6, 4);
+	IMAGEMANAGER->addFrameImage("explosionParticle2", "Images/particle/explosionParticle(320,213).bmp", 320, 213, 6, 4);
 	IMAGEMANAGER->addFrameImage("healBallParticle", "Images/particle/healBallParticle.bmp", 60, 5, 10, 1);
 	IMAGEMANAGER->addFrameImage("bossJumpParticle", "Images/particle/stone.bmp", 60, 15, 4, 1);
 	
