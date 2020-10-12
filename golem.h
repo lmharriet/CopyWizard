@@ -8,6 +8,8 @@ private:
 	POINT smallSlashIndex;
 	image* hitImg;
 
+	bool isAtkImgCount;
+
 public:
 	void addInit()override;
 	void update() override;
