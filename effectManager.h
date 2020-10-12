@@ -30,6 +30,7 @@ struct tagEffect
 	bool isEraseTime;	// 시간이 지나면 지워질지, 프레임이 끝나면 지워질지
 	int eraseTime;		// 몇초 뒤에 지워질지
 	int currentTime;	// 현재 시간 (이건 안건드려도됨)
+	int opacity;
 
 	int maxFrame;		// 이미지의 최대 프레임 (이것도 안건드려도됨)
 	POINT pos;			// 이미지를 재생시킬 위치
@@ -43,6 +44,18 @@ struct tagDamageEffect
 	int maxFrame;		// 이미지의 최대 프레임 (이것도 안건드려도됨)
 	POINT pos;			// 이미지를 재생시킬 위치
 };
+
+struct tagPortalEffect
+{
+	int frameX;
+	int maxFrame;
+
+	int opacity[8];
+	POINT pos;
+
+	bool isActive;
+};
+
 class effectManager : public singletonBase <effectManager>
 {
 private:
@@ -53,12 +66,16 @@ private:
 	//데미지 이펙트 관리
 	vector<tagDamageEffect> dEft;
 
+	tagPortalEffect pEft;
+
 	int time;			// 프레임렌더를 하기 위해 필요, 'time++' 을 해주기 위함
 public:
 	HRESULT init();
 	void pRender(HDC hdc);
 
 	void render(HDC hdc);
+
+	void portalRender(HDC hdc);
 
 	void dRender(HDC hdc);
 
@@ -68,7 +85,12 @@ public:
 	void setDash(string keyName, int frameY, bool flip, POINT pt);
 	void setEffect(string keyName, POINT pt, bool flip = false, bool isEraseTime = false, int eraseTime = 0, int frameDelay = 5);
 
+	void setEffect(string keyName, POINT pt, int minOpacity, int maxOpacity);
+
+	void setPortalEffect(POINT pt);
+
 	void setEffect(string keyName, POINT pt, bool isFrameImg , int frameDelay ,bool flip, float increaseSize, float startSize, float endSize);
 
 	void damageEffect(POINT pt);
+	void lightEffect(POINT pt, int maxEffect);
 };

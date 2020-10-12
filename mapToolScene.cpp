@@ -228,6 +228,9 @@ void mapToolScene::render()
 	}
 
 	textRender();
+
+	//Áß¾Ó
+	Rectangle(getMemDC(), RectMakeCenter(WINSIZEX / 2, WINSIZEY / 2, 50, 50));
 }
 
 void mapToolScene::buttonCheck()
@@ -673,7 +676,7 @@ void mapToolScene::initSelectTerrain()
 		object[i].keyName = objectName[i];
 	}
 	//page2//
-	string decoName[9] = { "decoGrass3","decoGrass2","decoGrass1","tomb0","tomb1","flower","window0","window1", "flag0" };
+	string decoName[9] = { "decoGrass3","decoGrass2","decoGrass1","tomb0","tomb1","warpZone","window0","window1", "flag0" };
 	for (int i = 0; i < 9; i++)
 	{
 		deco[i].rc = RectMake(941 + (i % 3) * 120, 170 + (i / 3) * 105, 90, 75);
@@ -774,7 +777,7 @@ void mapToolScene::addImage()
 	IMAGEMANAGER->addImage("decoGrass1", "maptool/deco/decoGrass1.bmp", 64, 40, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("tomb0", "maptool/deco/tomb0.bmp", 116, 84, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("tomb1", "maptool/deco/tomb1.bmp", 116, 80, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("flower", "maptool/deco/flower.bmp", 70, 50, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("warpZone", "maptool/deco/warpZone.bmp", 170, 163, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("window0", "maptool/deco/window0.bmp", 82, 74, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("window1", "maptool/deco/window1.bmp", 82, 74, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("flag0", "maptool/deco/flag0.bmp", 68, 96, true, RGB(255, 0, 255));

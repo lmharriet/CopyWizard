@@ -5,6 +5,14 @@ HRESULT effectManager::init()
 {
     addImage();
     time = 0;
+
+    int arr[8] = { 255,255,255,204,153,102,51,25 };
+    for (int i = 0; i < 8; i++)pEft.opacity[i] = arr[i];
+    pEft.frameX = 0;
+    pEft.maxFrame = IMAGEMANAGER->findImage("portalEffect")->getMaxFrameX();
+    pEft.isActive = false;
+    pEft.pos = { 0,0 };
+
     return S_OK;
 }
 
@@ -127,20 +135,68 @@ void effectManager::render(HDC hdc)
 
         else // 프레임 이미지가 아님 (size로 삭제)
         {
-            //출력
-            CAMERAMANAGER->StretchRender(hdc, img, 
-                iter->pos.x - (img->getWidth() * iter->currentSize / 2),
-                iter->pos.y - (img->getHeight() * iter->currentSize / 2),
-                iter->currentSize);
+            if (iter->isEraseSize)
+            {
+                //출력
+                CAMERAMANAGER->StretchRender(hdc, img,
+                    iter->pos.x - (img->getWidth() * iter->currentSize / 2),
+                    iter->pos.y - (img->getHeight() * iter->currentSize / 2),
+                    iter->currentSize);
 
-            //사이즈 변경
-            iter->currentSize += iter->increaseSize;
+                //사이즈 변경
+                iter->currentSize += iter->increaseSize;
 
-            //삭제
-            float cul = abs(iter->currentSize - iter->endSize);
+                //삭제
+                float cul = abs(iter->currentSize - iter->endSize);
 
-            if (cul < 0.01) iter = vEft.erase(iter);
-            else iter++;
+                if (cul < 0.01) iter = vEft.erase(iter);
+                else iter++;
+            }
+            
+            else // time del
+            {
+                //출력
+                CAMERAMANAGER->AlphaRender(hdc, img, 
+                    iter->pos.x - (img->getWidth() / 2),
+                    iter->pos.y - (img->getHeight() / 2),
+                    iter->opacity);
+                
+                //이동
+                if (time % 2 == 0) iter->pos.y--;
+
+                //투명도 변경
+                if(iter->opacity > 0)iter->opacity--;
+
+                //삭제
+                if (iter->opacity == 0) iter = vEft.erase(iter);
+
+                else iter++;
+            }
+        }
+    }
+}
+
+void effectManager::portalRender(HDC hdc)
+{
+    if (pEft.isActive)
+    {
+        image* img = IMAGEMANAGER->findImage("portalEffect");
+        //렌더
+        CAMERAMANAGER->AlphaFrameRender(hdc, img,
+            pEft.pos.x - img->getFrameWidth() / 2,
+            pEft.pos.y - img->getFrameHeight() + 70,
+            pEft.frameX, 0, pEft.opacity[pEft.frameX]);
+
+        //비활성화
+        if (pEft.frameX == pEft.maxFrame)
+        {
+            lightEffect(pEft.pos, 20);
+            pEft.isActive = false;
+        }
+        else
+        {
+            //프레임 증가
+            if (time % 4 == 0) pEft.frameX++;
         }
     }
 }
@@ -176,8 +232,13 @@ void effectManager::addImage()
     IMAGEMANAGER->addFrameImage("dashLDRD", "Images/effect/dashLDRD.bmp", 395, 158, 5, 2);
 
     //other
-    IMAGEMANAGER->addImage("noFrameStone", "Images/effect/notFrame/stone.bmp", 50, 56, true, RGB(255, 0, 255));
+    IMAGEMANAGER->addFrameImage("portalEffect", "Images/effect/portal.bmp", 384 * 2, 256 * 2, 8, 1);
 
+    IMAGEMANAGER->addImage("lightEffect1", "Images/effect/notFrame/light1.bmp", 5, 5, true, RGB(255, 0, 255));
+    IMAGEMANAGER->addImage("lightEffect2", "Images/effect/notFrame/light2.bmp", 5, 5, true, RGB(255, 0, 255));
+    IMAGEMANAGER->addImage("lightEffect3", "Images/effect/notFrame/light3.bmp", 5, 5, true, RGB(255, 0, 255));
+
+    IMAGEMANAGER->addImage("noFrameStone", "Images/effect/notFrame/stone.bmp", 50, 56, true, RGB(255, 0, 255));
     //damage
     IMAGEMANAGER->addFrameImage("damageEffect", "Images/effect/monster/damageEffect.bmp", 300, 300, 4, 4);
 }
@@ -255,6 +316,34 @@ void effectManager::setEffect(string keyName, POINT pt, bool flip, bool isEraseT
     vEft.push_back(effect);
 }
 
+void effectManager::setEffect(string keyName, POINT pt, int minOpacity, int maxOpacity)
+{
+    tagEffect effect;
+    effect.keyName = keyName;
+    effect.pos = pt;
+    effect.isFrame = false;
+    effect.isEraseTime = true;
+    effect.eraseTime = 0;
+
+    effect.opacity = RANDOM->range(minOpacity, maxOpacity);
+
+    effect.flipImg = false;
+    effect.currentTime = 0;
+    effect.maxFrame = 0;
+    effect.frameDelay = 0;
+    effect.isEraseSize = false;
+    effect.currentSize = 1.f;
+
+    vEft.push_back(effect);
+}
+
+void effectManager::setPortalEffect(POINT pt)
+{
+    pEft.pos = pt;
+    pEft.frameX = 0;
+    pEft.isActive = true;
+}
+
 void effectManager::setEffect(string keyName, POINT pt, bool isFrameImg, int frameDelay, bool flip, float increaseSize, float startSize, float endSize)
 {
     tagEffect effect;
@@ -291,4 +380,21 @@ void effectManager::damageEffect(POINT pt)
     effect.pos = pt;
 
     dEft.push_back(effect);
+}
+
+void effectManager::lightEffect(POINT pt, int maxEffect)
+{
+    for (int i = 0; i < maxEffect; i++)
+    {
+        int ranX = RANDOM->range(-50,50);
+        int ranY = RANDOM->range(-200,50);
+        int ranTime = RANDOM->range(50, 100);
+
+        string str = "lightEffect";
+        int ranStr = RANDOM->range(1, 3);
+        char ch[10];
+        str += itoa(ranStr, ch, 10);
+
+        setEffect(str, { pt.x + ranX,pt.y + ranY }, 35, 75);
+    }
 }

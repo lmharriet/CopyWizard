@@ -68,6 +68,7 @@ HRESULT gameScene::init()
 	_player->setTileAd0(vTile);
 	//_player->setTileAd1(vWall);
 
+	EFFECT->setPortalEffect({ (long)_player->getX(),(long)_player->getY() });
 
 	//sound
 	soundInit();
@@ -125,7 +126,6 @@ void gameScene::update()
 	//collision between player skill and enemy
 	playerAttack();
 	enemyAttack();
-
 }
 
 void gameScene::render()
@@ -486,6 +486,8 @@ void gameScene::render()
 	EFFECT->dRender(getMemDC());
 
 	DAMAGE->render(getMemDC());
+
+	EFFECT->portalRender(getMemDC());
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), _player->getRect());
 	//uiImg->render(getMemDC());
