@@ -70,8 +70,6 @@ void enemyManager::render()
 {
 	//°ø¿ëÃÑ¾Ë ·»´õ
 	_bullet->render();
-	/*Rectangle(getMemDC(), CAMERAMANAGER->GetRelativeX(playerRC.left), CAMERAMANAGER->GetRelativeY(playerRC.top), 
-		CAMERAMANAGER->GetRelativeX(playerRC.left)+100, CAMERAMANAGER->GetRelativeY(playerRC.top)+ 100);*/
 }
 
 void enemyManager::setMinion(tagTile* _subTile, POINT _monPt)
