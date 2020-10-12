@@ -75,8 +75,8 @@ void knight::render()
 {
     stateImageRender();
    // astar->render(getMemDC());
-   FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
-   FrameRect(getMemDC(), rc, RGB(255, 255, 255));
+  // FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
+  // FrameRect(getMemDC(), rc, RGB(255, 255, 255));
 }
 
 
