@@ -136,7 +136,7 @@ void summoner::stateATK()
     if (!isCharging)
     {
        
-       // PARTICLE->bossJumpParticlePlay(pos.x, pos.y);
+        SOUNDMANAGER->play("summonerCasting",false,-0.15f);
         isCharging = true;
     }
     if (!isCasting)

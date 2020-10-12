@@ -521,7 +521,7 @@ void monster::die()
 			
 			break;
 		case MONSTERKIND::SUMMONER:
-			//SOUNDMANAGER->play("golemDie", false); //hit sound change
+			SOUNDMANAGER->play("knightDie", false,-0.3f); //hit sound change
 			break;
 
 		}

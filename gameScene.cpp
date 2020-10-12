@@ -650,6 +650,7 @@ void gameScene::enemyAttack()
 			if (enemy->getBullet()->getBullet()[i].kind == MONSTERKIND::SUMMONER)
 			{
 				PARTICLE->crashRockParticlePlay(_player->getX(), _player->getY());
+				SOUNDMANAGER->play("summonerAtk", false, -0.18f);
 			}
 			enemy->getBullet()->removeBullet(i);
 			SOUNDMANAGER->play("playerHit", false,-0.18f);
@@ -706,5 +707,10 @@ void gameScene::soundInit()
 	SOUNDMANAGER->addSound("knightHit0", "Sound/knight_hit0.mp3");
 	SOUNDMANAGER->addSound("knightHit1", "Sound/knight_hit1.mp3");
 
+	SOUNDMANAGER->addSound("summonerCasting", "Sound/summoner_casting.mp3");
+	SOUNDMANAGER->addSound("summonerFire", "Sound/summoner_fire.mp3");
+	SOUNDMANAGER->addSound("summonerAtk", "Sound/summoner_atk.mp3");
+	
+	
 
 }
