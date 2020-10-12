@@ -132,6 +132,11 @@ void mainGame::volumeControl()
 		SOUNDMANAGER->setVolumeSFX(sfxVolume);
 	}
 
+	if (INPUT->GetToggleKey(VK_OEM_3)) //mute
+	{
+		SOUNDMANAGER->setVolumeSFX(-0.5f);
+	}
+	
 }
 
 void mainGame::soundInit()
