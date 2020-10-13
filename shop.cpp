@@ -238,6 +238,8 @@ void shop::buyItem()
             //2. vector<string> vInven에 push_Back
             PLAYERDATA->pushInven(AndresShop[colItem].keyName);
 
+            PLAYERDATA->setCoin(PLAYERDATA->getCoin() - AndresShop[colItem].price);
+
             //3. 벡터의 string이 들어있으므로 itemManager 에서 getItem을 사용하여 frameKeyName, frameX, frameY을 가져온 뒤
             //   지정한 자리에 출력을 하면 끝.
 
