@@ -447,7 +447,8 @@ void player::dashFunction()
 			{
 				posX -= speed;
 				posY -= speed;
-
+				OffsetRect(&rc, -speed, -speed);
+				RectMakeCenter(posX, posY, 50, 50);
 			}
 		}
 		else if (dashDown)
@@ -457,12 +458,19 @@ void player::dashFunction()
 			{
 				posX -= speed;
 				posY += speed;
+				OffsetRect(&rc, -speed, speed);
+				RectMakeCenter(posX, posY, 50, 50);
 			}
 		}
 		else // 그냥 순수 LEFT
 		{
 			if (!tileCheck[(int)DIRECTION::LEFT].isCol)
+
+			{
 				posX -= speed;
+				OffsetRect(&rc, -speed, 0);
+				RectMakeCenter(posX, posY, 50, 50);
+			}
 		}
 	}
 
@@ -475,6 +483,8 @@ void player::dashFunction()
 			{
 				posX += speed;
 				posY -= speed;
+				OffsetRect(&rc, speed, -speed);
+				RectMakeCenter(posX, posY, 50, 50);
 			}
 		}
 		else if (dashDown)
@@ -484,12 +494,19 @@ void player::dashFunction()
 			{
 				posX += speed;
 				posY += speed;
+				OffsetRect(&rc, speed, speed);
+				RectMakeCenter(posX, posY, 50, 50);
+
 			}
 		}
 		else // 그냥 순수 RIGHT
 		{
 			if (!tileCheck[(int)DIRECTION::RIGHT].isCol)
+			{
 				posX += speed;
+				OffsetRect(&rc, speed, 0);
+				RectMakeCenter(posX, posY, 50, 50);
+			}
 		}
 	}
 
@@ -498,7 +515,11 @@ void player::dashFunction()
 		//순수 UP
 		if (!tileCheck[(int)DIRECTION::TOP].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol
 			&& !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol)
+		{
 			posY -= speed;
+			OffsetRect(&rc, 0, -speed);
+			RectMakeCenter(posX, posY, 50, 50);
+		}
 
 	}
 
@@ -507,8 +528,11 @@ void player::dashFunction()
 		//순수 DOWN
 		if (!tileCheck[(int)DIRECTION::BOTTOM].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol
 			&& !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol)
-
+		{
 			posY += speed;
+			OffsetRect(&rc, 0, speed);
+			RectMakeCenter(posX, posY, 50, 50);
+		}
 	}
 
 	speed--;
@@ -617,7 +641,6 @@ void player::dragonArcSetUp()
 		dragon->phoenixFire(posX, posY, angle);
 
 	}
-
 }
 
 void player::takeCoin()
@@ -1097,9 +1120,10 @@ void player::death()
 	}
 }
 //플레이어 피격 데미지
-void player::damage(int damage, float attackAngle, float knockBackX,float knockBackY)
+void player::damage(int damage, float attackAngle, float knockBackX, float knockBackY)
 {
 	if (PLAYERDATA->getHp() <= 0) return;
+
 	isDamaged = true;
 
 	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
