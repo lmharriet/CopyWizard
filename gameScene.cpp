@@ -55,24 +55,10 @@ HRESULT gameScene::init()
 	enemy = new enemyManager;
 	enemy->init(tile, subTile, culPt);
 
-
-
-
-	//벽 타입만 저장
-	//for (int i = 0; i < MAXTILE; i++)
-	//{
-	//	if (tile[i].kind == TERRAIN::WALL)
-	//	{
-	//		vWall.push_back(i);
-	//	}
-	//}
-
 	PLAYERDATA->setTile(tile);
-	//PLAYERDATA->setWall(vWall);
 
 	_player->setTileAd(tile);
 	_player->setTileAd0(vTile);
-	//_player->setTileAd1(vWall);
 
 	EFFECT->setPortalEffect({ (long)_player->getX(),(long)_player->getY() });
 	SOUNDMANAGER->play("portalWarp", false);
@@ -143,6 +129,9 @@ void gameScene::update()
 	//collision between player skill and enemy
 	playerAttack();
 	enemyAttack();
+
+	_shop->shopCollider(_player->getRect());
+	_shop->buyItem();
 
 	if (INPUT->GetKeyDown('J'))
 	{

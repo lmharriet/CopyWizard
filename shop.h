@@ -13,8 +13,11 @@ struct tagSellItem
 	POINT pt;
 	POINT frame;
 
+	RECT rc;
+
 	int price;
 	bool isSell;
+	bool isCol;
 };
 class shop : public gameNode
 {
@@ -26,9 +29,16 @@ private:
 
 	//nox
 	tagSellItem NoxShop[3];
+
+	//
+	int colItem;
 public:
 	HRESULT init();
 	void addImage();
 	void generate(POINT arr[3]);
 	void render();
+
+	void shopCollider(RECT rc);
+
+	void buyItem();
 };
