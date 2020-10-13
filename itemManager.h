@@ -33,4 +33,5 @@ public:
 		float potionDropChance, float defenceChance, float burnChance, bool vampireBlood, int price, string description, POINT frame);
 
 	tagItem getItem(string keyName);
+	tagItem getRandomItem();
 };

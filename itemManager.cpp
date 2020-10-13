@@ -126,3 +126,10 @@ tagItem itemManager::getItem(string keyName)
 	tagItem item = vItem[0];
 	return item;
 }
+
+tagItem itemManager::getRandomItem()
+{
+	int ranNum = RANDOM->range(0, vItem.size() - 1);
+
+	return vItem[ranNum];
+}
