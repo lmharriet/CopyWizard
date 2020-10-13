@@ -6,6 +6,14 @@ struct tagCollider
 	POINT pos;
 	bool isCol;
 };
+struct tagKnockBack
+{
+	float angle;
+	float speed;
+	float percent;
+};
+
+
 //Dash,RUN
 enum class STATE
 {

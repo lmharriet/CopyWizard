@@ -66,7 +66,6 @@ private:
 	int infernoStateCool;
 	int meteorStateCool;
 	int knockBackCool;
-
 	int blazeCount, meteorCount;
 
 	//skill upgrade
@@ -87,6 +86,8 @@ private:
 	int frozenTime;
 	bool isDamaged;
 	
+	tagKnockBack knockBack;
+
 	//dash
 	bool dashLeft, dashRight, dashUp, dashDown;
 	
@@ -139,7 +140,7 @@ public:
 	//»ç¸Á ÆÇÁ¤
 	void death();
 
-	void damage(int damage, float attackAngle, float knockBackX, float knockBackY);
+	void damage(int damage, float attackAngle, float knockBackSpeed);
 
 	void damagedCool();
 

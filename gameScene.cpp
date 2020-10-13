@@ -21,9 +21,7 @@ HRESULT gameScene::init()
 
 	PARTICLE->init();
 	EFFECT->init();
-	//cout << "x : " <<_player->getX()<< endl;
-	//cout << "y : " <<_player->getY()<< endl;
-
+	
 	//vTile.clear();
 	collisionTile();
 
@@ -560,7 +558,7 @@ void gameScene::enemyAttack()
 	{
 		if (colCheck(enemy->getBullet()->getRect(i), _player->getRect()))
 		{
-			_player->damage(enemy->getBullet()->getBullet()[i].atkPower, enemy->getBullet()->getBullet()[i].angle,5.f,2.f);
+			_player->damage(enemy->getBullet()->getBullet()[i].atkPower, enemy->getBullet()->getBullet()[i].angle, 4.f);
 			if (enemy->getBullet()->getBullet()[i].kind == MONSTERKIND::SUMMONER)
 			{
 				PARTICLE->crashRockParticlePlay(_player->getX(), _player->getY());

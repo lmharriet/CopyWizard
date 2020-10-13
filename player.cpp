@@ -70,7 +70,6 @@ HRESULT player::init()
 	damageAngle = 0;
 	damageAngleTenth = frozenTime = 0;
 
-
 	isDamaged = false;
 	isDead = false;
 
@@ -78,6 +77,9 @@ HRESULT player::init()
 	upgradeGauge = 0;
 	gaugeMax = false;
 	upgrade = false;
+
+
+
 
 	//test
 	arcana.name = "nonSkill";
@@ -131,7 +133,7 @@ void player::update()
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
 
-	if (speed == 0 && stateCool == 0 && meteorStateCool == 0 &&frozenTime==0
+	if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && frozenTime == 0
 		&& !isDead && !inferno->getGauging())
 	{
 		controller();
@@ -164,7 +166,17 @@ void player::update()
 	dragonArcSetUp();
 
 	damagedCool();
-	//
+
+	// knockBack lerp
+	if (isDamaged)
+	{
+		if (tileCheck[index].isCol || tileCheck[index + 4].isCol || diagonalCheck[index].isCol)return;
+		knockBack.percent -= 0.2f;
+		posX += cosf(knockBack.angle) * (knockBack.speed + knockBack.percent);
+		posY -= sinf(knockBack.angle) * (knockBack.speed + knockBack.percent);
+		rc = RectMakeCenter(posX, posY, 50, 50);
+	}
+	
 	takeCoin();
 	takeHealball();
 
@@ -176,23 +188,15 @@ void player::update()
 
 
 
-	if (upgradeGauge < 100 && upgradeGauge >= 0 && count %10 ==0) upgradeGauge -= 0.5f;
+	//gauge
+	if (upgradeGauge < 100 && upgradeGauge >= 0 && count % 10 == 0) upgradeGauge -= 0.5f;
 
 	if (upgradeGauge == 100)
 		gaugeMax = true;
-
-
-
-	/*if (upgradeGauge < 100 )
-		cout << "upgradeGauge" << upgradeGauge << '\n';
-	if (upgradeGauge == 100)
-		cout << "max, upgradeGauge" << upgradeGauge << '\n';*/
-	//cout << vTile[0] << '\n';
 }
 
 void player::other_update()
 {
-
 	PLAYERDATA->update();
 
 	blaze->update();
@@ -222,7 +226,6 @@ void player::other_update()
 
 	if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && !isDead && !inferno->getGauging())
 	{
-
 		controller();
 	}
 
@@ -254,8 +257,15 @@ void player::other_update()
 
 	damagedCool();
 
-
-	//
+	// knockBack lerp
+	if (isDamaged)
+	{
+		if (tileCheck[index].isCol || tileCheck[index + 4].isCol || diagonalCheck[index].isCol)return;
+		knockBack.percent -= 0.2f;
+		posX += cosf(knockBack.angle) * (knockBack.speed + knockBack.percent);
+		posY -= sinf(knockBack.angle) * (knockBack.speed + knockBack.percent);
+		rc = RectMakeCenter(posX, posY, 50, 50);
+	}
 	takeCoin();
 	takeHealball();
 
@@ -456,7 +466,8 @@ void player::dashFunction()
 	{
 		UI->addCoolTime("searingDash");
 		searingRush->setIsCoolTime(true);
-		//cout << "cc" << endl;
+
+
 	}
 
 	if (dashLeft)
@@ -562,7 +573,7 @@ void player::dashFunction()
 
 void player::blazeSetUp()
 {
-	if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool() &&frozenTime==0 && !isDead 
+	if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool() && frozenTime == 0 && !isDead
 		&& !inferno->getGauging() && meteorStateCool == 0 && speed == 0)
 	{
 		UI->addCoolTime(0);
@@ -609,7 +620,7 @@ void player::blazeSetUp()
 
 void player::infernoSetUp()
 {
-	if (INPUT->GetKeyDown(VK_RBUTTON) &&frozenTime == 0 && !isDead
+	if (INPUT->GetKeyDown(VK_RBUTTON) && frozenTime == 0 && !isDead
 		&& !inferno->getCool() && meteorStateCool == 0 && speed == 0)
 	{
 		standard = true;
@@ -630,25 +641,47 @@ void player::meteorSetUp()
 	float mouseX = CAMERAMANAGER->GetAbsoluteX(_ptMouse.x);
 	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
 	//Attack
-	if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead
-		&& !Meteor->getCool() && !inferno->getGauging() && speed == 0)
+	if (!gaugeMax)
 	{
-		signature = true;
-
-		if (meteorStateCool == 0)
+		if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead
+			&& !Meteor->getCool() && !inferno->getGauging() && speed == 0)
 		{
-			meteorStateCool = 30;
-			Meteor->creatMeteor(mouseX, mouseY, 0);
+			signature = true;
+
+			if (meteorStateCool == 0)
+			{
+				meteorStateCool = 30;
+				Meteor->creatMeteor(mouseX, mouseY, 0);
+			}
 		}
+		if (meteorStateCool > 0)
+		{
+			state = STATE::SIGNATURE;
+			meteorStateCool--;
 
+			if (meteorStateCool == 0) signature = false;
+		}
 	}
-
-	if (meteorStateCool > 0)
+	else
 	{
-		state = STATE::SIGNATURE;
-		meteorStateCool--;
+		if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead
+			&& !Meteor->getCool() && !inferno->getGauging() && speed == 0)
+		{
+			signature = true;
 
-		if (meteorStateCool == 0) signature = false;
+			if (meteorStateCool == 0)
+			{
+				meteorStateCool = 30;
+				Meteor->creatMeteor(mouseX, mouseY, 0);
+			}
+		}
+		if (meteorStateCool > 0)
+		{
+			state = STATE::SIGNATURE;
+			meteorStateCool--;
+
+			if (meteorStateCool == 0) signature = false;
+		}
 	}
 }
 
@@ -787,8 +820,6 @@ void player::animation()
 			frameAnimation(6, 0);
 			if (!isDamaged) move = MOVE::LEFT;
 		}
-
-
 		//각도별로 
 
 		//if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
@@ -1144,11 +1175,15 @@ void player::death()
 	}
 }
 //플레이어 피격 데미지
-void player::damage(int damage, float attackAngle, float knockBackX, float knockBackY)
+void player::damage(int damage, float attackAngle, float knockBackSpeed)
 {
 	if (PLAYERDATA->getHp() <= 0) return;
 
 	isDamaged = true;
+
+	knockBack.angle = attackAngle;
+	knockBack.speed = knockBackSpeed;
+	knockBack.percent = 1.0f;
 
 	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
 
@@ -1163,13 +1198,6 @@ void player::damage(int damage, float attackAngle, float knockBackX, float knock
 
 	int index;
 	for (int i = 0; i < 4; i++)	index = i;
-
-	if (tileCheck[index].isCol || tileCheck[index + 4].isCol || diagonalCheck[index].isCol)return;
-
-
-	posX += cosf(attackAngle) * knockBackX;
-	posY -= sinf(attackAngle) * knockBackY;
-
 }
 
 void player::damagedCool()
@@ -1177,13 +1205,18 @@ void player::damagedCool()
 	if (isDamaged)
 	{
 		frozenTime++;
+
 		if (state == STATE::DASH || state == STATE::SIGNATURE || state == STATE::STANDARD) return;
 		state = STATE::DAMAGED;
+
 	}
-	if (frozenTime > 25)
+	if (frozenTime > 20)
 	{
 		isDamaged = false;
 		frozenTime = 0;
+		knockBack.angle = 0;
+		knockBack.speed = 1.5f;
+		knockBack.percent = 1.0f;
 	}
 }
 
