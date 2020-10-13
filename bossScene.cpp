@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "bossScene.h"
 
+bossScene::bossScene() : _player(nullptr), _boss(nullptr) {}
+
 HRESULT bossScene::init()
 {
 	IMAGEMANAGER->addImage("bossRoom", "map/bossRoom.bmp", MAXWIDTH, MAXHEIGHT, true, RGB(255, 0, 255));
@@ -42,8 +44,14 @@ HRESULT bossScene::init()
 
 void bossScene::release()
 {
-	//_player->release();
-	//SAFE_DELETE(_player);
+	if (_player != nullptr)
+	{
+		_player->release();
+		SAFE_DELETE(_player);
+
+		_boss->release();
+		SAFE_DELETE(_boss);
+	}
 }
 
 void bossScene::update()

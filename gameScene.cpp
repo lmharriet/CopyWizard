@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "gameScene.h"
 
+gameScene::gameScene(): 
+	enemy(nullptr), _player(nullptr),bgImg(nullptr), playerImg(nullptr), uiImg(nullptr), _shop(nullptr) {}
+
 HRESULT gameScene::init()
 {
 
@@ -83,11 +86,14 @@ HRESULT gameScene::init()
 
 void gameScene::release()
 {
-	/*_player->release();
-	SAFE_DELETE(_player);
+	if (_player != nullptr)
+	{
+		_player->release();
+		SAFE_DELETE(_player);
 
-	enemy->release();
-	SAFE_DELETE(enemy);*/
+		enemy->release();
+		SAFE_DELETE(enemy);
+	}
 }
 
 void gameScene::update()

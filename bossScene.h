@@ -6,6 +6,9 @@
 #define MAXHEIGHT 989
 class bossScene : public gameNode
 {
+public:
+	bossScene();
+private:
 	RECT rc;
 	RECT area;
 
