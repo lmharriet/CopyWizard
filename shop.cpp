@@ -15,6 +15,7 @@ HRESULT shop::init()
         AndresShop[i].keyName = "";
         AndresShop[i].price = 0;
         AndresShop[i].pt = { 0,0 };
+        AndresShop[i].frame = { 0,0 };
     }
 
     //random item
@@ -27,10 +28,9 @@ HRESULT shop::init()
         {
             AndresShop[count].keyName = item.keyName;
             AndresShop[count].price = item.price;
+            AndresShop[count].frame = item.frame;
 
             count++;
-
-            cout << item.keyName << '\n';
         }
         else
         {
@@ -49,10 +49,9 @@ HRESULT shop::init()
             {
                 AndresShop[count].keyName = item.keyName;
                 AndresShop[count].price = item.price;
+                AndresShop[count].frame = item.frame;
 
                 count++;
-
-                cout << item.keyName << '\n';
             }
         }
     }
@@ -69,6 +68,8 @@ void shop::addImage()
 
     IMAGEMANAGER->addImage("oldFabric", "Images/npc/oldFabric.bmp", 120*3, 42*3, true, RGB(255, 0, 255));
     IMAGEMANAGER->addImage("desk", "Images/npc/desk.bmp", 120 * 3, 42 * 3, true, RGB(255, 0, 255));
+
+    IMAGEMANAGER->addFrameImage("shopNumbers", "Images/npc/shopNumbers.bmp", 30, 5, 10, 1);
 }
 
 void shop::generate(POINT arr[3])
@@ -87,6 +88,7 @@ void shop::generate(POINT arr[3])
     {
         npc[i].keyName = ranStr[i];
         npc[i].pt = arr[i];
+        cout << npc[i].keyName << " " << npc[i].pt.x << ", " << npc[i].pt.y << '\n';
     }
 }
 
@@ -98,6 +100,8 @@ void shop::render()
         CAMERAMANAGER->Render(getMemDC(), img,
             npc[i].pt.x - img->getWidth() / 2,
             npc[i].pt.y - img->getHeight() / 2);
+
+        CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(npc[i].pt.x, npc[i].pt.y, 50, 50));
 
         if (npc[i].keyName == "Nox")
         {
@@ -112,12 +116,49 @@ void shop::render()
         {
             image* ig = IMAGEMANAGER->findImage("desk");
             CAMERAMANAGER->Render(getMemDC(),
-                IMAGEMANAGER->findImage("desk"),
+                ig,
                 npc[i].pt.x - ig->getWidth() / 2,
                 npc[i].pt.y - ig->getHeight() / 2 + 150);
 
-            //아이템 출력
+            AndresShop[i].pt = npc[i].pt;
 
+            //아이템 출력
+            for (int j = 0; j < 5; j++)
+            {
+                image* img = IMAGEMANAGER->findImage("itemFrame");
+
+                AndresShop[j].pt = {
+                    npc[i].pt.x - 140 + (j * 70) - img->getFrameWidth() / 2,
+                    npc[i].pt.y + 95 - img->getFrameHeight() / 2 };
+
+
+                CAMERAMANAGER->FrameRender(getMemDC(),
+                    img,
+                    AndresShop[j].pt.x,
+                    AndresShop[j].pt.y,
+                    AndresShop[j].frame.x, 
+                    AndresShop[j].frame.y);
+
+                //image* numImg = IMAGEMANAGER->findImage("shopNumbers");
+                image* numImg = IMAGEMANAGER->findImage("numbers");
+                //가격표 출력
+                if (AndresShop[j].price < 100)
+                {
+                    int one = AndresShop[j].price % 10;
+                    int ten = AndresShop[j].price / 10;
+                }
+
+                else // price가 3자리 수 일 때
+                {
+                    int one = AndresShop[j].price % 10;
+                    int ten = AndresShop[j].price / 10 % 10;
+                    int hun = AndresShop[j].price / 100;
+
+                    CAMERAMANAGER->FrameRender(getMemDC(), numImg, AndresShop[j].pt.x - 25, AndresShop[j].pt.y, hun, 0);
+                    CAMERAMANAGER->FrameRender(getMemDC(), numImg, AndresShop[j].pt.x - 00, AndresShop[j].pt.y, ten, 0);
+                    CAMERAMANAGER->FrameRender(getMemDC(), numImg, AndresShop[j].pt.x + 25, AndresShop[j].pt.y, one, 0);
+                }
+            }
         }
     }
 }

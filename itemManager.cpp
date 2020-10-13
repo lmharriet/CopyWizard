@@ -92,6 +92,7 @@ HRESULT itemManager::init()
 		"최대 체력이 150 증가한다.", 
 		{ 5,1 });
 
+	addImage();
 	return S_OK;
 }
 

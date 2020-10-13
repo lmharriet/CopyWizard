@@ -9,7 +9,10 @@ struct tagShop
 struct tagSellItem
 {
 	string keyName;
+
 	POINT pt;
+	POINT frame;
+
 	int price;
 	bool isSell;
 };
