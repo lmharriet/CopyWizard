@@ -6,6 +6,11 @@ gameScene::gameScene():
 
 HRESULT gameScene::init()
 {
+	//sound 
+	SOUNDMANAGER->stop("mapToolBGM");
+	SOUNDMANAGER->stop("ingameBGM");
+	SOUNDMANAGER->stop("bossBGM");
+
 
 	UI->init();
 	DROP->init();
@@ -138,6 +143,11 @@ void gameScene::update()
 	//collision between player skill and enemy
 	playerAttack();
 	enemyAttack();
+
+	if (INPUT->GetKeyDown('J'))
+	{
+		SCENEMANAGER->loadScene("º¸½º¹æ");
+	}
 }
 
 void gameScene::render()

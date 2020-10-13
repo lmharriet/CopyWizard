@@ -5,6 +5,10 @@ HRESULT mapToolScene::init()
 {
 	//sound init
 
+	SOUNDMANAGER->stop("ingameBGM");
+	SOUNDMANAGER->stop("bossBGM");
+	SOUNDMANAGER->stop("titleBGM");
+
 	ZeroMemory(&tile, sizeof(tagTile));
 	ZeroMemory(&obTile, sizeof(tagTile));
 
