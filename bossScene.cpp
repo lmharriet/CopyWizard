@@ -184,7 +184,7 @@ void bossScene::attackBoss()
 			int damage = _player->getBlaze()->getBullet()[i].atkPower + RANDOM->range(0, 3);
 
 			bool isCri = PLAYERDATA->criAppear();
-			_player->skillGauge(isCri);
+			_player->chargeSkillGauge(isCri);
 
 			if (isCri) //critical damage
 				damage = (float)damage * PLAYERDATA->getStat().criDamage;

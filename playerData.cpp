@@ -7,7 +7,7 @@ HRESULT playerData::init()
 	hp = 500;
 	coin = 0;
 	_gaugeTime = 0;
-	
+	skillGauge = 0;
 	stat.damage = 1.f;				//100%
 	stat.criDamage = 1.5f;			//150%
 	stat.criChance = 0.15f;			// 15%
@@ -31,6 +31,7 @@ void playerData::update()
 
 	UI->setHp(hp);
 	UI->setCoin(coin);
+	UI->setSkillGauge(skillGauge);
 }
 
 void playerData::setStat(string statName, float value)

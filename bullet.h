@@ -231,6 +231,9 @@ public:
 	float getAngle(int index) { return vDamage[index].angle; }
 	RECT getColRect(int index) { return vDamage[index].rc; }
 
+	//upgrade ½ºÅ³¿ë
+	void setUpgrade(bool _upgrade) { upgrade = _upgrade; }
+
 };
 
 

@@ -15,6 +15,7 @@ private:
 
 	int coin;
 	int hp;
+	float skillGauge;
 
 public:
 	HRESULT init();
@@ -31,6 +32,7 @@ public:
 
 	void setCoin(int num) { coin = num; }
 	void setHp(int _hp) { hp = _hp; }
+	void setSkillGauge(float gauge) { skillGauge = gauge; }
 
 	void setSkillSlot(string keyName, int sec);
 	void addCoolTime(int index) { skillSlot[index].available = false; }

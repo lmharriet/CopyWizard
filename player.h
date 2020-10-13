@@ -32,6 +32,7 @@ private:
 	//test
 	tagAllSkill arcana;
 
+	//bullet class
 
 	bomb* blaze;
 	dragonArc* dragon;
@@ -39,13 +40,16 @@ private:
 	dashFire* searingRush;
 	RagingInferno* inferno;
 
+	//inventory
 	inventory* inven;
+
 private:
 
 	MOVE move;
 	STATE state;
 
 	RECT rc;
+
 	tagCollider tileCheck[8];
 	tagCollider diagonalCheck[4];
 
@@ -69,9 +73,10 @@ private:
 	int blazeCount, meteorCount;
 
 	//skill upgrade
-	float upgradeGauge;
-	bool gaugeMax;
-	bool upgrade;
+	float skillGauge;
+	int gaugeMaxCool;
+	bool upgradeReady;
+
 
 	//animation count , index
 	int dashCount,dashIndex;
@@ -144,7 +149,8 @@ public:
 
 	void damagedCool();
 
-	void skillGauge(bool appearCri);
+	void chargeSkillGauge(bool appearCri);
+	void skillGaugeSetUp();
 
 	void arcanaCheck();
 

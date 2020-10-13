@@ -74,11 +74,9 @@ HRESULT player::init()
 	isDead = false;
 
 	//upgrade gauge
-	upgradeGauge = 0;
-	gaugeMax = false;
-	upgrade = false;
-
-
+	skillGauge = 0;
+	gaugeMaxCool = 0;
+	upgradeReady = false;
 
 
 	//test
@@ -176,7 +174,10 @@ void player::update()
 		posY -= sinf(knockBack.angle) * (knockBack.speed + knockBack.percent);
 		rc = RectMakeCenter(posX, posY, 50, 50);
 	}
-	
+
+	skillGaugeSetUp();
+
+
 	takeCoin();
 	takeHealball();
 
@@ -188,11 +189,6 @@ void player::update()
 
 
 
-	//gauge
-	if (upgradeGauge < 100 && upgradeGauge >= 0 && count % 10 == 0) upgradeGauge -= 0.5f;
-
-	if (upgradeGauge == 100)
-		gaugeMax = true;
 }
 
 void player::other_update()
@@ -252,7 +248,6 @@ void player::other_update()
 	blazeSetUp();
 	infernoSetUp();
 	meteorSetUp();
-
 	dragonArcSetUp();
 
 	damagedCool();
@@ -266,6 +261,9 @@ void player::other_update()
 		posY -= sinf(knockBack.angle) * (knockBack.speed + knockBack.percent);
 		rc = RectMakeCenter(posX, posY, 50, 50);
 	}
+
+	skillGaugeSetUp();
+
 	takeCoin();
 	takeHealball();
 
@@ -571,6 +569,8 @@ void player::dashFunction()
 	if (speed == 0) resetKey();
 }
 
+//bullet
+
 void player::blazeSetUp()
 {
 	if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool() && frozenTime == 0 && !isDead
@@ -638,10 +638,11 @@ void player::infernoSetUp()
 
 void player::meteorSetUp()
 {
+	Meteor->setUpgrade(upgradeReady);
 	float mouseX = CAMERAMANAGER->GetAbsoluteX(_ptMouse.x);
 	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
 	//Attack
-	if (!gaugeMax)
+	if (!upgradeReady)
 	{
 		if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead
 			&& !Meteor->getCool() && !inferno->getGauging() && speed == 0)
@@ -673,6 +674,10 @@ void player::meteorSetUp()
 			{
 				meteorStateCool = 30;
 				Meteor->creatMeteor(mouseX, mouseY, 0);
+
+				//skillGauge ÃÊ±âÈ­
+				skillGauge = 0;
+				upgradeReady = false;
 			}
 		}
 		if (meteorStateCool > 0)
@@ -682,7 +687,10 @@ void player::meteorSetUp()
 
 			if (meteorStateCool == 0) signature = false;
 		}
+
+
 	}
+
 }
 
 void player::dragonArcSetUp()
@@ -1162,8 +1170,6 @@ void player::buttonDown()
 	else isUp = false;
 	if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))isDown = true;
 	else isDown = false;
-
-
 }
 
 void player::death()
@@ -1220,11 +1226,36 @@ void player::damagedCool()
 	}
 }
 
-void player::skillGauge(bool appearCri)
+void player::chargeSkillGauge(bool appearCri)
 {
 	bool cri = appearCri;
-	if (cri) upgradeGauge += 5.f;
-	else upgradeGauge += 2.f;
+	if (cri) skillGauge += 5.f;
+	else skillGauge += 2.f;
+}
+
+void player::skillGaugeSetUp()
+{
+	//gauge
+	if (skillGauge < 100 && skillGauge >= 0 && !upgradeReady && count % 10 == 0)
+		skillGauge -= 0.3f;
+
+	else if (skillGauge >= 100)
+	{
+		skillGauge = 100;
+		upgradeReady = true;
+		gaugeMaxCool = 20;
+	}
+
+	if (upgradeReady)
+	{
+		gaugeMaxCool--;
+	}
+
+	if (gaugeMaxCool > 0)
+	{
+	}
+
+	PLAYERDATA->setSkillGauge(skillGauge);
 }
 void player::arcanaCheck()
 {

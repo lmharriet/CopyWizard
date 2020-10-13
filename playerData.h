@@ -19,7 +19,8 @@ private:
 	//stat//
 	int hp;
 	int maxHp;	
-	
+	float skillGauge;
+
 	tagStat stat;
 	////////
 	int coin;
@@ -50,7 +51,7 @@ public:
 	void setX(float x) { _x = x; }
 	void setY(float y) { _y = y; }
 	void setGaugeTime(int time) { _gaugeTime = time; }
-
+	void setSkillGauge(float gauge) { skillGauge = gauge; }
 
 	tagStat getStat() { return stat; }
 	void setStat(string statName, float value);

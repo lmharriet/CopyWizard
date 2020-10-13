@@ -5,7 +5,7 @@ HRESULT uiManager::init()
 {
 	IMAGEMANAGER->addImage("hpInfo", "Images/ui/leftTopInfo.bmp", 324, 90, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("hpBar", "Images/ui/hpBar.bmp", 242, 32, true, RGB(255, 0, 255));
-
+	IMAGEMANAGER->addImage("skillGaugeBar", "Images/ui/gaugeBar.bmp", 184, 20, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("uiCoin", "Images/ui/coin.bmp", 21, 17, true, RGB(255, 0, 255));
 
 	IMAGEMANAGER->addFrameImage("pictureFrame", "Images/ui/pictureFrame.bmp", 96, 48, 2, 1);
@@ -93,7 +93,14 @@ void uiManager::infoRender(HDC hdc, int destX, int destY)
 	int hpBar = (float)img->getWidth() * ((float)hp / 500);
 	img->render(hdc, destX + 75, destY + 23, 0, 0, hpBar, img->getHeight());
 
+	img = IMAGEMANAGER->findImage("skillGaugeBar");
+
+	int skillGaugeBar = (float)img->getWidth() * (skillGauge / 100.f);
+	img->render(hdc, destX + 78, destY + 60, 0, 0, skillGaugeBar, img->getHeight());
+
 	img = IMAGEMANAGER->findImage("numbers");
+
+	
 
 	int tmp[3] = { hp / 100, hp / 10 % 10, hp % 10 };
 
