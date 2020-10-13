@@ -28,7 +28,7 @@ HRESULT bossScene::init()
 	_boss->getPlayerInfo(_player);
 
 	PARTICLE->init();
-
+	DAMAGE->init();
 
 	//UI->setCoin(PLAYERDATA->getCoin());
 	//UI->setHp(PLAYERDATA->getHp());
@@ -127,6 +127,8 @@ void bossScene::render()
 	CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("frontFrame"), 0, 0);
 	PARTICLE->render(getMemDC());
 	UI->render(getMemDC(), 50, 50);
+
+	DAMAGE->render(getMemDC());
 }
 
 void bossScene::soundInit()

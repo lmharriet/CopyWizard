@@ -43,7 +43,7 @@ HRESULT bossSkill::init(float x, float y, int deleteTime, int type)
 		_frameY = 0;
 		break;
 	case 3:
-		temp = RectMake(_posX, _posY, 256, 256);
+		temp = RectMake(_posX + 28, _posY + 28, 200, 200);
 		break;
 	}
 
@@ -78,6 +78,9 @@ void bossSkill::render(HDC hdc)
 	case 2:
 		CAMERAMANAGER->AlphaFrameRender(hdc, _bossCircleImg, _posX, _posY, _frameX, _frameY, 7);
 		//CAMERAMANAGER->Rectangle(hdc, temp);
+		break;
+	case 3:
+		CAMERAMANAGER->Rectangle(hdc, temp);
 		break;
 	}
 }

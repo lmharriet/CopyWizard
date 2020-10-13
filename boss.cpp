@@ -29,6 +29,7 @@ HRESULT boss::init(int _posX, int _posY)
 	patternCount = 0;
 	patternTimer = 0;
 	samePattern = 0;
+	hitTimer = 0;
 
 	jumpMotion = false;
 	leftCheck = false;
@@ -43,6 +44,7 @@ HRESULT boss::init(int _posX, int _posY)
 	punchPattern = false;
 	niddlePattern = false;
 	wallPattern = false;
+	isHit = false;
 
 	niddleAngle = 0.0f;
 
@@ -67,14 +69,15 @@ void boss::update()
 
 void boss::render()
 {
+	
 	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("boss"), boss.rc.left, boss.rc.top, frameX, frameY);
 
 	if (boss.bossState == DRILL) {
 		if (!leftCheck) {
-			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("drill"), drillBlcok.rc.left, drillBlcok.rc.top, 0, 0);
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("drill"), drillBlock.rc.left, drillBlock.rc.top, 0, 0);
 		}
 		else {
-			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("drill"), drillBlcok.rc.left, drillBlcok.rc.top, 0, 1);
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("drill"), drillBlock.rc.left, drillBlock.rc.top, 0, 1);
 		}
 	}
 
@@ -542,9 +545,9 @@ void boss::jump(int patternType)
 			}
 			else {
 				CAMERAMANAGER->Shake(30, 30, 15);
-				boss.center.x = boss.rc.left + 75;
-				boss.center.y = boss.rc.top + 75;
-				BOSSMANAGER->init(posX - 130, posY + WINSIZEY - 150, 30, 3);
+				boss.center.x = boss.rc.left + 50;
+				boss.center.y = boss.rc.top + 50;
+				BOSSMANAGER->init(posX - 130, posY + WINSIZEY - 150, 1, 3);
 				PARTICLE->bossJumpParticlePlay(boss.center.x, boss.center.y);
 				patternStart = false;
 				jumpPattern = false;
@@ -578,12 +581,12 @@ void boss::drill(int patternType)
 		posY = _player->getY();
 		boss.angle = getAngle(boss.center.x, boss.center.y, posX, posY);
 		if (boss.rc.right < _player->getRect().left) {
-			drillBlcok.rc = RectMakeCenter(boss.center.x + 50, boss.center.y + 20, 100, 80);
+			drillBlock.rc = RectMakeCenter(boss.center.x + 50, boss.center.y + 20, 100, 80);
 			leftCheck = false;
 		}
 		else {
 			leftCheck = true;
-			drillBlcok.rc = RectMakeCenter(boss.center.x - 50, boss.center.y + 20, 100, 80);
+			drillBlock.rc = RectMakeCenter(boss.center.x - 50, boss.center.y + 20, 100, 80);
 		}
 		drillPattern = true;
 	}
@@ -594,10 +597,10 @@ void boss::drill(int patternType)
 			boss.center.y += -sinf(boss.angle) * 30;
 			boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
 			if (leftCheck) {
-				drillBlcok.rc = RectMakeCenter(boss.center.x - 75, boss.center.y + 20, 100, 80);
+				drillBlock.rc = RectMakeCenter(boss.center.x - 75, boss.center.y + 20, 100, 80);
 			}
 			else {
-				drillBlcok.rc = RectMakeCenter(boss.center.x + 75, boss.center.y + 20, 100, 80);
+				drillBlock.rc = RectMakeCenter(boss.center.x + 75, boss.center.y + 20, 100, 80);
 			}
 		}
 		else {
@@ -616,7 +619,7 @@ void boss::drill(int patternType)
 					boss.center.y -= 30;
 				}
 				boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
-				drillBlcok.rc = RectMake(-100, -100, 100, 80);
+				drillBlock.rc = RectMake(-100, -100, 100, 80);
 				boss.bossState = BOSSIDLE;
 				patternCount++;
 				drillPattern = false;
@@ -652,6 +655,7 @@ void boss::punch(int patternType)
 				CAMERAMANAGER->Shake(10, 10, 2);
 			}
 			if (punchBlock[i]->rc.left > WINSIZEX + 150|| punchBlock[i]->rc.right < 100 || punchBlock[i]->rc.top > WINSIZEY || punchBlock[i]->rc.bottom < 150) {
+				PARTICLE->crashRockParticlePlay(punchBlock[i]->rc.left + 50, punchBlock[i]->rc.top + 50);
 				punchBlock.erase(punchBlock.begin() + i);
 				break;
 			}
@@ -688,6 +692,7 @@ void boss::niddle(int patternType)
 				niddleBlock.clear();
 				for (int i = 0; i < 5; i++) {
 					tagBlock* _block = new tagBlock;
+					_block->isHit = false;
 					_block->angle = (18 + (i * 72)) * PI / 180;
 					_block->center.x = cosf(_block->angle) * 130 + WINSIZEX / 2;
 					_block->center.y = -sinf(_block->angle) * 130 + WINSIZEY / 2;
@@ -712,7 +717,7 @@ void boss::niddle(int patternType)
 			patternStart = false;
 		}
 		for (int i = 0; i < niddleBlock.size(); i++) {
-			niddleAngle = getAngle(niddleBlock[i]->center.x, niddleBlock[i]->center.y, _player->getX(), _player->getY());
+			niddleAngle = getAngle(niddleBlock[i]->center.x, niddleBlock[i]->center.y, _player->getX() - 40, _player->getY() - 40);
 
 			if (timer % 5 == 0) {
 				BOSSMANAGER->init(niddleBlock[i]->center.x, niddleBlock[i]->center.y, 20, 1);
@@ -729,10 +734,10 @@ void boss::niddle(int patternType)
 				niddleBlock[i]->angle = niddleAngle;
 			}
 
-			niddleBlock[i]->center.x += cosf(niddleBlock[i]->angle) * 4;
-			niddleBlock[i]->center.y += -sinf(niddleBlock[i]->angle) * 4;
+			niddleBlock[i]->center.x += cosf(niddleBlock[i]->angle) * 6;
+			niddleBlock[i]->center.y += -sinf(niddleBlock[i]->angle) * 6;
 
-			niddleBlock[i]->rc = RectMakeCenter(niddleBlock[i]->center.x, niddleBlock[i]->center.y, 20, 20);
+			niddleBlock[i]->rc = RectMakeCenter(niddleBlock[i]->center.x + 20, niddleBlock[i]->center.y + 20, 20, 20);
 
 			CAMERAMANAGER->Shake(5, 5, 70);
 		}
@@ -741,12 +746,12 @@ void boss::niddle(int patternType)
 
 void boss::middleWood()
 {
-	tagBlock _wall;
-	_wall.center = boss.center;
-	_wall.angle = getAngle(_wall.center.x, _wall.center.y, _player->getX(), _player->getY());
-	_wall.rc = RectMakeCenter(_wall.center.x, _wall.center.y, 44, 44);
-	_wall.type = 0;
-	_wall.blockCount = 0;
+	tagBlock* _wall = new tagBlock;
+	_wall->center = boss.center;
+	_wall->angle = getAngle(_wall->center.x, _wall->center.y, _player->getX(), _player->getY());
+	_wall->rc = RectMakeCenter(_wall->center.x, _wall->center.y, 44, 44);
+	_wall->type = 0;
+	_wall->blockCount = 0;
 	wallBlock.push_back(_wall);
 }
 
@@ -763,12 +768,12 @@ void boss::wall(int patternType)
 			leftCheck = true;
 		}
 		for (int i = -1; i < 2; i++) {
-			tagBlock _wall;
-			_wall.center = boss.center;
-			_wall.angle = getAngle(_wall.center.x, _wall.center.y, _player->getX(), _player->getY()) + i * PI_8;
-			_wall.rc = RectMakeCenter(_wall.center.x, _wall.center.y, 44, 44);
-			_wall.type = i;
-			_wall.blockCount = 0;
+			tagBlock* _wall = new tagBlock;
+			_wall->center = boss.center;
+			_wall->angle = getAngle(_wall->center.x, _wall->center.y, _player->getX(), _player->getY()) + i * PI_8;
+			_wall->rc = RectMakeCenter(_wall->center.x, _wall->center.y, 44, 44);
+			_wall->type = i;
+			_wall->blockCount = 0;
 			wallBlock.push_back(_wall);
 		}
 		this->bossPlayerAngle();
@@ -788,48 +793,48 @@ void boss::wall(int patternType)
 			this->middleWood();
 		}
 		for (int i = 0; i < wallBlock.size(); i++) {
-			wallBlock[i].blockCount++;
-			if (wallBlock[i].rc.left > 0 && wallBlock[i].rc.right < WINSIZEX + 100 && wallBlock[i].rc.top > 150 && wallBlock[i].rc.bottom < WINSIZEY + 100) {
-				if (wallBlock[i].blockCount % 2 == 0 && wallBlock[i].type == -1) {
+			wallBlock[i]->blockCount++;
+			if (wallBlock[i]->rc.left > 0 && wallBlock[i]->rc.right < WINSIZEX + 100 && wallBlock[i]->rc.top > 150 && wallBlock[i]->rc.bottom < WINSIZEY + 100) {
+				if (wallBlock[i]->blockCount % 2 == 0 && wallBlock[i]->type == -1) {
 					switch (posPlayer)
 					{
 					case 1:
-						BOSSMANAGER->init(wallBlock[i].center.x + 30, wallBlock[i].center.y, 240, 0);
+						BOSSMANAGER->init(wallBlock[i]->center.x + 30, wallBlock[i]->center.y, 240, 0);
 						break;
 					case 2:
-						BOSSMANAGER->init(wallBlock[i].center.x + 130, wallBlock[i].center.y -200, 240, 0);
+						BOSSMANAGER->init(wallBlock[i]->center.x + 130, wallBlock[i]->center.y -200, 240, 0);
 						break;
 					case 3:
-						BOSSMANAGER->init(wallBlock[i].center.x - 200, wallBlock[i].center.y - 150, 240, 0);
+						BOSSMANAGER->init(wallBlock[i]->center.x - 200, wallBlock[i]->center.y - 150, 240, 0);
 						break;
 					case 4:
-						BOSSMANAGER->init(wallBlock[i].center.x -130, wallBlock[i].center.y, 240, 0);
+						BOSSMANAGER->init(wallBlock[i]->center.x -130, wallBlock[i]->center.y, 240, 0);
 						break;
 					}
 				}
-				if (wallBlock[i].blockCount % 2 == 0 && wallBlock[i].type == 0) {
-					BOSSMANAGER->init(wallBlock[i].center.x + (leftCheck ? -50 : 50), wallBlock[i].center.y - 110, 80, 0);
+				if (wallBlock[i]->blockCount % 2 == 0 && wallBlock[i]->type == 0) {
+					BOSSMANAGER->init(wallBlock[i]->center.x + (leftCheck ? -50 : 50), wallBlock[i]->center.y - 110, 80, 0);
 				}
-				if (wallBlock[i].blockCount % 2 == 0 && wallBlock[i].type == 1) {
+				if (wallBlock[i]->blockCount % 2 == 0 && wallBlock[i]->type == 1) {
 					switch (posPlayer)
 					{
 					case 1:
-						BOSSMANAGER->init(wallBlock[i].center.x - 170, wallBlock[i].center.y, 240, 0);
+						BOSSMANAGER->init(wallBlock[i]->center.x - 170, wallBlock[i]->center.y, 240, 0);
 						break;
 					case 2:
-						BOSSMANAGER->init(wallBlock[i].center.x + 130, wallBlock[i].center.y, 240, 0);
+						BOSSMANAGER->init(wallBlock[i]->center.x + 130, wallBlock[i]->center.y, 240, 0);
 						break;
 					case 3:
-						BOSSMANAGER->init(wallBlock[i].center.x + 50, wallBlock[i].center.y - 150, 240, 0);
+						BOSSMANAGER->init(wallBlock[i]->center.x + 50, wallBlock[i]->center.y - 150, 240, 0);
 						break;
 					case 4:
-						BOSSMANAGER->init(wallBlock[i].center.x - 130, wallBlock[i].center.y - 200, 240, 0);
+						BOSSMANAGER->init(wallBlock[i]->center.x - 130, wallBlock[i]->center.y - 200, 240, 0);
 						break;
 					}
 				}
-				wallBlock[i].center.x += cosf(wallBlock[i].angle) * 55;
-				wallBlock[i].center.y += -sinf(wallBlock[i].angle) * 55;
-				wallBlock[i].rc = RectMakeCenter(wallBlock[i].center.x, wallBlock[i].center.y, 48, 44);
+				wallBlock[i]->center.x += cosf(wallBlock[i]->angle) * 55;
+				wallBlock[i]->center.y += -sinf(wallBlock[i]->angle) * 55;
+				wallBlock[i]->rc = RectMakeCenter(wallBlock[i]->center.x, wallBlock[i]->center.y, 48, 44);
 			}
 		}
 	}
@@ -839,7 +844,7 @@ void boss::bossPattern()
 {
 	if (boss.bossState == BOSSIDLE) {
 		pattern = RANDOM->range(5) + 1;
-		pattern = 3;
+		//pattern = 5;
 		if (samePattern == pattern) {
 			while (true)
 			{
@@ -875,25 +880,50 @@ void boss::collCheck()
 {
 	RECT temp;
 
+	/*if (boss.rc.left + 75 < _player->getX()) {
+		leftCheck = true;
+	}
+	else {
+		leftCheck = false;
+	}*/
+
 	for (int i = 0; i < BOSSMANAGER->getVector().size(); i++) {
 		if (IntersectRect(&temp, &BOSSMANAGER->getVector()[i]->getRect(), &_player->getRect())) {
 			switch (pattern)
 			{
-			case 1:
-				cout << "점프" << endl;
-				break;
-			case 4:
-				for (int i = 0; i < niddleBlock.size(); i++) {
-					if (IntersectRect(&temp, &_player->getRect(), &niddleBlock[i]->rc)) {
-						niddleBlock.erase(niddleBlock.begin() + i);
-						break;
+			case 1: {
+				if (!isHit) {
+					float _jumpAngle = getAngle(boss.center.x, boss.center.y, _player->getX(), _player->getY());
+					DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", 10);
+					_player->damage(RANDOM->range(75, 91), _jumpAngle, 10);
+					isHit = true;
+				}
+			}
+					break;
+			case 4: {
+				for (int j = 0; j < niddleBlock.size(); j++) {
+					if (IntersectRect(&temp, &niddleBlock[j]->rc, &_player->getRect())) {
+						if (!niddleBlock[j]->isHit) {
+							float _niddelAngle = getAngle(niddleBlock[j]->rc.left, niddleBlock[j]->rc.top, _player->getRect().left, _player->getRect().top);
+							niddleBlock[j]->isHit = true;
+							niddleBlock.erase(niddleBlock.begin() + j);
+							DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", 10);
+							_player->damage(RANDOM->range(8, 13), _niddelAngle, 3);
+							break;
+						}
 					}
 				}
-				cout << "니들" << endl;
+			}
+					break;
+			case 5: {
+				if (!isHit) {
+					float _wallAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left, BOSSMANAGER->getVector()[i]->getRect().top, _player->getRect().left, _player->getRect().top);
+					DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", 10);
+					_player->damage(RANDOM->range(8, 13), _wallAngle, 8);
+					isHit = true;
+				}
 				break;
-			case 5:
-				cout << "벽맞음" << endl;
-				break;
+			}
 			}
 		}
 	}
@@ -901,15 +931,31 @@ void boss::collCheck()
 	if (pattern == 3) {
 		for (int i = 0; i < punchBlock.size(); i++) {
 			if (IntersectRect(&temp, &_player->getRect(), &punchBlock[i]->rc)) {
-				cout << i + 1 << "펀치 " << endl;
+				float _punchAngle = getAngle(punchBlock[i]->rc.left, punchBlock[i]->rc.top, _player->getRect().left, _player->getRect().top);
+				DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", 10);
+				_player->damage(RANDOM->range(10, 20), _punchAngle, 6);
+				PARTICLE->crashRockParticlePlay(punchBlock[i]->rc.left + 50, punchBlock[i]->rc.top + 50);
 				punchBlock.erase(punchBlock.begin() + i);
 				break;
 			}
 		}
 	}
 
-	if (IntersectRect(&temp, &drillBlcok.rc, &_player->getRect())) {
-		cout << "드릴맞음" << endl;
+	if (IntersectRect(&temp, &drillBlock.rc, &_player->getRect())) {
+		if (!isHit) {
+			float _drillBlock = getAngle(drillBlock.rc.left, drillBlock.rc.top, _player->getRect().left, _player->getRect().top);
+			DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", 10);
+			_player->damage(RANDOM->range(1, 5), _drillBlock, 10);
+			isHit = true;
+		}
+	}
+
+	if (isHit) {
+		hitTimer++;
+		if (hitTimer > 50) {
+			hitTimer = 0;
+			isHit = false;
+		}
 	}
 }
 
@@ -944,3 +990,5 @@ void boss::punchRectMove()
 		}
 	}
 }
+
+

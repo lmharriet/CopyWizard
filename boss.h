@@ -25,6 +25,7 @@ struct tagBlock
 	int type;
 	int blockCount;
 	bool isFire;
+	bool isHit;
 };
 class player;
 class boss : public gameNode
@@ -38,11 +39,11 @@ public:
 private:
 	tagBoss boss;
 	//tagBlock block[3];
-	tagBlock drillBlcok;
+	tagBlock drillBlock;
 	//tagBlock niddleBlock[5];
 	vector<tagBlock*> niddleBlock;
 	vector<tagBlock*> punchBlock;
-	vector<tagBlock> wallBlock;
+	vector<tagBlock*> wallBlock;
 
 	int count, timer;
 	int posX, posY;
@@ -54,6 +55,7 @@ private:
 	int patternCount;
 	int patternTimer;
 	int samePattern;
+	int hitTimer;
 
 	bool jumpMotion;
 	bool leftCheck;
@@ -66,6 +68,7 @@ private:
 	bool punchPattern;
 	bool niddlePattern;
 	bool wallPattern;
+	bool isHit;
 
 	float niddleAngle;
 
