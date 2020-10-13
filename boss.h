@@ -97,6 +97,8 @@ public:
 	void punchSet();
 	void punchRectMove();
 
+
+	tagBoss getBoss() { return boss; }
 	RECT getBossRect() {
 		return boss.rc;
 	}

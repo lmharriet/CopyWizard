@@ -167,7 +167,24 @@ void bossScene::attackBoss()
 	{
 		if (colCheck(_player->getBlaze()->getBullet()[i].rc, _boss->getBossRect()))
 		{
-			//cout << "blaze hit" << '\n';
+			int damage = _player->getBlaze()->getBullet()[i].atkPower + RANDOM->range(0, 3);
+
+			bool isCri = PLAYERDATA->criAppear();
+			_player->skillGauge(isCri);
+
+			if (isCri) //critical damage
+				damage = (float)damage * PLAYERDATA->getStat().criDamage;
+			//normal damage
+			else damage = (float)damage * PLAYERDATA->getStat().damage;
+
+
+
+			SOUNDMANAGER->play("blazeExp", false);
+			PARTICLE->explosionGenerate("explosionParticle", _player->getBlaze()->getBullet()[i].x + 20,
+				_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
+			// boss hit
+			_player->getBlaze()->setCol(i, true);
+
 		}
 	}
 
@@ -189,6 +206,20 @@ void bossScene::attackBoss()
 		{
 			//cout << "inferno" << '\n';
 			//수정 필요
+		}
+	}
+
+	//meteor
+	for (int i = 0; i < _player->getMeteor()->getColSize(); i++)
+	{
+		if (colCheck(_player->getMeteor()->getColRect(i), _boss->getBossRect()))
+		{
+			int damage = _player->getMeteor()->getAtkPower(i) + RANDOM->range(0, 5);
+			bool isCri = PLAYERDATA->criAppear();
+
+			if (isCri) damage = (float)damage * PLAYERDATA->getStat().criDamage;
+			else damage = (float)damage * PLAYERDATA->getStat().damage;
+
 		}
 	}
 }
