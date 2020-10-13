@@ -444,8 +444,11 @@ void gameScene::playerAttack()
 				int damage = _player->getBlaze()->getBullet()[i].atkPower + RANDOM->range(0, 3);
 
 				bool isCri = PLAYERDATA->criAppear();
+					_player->skillGauge(isCri);
 
-				if (isCri) damage = (float)damage * PLAYERDATA->getStat().criDamage;
+				if (isCri)
+					damage = (float)damage * PLAYERDATA->getStat().criDamage;
+					
 				else damage = (float)damage * PLAYERDATA->getStat().damage;
 
 				SOUNDMANAGER->play("blazeExp", false);

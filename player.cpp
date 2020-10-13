@@ -69,8 +69,15 @@ HRESULT player::init()
 	//damage 
 	damageAngle = 0;
 	damageAngleTenth = frozenTime = 0;
+
+
 	isDamaged = false;
 	isDead = false;
+
+	//upgrade gauge
+	upgradeGauge = 0;
+	gaugeMax = false;
+	upgrade = false;
 
 	//test
 	arcana.name = "nonSkill";
@@ -124,7 +131,8 @@ void player::update()
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
 
-	if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && !isDead && !inferno->getGauging())
+	if (speed == 0 && stateCool == 0 && meteorStateCool == 0 &&frozenTime==0
+		&& !isDead && !inferno->getGauging())
 	{
 		controller();
 	}
@@ -166,6 +174,19 @@ void player::update()
 	//don't touch!
 	buttonDown();
 
+
+
+	if (upgradeGauge < 100 && upgradeGauge >= 0 && count %10 ==0) upgradeGauge -= 0.5f;
+
+	if (upgradeGauge == 100)
+		gaugeMax = true;
+
+
+
+	/*if (upgradeGauge < 100 )
+		cout << "upgradeGauge" << upgradeGauge << '\n';
+	if (upgradeGauge == 100)
+		cout << "max, upgradeGauge" << upgradeGauge << '\n';*/
 	//cout << vTile[0] << '\n';
 }
 
@@ -541,8 +562,8 @@ void player::dashFunction()
 
 void player::blazeSetUp()
 {
-	if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool() &&
-		!inferno->getGauging() && meteorStateCool == 0 && speed == 0)
+	if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool() &&frozenTime==0 && !isDead 
+		&& !inferno->getGauging() && meteorStateCool == 0 && speed == 0)
 	{
 		UI->addCoolTime(0);
 		blazeCount = 3;
@@ -588,8 +609,8 @@ void player::blazeSetUp()
 
 void player::infernoSetUp()
 {
-	if (INPUT->GetKeyDown(VK_RBUTTON) &&
-		!inferno->getCool() && meteorStateCool == 0 && speed == 0)
+	if (INPUT->GetKeyDown(VK_RBUTTON) &&frozenTime == 0 && !isDead
+		&& !inferno->getCool() && meteorStateCool == 0 && speed == 0)
 	{
 		standard = true;
 		saveAngle2 = attackAngle;
@@ -609,7 +630,7 @@ void player::meteorSetUp()
 	float mouseX = CAMERAMANAGER->GetAbsoluteX(_ptMouse.x);
 	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
 	//Attack
-	if (INPUT->GetKeyDown('Q')
+	if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead
 		&& !Meteor->getCool() && !inferno->getGauging() && speed == 0)
 	{
 		signature = true;
@@ -761,9 +782,12 @@ void player::animation()
 		}
 		break;
 	case STATE::DAMAGED:
+		if (frozenTime > 0)
+		{
+			frameAnimation(6, 0);
+			if (!isDamaged) move = MOVE::LEFT;
+		}
 
-		frameAnimation(6, 0);
-		if (!isDamaged) move = MOVE::LEFT;
 
 		//각도별로 
 
@@ -1156,13 +1180,19 @@ void player::damagedCool()
 		if (state == STATE::DASH || state == STATE::SIGNATURE || state == STATE::STANDARD) return;
 		state = STATE::DAMAGED;
 	}
-	if (frozenTime > 6)
+	if (frozenTime > 25)
 	{
 		isDamaged = false;
 		frozenTime = 0;
 	}
 }
 
+void player::skillGauge(bool appearCri)
+{
+	bool cri = appearCri;
+	if (cri) upgradeGauge += 5.f;
+	else upgradeGauge += 2.f;
+}
 void player::arcanaCheck()
 {
 }

@@ -61,14 +61,17 @@ private:
 	int gaugeTime;
 
 
+	//coolTile
 	int stateCool;
 	int infernoStateCool;
 	int meteorStateCool;
-	
+	int knockBackCool;
+
 	int blazeCount, meteorCount;
 
 	//skill upgrade
-	int power;
+	float upgradeGauge;
+	bool gaugeMax;
 	bool upgrade;
 
 	//animation count , index
@@ -139,6 +142,8 @@ public:
 	void damage(int damage, float attackAngle, float knockBackX, float knockBackY);
 
 	void damagedCool();
+
+	void skillGauge(bool appearCri);
 
 	void arcanaCheck();
 
