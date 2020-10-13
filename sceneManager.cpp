@@ -39,7 +39,10 @@ void sceneManager::release()
 	{
 		cout << scene.second << endl;
 		scene.second->release();
-		//SAFE_DELETE(scene.second);
+		if (scene.first != "인게임")
+		{
+			SAFE_DELETE(scene.second);
+		}
 	}
 	// SAFE_DELETE만 일단 off 해둠
 	/////////////////////////////////////////////

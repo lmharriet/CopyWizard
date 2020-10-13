@@ -64,6 +64,12 @@ void soundManager::update()
 
 void soundManager::addSound(string keyName, string soundName, bool bgm, bool loop)
 {
+	arrSoundIter iter = _mTotalSound.begin();
+	for (iter; iter != _mTotalSound.end(); ++iter)
+	{
+		if (keyName == iter->first)
+			return;
+	}
 	if (loop) //일반적으로 BGM
 	{
 		if (bgm)

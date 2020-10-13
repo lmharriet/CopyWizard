@@ -3,6 +3,7 @@
 
 HRESULT inventory::init()
 {
+	_vSlot.clear();
 	IMAGEMANAGER->addImage("info", "resource/UI/playerinfoBoxSmall.bmp", 400, 588, true, RGB(255, 0, 255));
 	rc = RectMakeCenter(WINSIZEX / 2 - ((WINSIZEX / 2) / 2), WINSIZEY / 2, 400, 588);
 	isOpen = false;
