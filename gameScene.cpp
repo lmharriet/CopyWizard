@@ -1,8 +1,16 @@
 #include "stdafx.h"
 #include "gameScene.h"
 
+gameScene::gameScene(): 
+	enemy(nullptr), _player(nullptr),bgImg(nullptr), playerImg(nullptr), uiImg(nullptr), _shop(nullptr) {}
+
 HRESULT gameScene::init()
 {
+	//sound 
+	SOUNDMANAGER->stop("mapToolBGM");
+	SOUNDMANAGER->stop("ingameBGM");
+	SOUNDMANAGER->stop("bossBGM");
+
 
 	UI->init();
 	DROP->init();
@@ -83,11 +91,14 @@ HRESULT gameScene::init()
 
 void gameScene::release()
 {
-	/*_player->release();
-	SAFE_DELETE(_player);
+	if (_player != nullptr)
+	{
+		_player->release();
+		SAFE_DELETE(_player);
 
-	enemy->release();
-	SAFE_DELETE(enemy);*/
+		enemy->release();
+		SAFE_DELETE(enemy);
+	}
 }
 
 void gameScene::update()
@@ -132,6 +143,11 @@ void gameScene::update()
 	//collision between player skill and enemy
 	playerAttack();
 	enemyAttack();
+
+	if (INPUT->GetKeyDown('J'))
+	{
+		SCENEMANAGER->loadScene("º¸½º¹æ");
+	}
 }
 
 void gameScene::render()

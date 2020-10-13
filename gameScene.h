@@ -8,6 +8,11 @@
 
 class gameScene : public gameNode
 {
+public:
+	gameScene();
+
+
+
 private:
 	
 	enemyManager* enemy;

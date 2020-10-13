@@ -7,6 +7,7 @@ HRESULT startScene::init()
 	//»ç¿îµå
 	SOUNDMANAGER->stop("ingameBGM");
 	SOUNDMANAGER->stop("mapToolBGM");
+	SOUNDMANAGER->stop("bossBGM");
 	SOUNDMANAGER->play("titleBGM",true);
 	isTitleBGM = true;
 	fadeIn = 0.0f;
