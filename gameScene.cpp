@@ -450,7 +450,7 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(isCri);
 
 				if (isCri)
-					damage = (float)damage * PLAYERDATA->getStat().criDamage;
+					damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
 					
 				else damage = (float)damage * PLAYERDATA->getStat().damage;
 

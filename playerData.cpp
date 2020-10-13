@@ -9,7 +9,7 @@ HRESULT playerData::init()
 	_gaugeTime = 0;
 	skillGauge = 0;
 	stat.damage = 1.f;				//100%
-	stat.criDamage = 1.5f;			//150%
+	stat.criDamage = 0.5f;			//100% + 50% = 150%
 	stat.criChance = 0.15f;			// 15%
 
 	stat.potionDropChance = 0.f;	//  0%
