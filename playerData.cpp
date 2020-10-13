@@ -34,17 +34,18 @@ void playerData::update()
 	UI->setSkillGauge(skillGauge);
 }
 
-void playerData::setStat(string statName, float value)
+void playerData::setStat(string itemName)
 {
-	if (statName == "damage") stat.damage += value;
-	else if (statName == "criDamage") stat.criDamage += value;
-	else if (statName == "criChance") stat.criChance += value;
-	else if (statName == "potionDropChance") stat.potionDropChance += value;
-	else if (statName == "defenceChance") stat.defenceChance += value;
-	else if (statName == "burnChance") stat.burnChance += value;
-	else if (statName == "vampireBlood") stat.vampireBlood = true;
+	tagItem item = ITEM->getItem(itemName);
 
-	else cout << "ÂÄ½Å¾ÈÂ÷·Á?" << '\n';
+	stat.damage += item.damage;
+	stat.criDamage += item.criDamage;
+	stat.criChance += item.criChance;
+	stat.burnChance += item.burnChance;
+	stat.defenceChance += item.defenceChance;
+	stat.potionDropChance += item.potionDropChance;
+
+	if (item.vampireBlood == true) stat.vampireBlood = true;
 }
 
 bool playerData::criAppear()

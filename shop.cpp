@@ -232,16 +232,13 @@ void shop::buyItem()
             AndresShop[colItem].isSell = true;
             AndresShop[colItem].frame = { 0,0 };
 
-            //여기에 inventory 추가 기능 넣기
+            //1. 여기에 player stat을 조정
+            PLAYERDATA->setStat(AndresShop[colItem].keyName);
 
-            //1. PLAYERDATA 에 vector<string> vInven 을 생성
+            //2. vector<string> vInven에 push_Back
+            PLAYERDATA->pushInven(AndresShop[colItem].keyName);
 
-            //2. 여기에 player stat을 조정 후 vector<string> vInven에 push_Back
-
-            //3. inventory class에서 PLAYERDATA에 vector<string> vInven을 받아와서
-            //   inventory class에 있는 벡터에 넣어준다.
-
-            //4. 벡터의 string이 들어있으므로 itemManager 에서 getItem을 사용하여 frameKeyName, frameX, frameY을 가져온 뒤
+            //3. 벡터의 string이 들어있으므로 itemManager 에서 getItem을 사용하여 frameKeyName, frameX, frameY을 가져온 뒤
             //   지정한 자리에 출력을 하면 끝.
 
             //ex) CAMERAMANAGER->frameRender(getmemDC(), "itemFrame", x위치, y위치, frameX, frameY);

@@ -403,8 +403,8 @@ void gameScene::render()
 	//uiImg->render(getMemDC());
 
 
-	_player->invenRender();
 	UI->render(getMemDC(), 50, 50);
+	_player->invenRender();
 
 	viewText();
 

@@ -114,11 +114,11 @@ tagItem itemManager::getItem(string keyName)
 {
 	vector<tagItem>::iterator iter = vItem.begin();
 
-	for (iter; iter != vItem.begin(); ++iter)
+	for (iter; iter != vItem.end(); ++iter)
 	{
 		if (keyName == iter->keyName)
 		{
-			cout << "정상적으로 불러옴" << '\n';
+			//cout << "정상적으로 불러옴" << '\n';
 			return *iter;
 		}
 	}
