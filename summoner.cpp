@@ -11,10 +11,10 @@ void summoner::addInit()
     skillImg = IMAGEMANAGER->findImage("stoneFly");
 
     kind = MONSTERKIND::SUMMONER;
-    atk = 10;
+    atk = 15;
     armour = 0;
     speed = 0.f;
-    hp = 50;
+    hp = 80;
     img = IMAGEMANAGER->findImage("summoner");
     
     imgSize = 0.f;

@@ -7,7 +7,7 @@ void knight::addInit()
     atk = 5;
     armour = 4;
     speed = 6.f;
-    hp = 80;
+    hp = 100;
     img = IMAGEMANAGER->findImage("knight");
     skillImg = NULL;
     isKnockBack = true;

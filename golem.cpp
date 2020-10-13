@@ -7,10 +7,10 @@ void golem::addInit()
     smallSlashIndex = { 0,0 };
     hitImg = IMAGEMANAGER->addFrameImage("golemHit", "resource/enemy/golemHit.bmp", 1080, 630, 6, 3);
     kind = MONSTERKIND::GOLEM;
-    atk = 15;
+    atk = 30;
     armour = 8;
     speed = 2.f;
-    hp = 50;
+    hp = 150;
     img = IMAGEMANAGER->findImage("golem");
     skillImg = IMAGEMANAGER->findImage("smallSlash");
     isKnockBack = false;
