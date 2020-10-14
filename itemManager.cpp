@@ -22,7 +22,7 @@ HRESULT itemManager::init()
 		"공격력이 20% 증가한다.",
 		{ 1,0 });
 
-	//구현 중
+	//구현 중 (monster)
 	addItem(
 		"화염 구슬", 0, 0, 0, 0, 0, 0, 0.3f, 
 		false, 0, false, 
@@ -50,7 +50,7 @@ HRESULT itemManager::init()
 		"포션 드랍율이 20% 증가한다.",
 		{ 5,0 });
 
-	//구현 중
+	//구현 중 (player.cpp)
 	addItem(
 		"황금 저금통", 0, 0, 0, 0, 0, 0, 0, 
 		true, 0, false,
@@ -96,7 +96,7 @@ HRESULT itemManager::init()
 		"공격력, 크리티컬 데미지, 크리티컬 확률이 25% 증가한다.",
 		{ 0,1 });
 
-	//구현 중
+	//구현 중 (player.cpp)
 	addItem(
 		"신속의 마법서", 0, 0, 0, 0, 0, 0, 0,
 		false, 1, false,
@@ -118,7 +118,7 @@ HRESULT itemManager::init()
 
 	//curse
 
-	//구현 중
+	//구현 중 (player.cpp)
 	addItem(
 		"악마의 심장", 0, 0, 0.4f, 0, 0, 0, 0, 
 		false, 0, false,
@@ -128,7 +128,7 @@ HRESULT itemManager::init()
 		"2배의 피해를 입지만, 치명타 확률이 40% 증가한다.",
 		{ 0,2 });
 	
-	//구현 중
+	//구현 완료 (gameScene.cpp)
 	addItem(
 		"저주받은 목걸이", 0, 0.5f, 0, 0, 0, 0, 0, 
 		false, 0, false,
@@ -138,7 +138,7 @@ HRESULT itemManager::init()
 		"더이상 마력게이지가 차지않지만, 치명타 공격력이 50% 증가한다.",
 		{ 1,2 });
 
-	//구현 중
+	//구현 완료 (playerData.cpp)
 	addItem(
 		"거인의 덫", 0.4f, 0, 0, 0, 0, 0, 0, 
 		false, 0, false,
@@ -148,7 +148,7 @@ HRESULT itemManager::init()
 		"치명타가 발생하지 않지만, 공격력이 40% 증가한다.",
 		{ 2,2 });
 
-	//구현 중
+	//구현 중 (gameScene.cpp)
 	addItem(
 		"고학자의 깨진 안경", 0.3f, 0, 0, 0, 0, 0, 0, 
 		false, 0, false,
@@ -158,7 +158,7 @@ HRESULT itemManager::init()
 		"볼 수 있는 시야가 감소하지만, 데미지가 30% 증가한다.",
 		{ 3,2 });
 
-	//구현 중
+	//구현 완료 (playerData.cpp)
 	addItem(
 		"이면의 얼굴", 0, 0, 0, -250, 0, 0, 0,
 		false, 0, false,
@@ -168,7 +168,7 @@ HRESULT itemManager::init()
 		"최대 체력이 250 감소하지만, 체력이 50% 이하가 되면 공격력이 50% 증가한다.",
 		{ 4,2 });
 
-	//구현 중
+	//구현 완료 (playerData.cpp)
 	addItem(
 		"수상한 알약", -0.2f, 0, 0, 0, 0, 0, 0,
 		false, 0, false,
@@ -178,14 +178,14 @@ HRESULT itemManager::init()
 		"공격력이 20% 감소하지만, 최대 생명력으로 회복 한다.",
 		{ 5,2 });
 
-	//구현 중
+	//구현 완료 (playerData.cpp)
 	addItem(
 		"피묻은 금괴", -0.2f, 0, 0, 0, 0, 0, 0,
 		false, 0, false,
 
 		false, false, false, false, false, false, true,
 		0,
-		"공격력이 20% 감소하지만, 보유 코인의 25%만큼 공격력이 증가한다.",
+		"공격력이 20% 감소하지만, 보유한 코인 개수에 따라 공격력을 증가시킨다.",
 		{ 6,2 });
 
 	//구현 완료
