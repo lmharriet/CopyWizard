@@ -5,6 +5,7 @@
 #include "colorNode.h"
 #include "enemyManager.h"
 #include "shop.h"
+#include "wall.h"
 
 class gameScene : public gameNode
 {
@@ -25,28 +26,17 @@ private:
 
 	shop* _shop;
 
-	//맵타일 정보
-	tagTile tile[MAXTILE];
-	tagTile subTile[MAXTILE];
+	wall* _wall;
 
-	// 메모리 관리용
-	vector<int> vTile;
-
-	vector<int> vWall;
-
-	//test cam(수정해도됨)
 	RECT cam;
 	RECT checkArea;
 
-	POINT culPt;
-	bool oneTime;
+	int atkCount;
 
-	 int atkCount;
+	//사운드
 
-	 //사운드
-
-	 bool isIngameBGM;
-	 float fadeIn;
+	bool isIngameBGM;
+	float fadeIn;
 
 public:
 	HRESULT init();
@@ -54,13 +44,8 @@ public:
 	void update();
 	void render();
 
-	void collisionTile();
-
 	void playerAttack();
 	void enemyAttack();
-	//맵 로드
-	void loadMap(int index);
-	//void loadMap(const char* mapFileName);
 
 	void viewText();
 	//sound

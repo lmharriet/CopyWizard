@@ -192,6 +192,7 @@
     <ClInclude Include="uiManager.h" />
     <ClInclude Include="unitNode.h" />
     <ClInclude Include="util.h" />
+    <ClInclude Include="wall.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="boss.cpp" />
@@ -238,6 +239,7 @@
     <ClCompile Include="timeManager.cpp" />
     <ClCompile Include="uiManager.cpp" />
     <ClCompile Include="util.cpp" />
+    <ClCompile Include="wall.cpp" />
     <ClCompile Include="winMain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
