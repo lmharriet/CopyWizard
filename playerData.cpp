@@ -42,6 +42,7 @@ void playerData::release()
 void playerData::update()
 {
 	if (hp > maxHp)hp = maxHp;
+	else if (hp < 0)hp = 0;
 
 	UI->setHp(hp);
 	UI->setCoin(coin);
