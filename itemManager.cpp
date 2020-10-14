@@ -118,7 +118,7 @@ HRESULT itemManager::init()
 
 	//curse
 
-	//구현 중 (player.cpp)
+	//구현 완료 (player.cpp)
 	addItem(
 		"악마의 심장", 0, 0, 0.4f, 0, 0, 0, 0, 
 		false, 0, false,

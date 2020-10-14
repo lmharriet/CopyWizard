@@ -1194,7 +1194,8 @@ void player::damage(int damage, float attackAngle, float knockBackSpeed)
 	knockBack.speed = knockBackSpeed;
 	knockBack.percent = 1.0f;
 
-	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
+	if (PLAYERDATA->getStat().doubleDamage) PLAYERDATA->setHp(PLAYERDATA->getHp() - damage * 2);
+	else PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
 
 	float angle = attackAngle * (180 / PI);
 
