@@ -117,11 +117,13 @@ void shop::addImage()
     IMAGEMANAGER->addImage("Doki", "Images/npc/richNPC.bmp", 82, 112, true, RGB(255, 0, 255));
     IMAGEMANAGER->addImage("Andres", "Images/npc/shopNPC.bmp", 84, 129, true, RGB(255, 0, 255));
 
-    IMAGEMANAGER->addImage("oldFabric", "Images/npc/oldFabric.bmp", 120*3, 42*3, true, RGB(255, 0, 255));
+    IMAGEMANAGER->addImage("oldFabric", "Images/npc/oldFabric.bmp", 360, 126, true, RGB(255, 0, 255));
     IMAGEMANAGER->addImage("desk", "Images/npc/desk.bmp", 390, 153, true, RGB(255, 0, 255));
 
     IMAGEMANAGER->addFrameImage("shopNumbers", "Images/npc/shopNumbers.bmp", 60, 10, 10, 1);
     IMAGEMANAGER->addImage("soldOut", "Images/npc/soldOut.bmp", 11, 11, true, RGB(255, 0, 255));
+
+    IMAGEMANAGER->addImage("oldFabricShadow", "Images/npc/oldFabricShadow.bmp", 360, 126, true, RGB(255, 0, 255));
 }
 
 void shop::generate(POINT arr[3])
@@ -167,14 +169,21 @@ void shop::render()
             //아이템 출력
             if (NoxShop[0].isSell == false) // 하나라도 팔리면 다 없어짐
             {
+                //shadow
+                image* shadow = IMAGEMANAGER->findImage("oldFabricShadow");
+
+                CAMERAMANAGER->AlphaRender(getMemDC(), shadow,
+                    npc[i].pt.x - ig->getWidth() / 2,
+                    npc[i].pt.y - ig->getHeight() / 2 + 150
+                , 140);
+
                 for (int j = 0; j < 3; j++)
                 {
                     image* img = IMAGEMANAGER->findImage("itemFrame");
 
                     NoxShop[j].pt = {
                         npc[i].pt.x - 90 + (j * 90) - img->getFrameWidth() / 2,
-                        npc[i].pt.y + 140 - img->getFrameHeight() / 2 };
-
+                        npc[i].pt.y + 130 - img->getFrameHeight() / 2 };
 
                     CAMERAMANAGER->FrameRender(getMemDC(),
                         img,
@@ -207,7 +216,6 @@ void shop::render()
                 AndresShop[j].pt = {
                     npc[i].pt.x - 154 + (j * 77) - img->getFrameWidth() / 2,
                     npc[i].pt.y + 85 - img->getFrameHeight() / 2 };
-
 
                 CAMERAMANAGER->FrameRender(getMemDC(),
                     img,
