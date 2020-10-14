@@ -9,7 +9,7 @@ HRESULT player::init()
 	IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 1200, 250, 6, 1);
 	IMAGEMANAGER->addFrameImage("flame", "resource/player/flame1.bmp", 4096, 128, 32, 1);
 	IMAGEMANAGER->addFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
-	IMAGEMANAGER->addImage("infernoGauging", "Images/ui/gaugingBar.bmp", 50, 10);
+	
 
 	posX = WINSIZEX / 2;
 	posY = WINSIZEY / 2;
@@ -304,10 +304,10 @@ void player::render()
 	Meteor->render();
 	inferno->render();
 
-	if (inferno->getGauging())
+	/*if (inferno->getGauging())
 	{
 		CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("infernoGauging"), posX, posY - 70);
-	}
+	}*/
 
 	if (INPUT->GetToggleKey('L'))
 	{
@@ -633,7 +633,9 @@ void player::infernoSetUp()
 		inferno->fire(posX, posY, attackAngle, &gaugeTime);
 
 	if (inferno->getGauging())
+	{
 		state = STATE::STANDARD;
+	}
 
 }
 
