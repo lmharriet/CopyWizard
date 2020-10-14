@@ -384,14 +384,7 @@ void monster::commonUpdate()
 
 		if (isKnockBack ) // ¹Ð·Á³².
 		{
-			for (int i = 0; i < PLAYERDATA->getWall().size(); i++)
-			{
-				if (colCheck(rc, wall[PLAYERDATA->getWall()[i]].rc))
-				{
-					isWallcol = true;
-					break;
-				}
-			}
+			wallCol();
 			if (!isWallcol)
 			{
 				pos.x += cos(hitAngle) * knockBack * 0.25;
@@ -418,6 +411,15 @@ void monster::commonUpdate()
 	{
 		state = STATEIMAGE::DIE;
 	}
+}
+
+void monster::setPt(float x, float y)
+{
+	wallCol();
+	if(!isWallcol)
+	 pos = { (long)x, (long)y }; 
+
+	isWallcol = false;
 }
 
 void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum, bool isCritical)
@@ -509,6 +511,18 @@ void monster::hitCul()
 			i++;
 		}
 
+	}
+}
+
+void monster::wallCol()
+{
+	for (int i = 0; i < PLAYERDATA->getWall().size(); i++)
+	{
+		if (colCheck(rc, wall[PLAYERDATA->getWall()[i]].rc))
+		{
+			isWallcol = true;
+			return;
+		}
 	}
 }
 
