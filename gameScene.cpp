@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "gameScene.h"
 
-gameScene::gameScene(): 
-	enemy(nullptr), _player(nullptr),bgImg(nullptr), playerImg(nullptr), uiImg(nullptr), _shop(nullptr) {}
+gameScene::gameScene() :
+	enemy(nullptr), _player(nullptr), bgImg(nullptr), playerImg(nullptr), uiImg(nullptr), _shop(nullptr) {}
 
 HRESULT gameScene::init()
 {
-	
+
 
 
 	UI->init();
@@ -26,7 +26,7 @@ HRESULT gameScene::init()
 
 	PARTICLE->init();
 	EFFECT->init();
-	
+
 	//vTile.clear();
 	collisionTile();
 
@@ -126,6 +126,7 @@ void gameScene::update()
 	//enemy->collision(_player->getRect());
 
 	//collision between player skill and enemy
+
 	playerAttack();
 	enemyAttack();
 
@@ -385,7 +386,7 @@ void gameScene::render()
 	for (int i = 0; i < enemy->getMinion().size(); i++)
 	{
 		if (eRender[i] == true)continue;
-		
+
 		enemy->getMinion()[i]->render();
 	}
 
@@ -495,7 +496,7 @@ void gameScene::playerAttack()
 
 				int damage = PLAYERDATA->damageCul(_player->getDashFire()->getAtk(i) + RANDOM->range(0, 5), criCheck);
 
-				enemy->getMinion()[j]->hit(damage,70.f, 20.f, _player->getDashFire()->getSkillNum(), criCheck);
+				enemy->getMinion()[j]->hit(damage, 70.f, 20.f, _player->getDashFire()->getSkillNum(), criCheck);
 			}
 		}
 	}
@@ -518,7 +519,7 @@ void gameScene::playerAttack()
 				if (PLAYERDATA->getGaugeTime() < 50)
 				{
 					if (SOUNDMANAGER->isPlaySound("RagingInfernoExp") == false)	SOUNDMANAGER->play("RagingInfernoExp", false);
-					
+
 					PLAYERDATA->setGaugeTime(50);
 					_player->getInferno()->setActive(true);
 				}
@@ -529,7 +530,7 @@ void gameScene::playerAttack()
 				bool criCheck = PLAYERDATA->criAppear();
 
 				int damage = PLAYERDATA->damageCul(_player->getInferno()->getInf().atkPower, criCheck);
-				
+
 				float angle = getAngle(enemyX + 40, enemyY + 40,
 					_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
 
@@ -545,9 +546,10 @@ void gameScene::playerAttack()
 
 void gameScene::enemyAttack()
 {
+	if (PLAYERDATA->getHp() <= 0)return;
+
 	for (int i = 0; i < enemy->getBullet()->getBullet().size(); )
 	{
-		if (PLAYERDATA->getHp() <= 0) continue;
 		if (colCheck(enemy->getBullet()->getRect(i), _player->getRect()))
 		{
 			_player->damage(enemy->getBullet()->getBullet()[i].atkPower, enemy->getBullet()->getBullet()[i].angle, 4.f);
@@ -557,7 +559,7 @@ void gameScene::enemyAttack()
 				SOUNDMANAGER->play("summonerAtk", false, -0.18f);
 			}
 			enemy->getBullet()->removeBullet(i);
-			SOUNDMANAGER->play("playerHit", false,-0.18f);
+			SOUNDMANAGER->play("playerHit", false, -0.18f);
 		}
 		else
 		{
@@ -620,7 +622,7 @@ void gameScene::soundInit()
 	SOUNDMANAGER->addSound("summonerCasting", "Sound/summoner_casting.mp3");
 	SOUNDMANAGER->addSound("summonerFire", "Sound/summoner_fire.mp3");
 	SOUNDMANAGER->addSound("summonerAtk", "Sound/summoner_atk.mp3");
-	
-	
+
+
 
 }
