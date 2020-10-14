@@ -175,7 +175,7 @@ public:
 
 	//inline bool 
 
-	inline void setPt(float x, float y) { pos = { (long)x, (long)y }; }
+	void setPt(float x, float y);
 	inline void setX(int X) { pos.x = X; }
 	inline void setY(int Y) { pos.y = Y; }
 	inline void setPlayerRC(RECT rc) { playerRC = rc; }
@@ -190,7 +190,7 @@ public:
 	bool hitCheck(int skillNum);
 
 	void hitCul();
-
+	void wallCol();
 	void coinDrop(int min, int max);
 	void die();
 };
