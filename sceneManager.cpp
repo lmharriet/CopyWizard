@@ -9,47 +9,18 @@ HRESULT sceneManager::init()
 
 void sceneManager::release()
 {
-	/*
-	//정석적인 방법
-	miSceneList iter = _mSceneList.begin();
-	for (; iter != _mSceneList.end();)
-	{
-		if (iter->second != NULL)
-		{
-			//여기서 삭제
-			if (iter->second == _currentScene) iter->second->release();
-			SAFE_DELETE(iter->second);
-			iter = _mSceneList.erase(iter);
-		}
-		else
-		{
-			++iter;
-		}
-	}
-	//맵전체를 클리어 하기
-	_mSceneList.clear();
-	*/
-
-	//C++ 고오급 문법
-	//for(auto scene in _mSceneList) => 지금은 사용불가
 	
-	///////// 21 SEP 20 릴리즈 기능 off//////////////
 
 	for (auto scene : _mSceneList)
 	{
-		cout << scene.second << endl;
+		//cout << scene.second << endl;
 		scene.second->release();
 		if (scene.first != "인게임")
 		{
 			SAFE_DELETE(scene.second);
 		}
 	}
-	// SAFE_DELETE만 일단 off 해둠
-	/////////////////////////////////////////////
 	
-	//int a = 10;
-	//auto b = 100.5f;
-	//var c = 10; //유니티에서 잠깐만....
 	
 }
 
