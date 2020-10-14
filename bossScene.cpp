@@ -100,6 +100,12 @@ void bossScene::update()
 
 
 	attackBoss();
+
+	if (INPUT->GetKeyDown('J'))
+	{
+		SCENEMANAGER->loadScene("시작화면");
+	}
+
 }
 
 void bossScene::bossCutScene()
