@@ -572,6 +572,7 @@ HRESULT RagingInferno::init()
 	inferno.img = IMAGEMANAGER->addFrameImage("inferno", "resource/player/inferno.bmp", 240, 80, 3, 1);
 
 	time = 0;
+	gaugeTime = 0;
 	distance = 0;
 	currentCoolTime = 0;
 	coolTime = 300;
@@ -587,10 +588,11 @@ void RagingInferno::release()
 {
 }
 
-void RagingInferno::update(int* gaugeTime)
+void RagingInferno::update()
 {
 	count++;
-
+	gaugeTime++;
+	PLAYERDATA->setGaugeTime(gaugeTime);
 	if (count % 3 == 0)
 	{
 		index++;
@@ -600,10 +602,10 @@ void RagingInferno::update(int* gaugeTime)
 
 	distance = getDistance(inferno.x, inferno.y, inferno.fireX, inferno.fireY);
 
-	move(*gaugeTime);
-	if (isActive && *gaugeTime < 50)
+	move();
+	if (isActive && gaugeTime < 50)
 	{
-		*gaugeTime = 50;
+		gaugeTime = 50;
 		inferno.lifeTime--;
 	}
 
@@ -664,7 +666,7 @@ void RagingInferno::render()
 	}
 }
 
-void RagingInferno::fire(float x, float y, float angle, int* gaugeTime)
+void RagingInferno::fire(float x, float y, float angle)
 {
 	inferno.angle = angle;
 	inferno.speed = -30.f;
@@ -677,7 +679,7 @@ void RagingInferno::fire(float x, float y, float angle, int* gaugeTime)
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 5, 5.f, 0.7f, 10);
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 7, 7.f, 0.6f, 10);
 	SOUNDMANAGER->play("RagingInfernoFire", false);
-	*gaugeTime = 0;
+	gaugeTime = 0;
 	isFire = true;
 	gauging = true;
 
@@ -685,7 +687,7 @@ void RagingInferno::fire(float x, float y, float angle, int* gaugeTime)
 	UI->addCoolTime("infernoIcon");
 }
 
-void RagingInferno::move(int gaugeTime)
+void RagingInferno::move()
 {
 	if (isFire)
 	{

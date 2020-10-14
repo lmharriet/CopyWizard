@@ -170,7 +170,6 @@ void bossScene::soundInit()
 
 void bossScene::attackBoss()
 {
-
 	//blaze
 	for (int i = 0; i < _player->getBlaze()->getSize(); i++)
 	{
@@ -223,8 +222,6 @@ void bossScene::attackBoss()
 
 	//inferno
 
-	//보스씬에서 게이징 타임 2배로 돌아가는 문제 해결 필요
-
 	//게이징 + 무브 상태가 아닐 때 inferno와 보스 충돌 체크
 
 
@@ -248,8 +245,14 @@ void bossScene::attackBoss()
 		if (isCri) damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
 		else damage = (float)damage * PLAYERDATA->getStat().damage;
 
+		float angle = getAngle(_boss->getBoss().center.x, _boss->getBoss().center.y,
+			_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
+		
+		float x = _boss->getBoss().center.x + cosf(angle) * 6.f;
+		float y = _boss->getBoss().center.y - sinf(angle) * 6.f;
 		// set boss center x,y (inferno 공격 당하면 inferno쪽으로 끌려오기)
-
+		_boss->setCenter({ (long)x, (long)y });
+		_boss->setRect((int)x, (int)y);
 		//-> boss damaged
 
 	}

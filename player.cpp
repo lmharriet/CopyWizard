@@ -46,7 +46,7 @@ HRESULT player::init()
 	//attack type
 	basic = standard = signature = false;
 
-	speed = gaugeTime = 0;
+	speed = 0;
 
 	//animation count ,index
 	atkCount = atkIndex = index = dashIndex = count = dashCount = basicCount = basicIndex = 0;
@@ -117,7 +117,7 @@ void player::update()
 	Meteor->update();
 	searingRush->update();
 
-	inferno->update(&gaugeTime);
+	inferno->update();
 
 	inven->update();
 	//animation count
@@ -126,8 +126,7 @@ void player::update()
 	atkCount++;
 	basicCount++;
 
-	gaugeTime++;
-	PLAYERDATA->setGaugeTime(gaugeTime);
+	
 	// angle(mouse-player), angleTenth
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
@@ -201,7 +200,7 @@ void player::other_update()
 	Meteor->update();
 	searingRush->update();
 
-	inferno->update(&gaugeTime);
+	inferno->update();
 	gaugeTime++;
 
 
@@ -213,9 +212,6 @@ void player::other_update()
 	atkCount++;
 	basicCount++;
 
-	//gaugeTime++;
-	//PLAYERDATA->setGaugeTime(gaugeTime);
-	PLAYERDATA->getGaugeTime();
 	// angle(mouse-player), angleTenth
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
@@ -630,7 +626,7 @@ void player::infernoSetUp()
 	else standard = false;
 
 	if (standard)
-		inferno->fire(posX, posY, attackAngle, &gaugeTime);
+		inferno->fire(posX, posY, attackAngle);
 
 	if (inferno->getGauging())
 	{
