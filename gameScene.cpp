@@ -6,9 +6,6 @@ gameScene::gameScene() :
 
 HRESULT gameScene::init()
 {
-
-
-
 	UI->init();
 	DROP->init();
 
@@ -16,8 +13,6 @@ HRESULT gameScene::init()
 	_player->init();
 	uiImg = IMAGEMANAGER->addImage("UI", "Images/gameUI.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 	playerImg = IMAGEMANAGER->findImage("playerFrame");
-
-	//loadMap(0);
 
 	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX + 15, WINSIZEY + 15);
 
@@ -27,32 +22,15 @@ HRESULT gameScene::init()
 	PARTICLE->init();
 	EFFECT->init();
 
-	//vTile.clear();
 	_wall = new wall;
 
 	_wall->getRectAd(&cam);
 	_wall->init();
 	_wall->getPlayerAd(_player);
 	_wall->collisionTile();
-	//collisionTile();
 
 	UI->setCoin(PLAYERDATA->getCoin());
 	UI->setHp(PLAYERDATA->getHp());
-
-	oneTime = false;
-	////culPt
-	//culPt = { 0,0 };
-	//POINT ptZero = subTile[0].pos;
-	//POINT ptCam = { 0,0 };
-
-	//for (int i = 0; i < MAXTILE; i++)
-	//{
-	//	if (colCheck(cam, subTile[i].rc) == false)continue;
-	//	ptCam = subTile[i].pos;
-	//	break;
-	//}
-
-	//culPt = { ptCam.x - ptZero.x, ptCam.y - ptZero.y };
 
 	enemy = new enemyManager;
 	enemy->init(_wall->getTile(), _wall->getSubTile(), _wall->getCulPt());
@@ -110,7 +88,7 @@ void gameScene::update()
 	PLAYERDATA->setY(_player->getY());
 
 	atkCount++;
-	//collisionTile();
+
 	_wall->update();
 
 	_player->setTileAd0(_wall->getVtile());
@@ -125,15 +103,12 @@ void gameScene::update()
 
 
 	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX + 15, WINSIZEY + 15);
-	//checkArea = RectMakeCenter(_player->getX(), _player->getY(), 400, 400);
+
 	checkArea = RectMake(_player->getX() - 100, _player->getY() - WINSIZEY / 2 + 420, 200, 500);
 
 	CAMERAMANAGER->update();
 	PARTICLE->pointActive();
 	PARTICLE->explosionActive();
-
-	//enemy->minionBulletFire(_player->getX(), _player->getY());
-	//enemy->collision(_player->getRect());
 
 	//collision between player skill and enemy
 
@@ -152,32 +127,7 @@ void gameScene::update()
 void gameScene::render()
 {
 	_wall->render();
-	//for (int i = 0; i < vTile.size(); i++)
-	//{
-	//	int num = vTile[i];
 
-	//	if (tile[num].keyName == "" || tile[num].kind != TERRAIN::TILE)continue;
-
-	//	image* img = IMAGEMANAGER->findImage(tile[num].keyName);
-
-	//	CAMERAMANAGER->FrameRender(getMemDC(), img, tile[num].rc.left, tile[num].rc.top, tile[num].frame.x, tile[num].frame.y);
-	//}
-
-	////deco image render
-	//for (int f = 0; f < vTile.size(); f++)
-	//{
-	//	int i = vTile[f];
-
-	//	if (subTile[i].kind != TERRAIN::DECO) continue;
-
-	//	image* img = IMAGEMANAGER->findImage(subTile[i].keyName);
-
-	//	CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top);
-	//}
-
-	//CAMERAMANAGER->Rectangle(getMemDC(), checkArea);
-	//Rectangle(getMemDC(), checkArea);
-	//_player->render();
 	_shop->render();
 
 	DROP->render(getMemDC());
@@ -196,169 +146,6 @@ void gameScene::render()
 
 	bool isRender = false;
 
-	//CAMERAMANAGER->Rectangle(getMemDC(), cam);
-
-	//string key;
-	//image* img;
-	//int width, height;
-	//for (int f = 0; f < vTile.size(); f++)
-	//{
-	//	int i = vTile[f];
-
-	//	if (tile[i].kind != TERRAIN::WALL && tile[i].kind != TERRAIN::OBJECT)continue;
-
-	//	int w = MAXTILE_WIDTH;
-	//	int w2 = MAXTILE_WIDTH * 2;
-	//	int w3 = MAXTILE_WIDTH * 3;
-	//	int w4 = MAXTILE_WIDTH * 4;
-	//	int w5 = MAXTILE_WIDTH * 5;
-	//	int w6 = MAXTILE_WIDTH * 6;
-
-	//	switch (tile[i].kind)
-	//	{
-	//	case TERRAIN::WALL:
-	//		key = tile[i].keyName;
-
-	//		if (key == "topWall") // fix
-	//		{
-	//			if ((key == tile[i + 1].keyName &&
-	//				key == tile[i - w].keyName && key == tile[i - w + 1].keyName &&
-	//				key == tile[i - w2].keyName && key == tile[i - w2 + 1].keyName &&
-	//				key == tile[i - w3].keyName && key == tile[i - w3 + 1].keyName &&
-	//				key == tile[i - w4].keyName && key == tile[i - w4 + 1].keyName &&
-
-	//				key == tile[i - w3 + 2].keyName && key == tile[i - w3 + 3].keyName &&
-	//				key == tile[i - w3 + 4].keyName && key == tile[i - w3 + 5].keyName &&
-	//				key == tile[i - w4 + 2].keyName && key == tile[i - w4 + 3].keyName &&
-	//				key == tile[i - w4 + 4].keyName && key == tile[i - w4 + 5].keyName &&
-
-	//				key == tile[i - w4 + 10].keyName && key == tile[i - w4 + 11].keyName &&
-	//				key == tile[i - w4 + 12].keyName && key == tile[i - w4 + 13].keyName &&
-	//				key == tile[i - w4 + 14].keyName && key == tile[i - w4 + 15].keyName &&
-
-	//				key == tile[i - w3 + 10].keyName && key == tile[i - w3 + 11].keyName &&
-	//				key == tile[i - w3 + 12].keyName && key == tile[i - w3 + 13].keyName &&
-	//				key == tile[i - w3 + 14].keyName && key == tile[i - w3 + 15].keyName &&
-
-	//				key == tile[i - w2 + 14].keyName && key == tile[i - w2 + 15].keyName &&
-	//				key == tile[i - w + 14].keyName && key == tile[i - w + 15].keyName &&
-	//				key == tile[i + 14].keyName && key == tile[i + 15].keyName)
-	//				== false)
-	//			{
-	//				continue;
-	//			}
-
-	//			height = 8 * TILESIZE;
-
-	//			img = IMAGEMANAGER->findImage(key);
-
-	//			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-
-	//		}
-
-	//		else if (key == "bottomWall") // fix
-	//		{
-	//			if ((key == tile[i + 1].keyName &&
-	//				key == tile[i - w].keyName && key == tile[i - w + 1].keyName &&
-	//				key == tile[i - w2].keyName && key == tile[i - w2 + 1].keyName &&
-	//				key == tile[i - w3].keyName && key == tile[i - w3 + 1].keyName &&
-	//				key == tile[i - w4].keyName && key == tile[i - w4 + 1].keyName &&
-	//				key == tile[i - w5].keyName && key == tile[i - w5 + 1].keyName &&
-	//				key == tile[i - w6].keyName && key == tile[i - w6 + 1].keyName &&
-
-	//				key == tile[i - w + 2].keyName && key == tile[i - w + 3].keyName &&
-	//				key == tile[i - w + 4].keyName &&
-	//				key == tile[i + 2].keyName && key == tile[i + 3].keyName &&
-	//				key == tile[i + 4].keyName &&
-
-
-	//				key == tile[i - w + 11].keyName && key == tile[i - w + 12].keyName &&
-	//				key == tile[i - w + 13].keyName &&
-	//				key == tile[i + 11].keyName && key == tile[i + 12].keyName &&
-	//				key == tile[i + 13].keyName &&
-
-	//				key == tile[i + 14].keyName && key == tile[i + 15].keyName &&
-	//				key == tile[i - w + 14].keyName && key == tile[i - w + 15].keyName &&
-	//				key == tile[i - w2 + 14].keyName && key == tile[i - w2 + 15].keyName &&
-	//				key == tile[i - w3 + 14].keyName && key == tile[i - w3 + 15].keyName &&
-	//				key == tile[i - w4 + 14].keyName && key == tile[i - w4 + 15].keyName &&
-	//				key == tile[i - w5 + 14].keyName && key == tile[i - w5 + 15].keyName &&
-	//				key == tile[i - w6 + 14].keyName && key == tile[i - w6 + 15].keyName
-	//				) == false)
-	//			{
-	//				continue;
-	//			}
-	//			height = 8 * TILESIZE;
-
-	//			img = IMAGEMANAGER->findImage(key);
-
-	//			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-	//		}
-
-	//		else if (key == "wallFrame0" || key == "wallFrame1" || key == "wallFrame2" || key == "wallFrame3")
-	//		{
-	//			image* img = IMAGEMANAGER->findImage(tile[i].keyName);
-
-	//			CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
-	//		}
-
-	//		else
-	//		{
-	//			height = 3 * TILESIZE;
-
-	//			img = IMAGEMANAGER->findImage(key);
-
-	//			CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height, tile[i].frame.x, tile[i].frame.y);
-	//		}
-
-	//		break;
-	//	case TERRAIN::OBJECT:
-	//		// 2X2인 오브젝트만 처리
-
-	//		//i object, i+1 object, i+w object, i+w+1 object
-	//		if (!(tile[i + 1].kind == TERRAIN::OBJECT && tile[i + MAXTILE_WIDTH].kind == TERRAIN::OBJECT &&
-	//			tile[i + MAXTILE_WIDTH + 1].kind == TERRAIN::OBJECT)) continue;
-
-	//		key = tile[i].keyName;
-
-	//		if (!(tile[i + 1].keyName == key &&
-	//			tile[i + MAXTILE_WIDTH].keyName == key &&
-	//			tile[i + MAXTILE_WIDTH + 1].keyName == key)) continue;
-
-	//		if (tile[i].keyName == "flowerbed1")
-	//		{
-	//			key = "tree0";
-	//			width = 2 * TILESIZE;
-	//			height = 4 * TILESIZE;
-
-	//			img = IMAGEMANAGER->findImage(key);
-
-	//			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left - width, tile[i].rc.top - height);
-	//		}
-	//		else if (tile[i].keyName == "flowerbed2")
-	//		{
-	//			key = "tree1";
-	//			width = 2 * TILESIZE;
-	//			height = 5 * TILESIZE;
-
-	//			img = IMAGEMANAGER->findImage(key);
-
-	//			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left - width, tile[i].rc.top - height);
-	//		}
-	//		else if (tile[i].keyName == "pillar1")
-	//		{
-	//			key = "pillar1";
-
-	//			height = 3 * TILESIZE;
-
-	//			img = IMAGEMANAGER->findImage(key);
-
-	//			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-	//		}
-	//		break;
-	//	}
-	//}
-
 	enemy->render();
 
 	_player->render();
@@ -372,7 +159,6 @@ void gameScene::render()
 
 	PLAYERDATA->shroudRender(getMemDC());
 
-	//PARTICLE->render(getMemDC(), CAMERAMANAGER->getRect());
 	PARTICLE->render(getMemDC());
 	EFFECT->render(getMemDC());
 	EFFECT->dRender(getMemDC());
@@ -381,35 +167,11 @@ void gameScene::render()
 
 	EFFECT->portalRender(getMemDC());
 
-	//CAMERAMANAGER->Rectangle(getMemDC(), _player->getRect());
-	//uiImg->render(getMemDC());
-	
-
 	UI->render(getMemDC(), 50, 50);
 	_player->invenRender();
 
 	viewText();
 
-}
-
-void gameScene::collisionTile()
-{
-	//vTile.clear();
-	//vWall.clear();
-	//for (int i = 0; i < MAXTILE; i++)
-	//{
-	//	if (colCheck(cam, tile[i].rc))
-	//	{
-	//		vTile.push_back(i);
-
-	//		if (tile[i].kind == TERRAIN::WALL)vWall.push_back(i);
-	//	}
-	//}
-
-	//_player->setTileAd0(vTile);
-	//PLAYERDATA->setTile(vTile);
-	//_player->setTileAd1(vWall);
-	//PLAYERDATA->setWall(vWall);
 }
 
 void gameScene::playerAttack()
@@ -472,8 +234,8 @@ void gameScene::playerAttack()
 			}
 		}
 	}
-	//rush
 
+	//rush
 	for (int i = 0; i < _player->getDashFire()->getSize(); i++)
 	{
 		for (int j = 0; j < enemy->getMinion().size(); j++)
@@ -498,7 +260,6 @@ void gameScene::playerAttack()
 
 
 	//inferno
-
 	for (int i = 0; i < enemy->getMinion().size(); i++)
 	{
 		long enemyX = enemy->getMinion()[i]->getPos().x;
@@ -571,25 +332,6 @@ void gameScene::enemyAttack()
 			i++;
 		}
 	}
-}
-
-void gameScene::loadMap(int index)
-{
-	char str[50], str1[50];
-
-	sprintf(str, "mapData/map%d.map", index);
-	sprintf(str1, "mapData/object%d.map", index);
-
-	HANDLE file;
-	DWORD read;
-
-	file = CreateFile(str, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	ReadFile(file, _wall->getTile(), sizeof(tagTile) * MAXTILE, &read, NULL);
-	CloseHandle(file);
-
-	file = CreateFile(str1, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	ReadFile(file, _wall->getSubTile(), sizeof(tagTile) * MAXTILE, &read, NULL);
-	CloseHandle(file);
 }
 
 void gameScene::viewText()

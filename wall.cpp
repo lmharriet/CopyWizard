@@ -20,7 +20,7 @@ HRESULT wall::init()
 
 	culPt = { ptCam.x - ptZero.x, ptCam.y - ptZero.y };
 
-    return S_OK;
+	return S_OK;
 }
 
 void wall::loadMap(int index)
@@ -49,6 +49,18 @@ void wall::update()
 
 void wall::render()
 {
+	////deco image render
+	//for (int f = 0; f < vTile.size(); f++)
+	//{
+	//	int i = vTile[f];
+	
+	//	if (subTile[i].kind != TERRAIN::DECO) continue;
+	
+	//	image* img = IMAGEMANAGER->findImage(subTile[i].keyName);
+	
+	//	CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top);
+	//}
+	//
 	for (int i = 0; i < vTile.size(); i++)
 	{
 		int num = vTile[i];
