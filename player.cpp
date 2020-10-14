@@ -712,6 +712,9 @@ void player::takeCoin()
 		if (colCheck(rc, DROP->getCoinRect(i)))
 		{
 			PLAYERDATA->setCoin(PLAYERDATA->getCoin() + DROP->getCoinVec()[i].money);
+			
+			if (PLAYERDATA->getStat().goldPig)PLAYERDATA->setCoin(PLAYERDATA->getCoin() + RANDOM->range(1, 2));
+
 			DROP->delCoin(i);
 			SOUNDMANAGER->play("coinGet", false, 0.13f);
 		}
@@ -1231,7 +1234,7 @@ void player::chargeSkillGauge(int atkPower)
 
 	skillGauge += (float)(atkPower / atkPower) * 1.5f;
 
-	cout << "현재 게이지:" << skillGauge << '\n';
+	//cout << "현재 게이지:" << skillGauge << '\n';
 
 }
 

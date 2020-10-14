@@ -19,10 +19,10 @@ HRESULT itemManager::init()
 		
 		false, false, false, false, false, false, false, 
 		125,
-		"공격력이 20% 증가한다.",
+		"데미지가 20% 증가한다.",
 		{ 1,0 });
 
-	//구현 중 (monster)
+	//구현 중 (monster.cpp)
 	addItem(
 		"화염 구슬", 0, 0, 0, 0, 0, 0, 0.3f, 
 		false, 0, false, 
@@ -50,14 +50,14 @@ HRESULT itemManager::init()
 		"포션 드랍율이 20% 증가한다.",
 		{ 4,0 });
 
-	//구현 중 (player.cpp)
+	//구현 완료 (player.cpp)
 	addItem(
 		"황금 저금통", 0, 0, 0, 0, 0, 0, 0, 
 		true, 0, false,
 		
 		false, false, false, false, false, false, false,
 		70,
-		"코인 획득 시 50% 확률로 1코인 획득", 
+		"코인 획득 시 50% 확률로 추가 코인 획득", 
 		{ 5,0 });
 
 	addItem(
@@ -75,7 +75,7 @@ HRESULT itemManager::init()
 		
 		false, false, false, false, false, false, false,
 		190,
-		"치명타 확률이 30% 증가한다.",
+		"크리티컬 확률이 30% 증가한다.",
 		{ 7,0 });
 
 	addItem(
@@ -93,7 +93,7 @@ HRESULT itemManager::init()
 		
 		false, false, false, false, false, false, false,
 		240,
-		"공격력, 크리티컬 데미지, 크리티컬 확률이 25% 증가한다.",
+		"데미지, 크리티컬 데미지, 크리티컬 확률이 25% 증가한다.",
 		{ 0,1 });
 
 	//구현 중 (player.cpp)
@@ -206,7 +206,7 @@ HRESULT itemManager::init()
 		"최대 체력이 100감소하거나 증가하고, 공격력이 20% 증가하거나 감소한다.",
 		{ 7,2 });
 
-	//구현 중
+	//구현 중 (monster.cpp)
 	addItem(
 		"흡혈의 카타나", 0, 0, 0, -200, 0, 0, 0, 
 		false, 0, false, 
