@@ -12,6 +12,7 @@ private:
 public:
 	void addUnit(int _index, string _keyName, string type, POINT frame, float _x = 0, float _y = 0);
 	void setFramePlayer(POINT frame) { player->setFrame(frame); }
+	void setPlayerRect(RECT rc) { player->setRect(rc); }
 
 	void release();
 	void update();

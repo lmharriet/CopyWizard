@@ -190,7 +190,6 @@ void player::update()
 	//don't touch!
 	buttonDown();
 
-	cout << "upgrade : "<<upgradeReady << '\n';
 
 }
 
@@ -281,7 +280,7 @@ void player::render()
 	int tempAngle = attackAngle * (18 / PI);
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
 	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, tempAngle, 0, 50);
-
+	
 	//bool isRender = false;
 
 	// DASH FIRE RENDER
@@ -702,7 +701,7 @@ void player::dragonArcSetUp()
 			dragon->phoenixFire(posX, posY, angle);
 			
 			//skillGauge초기화 수정 필요..
-			skillGauge = 0;
+			//skillGauge = 0;
 		}
 
 		//조건 넣어서 skill gauge 0 으로 초기화하고 upgradeReady false로 만들기

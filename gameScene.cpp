@@ -127,6 +127,10 @@ void gameScene::update()
 	{
 		SCENEMANAGER->loadScene("º¸½º¹æ");
 	}
+	
+	UNITRENDER->setPlayerRect(_player->getRect());
+
+
 }
 
 void gameScene::render()
