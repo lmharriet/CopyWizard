@@ -245,7 +245,6 @@ void bomb::move() // blaze tile충돌은 gameScene에서만 되도록 처리하기
 				}
 			}
 		}
-
 	}
 }
 //폭탄삭제

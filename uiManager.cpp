@@ -13,7 +13,7 @@ HRESULT uiManager::init()
 	IMAGEMANAGER->addFrameImage("buttons", "Images/ui/button.bmp", 204, 32, 6, 1);
 
 	IMAGEMANAGER->addFrameImage("numbers", "Images/ui/numbers.bmp", 264, 29, 13, 1);
-	
+
 	//skill//
 	IMAGEMANAGER->addImage("nonSkill", "Images/ui/skill/nonSkill.bmp", 34, 34);
 
@@ -29,6 +29,9 @@ HRESULT uiManager::init()
 
 
 	IMAGEMANAGER->addImage("coolTime", "Images/ui/coolTime.bmp", 34, 34);
+
+	//inferno gauging bar
+	IMAGEMANAGER->addImage("infernoGauging", "Images/ui/gaugingBar.bmp", 50, 10);
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -98,9 +101,10 @@ void uiManager::infoRender(HDC hdc, int destX, int destY)
 	int skillGaugeBar = (float)img->getWidth() * (skillGauge / 100.f);
 	img->render(hdc, destX + 78, destY + 60, 0, 0, skillGaugeBar, img->getHeight());
 
+
 	img = IMAGEMANAGER->findImage("numbers");
 
-	
+
 
 	int tmp[3] = { hp / 100, hp / 10 % 10, hp % 10 };
 
@@ -115,6 +119,15 @@ void uiManager::infoRender(HDC hdc, int destX, int destY)
 	{
 		img->frameRender(hdc, destX + 231 + (i * 17), destY + 2, arr[i], 0);
 	}
+
+	image* gauge;
+	gauge = IMAGEMANAGER->findImage("infernoGauging");
+
+
+	int infernoBar = (float)gauge->getWidth() * ((float)PLAYERDATA->getGaugeTime() / 50);
+	gauge->render(hdc, WINSIZEX / 2-25, WINSIZEY / 2 - 70, 0, 0, infernoBar, gauge->getHeight());
+
+
 }
 
 void uiManager::coinRender(HDC hdc)
@@ -127,7 +140,7 @@ void uiManager::coinRender(HDC hdc)
 	img = IMAGEMANAGER->findImage("numbers");
 
 	bool n100 = coin >= 100; // 세 자리 수 ?
-	bool n10  = coin >= 10;  // 두 자리 수 ?
+	bool n10 = coin >= 10;  // 두 자리 수 ?
 
 	int cycle = n100 + n10 + 1;
 
