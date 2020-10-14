@@ -30,7 +30,7 @@ HRESULT itemManager::init()
 		false, false, false, false, false, false, false,
 		100,
 		"30% 확률로 적을 불태운다.",
-		{ 3,0 });
+		{ 2,0 });
 
 	addItem(
 		"당근 케익", 0, 0.2f, 0.3f, 0, 0, 0, 0, 
@@ -39,7 +39,7 @@ HRESULT itemManager::init()
 		false, false, false, false, false, false, false,
 		170,
 		"크리티컬 데미지가 20% 증가하고, 확률은 30% 증가한다.",
-		{ 4,0 });
+		{ 3,0 });
 
 	addItem(
 		"비스킷 세트", 0, 0, 0, 0, 0.2f, 0, 0, 
@@ -48,7 +48,7 @@ HRESULT itemManager::init()
 		false, false, false, false, false, false, false,
 		90,
 		"포션 드랍율이 20% 증가한다.",
-		{ 5,0 });
+		{ 4,0 });
 
 	//구현 중 (player.cpp)
 	addItem(
@@ -58,7 +58,7 @@ HRESULT itemManager::init()
 		false, false, false, false, false, false, false,
 		70,
 		"코인 획득 시 50% 확률로 1코인 획득", 
-		{ 6,0 });
+		{ 5,0 });
 
 	addItem(
 		"기사의 장갑", 0, 0, 0, 150, 0, 0, 0, 
@@ -67,7 +67,7 @@ HRESULT itemManager::init()
 		false, false, false, false, false, false, false,
 		150,
 		"최대 체력이 150 증가한다.",
-		{ 7,0 });
+		{ 6,0 });
 
 	addItem(
 		"뾰족한 단검", 0, 0, 0.3f, 0, 0, 0, 0, 
@@ -76,7 +76,7 @@ HRESULT itemManager::init()
 		false, false, false, false, false, false, false,
 		190,
 		"치명타 확률이 30% 증가한다.",
-		{ 8,0 });
+		{ 7,0 });
 
 	addItem(
 		"고위관의 마법서", 0, 0.2f, 0, 0, 0, 0, 0, 
@@ -85,7 +85,7 @@ HRESULT itemManager::init()
 		false, false, false, false, false, false, false,
 		140,
 		"크리티컬 데미지가 20% 증가한다",
-		{ 9,0 });
+		{ 8,0 });
 
 	addItem(
 		"황금 레시피", 0.25f, 0.25f, 0.25f, 0, 0, 0, 0, 
@@ -148,16 +148,6 @@ HRESULT itemManager::init()
 		"치명타가 발생하지 않지만, 공격력이 40% 증가한다.",
 		{ 2,2 });
 
-	//구현 중 (gameScene.cpp)
-	addItem(
-		"고학자의 깨진 안경", 0.3f, 0, 0, 0, 0, 0, 0, 
-		false, 0, false,
-
-		false, false, false, false, true, false, false,
-		0,
-		"볼 수 있는 시야가 감소하지만, 데미지가 30% 증가한다.",
-		{ 3,2 });
-
 	//구현 완료 (playerData.cpp)
 	addItem(
 		"이면의 얼굴", 0, 0, 0, -250, 0, 0, 0,
@@ -166,6 +156,16 @@ HRESULT itemManager::init()
 		false, false, false, false, false, true, false,
 		0,
 		"최대 체력이 250 감소하지만, 체력이 50% 이하가 되면 공격력이 50% 증가한다.",
+		{ 3,2 });
+
+	//구현 중 (gameScene.cpp)
+	addItem(
+		"고학자의 깨진 안경", 0.3f, 0, 0, 0, 0, 0, 0, 
+		false, 0, false,
+
+		false, false, false, false, true, false, false,
+		0,
+		"볼 수 있는 시야가 감소하지만, 데미지가 30% 증가한다.",
 		{ 4,2 });
 
 	//구현 완료 (playerData.cpp)
