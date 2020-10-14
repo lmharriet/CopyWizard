@@ -132,6 +132,7 @@ void enemyManager::minionBulletFire(float aimX, float aimY)
 				(float)aimX, (float)aimY);
 			summonerBullet(angle);
 			SOUNDMANAGER->play("summonerFire", false,-0.3f);
+			(*_viMinion)->setFx(false);
 			break;
 		}
 		

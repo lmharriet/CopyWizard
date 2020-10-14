@@ -62,7 +62,7 @@ void summoner::update()
         
     }
     
-    if (isATK&& !isHit)
+    if (isATK&& !isHit && !isFxAppear)
     {
         if (atkTime % (randomTime+30)==0)
         {
