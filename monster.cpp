@@ -370,47 +370,75 @@ void monster::commonUpdate()
 	rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
 	if (distanceMax > getDistance(pos.x /*+ img->getFrameWidth() * 0.5*/, pos.y/* + img->getFrameHeight() * 1.5*/, playerRC.left, playerRC.top))
+	{
 		isFindWayOn = true;
+		isCardAppear = true;
+	}
 	else
 		isFindWayOn = false;
 
-	update(); //몬스터별 업데이트
-
-	if (isHit && !isDie)
+	if (isCardAppear)
 	{
-		if(kind != MONSTERKIND::GOLEM)
-			isATK = false;
-		hitTime++;
-
-		if (isKnockBack ) // 밀려남.
+		if (!isCardFxAppear)
 		{
-			wallCol();
-			if (!isWallcol)
+			EFFECT->setEffect("flipCard", { pos.x + img->getFrameWidth()/2,pos.y + img->getFrameHeight()/2 },false,true,100); // false,false,0,
+			isCardFxAppear = true;
+		}
+		monsterAppearCount++;
+		if (monsterAppearCount == 50)
+		{
+			isMonsterApeear = true;
+		}
+	}
+	if (isMonsterApeear)
+	{
+		update(); //몬스터별 업데이트
+
+		if (isHit && !isDie)
+		{
+			if (kind != MONSTERKIND::GOLEM)
+				isATK = false;
+			hitTime++;
+
+			if (isKnockBack) // 밀려남.
 			{
-				pos.x += cos(hitAngle) * knockBack * 0.25;
-				pos.y += -sin(hitAngle) * knockBack * 0.25;
+				wallCol();
+				if (!isWallcol)
+				{
+					pos.x += cos(hitAngle) * knockBack * 0.25;
+					pos.y += -sin(hitAngle) * knockBack * 0.25;
+				}
+				isWallcol = false;
 			}
-			isWallcol = false;
+
+			if (hitTime % 6 == 0)
+			{
+				isHit = false;
+				hitTime = 0;
+			}
 		}
 
-		if (hitTime % 6 == 0)
+		hitCul();
+
+		cul.x = CAMERAMANAGER->GetRelativeX(pos.x);
+		cul.y = CAMERAMANAGER->GetRelativeY(pos.y);
+
+		if (!isDie)
+			die();
+		else
 		{
-			isHit = false;
-			hitTime = 0;
+			state = STATEIMAGE::DIE;
 		}
 	}
-	
-	hitCul();
+}
 
-	cul.x = CAMERAMANAGER->GetRelativeX(pos.x);
-	cul.y = CAMERAMANAGER->GetRelativeY(pos.y);
-
-	if(!isDie)
-		die();
-	else
-	{
-		state = STATEIMAGE::DIE;
-	}
+void monster::render()
+{
+	if(isMonsterApeear)
+	stateImageRender();
+	// astar->render(getMemDC());
+	// FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
+	// FrameRect(getMemDC(), rc, RGB(255, 255, 255));
 }
 
 void monster::setPt(float x, float y)
