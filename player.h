@@ -149,8 +149,10 @@ public:
 
 	void damagedCool();
 
-	void chargeSkillGauge(bool appearCri);
+	void chargeSkillGauge(int atkPower);
+
 	void skillGaugeSetUp();
+
 
 	void arcanaCheck();
 

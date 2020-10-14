@@ -442,13 +442,14 @@ void gameScene::playerAttack()
 			{
 				bool criCheck = PLAYERDATA->criAppear();
 
+				int damage = PLAYERDATA->damageCul(_player->getBlaze()->getBullet()[i].atkPower + RANDOM->range(0, 3), criCheck);
+
 				//gauge
 				if (PLAYERDATA->getStat().ManaRejection == false)
 				{
-					_player->chargeSkillGauge(criCheck);
+					_player->chargeSkillGauge(damage);
 				}
 
-				int damage = PLAYERDATA->damageCul(_player->getBlaze()->getBullet()[i].atkPower + RANDOM->range(0, 3), criCheck);
 
 				SOUNDMANAGER->play("blazeExp", false);
 				PARTICLE->explosionGenerate("explosionParticle", _player->getBlaze()->getBullet()[i].x + 20,
@@ -476,6 +477,12 @@ void gameScene::playerAttack()
 				//데미지 계산
 				int damage = PLAYERDATA->damageCul(_player->getMeteor()->getAtkPower(i) + RANDOM->range(0, 5), criCheck);
 
+				//gauge
+				if (PLAYERDATA->getStat().ManaRejection == false)
+				{
+					_player->chargeSkillGauge(damage);
+				}
+
 				enemy->getMinion()[j]->hit(damage, _player->getMeteor()->getAngle(i),
 					30.f, _player->getMeteor()->getSkillNum(), criCheck);
 
@@ -495,6 +502,12 @@ void gameScene::playerAttack()
 				bool criCheck = PLAYERDATA->criAppear();
 
 				int damage = PLAYERDATA->damageCul(_player->getDashFire()->getAtk(i) + RANDOM->range(0, 5), criCheck);
+
+				//gauge
+				if (PLAYERDATA->getStat().ManaRejection == false)
+				{
+					_player->chargeSkillGauge(damage);
+				}
 
 				enemy->getMinion()[j]->hit(damage, 70.f, 20.f, _player->getDashFire()->getSkillNum(), criCheck);
 			}
@@ -528,8 +541,13 @@ void gameScene::playerAttack()
 			else if (PLAYERDATA->getGaugeTime() >= 50)
 			{
 				bool criCheck = PLAYERDATA->criAppear();
-
+			
 				int damage = PLAYERDATA->damageCul(_player->getInferno()->getInf().atkPower, criCheck);
+				//gauge
+				if (PLAYERDATA->getStat().ManaRejection == false)
+				{
+					_player->chargeSkillGauge(damage);
+				}
 
 				float angle = getAngle(enemyX + 40, enemyY + 40,
 					_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);

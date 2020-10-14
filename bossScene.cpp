@@ -182,22 +182,24 @@ void bossScene::attackBoss()
 			int damage = _player->getBlaze()->getBullet()[i].atkPower + RANDOM->range(0, 3);
 
 			bool isCri = PLAYERDATA->criAppear();
-			_player->chargeSkillGauge(isCri);
 
 			if (isCri) //critical damage
 				damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
 			//normal damage
 			else damage = (float)damage * PLAYERDATA->getStat().damage;
 
+			//gauge
+			if (PLAYERDATA->getStat().ManaRejection == false)
+			{
+				_player->chargeSkillGauge(damage);
+			}
 
 
 			SOUNDMANAGER->play("blazeExp", false);
 			PARTICLE->explosionGenerate("explosionParticle", _player->getBlaze()->getBullet()[i].x + 20,
 				_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
 
-
 			// -> boss damaged
-
 
 			_player->getBlaze()->setCol(i, true);
 
@@ -212,12 +214,19 @@ void bossScene::attackBoss()
 			int damage = _player->getDashFire()->getAtk(i) + RANDOM->range(0, 5);
 
 			bool isCri = PLAYERDATA->criAppear();
-			_player->chargeSkillGauge(isCri);
+
 
 			if (isCri) //critical damage
 				damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
+			
 			//normal damage
 			else damage = (float)damage * PLAYERDATA->getStat().damage;
+
+			//gauge
+			if (PLAYERDATA->getStat().ManaRejection == false)
+			{
+				_player->chargeSkillGauge(damage);
+			}
 
 
 			//-> boss damaged
@@ -244,11 +253,17 @@ void bossScene::attackBoss()
 		int damage = _player->getInferno()->getInf().atkPower;
 
 		bool isCri = PLAYERDATA->criAppear();
-		_player->chargeSkillGauge(isCri);
+
+		
 
 		if (isCri) damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
 		else damage = (float)damage * PLAYERDATA->getStat().damage;
 
+		//gauge
+		if (PLAYERDATA->getStat().ManaRejection == false)
+		{
+			_player->chargeSkillGauge(damage);
+		}
 		float angle = getAngle(_boss->getBoss().center.x, _boss->getBoss().center.y,
 			_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
 		
@@ -269,11 +284,15 @@ void bossScene::attackBoss()
 		{
 			int damage = _player->getMeteor()->getAtkPower(i) + RANDOM->range(0, 5);
 			bool isCri = PLAYERDATA->criAppear();
-			_player->chargeSkillGauge(isCri);
-
+			
+			
 			if (isCri) damage = (float)damage * PLAYERDATA->getStat().criDamage;
 			else damage = (float)damage * PLAYERDATA->getStat().damage;
-
+			//gauge
+			if (PLAYERDATA->getStat().ManaRejection == false)
+			{
+				_player->chargeSkillGauge(damage);
+			}
 
 			//-> boss damaged
 
