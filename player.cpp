@@ -75,7 +75,7 @@ HRESULT player::init()
 
 	//upgrade gauge
 	skillGauge = 0;
-	gaugeMaxCool = 0;
+	gaugeMaxCool = 120;
 	upgradeReady = false;
 
 
@@ -302,11 +302,6 @@ void player::render()
 	dragon->render();
 	Meteor->render();
 	inferno->render();
-
-	/*if (inferno->getGauging())
-	{
-		CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("infernoGauging"), posX, posY - 70);
-	}*/
 
 	if (INPUT->GetToggleKey('L'))
 	{
@@ -638,6 +633,7 @@ void player::infernoSetUp()
 void player::meteorSetUp()
 {
 	Meteor->setUpgrade(upgradeReady);
+
 	float mouseX = CAMERAMANAGER->GetAbsoluteX(_ptMouse.x);
 	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
 	//Attack
@@ -691,13 +687,16 @@ void player::meteorSetUp()
 
 void player::dragonArcSetUp()
 {
-	if (INPUT->GetKeyDown('E'))
+	if (!upgradeReady)
 	{
-		float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
+		if (INPUT->GetKeyDown('E'))
+		{
+			float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 
-		//dragon->fire(posX, posY, angle);
-		dragon->phoenixFire(posX, posY, angle);
+			dragon->fire(posX, posY, angle);
+			//dragon->phoenixFire(posX, posY, angle);
 
+		}
 	}
 }
 
@@ -1232,12 +1231,12 @@ void player::chargeSkillGauge(int atkPower, int skillNum)
 	switch (skillNum)
 	{
 	case 0:
-			skillGauge += (float)(atkPower / atkPower) * 1.5f;
+		skillGauge += 10/*(float)(atkPower / atkPower) * 1.5f*/;
 		break;
 	case 1:
-		if (count  % 15==0)
+		if (count % 15 == 0)
 			skillGauge += (float)(atkPower / atkPower) * 1.5f;
-			break;
+		break;
 	case 2:
 		if (count % 15 == 0)
 			skillGauge += (float)(atkPower / atkPower) * 1.5f;
@@ -1249,22 +1248,32 @@ void player::chargeSkillGauge(int atkPower, int skillNum)
 	case 4:
 		break;
 	}
-	
 
-	//cout << "현재 게이지:" << skillGauge << '\n';
 
+	if (skillGauge >= 100)
+	{
+		skillGauge = 100;
+		upgradeReady = true;
+	}
 }
 
 void player::skillGaugeSetUp()
 {
+
 	//gauge
 	if (skillGauge < 100 && skillGauge >= 0 && !upgradeReady && count % 10 == 0)
 		skillGauge -= 0.3f;
 
-	else if (skillGauge >= 100)
+	if (upgradeReady)
 	{
-		skillGauge = 100;
-		upgradeReady = true;
+		gaugeMaxCool--;
+	}
+	else gaugeMaxCool = 120;
+
+	if (gaugeMaxCool <= 0)
+	{
+		upgradeReady = false;
+		skillGauge -= 0.7f;
 	}
 
 	PLAYERDATA->setSkillGauge(skillGauge);
