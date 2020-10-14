@@ -17,7 +17,7 @@ HRESULT gameScene::init()
 	uiImg = IMAGEMANAGER->addImage("UI", "Images/gameUI.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 	playerImg = IMAGEMANAGER->findImage("playerFrame");
 
-	loadMap(0);
+	//loadMap(0);
 
 	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX + 15, WINSIZEY + 15);
 
@@ -28,34 +28,39 @@ HRESULT gameScene::init()
 	EFFECT->init();
 
 	//vTile.clear();
-	collisionTile();
+	_wall = new wall;
+
+	_wall->getRectAd(&cam);
+	_wall->init();
+	_wall->getPlayerAd(_player);
+	_wall->collisionTile();
+	//collisionTile();
 
 	UI->setCoin(PLAYERDATA->getCoin());
 	UI->setHp(PLAYERDATA->getHp());
 
 	oneTime = false;
+	////culPt
+	//culPt = { 0,0 };
+	//POINT ptZero = subTile[0].pos;
+	//POINT ptCam = { 0,0 };
 
-	//culPt
-	culPt = { 0,0 };
-	POINT ptZero = subTile[0].pos;
-	POINT ptCam = { 0,0 };
+	//for (int i = 0; i < MAXTILE; i++)
+	//{
+	//	if (colCheck(cam, subTile[i].rc) == false)continue;
+	//	ptCam = subTile[i].pos;
+	//	break;
+	//}
 
-	for (int i = 0; i < MAXTILE; i++)
-	{
-		if (colCheck(cam, subTile[i].rc) == false)continue;
-		ptCam = subTile[i].pos;
-		break;
-	}
-
-	culPt = { ptCam.x - ptZero.x, ptCam.y - ptZero.y };
+	//culPt = { ptCam.x - ptZero.x, ptCam.y - ptZero.y };
 
 	enemy = new enemyManager;
-	enemy->init(tile, subTile, culPt);
+	enemy->init(_wall->getTile(), _wall->getSubTile(), _wall->getCulPt());
 
-	PLAYERDATA->setTile(tile);
+	PLAYERDATA->setTile(_wall->getTile());
 
-	_player->setTileAd(tile);
-	_player->setTileAd0(vTile);
+	_player->setTileAd(_wall->getTile());
+	_player->setTileAd0(_wall->getVtile());
 
 	EFFECT->setPortalEffect({ (long)_player->getX(),(long)_player->getY() });
 	SOUNDMANAGER->play("portalWarp", false);
@@ -81,6 +86,9 @@ void gameScene::release()
 
 		enemy->release();
 		SAFE_DELETE(enemy);
+
+		_wall->release();
+		SAFE_DELETE(_wall);
 	}
 }
 
@@ -102,8 +110,10 @@ void gameScene::update()
 	PLAYERDATA->setY(_player->getY());
 
 	atkCount++;
-	collisionTile();
-	_player->setTileAd0(vTile);
+	//collisionTile();
+	_wall->update();
+
+	_player->setTileAd0(_wall->getVtile());
 
 	UI->update();
 	DROP->update();
@@ -141,16 +151,17 @@ void gameScene::update()
 
 void gameScene::render()
 {
-	for (int i = 0; i < vTile.size(); i++)
-	{
-		int num = vTile[i];
+	_wall->render();
+	//for (int i = 0; i < vTile.size(); i++)
+	//{
+	//	int num = vTile[i];
 
-		if (tile[num].keyName == "" || tile[num].kind != TERRAIN::TILE)continue;
+	//	if (tile[num].keyName == "" || tile[num].kind != TERRAIN::TILE)continue;
 
-		image* img = IMAGEMANAGER->findImage(tile[num].keyName);
+	//	image* img = IMAGEMANAGER->findImage(tile[num].keyName);
 
-		CAMERAMANAGER->FrameRender(getMemDC(), img, tile[num].rc.left, tile[num].rc.top, tile[num].frame.x, tile[num].frame.y);
-	}
+	//	CAMERAMANAGER->FrameRender(getMemDC(), img, tile[num].rc.left, tile[num].rc.top, tile[num].frame.x, tile[num].frame.y);
+	//}
 
 	////deco image render
 	//for (int f = 0; f < vTile.size(); f++)
@@ -187,201 +198,170 @@ void gameScene::render()
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), cam);
 
-	string key;
-	image* img;
-	int width, height;
-	for (int f = 0; f < vTile.size(); f++)
-	{
-		int i = vTile[f];
+	//string key;
+	//image* img;
+	//int width, height;
+	//for (int f = 0; f < vTile.size(); f++)
+	//{
+	//	int i = vTile[f];
 
-		if (tile[i].kind != TERRAIN::WALL && tile[i].kind != TERRAIN::OBJECT)continue;
+	//	if (tile[i].kind != TERRAIN::WALL && tile[i].kind != TERRAIN::OBJECT)continue;
 
-		if (!isRender)
-		{
-			bool canCheck[4] = { false, };
+	//	int w = MAXTILE_WIDTH;
+	//	int w2 = MAXTILE_WIDTH * 2;
+	//	int w3 = MAXTILE_WIDTH * 3;
+	//	int w4 = MAXTILE_WIDTH * 4;
+	//	int w5 = MAXTILE_WIDTH * 5;
+	//	int w6 = MAXTILE_WIDTH * 6;
 
-			if (i >= 0)
-			{
-				canCheck[0] = colCheck(checkArea, tile[i].rc);
-			}
-			if (i + 15 >= 0)
-			{
-				canCheck[1] = colCheck(checkArea, tile[i + 15].rc);
-			}
-			if (i - MAXTILE_WIDTH * 4 + 10 >= 0)
-			{
-				canCheck[2] = colCheck(checkArea, tile[i - MAXTILE_WIDTH * 4 + 10].rc);
-			}
-			if (i - MAXTILE_WIDTH * 4 + 5 >= 0)
-			{
-				canCheck[3] = colCheck(checkArea, tile[i - MAXTILE_WIDTH * 4 + 5].rc);
-			}
+	//	switch (tile[i].kind)
+	//	{
+	//	case TERRAIN::WALL:
+	//		key = tile[i].keyName;
 
-			for (int i = 0; i < 4; i++)
-			{
-				if (canCheck[i])
-				{
-					isRender = true;
-					_player->render();
-				}
-			}
-		}
+	//		if (key == "topWall") // fix
+	//		{
+	//			if ((key == tile[i + 1].keyName &&
+	//				key == tile[i - w].keyName && key == tile[i - w + 1].keyName &&
+	//				key == tile[i - w2].keyName && key == tile[i - w2 + 1].keyName &&
+	//				key == tile[i - w3].keyName && key == tile[i - w3 + 1].keyName &&
+	//				key == tile[i - w4].keyName && key == tile[i - w4 + 1].keyName &&
 
-		int w = MAXTILE_WIDTH;
-		int w2 = MAXTILE_WIDTH * 2;
-		int w3 = MAXTILE_WIDTH * 3;
-		int w4 = MAXTILE_WIDTH * 4;
-		int w5 = MAXTILE_WIDTH * 5;
-		int w6 = MAXTILE_WIDTH * 6;
+	//				key == tile[i - w3 + 2].keyName && key == tile[i - w3 + 3].keyName &&
+	//				key == tile[i - w3 + 4].keyName && key == tile[i - w3 + 5].keyName &&
+	//				key == tile[i - w4 + 2].keyName && key == tile[i - w4 + 3].keyName &&
+	//				key == tile[i - w4 + 4].keyName && key == tile[i - w4 + 5].keyName &&
 
-		switch (tile[i].kind)
-		{
-		case TERRAIN::WALL:
-			key = tile[i].keyName;
+	//				key == tile[i - w4 + 10].keyName && key == tile[i - w4 + 11].keyName &&
+	//				key == tile[i - w4 + 12].keyName && key == tile[i - w4 + 13].keyName &&
+	//				key == tile[i - w4 + 14].keyName && key == tile[i - w4 + 15].keyName &&
 
-			if (key == "topWall") // fix
-			{
-				if ((key == tile[i + 1].keyName &&
-					key == tile[i - w].keyName && key == tile[i - w + 1].keyName &&
-					key == tile[i - w2].keyName && key == tile[i - w2 + 1].keyName &&
-					key == tile[i - w3].keyName && key == tile[i - w3 + 1].keyName &&
-					key == tile[i - w4].keyName && key == tile[i - w4 + 1].keyName &&
+	//				key == tile[i - w3 + 10].keyName && key == tile[i - w3 + 11].keyName &&
+	//				key == tile[i - w3 + 12].keyName && key == tile[i - w3 + 13].keyName &&
+	//				key == tile[i - w3 + 14].keyName && key == tile[i - w3 + 15].keyName &&
 
-					key == tile[i - w3 + 2].keyName && key == tile[i - w3 + 3].keyName &&
-					key == tile[i - w3 + 4].keyName && key == tile[i - w3 + 5].keyName &&
-					key == tile[i - w4 + 2].keyName && key == tile[i - w4 + 3].keyName &&
-					key == tile[i - w4 + 4].keyName && key == tile[i - w4 + 5].keyName &&
+	//				key == tile[i - w2 + 14].keyName && key == tile[i - w2 + 15].keyName &&
+	//				key == tile[i - w + 14].keyName && key == tile[i - w + 15].keyName &&
+	//				key == tile[i + 14].keyName && key == tile[i + 15].keyName)
+	//				== false)
+	//			{
+	//				continue;
+	//			}
 
-					key == tile[i - w4 + 10].keyName && key == tile[i - w4 + 11].keyName &&
-					key == tile[i - w4 + 12].keyName && key == tile[i - w4 + 13].keyName &&
-					key == tile[i - w4 + 14].keyName && key == tile[i - w4 + 15].keyName &&
+	//			height = 8 * TILESIZE;
 
-					key == tile[i - w3 + 10].keyName && key == tile[i - w3 + 11].keyName &&
-					key == tile[i - w3 + 12].keyName && key == tile[i - w3 + 13].keyName &&
-					key == tile[i - w3 + 14].keyName && key == tile[i - w3 + 15].keyName &&
+	//			img = IMAGEMANAGER->findImage(key);
 
-					key == tile[i - w2 + 14].keyName && key == tile[i - w2 + 15].keyName &&
-					key == tile[i - w + 14].keyName && key == tile[i - w + 15].keyName &&
-					key == tile[i + 14].keyName && key == tile[i + 15].keyName)
-					== false)
-				{
-					continue;
-				}
+	//			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
 
-				height = 8 * TILESIZE;
+	//		}
 
-				img = IMAGEMANAGER->findImage(key);
+	//		else if (key == "bottomWall") // fix
+	//		{
+	//			if ((key == tile[i + 1].keyName &&
+	//				key == tile[i - w].keyName && key == tile[i - w + 1].keyName &&
+	//				key == tile[i - w2].keyName && key == tile[i - w2 + 1].keyName &&
+	//				key == tile[i - w3].keyName && key == tile[i - w3 + 1].keyName &&
+	//				key == tile[i - w4].keyName && key == tile[i - w4 + 1].keyName &&
+	//				key == tile[i - w5].keyName && key == tile[i - w5 + 1].keyName &&
+	//				key == tile[i - w6].keyName && key == tile[i - w6 + 1].keyName &&
 
-				CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-
-			}
-
-			else if (key == "bottomWall") // fix
-			{
-				if ((key == tile[i + 1].keyName &&
-					key == tile[i - w].keyName && key == tile[i - w + 1].keyName &&
-					key == tile[i - w2].keyName && key == tile[i - w2 + 1].keyName &&
-					key == tile[i - w3].keyName && key == tile[i - w3 + 1].keyName &&
-					key == tile[i - w4].keyName && key == tile[i - w4 + 1].keyName &&
-					key == tile[i - w5].keyName && key == tile[i - w5 + 1].keyName &&
-					key == tile[i - w6].keyName && key == tile[i - w6 + 1].keyName &&
-
-					key == tile[i - w + 2].keyName && key == tile[i - w + 3].keyName &&
-					key == tile[i - w + 4].keyName &&
-					key == tile[i + 2].keyName && key == tile[i + 3].keyName &&
-					key == tile[i + 4].keyName &&
+	//				key == tile[i - w + 2].keyName && key == tile[i - w + 3].keyName &&
+	//				key == tile[i - w + 4].keyName &&
+	//				key == tile[i + 2].keyName && key == tile[i + 3].keyName &&
+	//				key == tile[i + 4].keyName &&
 
 
-					key == tile[i - w + 11].keyName && key == tile[i - w + 12].keyName &&
-					key == tile[i - w + 13].keyName &&
-					key == tile[i + 11].keyName && key == tile[i + 12].keyName &&
-					key == tile[i + 13].keyName &&
+	//				key == tile[i - w + 11].keyName && key == tile[i - w + 12].keyName &&
+	//				key == tile[i - w + 13].keyName &&
+	//				key == tile[i + 11].keyName && key == tile[i + 12].keyName &&
+	//				key == tile[i + 13].keyName &&
 
-					key == tile[i + 14].keyName && key == tile[i + 15].keyName &&
-					key == tile[i - w + 14].keyName && key == tile[i - w + 15].keyName &&
-					key == tile[i - w2 + 14].keyName && key == tile[i - w2 + 15].keyName &&
-					key == tile[i - w3 + 14].keyName && key == tile[i - w3 + 15].keyName &&
-					key == tile[i - w4 + 14].keyName && key == tile[i - w4 + 15].keyName &&
-					key == tile[i - w5 + 14].keyName && key == tile[i - w5 + 15].keyName &&
-					key == tile[i - w6 + 14].keyName && key == tile[i - w6 + 15].keyName
-					) == false)
-				{
-					continue;
-				}
-				height = 8 * TILESIZE;
+	//				key == tile[i + 14].keyName && key == tile[i + 15].keyName &&
+	//				key == tile[i - w + 14].keyName && key == tile[i - w + 15].keyName &&
+	//				key == tile[i - w2 + 14].keyName && key == tile[i - w2 + 15].keyName &&
+	//				key == tile[i - w3 + 14].keyName && key == tile[i - w3 + 15].keyName &&
+	//				key == tile[i - w4 + 14].keyName && key == tile[i - w4 + 15].keyName &&
+	//				key == tile[i - w5 + 14].keyName && key == tile[i - w5 + 15].keyName &&
+	//				key == tile[i - w6 + 14].keyName && key == tile[i - w6 + 15].keyName
+	//				) == false)
+	//			{
+	//				continue;
+	//			}
+	//			height = 8 * TILESIZE;
 
-				img = IMAGEMANAGER->findImage(key);
+	//			img = IMAGEMANAGER->findImage(key);
 
-				CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-			}
+	//			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
+	//		}
 
-			else if (key == "wallFrame0" || key == "wallFrame1" || key == "wallFrame2" || key == "wallFrame3")
-			{
-				image* img = IMAGEMANAGER->findImage(tile[i].keyName);
+	//		else if (key == "wallFrame0" || key == "wallFrame1" || key == "wallFrame2" || key == "wallFrame3")
+	//		{
+	//			image* img = IMAGEMANAGER->findImage(tile[i].keyName);
 
-				CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
-			}
+	//			CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
+	//		}
 
-			else
-			{
-				height = 3 * TILESIZE;
+	//		else
+	//		{
+	//			height = 3 * TILESIZE;
 
-				img = IMAGEMANAGER->findImage(key);
+	//			img = IMAGEMANAGER->findImage(key);
 
-				CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height, tile[i].frame.x, tile[i].frame.y);
-			}
+	//			CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height, tile[i].frame.x, tile[i].frame.y);
+	//		}
 
-			break;
-		case TERRAIN::OBJECT:
-			// 2X2인 오브젝트만 처리
+	//		break;
+	//	case TERRAIN::OBJECT:
+	//		// 2X2인 오브젝트만 처리
 
-			//i object, i+1 object, i+w object, i+w+1 object
-			if (!(tile[i + 1].kind == TERRAIN::OBJECT && tile[i + MAXTILE_WIDTH].kind == TERRAIN::OBJECT &&
-				tile[i + MAXTILE_WIDTH + 1].kind == TERRAIN::OBJECT)) continue;
+	//		//i object, i+1 object, i+w object, i+w+1 object
+	//		if (!(tile[i + 1].kind == TERRAIN::OBJECT && tile[i + MAXTILE_WIDTH].kind == TERRAIN::OBJECT &&
+	//			tile[i + MAXTILE_WIDTH + 1].kind == TERRAIN::OBJECT)) continue;
 
-			key = tile[i].keyName;
+	//		key = tile[i].keyName;
 
-			if (!(tile[i + 1].keyName == key &&
-				tile[i + MAXTILE_WIDTH].keyName == key &&
-				tile[i + MAXTILE_WIDTH + 1].keyName == key)) continue;
+	//		if (!(tile[i + 1].keyName == key &&
+	//			tile[i + MAXTILE_WIDTH].keyName == key &&
+	//			tile[i + MAXTILE_WIDTH + 1].keyName == key)) continue;
 
-			if (tile[i].keyName == "flowerbed1")
-			{
-				key = "tree0";
-				width = 2 * TILESIZE;
-				height = 4 * TILESIZE;
+	//		if (tile[i].keyName == "flowerbed1")
+	//		{
+	//			key = "tree0";
+	//			width = 2 * TILESIZE;
+	//			height = 4 * TILESIZE;
 
-				img = IMAGEMANAGER->findImage(key);
+	//			img = IMAGEMANAGER->findImage(key);
 
-				CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left - width, tile[i].rc.top - height);
-			}
-			else if (tile[i].keyName == "flowerbed2")
-			{
-				key = "tree1";
-				width = 2 * TILESIZE;
-				height = 5 * TILESIZE;
+	//			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left - width, tile[i].rc.top - height);
+	//		}
+	//		else if (tile[i].keyName == "flowerbed2")
+	//		{
+	//			key = "tree1";
+	//			width = 2 * TILESIZE;
+	//			height = 5 * TILESIZE;
 
-				img = IMAGEMANAGER->findImage(key);
+	//			img = IMAGEMANAGER->findImage(key);
 
-				CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left - width, tile[i].rc.top - height);
-			}
-			else if (tile[i].keyName == "pillar1")
-			{
-				key = "pillar1";
+	//			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left - width, tile[i].rc.top - height);
+	//		}
+	//		else if (tile[i].keyName == "pillar1")
+	//		{
+	//			key = "pillar1";
 
-				height = 3 * TILESIZE;
+	//			height = 3 * TILESIZE;
 
-				img = IMAGEMANAGER->findImage(key);
+	//			img = IMAGEMANAGER->findImage(key);
 
-				CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-			}
-			break;
-		}
-	}
+	//			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
+	//		}
+	//		break;
+	//	}
+	//}
 
 	enemy->render();
 
-	if (!isRender) _player->render();
+	_player->render();
 
 	for (int i = 0; i < enemy->getMinion().size(); i++)
 	{
@@ -414,22 +394,22 @@ void gameScene::render()
 
 void gameScene::collisionTile()
 {
-	vTile.clear();
-	vWall.clear();
-	for (int i = 0; i < MAXTILE; i++)
-	{
-		if (colCheck(cam, tile[i].rc))
-		{
-			vTile.push_back(i);
+	//vTile.clear();
+	//vWall.clear();
+	//for (int i = 0; i < MAXTILE; i++)
+	//{
+	//	if (colCheck(cam, tile[i].rc))
+	//	{
+	//		vTile.push_back(i);
 
-			if (tile[i].kind == TERRAIN::WALL)vWall.push_back(i);
-		}
-	}
+	//		if (tile[i].kind == TERRAIN::WALL)vWall.push_back(i);
+	//	}
+	//}
 
-	_player->setTileAd0(vTile);
-	PLAYERDATA->setTile(vTile);
-	_player->setTileAd1(vWall);
-	PLAYERDATA->setWall(vWall);
+	//_player->setTileAd0(vTile);
+	//PLAYERDATA->setTile(vTile);
+	//_player->setTileAd1(vWall);
+	//PLAYERDATA->setWall(vWall);
 }
 
 void gameScene::playerAttack()
@@ -604,11 +584,11 @@ void gameScene::loadMap(int index)
 	DWORD read;
 
 	file = CreateFile(str, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	ReadFile(file, tile, sizeof(tagTile) * MAXTILE, &read, NULL);
+	ReadFile(file, _wall->getTile(), sizeof(tagTile) * MAXTILE, &read, NULL);
 	CloseHandle(file);
 
 	file = CreateFile(str1, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	ReadFile(file, subTile, sizeof(tagTile) * MAXTILE, &read, NULL);
+	ReadFile(file, _wall->getSubTile(), sizeof(tagTile) * MAXTILE, &read, NULL);
 	CloseHandle(file);
 }
 

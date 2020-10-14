@@ -213,6 +213,7 @@
     <ClCompile Include="progressBar.cpp">
       <Filter>GameFramework\매니져\로딩</Filter>
     </ClCompile>
+    <ClCompile Include="wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -341,5 +342,6 @@
     <ClInclude Include="progressBar.h">
       <Filter>GameFramework\매니져\로딩</Filter>
     </ClInclude>
+    <ClInclude Include="wall.h" />
   </ItemGroup>
 </Project>
