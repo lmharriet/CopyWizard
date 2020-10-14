@@ -190,9 +190,11 @@
     <ClInclude Include="tileNode.h" />
     <ClInclude Include="timeManager.h" />
     <ClInclude Include="uiManager.h" />
+    <ClInclude Include="unit.h" />
     <ClInclude Include="unitNode.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="wall.h" />
+    <ClInclude Include="zObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="boss.cpp" />
@@ -238,9 +240,11 @@
     </ClCompile>
     <ClCompile Include="timeManager.cpp" />
     <ClCompile Include="uiManager.cpp" />
+    <ClCompile Include="unit.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="wall.cpp" />
     <ClCompile Include="winMain.cpp" />
+    <ClCompile Include="zObject.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

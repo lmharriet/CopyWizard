@@ -282,21 +282,21 @@ void player::render()
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
 	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, tempAngle, 0, 50);
 
-	bool isRender = false;
+	//bool isRender = false;
 
 	// DASH FIRE RENDER
 	for (int i = 0; i < searingRush->getSize(); i++)
 	{
-		if (!isRender && (searingRush->getY(i) > posY))
+		if (/*!isRender && */(searingRush->getY(i) > posY))
 		{
-			isRender = true;
+			//isRender = true;
 			animation();
 			searingRush->singleRender(i);
 		}
 		else searingRush->singleRender(i);
 	}
 
-	if (!isRender)animation(); // z렌더 같은 눈속임.. (나중에 frame이 떨어지면 포기하는 기능..)
+	//if (!isRender)animation(); // z렌더 같은 눈속임.. (나중에 frame이 떨어지면 포기하는 기능..)
 
 	blaze->render();
 	dragon->render();
@@ -1021,7 +1021,8 @@ void player::animation()
 
 void player::frameAnimation(int frameX, int frameY)
 {
-	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, frameX, frameY);
+	//CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, frameX, frameY);
+	UNITRENDER->setFramePlayer({ frameX,frameY });
 }
 
 void player::tileCol()

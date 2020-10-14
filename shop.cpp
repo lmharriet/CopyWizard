@@ -146,14 +146,22 @@ void shop::generate(POINT arr[3])
     }
 }
 
+void shop::zRender(HDC hdc,int index)
+{
+    image* img = IMAGEMANAGER->findImage(npc[index].keyName);
+    CAMERAMANAGER->Render(hdc, img,
+        npc[index].pt.x - img->getWidth() / 2,
+        npc[index].pt.y - img->getHeight() / 2);
+}
+
 void shop::render()
 {
     for (int i = 0; i < 3; i++) // NPC NUMBER
     {
-        image* img = IMAGEMANAGER->findImage(npc[i].keyName);
-        CAMERAMANAGER->Render(getMemDC(), img,
-            npc[i].pt.x - img->getWidth() / 2,
-            npc[i].pt.y - img->getHeight() / 2);
+        //image* img = IMAGEMANAGER->findImage(npc[i].keyName);
+        //CAMERAMANAGER->Render(getMemDC(), img,
+        //    npc[i].pt.x - img->getWidth() / 2,
+        //    npc[i].pt.y - img->getHeight() / 2);
 
         //CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(npc[i].pt.x, npc[i].pt.y, 50, 50));
 

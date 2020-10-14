@@ -50,6 +50,9 @@ HRESULT gameScene::init()
 	POINT ptArr[3] = { { -2040,-1509 },{ 2075,-35 },{ 1176,2134 } };
 	_shop->generate(ptArr);
 
+
+	UNITRENDER->addUnit(0, "playerFrame", "player", { 0,0 });
+
 	//sound
 	soundInit();
 	return S_OK;
@@ -65,8 +68,8 @@ void gameScene::release()
 		enemy->release();
 		SAFE_DELETE(enemy);
 
-		_wall->release();
-		SAFE_DELETE(_wall);
+		//_wall->release();
+		//SAFE_DELETE(_wall);
 	}
 }
 
@@ -97,6 +100,8 @@ void gameScene::update()
 	DROP->update();
 
 	_player->update();
+	_player->animation();
+	UNITRENDER->update();
 
 	enemy->setPlayerRC(RectMake(_player->getX(), _player->getY(), 100, 100));
 	enemy->update();
@@ -126,7 +131,8 @@ void gameScene::update()
 
 void gameScene::render()
 {
-	_wall->render();
+	_wall->render2();
+	//_wall->render();
 
 	_shop->render();
 
@@ -134,6 +140,7 @@ void gameScene::render()
 	EFFECT->pRender(getMemDC());
 
 	bool* eRender = new bool[enemy->getMinion().size()];
+
 
 	for (int i = 0; i < enemy->getMinion().size(); i++)
 	{
@@ -144,11 +151,11 @@ void gameScene::render()
 		}
 	}
 
-	bool isRender = false;
-
 	enemy->render();
 
 	_player->render();
+
+	UNITRENDER->render(getMemDC());
 
 	for (int i = 0; i < enemy->getMinion().size(); i++)
 	{

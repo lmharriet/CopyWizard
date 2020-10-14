@@ -36,6 +36,7 @@ public:
 	HRESULT init();
 	void addImage();
 	void generate(POINT arr[3]);
+	void zRender(HDC hdc, int index);
 	void render();
 
 	void shopCollider(RECT rc);

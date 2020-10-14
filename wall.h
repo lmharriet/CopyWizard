@@ -24,6 +24,8 @@ public:
 	void update();
 	void render();
 
+	void render2();
+
 	void collisionTile();
 
 

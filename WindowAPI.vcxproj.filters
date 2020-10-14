@@ -214,6 +214,8 @@
       <Filter>GameFramework\매니져\로딩</Filter>
     </ClCompile>
     <ClCompile Include="wall.cpp" />
+    <ClCompile Include="unit.cpp" />
+    <ClCompile Include="zObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -343,5 +345,7 @@
       <Filter>GameFramework\매니져\로딩</Filter>
     </ClInclude>
     <ClInclude Include="wall.h" />
+    <ClInclude Include="unit.h" />
+    <ClInclude Include="zObject.h" />
   </ItemGroup>
 </Project>

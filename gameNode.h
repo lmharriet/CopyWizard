@@ -15,6 +15,8 @@ public:
 	virtual void update();
 	virtual void render();
 
+	virtual void zRender(int index);
+
 	//백버퍼 이미지 얻기
 	image* getBackBuffer() { return _backBuffer; }
 	//화면 HDC 얻기
