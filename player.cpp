@@ -190,7 +190,7 @@ void player::update()
 	//don't touch!
 	buttonDown();
 
-
+	cout << "upgrade : "<<upgradeReady << '\n';
 
 }
 
@@ -345,7 +345,7 @@ void player::controller()
 	if (isLeft)
 	{
 		rc = RectMakeCenter(posX, posY, 50, 50);
-		if (!tileCheck[(int)DIRECTION::LEFT].isCol /*&& !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::LEFT_TOP].isCol*/)
+		if (!tileCheck[(int)DIRECTION::LEFT].isCol)
 			posX -= 8;
 		walkCount++;
 		if (walkCount == 16)
@@ -358,7 +358,7 @@ void player::controller()
 	if (isRight)
 	{
 		rc = RectMakeCenter(posX, posY, 50, 50);
-		if (!tileCheck[(int)DIRECTION::RIGHT].isCol /*&& !tileCheck[(int)DIRECTION::RIGHT_DOWN].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol*/)
+		if (!tileCheck[(int)DIRECTION::RIGHT].isCol)
 			posX += 8;
 		walkCount++;
 		if (walkCount == 16)
@@ -371,7 +371,7 @@ void player::controller()
 	if (isUp)
 	{
 		rc = RectMakeCenter(posX, posY, 50, 50);
-		if (/*!tileCheck[(int)DIRECTION::TOP].isCol &&*/ !tileCheck[(int)DIRECTION::LEFT_TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol)
+		if (!tileCheck[(int)DIRECTION::LEFT_TOP].isCol && !tileCheck[(int)DIRECTION::RIGHT_TOP].isCol)
 			posY -= 8;
 		walkCount++;
 		if (walkCount == 16)
@@ -442,9 +442,6 @@ void player::controller()
 
 void player::dashFunction()
 {
-	// 벽에 닿으면 대쉬 불가능, 게임 내에서 대쉬해서 낭떠러지에 닿으면 떨어짐. 
-	// 벽끼임 예외처리 필요
-
 	if (speed == 0) return;
 
 	if (!searingRush->getIsCoolTime() &&
@@ -543,7 +540,6 @@ void player::dashFunction()
 			OffsetRect(&rc, 0, -speed);
 			RectMakeCenter(posX, posY, 50, 50);
 		}
-
 	}
 
 	else if (dashDown)
@@ -672,7 +668,7 @@ void player::meteorSetUp()
 
 				//skillGauge 초기화
 				skillGauge = 0;
-				upgradeReady = false;
+			
 			}
 		}
 		if (meteorStateCool > 0)
@@ -687,16 +683,30 @@ void player::meteorSetUp()
 
 void player::dragonArcSetUp()
 {
+	dragon->setUpgrade(upgradeReady);
+
+	float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
+	
 	if (!upgradeReady)
 	{
 		if (INPUT->GetKeyDown('E'))
 		{
-			float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
-
 			dragon->fire(posX, posY, angle);
-			//dragon->phoenixFire(posX, posY, angle);
-
+		
 		}
+	}
+	else
+	{
+		if (INPUT->GetKeyDown('E'))
+		{
+			dragon->phoenixFire(posX, posY, angle);
+			
+			//skillGauge초기화 수정 필요..
+			skillGauge = 0;
+		}
+
+		//조건 넣어서 skill gauge 0 으로 초기화하고 upgradeReady false로 만들기
+
 	}
 }
 
@@ -1231,7 +1241,7 @@ void player::chargeSkillGauge(int atkPower, int skillNum)
 	switch (skillNum)
 	{
 	case 0:
-		skillGauge += (float)(atkPower / atkPower) * 1.5f;
+		skillGauge += 30/*(float)(atkPower / atkPower) * 1.5f*/;
 		break;
 	case 1:
 		if (count % 15 == 0)
@@ -1255,6 +1265,7 @@ void player::chargeSkillGauge(int atkPower, int skillNum)
 		skillGauge = 100;
 		upgradeReady = true;
 	}
+	else upgradeReady = false;
 }
 
 void player::skillGaugeSetUp()

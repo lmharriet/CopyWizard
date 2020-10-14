@@ -786,6 +786,9 @@ HRESULT dragonArc::init()
 
 	//memset(&dragonHead, 0, sizeof(dragonHead));
 
+	coolTime = 240;
+	currentCoolTime = 0;
+	isCoolTime = false;
 	upgrade = false;
 
 }
@@ -797,52 +800,72 @@ void dragonArc::release()
 
 void dragonArc::update()
 {
+	// ui에 dragonArc 아이콘 추가하기 + 쿨타임 세팅하기
+
 	count++;
 
-	//	move();
+
+	move();
 
 	phoenixMove();
+
+
+	//coolTime
+	if (isCoolTime)
+	{	
+		currentCoolTime++;
+		if (currentCoolTime == coolTime)
+		{
+			isCoolTime = false;
+			currentCoolTime = 0;
+		}
+	}
+
 }
 
 void dragonArc::render()
 {
-	/*for (int i = 0; i < vDragon.size(); i++)
+	if (!upgrade)
 	{
-		CAMERAMANAGER->Ellipse(getMemDC(), vDragon[i].rc);
-
-		if (count % 2 == 0)
+		for (int i = 0; i < vDragon.size(); i++)
 		{
-			PARTICLE->explosionGenerate("explosionParticle2", vDragon[i].x, vDragon[i].y, 3, 0.75f, 0.f, 3, true);
-			PARTICLE->explosionGenerate("explosionParticle2", vDragon[i].x, vDragon[i].y, 5, 1.25f, 0.f, 1, true);
+			CAMERAMANAGER->Ellipse(getMemDC(), vDragon[i].rc);
+
+			if (count % 2 == 0)
+			{
+				PARTICLE->explosionGenerate("explosionParticle2", vDragon[i].x, vDragon[i].y, 3, 0.75f, 0.f, 3, true);
+				PARTICLE->explosionGenerate("explosionParticle2", vDragon[i].x, vDragon[i].y, 5, 1.25f, 0.f, 1, true);
+			}
+
+			CAMERAMANAGER->FrameRender(getMemDC(), vDragon[i].img,
+				vDragon[i].x - vDragon[i].img->getFrameWidth() / 2,
+				vDragon[i].y - vDragon[i].img->getFrameHeight() / 2, vDragon[i].index, vDragon[i].frameY);
 		}
-
-		CAMERAMANAGER->FrameRender(getMemDC(), vDragon[i].img,
-			vDragon[i].x - vDragon[i].img->getFrameWidth() / 2,
-			vDragon[i].y - vDragon[i].img->getFrameHeight() / 2, vDragon[i].index, vDragon[i].frameY);
-	}*/
-
-
-	//CAMERAMANAGER->Ellipse(getMemDC(), dragonHead.rc);
-	if (dragonHead.isFire)
-	{
-		image* img = IMAGEMANAGER->findImage("dragon");
-
-		if (count % 2 == 0) PARTICLE->explosionGenerate("frameParticle", dragonHead.x, dragonHead.y, 1, 0, 0.f, 2, true);
-		//CAMERAMANAGER->FrameRender(getMemDC(), img,
-		//	dragonHead.x - img->getFrameWidth() / 2,
-		//	dragonHead.y - img->getFrameHeight() / 2, dragonHead.index, dragonHead.frameY);
 	}
-	for (int i = 0; i < vWings.size(); i++)
+	else
 	{
-		//CAMERAMANAGER->Ellipse(getMemDC(), vWings[i].rc);
-		if (count % 2 == 0)
+		if (dragonHead.isFire)
 		{
-			//PARTICLE->explosionGenerate("explosionParticle2", vWings[i].x, vWings[i].y, 7, 0.75f, 0, 2, true);
-			//PARTICLE->burningParticle2Play(vWings[i].x, vWings[i].y);
-			//PARTICLE->explosionGenerate("smokeX4", vWings[i].x, vWings[i].y, 2, 4, 0.f, 2, true);
-			//PARTICLE->explosionGenerate("frameParticle", vWings[i].x, vWings[i].y, 2, 0, 0.f, 2, true);
-			PARTICLE->explosionGenerate("explosionParticle", vWings[i].x, vWings[i].y, 3, 7, 0.f, 2, true);
+			image* img = IMAGEMANAGER->findImage("dragon");
+
+			if (count % 2 == 0) PARTICLE->explosionGenerate("frameParticle", dragonHead.x, dragonHead.y, 1, 0, 0.f, 2, true);
+			//CAMERAMANAGER->FrameRender(getMemDC(), img,
+			//	dragonHead.x - img->getFrameWidth() / 2,
+			//	dragonHead.y - img->getFrameHeight() / 2, dragonHead.index, dragonHead.frameY);
 		}
+		for (int i = 0; i < vWings.size(); i++)
+		{
+			//CAMERAMANAGER->Ellipse(getMemDC(), vWings[i].rc);
+			if (count % 2 == 0)
+			{
+				//PARTICLE->explosionGenerate("explosionParticle2", vWings[i].x, vWings[i].y, 7, 0.75f, 0, 2, true);
+				//PARTICLE->burningParticle2Play(vWings[i].x, vWings[i].y);
+				//PARTICLE->explosionGenerate("smokeX4", vWings[i].x, vWings[i].y, 2, 4, 0.f, 2, true);
+				//PARTICLE->explosionGenerate("frameParticle", vWings[i].x, vWings[i].y, 2, 0, 0.f, 2, true);
+				PARTICLE->explosionGenerate("explosionParticle", vWings[i].x, vWings[i].y, 3, 7, 0.f, 2, true);
+			}
+		}
+
 	}
 }
 
@@ -876,12 +899,13 @@ void dragonArc::fire(float x, float y, float angle)
 		dragon.index = 36 - (angle * 18 / PI);//0-35
 
 		vDragon.push_back(dragon);
+
+		isCoolTime = true;
 	}
 }
 
 void dragonArc::move()
 {
-
 	for (int i = 0; i < vDragon.size();)
 	{
 		if (vDragon[i].currentTime < 35 || vDragon[i].currentTime > 69)
@@ -992,6 +1016,8 @@ void dragonArc::phoenixFire(float x, float y, float angle)
 		//bullet x 2
 		vWings.push_back(wings);
 		vWings.push_back(wings);
+
+		isCoolTime = true;
 	}
 
 }

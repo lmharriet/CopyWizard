@@ -326,8 +326,7 @@ public:
 	void render();
 	void fire(float x, float y,float angle);
 	void move();
-	bool CheckCollision(RECT enemy);
-	int getSkillNum() { return 3; }
+
 
 	//getter , setter
 	bool getFire() { return isFire; }
@@ -335,8 +334,12 @@ public:
 	bool getGauging() { return gauging; }
 	bool getActive() { return isActive; }
 	bool getCool() { return isCoolTime; }
+	bool CheckCollision(RECT enemy);
 
+	int getSkillNum() { return 3; }
 	tagArcana getInf() { return inferno; }
+	
+	
 	void setX(float X) { inferno.x = X; }
 	void setY(float Y) { inferno.y = Y; }
 	void setActive(bool temp) { isActive = temp; }
@@ -356,8 +359,13 @@ private:
 	vector<tagDragon> vWings;
 	tagDragon dragonHead;
 
-	bool upgrade;
  private:
+
+	 int coolTime;
+	 int currentCoolTime;
+	 bool isCoolTime;
+
+	bool upgrade;
 	int count, index;
 
 public:
@@ -366,18 +374,24 @@ public:
 	void update();
 	void render();
 
-	//ÃÑ¾Ë¹ß»ç
-
+	
 	void fire(float x, float y, float angle);
-	//ÃÑ¾Ë¹«ºê
 	void move();
+
+	//upgrade skill
 	void phoenixFire(float x, float y, float angle);
 	void phoenixMove();
 	
 
+	//getter ,setter
 	RECT getDragonRC(int index) { return vDragon[index].rc; }
 	float getDragonAngle(int index) { return vDragon[index].angle; }
 	int getAtkPower(int index) { return vDragon[index].atkPower; }
-	int getSkillNum() { return 3; }
+	int getSkillNum() { return 4; }
+	
+	bool getUpgrade() { return upgrade; }
+	bool getCool() { return isCoolTime; }
+
+	void setUpgrade(bool temp) { upgrade = temp; }
 
 };
