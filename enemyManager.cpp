@@ -35,6 +35,10 @@ void enemyManager::release()
 	//°ø¿ëÃÑ¾Ë Å¬·¡½º »èÁ¦
 	_bullet->release();
 	SAFE_DELETE(_bullet);
+	for (int i = 0; i < _vMinion.size(); i++)
+	{
+		SAFE_DELETE(_vMinion[i]);
+	}
 }
 
 void enemyManager::update()
@@ -71,6 +75,8 @@ void enemyManager::render()
 	//°ø¿ëÃÑ¾Ë ·»´õ
 	_bullet->render();
 	
+
+
 }
 
 void enemyManager::setMinion(tagTile* _subTile, POINT _monPt)
