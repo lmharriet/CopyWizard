@@ -211,7 +211,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 
 }
 
-void bomb::move()
+void bomb::move() // blaze tile충돌은 gameScene에서만 되도록 처리하기
 {
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
@@ -857,6 +857,7 @@ void dragonArc::fire(float x, float y, float angle)
 		dragon.saveAngle = -.7f + angle;
 		dragon.frameY = 0;
 		dragon.index = angle * 18 / PI;//0-35
+		dragon.atkPower = 15;
 
 		vDragon.push_back(dragon);
 

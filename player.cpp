@@ -1243,20 +1243,11 @@ void player::skillGaugeSetUp()
 	{
 		skillGauge = 100;
 		upgradeReady = true;
-		gaugeMaxCool = 20;
-	}
-
-	if (upgradeReady)
-	{
-		gaugeMaxCool--;
-	}
-
-	if (gaugeMaxCool > 0)
-	{
 	}
 
 	PLAYERDATA->setSkillGauge(skillGauge);
 }
+
 void player::arcanaCheck()
 {
 }

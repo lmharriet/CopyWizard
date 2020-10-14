@@ -9,7 +9,7 @@ HRESULT playerData::init()
 	_gaugeTime = 0;
 	skillGauge = 0;
 	stat.damage = 1.f;				//100%
-	stat.criDamage = 1.5f;			//150%
+	stat.criDamage = 0.5f;			//100% + 50% = 150%
 	stat.criChance = 0.15f;			// 15%
 
 	stat.potionDropChance = 0.f;	//  0%
@@ -34,17 +34,18 @@ void playerData::update()
 	UI->setSkillGauge(skillGauge);
 }
 
-void playerData::setStat(string statName, float value)
+void playerData::setStat(string itemName)
 {
-	if (statName == "damage") stat.damage += value;
-	else if (statName == "criDamage") stat.criDamage += value;
-	else if (statName == "criChance") stat.criChance += value;
-	else if (statName == "potionDropChance") stat.potionDropChance += value;
-	else if (statName == "defenceChance") stat.defenceChance += value;
-	else if (statName == "burnChance") stat.burnChance += value;
-	else if (statName == "vampireBlood") stat.vampireBlood = true;
+	tagItem item = ITEM->getItem(itemName);
 
-	else cout << "ÂÄ½Å¾ÈÂ÷·Á?" << '\n';
+	stat.damage += item.damage;
+	stat.criDamage += item.criDamage;
+	stat.criChance += item.criChance;
+	stat.burnChance += item.burnChance;
+	stat.defenceChance += item.defenceChance;
+	stat.potionDropChance += item.potionDropChance;
+
+	if (item.vampireBlood == true) stat.vampireBlood = true;
 }
 
 bool playerData::criAppear()

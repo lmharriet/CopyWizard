@@ -75,7 +75,7 @@ struct tagDragon
 	int index;
 	int lifeTime;
 	int currentTime;
-
+	int atkPower;
 
 	float persent;
 
@@ -338,7 +338,7 @@ public:
 };
 
 
-//미완성
+//미완성 -> 업그레이드 스킬 충돌용 렉트 넣기
 //=============================================================
 //	##dragonArc## 
 //=============================================================
@@ -362,10 +362,17 @@ public:
 	void render();
 
 	//총알발사
+
 	void fire(float x, float y, float angle);
 	//총알무브
 	void move();
 	void phoenixFire(float x, float y, float angle);
 	void phoenixMove();
 	
+
+	RECT getDragonRC(int index) { return vDragon[index].rc; }
+	float getDragonAngle(int index) { return vDragon[index].angle; }
+	int getAtkPower(int index) { return vDragon[index].atkPower; }
+	int getSkillNum() { return 3; }
+
 };

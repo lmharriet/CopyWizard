@@ -28,7 +28,10 @@ private:
 
 	int _gaugeTime;
 
-	
+
+	vector<string> vInven;
+
+	/// //////////
 	tagTile* tile;
 	vector<int> vTile;
 
@@ -53,8 +56,14 @@ public:
 	void setGaugeTime(int time) { _gaugeTime = time; }
 	void setSkillGauge(float gauge) { skillGauge = gauge; }
 
+	//
 	tagStat getStat() { return stat; }
-	void setStat(string statName, float value);
+	void setStat(string itemName);
+
+	//inven
+	void pushInven(string name) { vInven.push_back(name); }
+	vector<string> getInven() { return vInven; }
+	//
 
 	bool criAppear();
 
@@ -70,6 +79,7 @@ public:
 
 	void setTile(tagTile* _tile) { tile = _tile; }
 	tagTile* _getTile() { return tile; }
+
 
 	playerData() {}
 	~playerData() {}

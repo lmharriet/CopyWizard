@@ -239,6 +239,10 @@ void effectManager::addImage()
     IMAGEMANAGER->addImage("lightEffect3", "Images/effect/notFrame/light3.bmp", 5, 5, true, RGB(255, 0, 255));
 
     IMAGEMANAGER->addImage("noFrameStone", "Images/effect/notFrame/stone.bmp", 50, 56, true, RGB(255, 0, 255));
+
+    //card
+    IMAGEMANAGER->addFrameImage("flipCard", "Images/effect/monster/flipCard.bmp", 1088, 64, 17, 1);
+
     //damage
     IMAGEMANAGER->addFrameImage("damageEffect", "Images/effect/monster/damageEffect.bmp", 300, 300, 4, 4);
 }

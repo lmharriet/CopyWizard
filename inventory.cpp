@@ -39,8 +39,14 @@ void inventory::render()
 			Rectangle(getMemDC(), _vSlot[i]);
 		}
 
+		vector<string> vInven = PLAYERDATA->getInven();
+		image* itemFrame = IMAGEMANAGER->findImage("itemFrame");
+
+		for (int i = 0; i < vInven.size(); i++)
+		{
+			tagItem item = ITEM->getItem(vInven[i]);
+
+			itemFrame->frameRender(getMemDC(), 150 + (i * 50), 275, item.frame.x, item.frame.y);
+		}
 	}
-
-
-
 }

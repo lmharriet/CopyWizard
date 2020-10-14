@@ -403,8 +403,8 @@ void gameScene::render()
 	//uiImg->render(getMemDC());
 
 
-	_player->invenRender();
 	UI->render(getMemDC(), 50, 50);
+	_player->invenRender();
 
 	viewText();
 
@@ -450,7 +450,7 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(isCri);
 
 				if (isCri)
-					damage = (float)damage * PLAYERDATA->getStat().criDamage;
+					damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
 					
 				else damage = (float)damage * PLAYERDATA->getStat().damage;
 
@@ -501,7 +501,7 @@ void gameScene::playerAttack()
 				int damage = _player->getDashFire()->getAtk(i) + RANDOM->range(0, 5);
 				bool isCri = PLAYERDATA->criAppear();
 
-				if (isCri) damage = (float)damage * PLAYERDATA->getStat().criDamage;
+				if (isCri) damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
 				else damage = (float)damage * PLAYERDATA->getStat().damage;
 
 				if (0 >= enemy->getMinion()[j]->getHp())continue;
@@ -541,7 +541,7 @@ void gameScene::playerAttack()
 
 				bool isCri = PLAYERDATA->criAppear();
 
-				if (isCri) damage = (float)damage * PLAYERDATA->getStat().criDamage;
+				if (isCri) damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
 				else damage = (float)damage * PLAYERDATA->getStat().damage;
 				
 				float angle = getAngle(enemyX + 40, enemyY + 40,
