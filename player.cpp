@@ -562,7 +562,6 @@ void player::dashFunction()
 			RectMakeCenter(posX, posY, 50, 50);
 		}
 	}
-
 	speed--;
 	if (speed == 0) resetKey();
 }
@@ -687,10 +686,7 @@ void player::meteorSetUp()
 
 			if (meteorStateCool == 0) signature = false;
 		}
-
-
 	}
-
 }
 
 void player::dragonArcSetUp()
@@ -1243,7 +1239,7 @@ void player::skillGaugeSetUp()
 {
 	//gauge
 	if (skillGauge < 100 && skillGauge >= 0 && !upgradeReady && count % 10 == 0)
-		skillGauge -= 0.3f;
+	 	skillGauge -= 0.3f;
 
 	else if (skillGauge >= 100)
 	{

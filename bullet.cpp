@@ -592,6 +592,7 @@ void RagingInferno::update()
 {
 	count++;
 	gaugeTime++;
+
 	PLAYERDATA->setGaugeTime(gaugeTime);
 	if (count % 3 == 0)
 	{
@@ -682,7 +683,7 @@ void RagingInferno::fire(float x, float y, float angle)
 	gaugeTime = 0;
 	isFire = true;
 	gauging = true;
-
+	PLAYERDATA->setGauging(gauging);
 	isCoolTime = true;
 	UI->addCoolTime("infernoIcon");
 }
@@ -698,6 +699,7 @@ void RagingInferno::move()
 			inferno.y = inferno.y - sinf(inferno.angle) * 20.0f;
 			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 50, 50);
 			gauging = false;
+			PLAYERDATA->setGauging(gauging);
 			if (gaugeTime % 3 == 0) PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);
 		}
 		else isActive = false;

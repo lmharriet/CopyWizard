@@ -6,8 +6,10 @@ HRESULT playerData::init()
 	maxHp = 500;
 	hp = 500;
 	coin = 0;
-	_gaugeTime = 0;
 	skillGauge = 0;
+
+	_gaugeTime = 0;
+	isGauging = false;
 
 	stat.damage = 1.f;				//100%
 	stat.criDamage = 0.5f;			//100% + 50% = 150%

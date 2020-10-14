@@ -39,6 +39,7 @@ private:
 	int coin;
 	float _x, _y;
 
+	bool isGauging;
 	int _gaugeTime;
 
 
@@ -61,6 +62,9 @@ public:
 	float getX() { return _x; }
 	float getY() { return _y; }
 	int getGaugeTime() { return _gaugeTime; }
+	//inferno¿ë
+	bool getGauging() { return isGauging; }
+
 
 	void setHp(int _hp) { hp = _hp; }
 	void setCoin(int _coin) { coin = _coin; }
@@ -68,6 +72,9 @@ public:
 	void setY(float y) { _y = y; }
 	void setGaugeTime(int time) { _gaugeTime = time; }
 	void setSkillGauge(float gauge) { skillGauge = gauge; }
+	
+	//inferno¿ë
+	void setGauging(bool temp) { isGauging = temp; }
 
 	//
 	tagStat getStat() { return stat; }

@@ -113,7 +113,7 @@ void uiManager::infoRender(HDC hdc, int destX, int destY)
 		img->frameRender(hdc, destX + 180 + (i * 17), destY + 2, tmp[i], 0);
 	}
 
-	int arr[4] = { 10, 
+	int arr[4] = { 10,
 		PLAYERDATA->getMaxHp() / 100,
 		PLAYERDATA->getMaxHp() / 10 % 10,
 		PLAYERDATA->getMaxHp() % 10 };
@@ -123,14 +123,18 @@ void uiManager::infoRender(HDC hdc, int destX, int destY)
 		img->frameRender(hdc, destX + 231 + (i * 17), destY + 2, arr[i], 0);
 	}
 
+
+
+
 	image* gauge;
 	gauge = IMAGEMANAGER->findImage("infernoGauging");
 
+	if (PLAYERDATA->getGauging())
+	{
+		int infernoBar = (float)gauge->getWidth() * ((float)PLAYERDATA->getGaugeTime() / 30);
+		gauge->render(hdc, WINSIZEX / 2 - 25, WINSIZEY / 2 - 70, 0, 0, infernoBar, gauge->getHeight());
 
-	int infernoBar = (float)gauge->getWidth() * ((float)PLAYERDATA->getGaugeTime() / 50);
-	gauge->render(hdc, WINSIZEX / 2-25, WINSIZEY / 2 - 70, 0, 0, infernoBar, gauge->getHeight());
-
-
+	}
 }
 
 void uiManager::coinRender(HDC hdc)
