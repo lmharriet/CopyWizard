@@ -310,7 +310,7 @@ void summoner::stateDIE()
     }
 
     
-    coinDrop(1, 10);
+    coinDrop(30, 50);
 }
 
 

@@ -6,10 +6,7 @@ gameScene::gameScene():
 
 HRESULT gameScene::init()
 {
-	//sound 
-	SOUNDMANAGER->stop("mapToolBGM");
-	SOUNDMANAGER->stop("ingameBGM");
-	SOUNDMANAGER->stop("bossBGM");
+	
 
 
 	UI->init();
@@ -595,6 +592,12 @@ void gameScene::viewText()
 
 void gameScene::soundInit()
 {
+	//sound 
+	SOUNDMANAGER->stop("mapToolBGM");
+	SOUNDMANAGER->stop("ingameBGM");
+	SOUNDMANAGER->stop("bossBGM");
+	SOUNDMANAGER->play("ingameBGM", true);
+
 	isIngameBGM = true;
 	fadeIn = 0.f;
 

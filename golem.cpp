@@ -392,7 +392,7 @@ void golem::stateDIE()
         img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::DIE].x, frameIndexR[STATEIMAGE::DIE].y);
     }
 
-    coinDrop(1, 10);
+    coinDrop(50, 70);
 }
 
 void golem::stateWalk()
