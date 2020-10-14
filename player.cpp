@@ -9,7 +9,7 @@ HRESULT player::init()
 	IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 1200, 250, 6, 1);
 	IMAGEMANAGER->addFrameImage("flame", "resource/player/flame1.bmp", 4096, 128, 32, 1);
 	IMAGEMANAGER->addFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
-	
+
 
 	posX = WINSIZEX / 2;
 	posY = WINSIZEY / 2;
@@ -109,9 +109,9 @@ void player::release()
 
 void player::update()
 {
-	
+
 	PLAYERDATA->update();
-	
+
 	blaze->update();
 	dragon->update();
 	Meteor->update();
@@ -126,7 +126,7 @@ void player::update()
 	atkCount++;
 	basicCount++;
 
-	
+
 	// angle(mouse-player), angleTenth
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
@@ -168,6 +168,9 @@ void player::update()
 	// knockBack lerp
 	if (isDamaged)
 	{
+		int index = 0;
+		for (int i = 0; i < 4; i++) index = i;
+
 		if (tileCheck[index].isCol || tileCheck[index + 4].isCol || diagonalCheck[index].isCol)return;
 		knockBack.percent -= 0.2f;
 		posX += cosf(knockBack.angle) * (knockBack.speed + knockBack.percent);
@@ -461,8 +464,6 @@ void player::dashFunction()
 	{
 		UI->addCoolTime("searingDash");
 		searingRush->setIsCoolTime(true);
-
-
 	}
 
 	if (dashLeft)
@@ -470,7 +471,7 @@ void player::dashFunction()
 		if (dashUp)
 		{
 			if (!tileCheck[(int)DIRECTION::LEFT_TOP].isCol &&
-				!diagonalCheck[0].isCol)
+				!diagonalCheck[0].isCol && !diagonalCheck[1].isCol)
 			{
 				posX -= speed;
 				posY -= speed;
@@ -506,7 +507,7 @@ void player::dashFunction()
 		if (dashUp)
 		{
 			if (!tileCheck[(int)DIRECTION::RIGHT_TOP].isCol &&
-				!diagonalCheck[1].isCol)
+				!diagonalCheck[1].isCol && !diagonalCheck[2].isCol)
 			{
 				posX += speed;
 				posY -= speed;
@@ -1225,11 +1226,13 @@ void player::damagedCool()
 	}
 }
 
-void player::chargeSkillGauge(bool appearCri)
+void player::chargeSkillGauge(int atkPower)
 {
-	bool cri = appearCri;
-	if (cri) skillGauge += 5.f;
-	else skillGauge += 2.f;
+
+	skillGauge += (float)(atkPower / atkPower) * 1.5f;
+
+	cout << "현재 게이지:" << skillGauge << '\n';
+
 }
 
 void player::skillGaugeSetUp()
@@ -1256,7 +1259,6 @@ void player::viewText()
 {
 	//wsprintf(str, "damageAngle : %d", damageAngle);
 	//textOut(getMemDC(), 100, 230, str, WHITE);
-
 
 	//wsprintf(str, "damageAngleTenth : %d", damageAngleTenth);
 	//textOut(getMemDC(), 100, 250, str, WHITE);
