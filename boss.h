@@ -98,10 +98,14 @@ public:
 	void punchRectMove();
 
 
+	//getter / setter
 	tagBoss getBoss() { return boss; }
 	RECT getBossRect() {
 		return boss.rc;
 	}
+	
+	void setRect(int x, int y) { boss.rc = RectMakeCenter(x, y, 150, 150); }
+	void setCenter(POINT pt) { boss.center = { pt.x,pt.y }; }
 };
 
 

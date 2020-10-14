@@ -144,6 +144,8 @@ private:
 	int coolTime;		// 몇초간 스킬 사용을 금할지
 	int currentCoolTime;	// 쿨타임이 다 돌면 isCoolTime을 false
 
+	bool bossScene;
+
 public:
 	HRESULT init(int bulletMax, float range);
 	void release();
@@ -166,6 +168,7 @@ public:
 	int getSize() { return _vBullet.size(); }
 
 	void setCol(int index, bool temp) { _vBullet[index].collision = temp; }
+	void setBossScene(bool temp) { bossScene = temp; }
 };
 
 //=============================================================

@@ -89,6 +89,8 @@ void gameScene::release()
 
 void gameScene::update()
 {
+	_player->getBlaze()->setBossScene(false);
+
 	//사운드
 	if (isIngameBGM)
 	{
@@ -408,10 +410,6 @@ void gameScene::render()
 
 	viewText();
 
-
-
-
-
 }
 
 void gameScene::collisionTile()
@@ -496,6 +494,7 @@ void gameScene::playerAttack()
 	{
 		for (int j = 0; j < enemy->getMinion().size(); j++)
 		{
+			if (0 >= enemy->getMinion()[j]->getHp())continue;
 			if (colCheck(_player->getDashFire()->getRect(i), enemy->getMinion()[j]->getRC()))
 			{
 				int damage = _player->getDashFire()->getAtk(i) + RANDOM->range(0, 5);
@@ -503,8 +502,6 @@ void gameScene::playerAttack()
 
 				if (isCri) damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
 				else damage = (float)damage * PLAYERDATA->getStat().damage;
-
-				if (0 >= enemy->getMinion()[j]->getHp())continue;
 
 				enemy->getMinion()[j]->hit(damage,70.f, 20.f, _player->getDashFire()->getSkillNum(), isCri);
 
@@ -520,6 +517,7 @@ void gameScene::playerAttack()
 		long enemyX = enemy->getMinion()[i]->getPos().x;
 		long enemyY = enemy->getMinion()[i]->getPos().y;
 
+		if (0 >= enemy->getMinion()[i]->getHp())continue;
 		if (colCheck(_player->getInferno()->getInf().rc, enemy->getMinion()[i]->getRC()))
 		{
 			//게이징 + 무브 상태가 아닐 때 inferno와 몬스터 충돌 체크
@@ -561,6 +559,7 @@ void gameScene::enemyAttack()
 {
 	for (int i = 0; i < enemy->getBullet()->getBullet().size(); )
 	{
+		if (PLAYERDATA->getHp() <= 0) continue;
 		if (colCheck(enemy->getBullet()->getRect(i), _player->getRect()))
 		{
 			_player->damage(enemy->getBullet()->getBullet()[i].atkPower, enemy->getBullet()->getBullet()[i].angle, 4.f);

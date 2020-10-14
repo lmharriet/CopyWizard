@@ -62,6 +62,8 @@ void bossScene::release()
 
 void bossScene::update()
 {
+	
+	_player->getBlaze()->setBossScene(true);
 	PLAYERDATA->update();
 
 
@@ -97,6 +99,7 @@ void bossScene::update()
 
 	PARTICLE->pointActive();
 	PARTICLE->explosionActive();
+
 
 	attackBoss();
 }
@@ -167,14 +170,6 @@ void bossScene::soundInit()
 
 void bossScene::attackBoss()
 {
-	//searingDash
-	for (int i = 0; i < _player->getDashFire()->getSize(); i++)
-	{
-		if (colCheck(_player->getDashFire()->getRect(i), _boss->getBossRect()))
-		{
-			//cout << "dashHit" << '\n';
-		}
-	}
 
 	//blaze
 	for (int i = 0; i < _player->getBlaze()->getSize(); i++)
@@ -187,7 +182,7 @@ void bossScene::attackBoss()
 			_player->chargeSkillGauge(isCri);
 
 			if (isCri) //critical damage
-				damage = (float)damage * PLAYERDATA->getStat().criDamage;
+				damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
 			//normal damage
 			else damage = (float)damage * PLAYERDATA->getStat().damage;
 
@@ -196,32 +191,69 @@ void bossScene::attackBoss()
 			SOUNDMANAGER->play("blazeExp", false);
 			PARTICLE->explosionGenerate("explosionParticle", _player->getBlaze()->getBullet()[i].x + 20,
 				_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
-			// boss hit
+
+
+			// -> boss damaged
+
+
 			_player->getBlaze()->setCol(i, true);
 
 		}
 	}
 
-	//inferno
-
-	//게이징 + 무브 상태가 아닐 때 inferno와 보스 충돌 체크
-	if (colCheck(_player->getRect(), _boss->getBossRect()))
+	//searingDash
+	for (int i = 0; i < _player->getDashFire()->getSize(); i++)
 	{
-		if (!_player->getInferno()->getActive() && _player->getInferno()->CheckCollision(_boss->getBossRect()))
+		if (colCheck(_player->getDashFire()->getRect(i), _boss->getBossRect()))
 		{
-			//충돌되면 그 자리에서 공격
-			if (PLAYERDATA->getGaugeTime() < 70)
-			{
-				PLAYERDATA->setGaugeTime(70);
-				_player->getInferno()->setActive(true);
-			}
-		}
-		else if (PLAYERDATA->getGaugeTime() >= 70)
-		{
-			//cout << "inferno" << '\n';
-			//수정 필요
+			int damage = _player->getDashFire()->getAtk(i) + RANDOM->range(0, 5);
+
+			bool isCri = PLAYERDATA->criAppear();
+			_player->chargeSkillGauge(isCri);
+
+			if (isCri) //critical damage
+				damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
+			//normal damage
+			else damage = (float)damage * PLAYERDATA->getStat().damage;
+
+
+			//-> boss damaged
 		}
 	}
+
+	//inferno
+
+	//보스씬에서 게이징 타임 2배로 돌아가는 문제 해결 필요
+
+	//게이징 + 무브 상태가 아닐 때 inferno와 보스 충돌 체크
+
+
+	if (!_player->getInferno()->getActive() && _player->getInferno()->CheckCollision(_boss->getBossRect()))
+	{
+		//충돌되면 그 자리에서 공격
+		if (PLAYERDATA->getGaugeTime() < 50)
+		{
+			PLAYERDATA->setGaugeTime(50);
+			_player->getInferno()->setActive(true);
+
+		}
+	}
+	else if (PLAYERDATA->getGaugeTime() >= 50 &&_player->getInferno()->CheckCollision(_boss->getBossRect()))
+	{
+		int damage = _player->getInferno()->getInf().atkPower;
+
+		bool isCri = PLAYERDATA->criAppear();
+		_player->chargeSkillGauge(isCri);
+
+		if (isCri) damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
+		else damage = (float)damage * PLAYERDATA->getStat().damage;
+
+		// set boss center x,y (inferno 공격 당하면 inferno쪽으로 끌려오기)
+
+		//-> boss damaged
+
+	}
+
 
 	//meteor
 	for (int i = 0; i < _player->getMeteor()->getColSize(); i++)
@@ -230,9 +262,13 @@ void bossScene::attackBoss()
 		{
 			int damage = _player->getMeteor()->getAtkPower(i) + RANDOM->range(0, 5);
 			bool isCri = PLAYERDATA->criAppear();
+			_player->chargeSkillGauge(isCri);
 
 			if (isCri) damage = (float)damage * PLAYERDATA->getStat().criDamage;
 			else damage = (float)damage * PLAYERDATA->getStat().damage;
+
+
+			//-> boss damaged
 
 		}
 	}

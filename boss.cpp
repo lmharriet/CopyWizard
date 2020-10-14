@@ -61,8 +61,10 @@ void boss::release()
 
 void boss::update()
 {
+
 	this->bossPattern();
 	this->collCheck();
+
 	BOSSMANAGER->update();
 	this->animation();
 }
@@ -493,7 +495,7 @@ void boss::animation()
 		break;
 	}
 }
- //플레이어 위치, 보스 범위 조정 필요
+//플레이어 위치, 보스 범위 조정 필요
 void boss::bossPlayerAngle()
 {
 	boss.center.x = boss.rc.left + 75;
@@ -654,7 +656,7 @@ void boss::punch(int patternType)
 				punchBlock[i]->rc = RectMakeCenter(punchBlock[i]->center.x, punchBlock[i]->center.y, 100, 100);
 				CAMERAMANAGER->Shake(10, 10, 2);
 			}
-			if (punchBlock[i]->rc.left > WINSIZEX + 150|| punchBlock[i]->rc.right < 100 || punchBlock[i]->rc.top > WINSIZEY || punchBlock[i]->rc.bottom < 150) {
+			if (punchBlock[i]->rc.left > WINSIZEX + 150 || punchBlock[i]->rc.right < 100 || punchBlock[i]->rc.top > WINSIZEY || punchBlock[i]->rc.bottom < 150) {
 				PARTICLE->crashRockParticlePlay(punchBlock[i]->rc.left + 50, punchBlock[i]->rc.top + 50);
 				punchBlock.erase(punchBlock.begin() + i);
 				break;
@@ -802,13 +804,13 @@ void boss::wall(int patternType)
 						BOSSMANAGER->init(wallBlock[i]->center.x + 30, wallBlock[i]->center.y, 240, 0);
 						break;
 					case 2:
-						BOSSMANAGER->init(wallBlock[i]->center.x + 130, wallBlock[i]->center.y -200, 240, 0);
+						BOSSMANAGER->init(wallBlock[i]->center.x + 130, wallBlock[i]->center.y - 200, 240, 0);
 						break;
 					case 3:
 						BOSSMANAGER->init(wallBlock[i]->center.x - 200, wallBlock[i]->center.y - 150, 240, 0);
 						break;
 					case 4:
-						BOSSMANAGER->init(wallBlock[i]->center.x -130, wallBlock[i]->center.y, 240, 0);
+						BOSSMANAGER->init(wallBlock[i]->center.x - 130, wallBlock[i]->center.y, 240, 0);
 						break;
 					}
 				}
@@ -899,7 +901,7 @@ void boss::collCheck()
 					isHit = true;
 				}
 			}
-					break;
+				  break;
 			case 4: {
 				for (int j = 0; j < niddleBlock.size(); j++) {
 					if (IntersectRect(&temp, &niddleBlock[j]->rc, &_player->getRect())) {
@@ -914,7 +916,7 @@ void boss::collCheck()
 					}
 				}
 			}
-					break;
+				  break;
 			case 5: {
 				if (!isHit) {
 					float _wallAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left, BOSSMANAGER->getVector()[i]->getRect().top, _player->getRect().left, _player->getRect().top);
@@ -957,6 +959,8 @@ void boss::collCheck()
 			isHit = false;
 		}
 	}
+
+
 }
 
 void boss::punchSet()

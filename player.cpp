@@ -109,8 +109,9 @@ void player::release()
 
 void player::update()
 {
+	
 	PLAYERDATA->update();
-
+	
 	blaze->update();
 	dragon->update();
 	Meteor->update();
@@ -212,9 +213,9 @@ void player::other_update()
 	atkCount++;
 	basicCount++;
 
-	gaugeTime++;
-	PLAYERDATA->setGaugeTime(gaugeTime);
-
+	//gaugeTime++;
+	//PLAYERDATA->setGaugeTime(gaugeTime);
+	PLAYERDATA->getGaugeTime();
 	// angle(mouse-player), angleTenth
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));

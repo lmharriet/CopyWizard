@@ -130,6 +130,7 @@ HRESULT bomb::init(int bulletMax, float range)
 
 	count = index = 0;
 
+	bossScene = false;
 	isCoolTime = false;
 	coolTime = 30;
 	currentCoolTime = 0;
@@ -228,17 +229,20 @@ void bomb::move() // blaze tile충돌은 gameScene에서만 되도록 처리하기
 			_vBullet[i].collision = true;
 		}
 
-		//충돌
-		for (int j = 0; j < PLAYERDATA->getWall().size(); j++)
+		//타일 충돌
+		if (!bossScene)
 		{
-			int num = PLAYERDATA->getWall()[j];
-
-			if (colCheck(PLAYERDATA->_getTile()[num].rc, _vBullet[0].rc))
+			for (int j = 0; j < PLAYERDATA->getWall().size(); j++)
 			{
-				PARTICLE->explosionGenerate("explosionParticle", _vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3, true);
-				SOUNDMANAGER->play("blazeExp", false);
-				_vBullet.erase(_vBullet.begin());
-				break;
+				int num = PLAYERDATA->getWall()[j];
+
+				if (colCheck(PLAYERDATA->_getTile()[num].rc, _vBullet[0].rc))
+				{
+					PARTICLE->explosionGenerate("explosionParticle", _vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3, true);
+					SOUNDMANAGER->play("blazeExp", false);
+					_vBullet.erase(_vBullet.begin());
+					break;
+				}
 			}
 		}
 
@@ -746,7 +750,7 @@ void RagingInferno::move(int gaugeTime)
 		if (inferno.lifeTime == 0)
 		{
 			PARTICLE->explosionParticlePlay(inferno.x, inferno.y);
-			CAMERAMANAGER->Shake(20, 20, 5); 
+			CAMERAMANAGER->Shake(20, 20, 5);
 			inferno.x = inferno.fireX;
 			inferno.y = inferno.fireY;
 			isFire = false;
@@ -820,7 +824,7 @@ void dragonArc::render()
 	{
 		image* img = IMAGEMANAGER->findImage("dragon");
 
-		if(count % 2 == 0) PARTICLE->explosionGenerate("frameParticle", dragonHead.x, dragonHead.y, 1, 0, 0.f, 2, true);
+		if (count % 2 == 0) PARTICLE->explosionGenerate("frameParticle", dragonHead.x, dragonHead.y, 1, 0, 0.f, 2, true);
 		//CAMERAMANAGER->FrameRender(getMemDC(), img,
 		//	dragonHead.x - img->getFrameWidth() / 2,
 		//	dragonHead.y - img->getFrameHeight() / 2, dragonHead.index, dragonHead.frameY);
