@@ -69,7 +69,7 @@ void boss::update()
 
 void boss::render()
 {
-	
+	CAMERAMANAGER->Rectangle(getMemDC(), boss.rc);
 	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("boss"), boss.rc.left, boss.rc.top, frameX, frameY);
 
 	if (boss.bossState == DRILL) {
