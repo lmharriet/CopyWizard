@@ -16,8 +16,9 @@ HRESULT mainGame::init()
 
 	
 	/*씬추가*/
+
+	SCENEMANAGER->addScene("로딩화면", new loadingScene);
 	SCENEMANAGER->addScene("시작화면", new startScene);
-	//SCENEMANAGER->addScene("픽셀충돌", new pixelCollisionScene);
 	SCENEMANAGER->addScene("인게임", new gameScene);
 	SCENEMANAGER->addScene("보스방", new bossScene);
 
@@ -27,8 +28,8 @@ HRESULT mainGame::init()
 	maptool->addImage();
 	/*현재씬*/
 
-	SCENEMANAGER->loadScene("인게임");
-	//SCENEMANAGER->loadScene("시작화면");
+	//SCENEMANAGER->loadScene("인게임");
+	SCENEMANAGER->loadScene("시작화면");
 	//SCENEMANAGER->loadScene("맵툴제작");
 	//SCENEMANAGER->loadScene("보스방");
 

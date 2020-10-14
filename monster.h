@@ -116,6 +116,7 @@ protected:
 	int delay = 0;
 	int hitTime;
 	int colCount = 0;
+	int monsterAppearCount = 0;
 	bool isWallcol = false;
 	bool isFindWayOn = false;
 	bool isLeft = false;
@@ -126,6 +127,9 @@ protected:
 	bool isFxAppear = false;
 	bool isRanger = false;
 	bool isBulletFire = false;
+	bool isMonsterApeear = false;
+	bool isCardAppear = false;
+	bool isCardFxAppear = false;
 	
 	//bool isBulletEmpty = true;
 	bool isAstar;
@@ -147,7 +151,8 @@ public:
 	void release();
 	void commonUpdate();
 	virtual void update()=0;
-	virtual void render()=0;
+	void render();
+	virtual void stateImageRender() = 0;
 	virtual void addInit()=0;
 
 	virtual void stateIDLE() = 0;

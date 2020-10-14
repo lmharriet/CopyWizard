@@ -4,10 +4,9 @@
 /*씬들의 헤더파일만 이곳에 추가한다*/
 #include "startScene.h"
 #include "gameScene.h"
-#include "soundTestScene.h"
-#include "pixelCollisionScene.h"
 #include "mapToolScene.h"
 #include "bossScene.h"
+#include "loadingScene.h"
 
 class mainGame : public gameNode
 {

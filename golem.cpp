@@ -76,13 +76,6 @@ void golem::update()
    
 }
 
-void golem::render()
-{
-    stateImageRender();
-  // FrameRect(getMemDC(), playerRC,RGB(255,255,255));
-  // FrameRect(getMemDC(), rc,RGB(255,255,255));
-  // CAMERAMANAGER->Rectangle(getMemDC(), rc);
-}
 
 void golem::stateImageRender()
 {

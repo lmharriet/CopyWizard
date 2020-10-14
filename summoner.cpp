@@ -74,14 +74,6 @@ void summoner::update()
     }
 }
 
-
-void summoner::render()
-{
-   // FrameRect(getMemDC(), rc, RGB(255, 255, 255));
-   // FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
-    stateImageRender();
-  
-}
 void summoner::stateImageRender()
 {
     switch (state)
