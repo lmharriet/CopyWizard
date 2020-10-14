@@ -17,13 +17,23 @@ HRESULT shop::init()
         AndresShop[i].pt = { 0,0 };
         AndresShop[i].frame = { 0,0 };
         AndresShop[i].isCol = false;
+
+        if (i < 3)
+        {
+            NoxShop[i].isSell = false;
+            NoxShop[i].keyName = "";
+            NoxShop[i].price = 0;
+            NoxShop[i].pt = { 0,0 };
+            NoxShop[i].frame = { 0,0 };
+            NoxShop[i].isCol = false;
+        }
     }
 
     //random item
     int count = 0;
     while (count < 5)
     {
-        tagItem item = ITEM->getRandomItem();
+        tagItem item = ITEM->getRandomItem(true);
 
         if (count == 0)
         {
@@ -51,6 +61,44 @@ HRESULT shop::init()
                 AndresShop[count].keyName = item.keyName;
                 AndresShop[count].price = item.price;
                 AndresShop[count].frame = item.frame;
+
+                count++;
+            }
+        }
+    }
+
+    //random item
+    count = 0;
+    while (count < 3)
+    {
+        tagItem item = ITEM->getRandomItem(false);
+
+        if (count == 0)
+        {
+            NoxShop[count].keyName = item.keyName;
+            NoxShop[count].price = item.price;
+            NoxShop[count].frame = item.frame;
+
+            count++;
+        }
+        else
+        {
+            bool check = false;
+
+            for (int i = 0; i < count; i++)
+            {
+                if (NoxShop[i].keyName == item.keyName)
+                {
+                    check = true;
+                    break;
+                }
+            }
+
+            if (check == false)
+            {
+                NoxShop[count].keyName = item.keyName;
+                NoxShop[count].price = item.price;
+                NoxShop[count].frame = item.frame;
 
                 count++;
             }
@@ -115,6 +163,33 @@ void shop::render()
                 IMAGEMANAGER->findImage("oldFabric"),
                 npc[i].pt.x - ig->getWidth() / 2,
                 npc[i].pt.y - ig->getHeight() / 2 + 150);
+
+            //아이템 출력
+            if (NoxShop[0].isSell == false) // 하나라도 팔리면 다 없어짐
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    image* img = IMAGEMANAGER->findImage("itemFrame");
+
+                    NoxShop[j].pt = {
+                        npc[i].pt.x - 90 + (j * 90) - img->getFrameWidth() / 2,
+                        npc[i].pt.y + 140 - img->getFrameHeight() / 2 };
+
+
+                    CAMERAMANAGER->FrameRender(getMemDC(),
+                        img,
+                        NoxShop[j].pt.x,
+                        NoxShop[j].pt.y,
+                        NoxShop[j].frame.x,
+                        NoxShop[j].frame.y);
+
+                    NoxShop[j].rc = RectMake(NoxShop[j].pt.x - img->getFrameWidth() / 2,
+                        NoxShop[j].pt.y - img->getFrameHeight() / 2,
+                        70, 70);
+
+                    //CAMERAMANAGER->Rectangle(getMemDC(), NoxShop[j].rc);
+                }
+            }
         }
         else if (npc[i].keyName == "Andres")
         {
@@ -203,18 +278,41 @@ void shop::render()
 
 void shop::shopCollider(RECT rc)
 {
-    for (int i = 0; i < 5; i++)AndresShop[i].isCol = false;
+    for (int i = 0; i < 5; i++)
+    {
+        AndresShop[i].isCol = false;
+
+        if (i < 3)
+        {
+            NoxShop[i].isCol = false;
+        }
+    }
 
     for (int i = 0; i < 5; i++)
     {
-        if (AndresShop[i].isSell == true) continue;
-
-        if (colCheck(rc, AndresShop[i].rc))
+        if (AndresShop[i].isSell == false)
         {
-            AndresShop[i].isCol = true;
-            colItem = i;
+            if (colCheck(rc, AndresShop[i].rc))
+            {
+                AndresShop[i].isCol = true;
+                colItem = i;
 
-            return;
+                return;
+            }
+        }
+
+        if (i < 3)
+        {
+            if (NoxShop[i].isSell == false)
+            {
+                if (colCheck(rc, NoxShop[i].rc))
+                {
+                    NoxShop[i].isCol = true;
+                    colItem = i + 5;
+
+                    return;
+                }
+            }
         }
     }
 
@@ -225,23 +323,44 @@ void shop::buyItem()
 {
     if (colItem != -1 && INPUT->GetKeyDown(0x46))
     {
-        if (PLAYERDATA->getCoin() >= AndresShop[colItem].price)
+        if (colItem < 5)
+        {
+            if (PLAYERDATA->getCoin() >= AndresShop[colItem].price)
+            {
+                //buy item
+                cout << AndresShop[colItem].keyName << "을 구매!" << '\n';
+
+                AndresShop[colItem].isSell = true;
+                AndresShop[colItem].frame = { 0,0 };
+
+                //1. 여기에 player stat을 조정
+                PLAYERDATA->setStat(AndresShop[colItem].keyName);
+
+                //2. vector<string> vInven에 push_Back
+                PLAYERDATA->pushInven(AndresShop[colItem].keyName);
+
+                //3. 아이템의 가격만큼 코인을 잃음
+                PLAYERDATA->setCoin(PLAYERDATA->getCoin() - AndresShop[colItem].price);
+            }
+            else cout << "잔액이 부족합니다!" << '\n';
+        }
+
+        else
         {
             //buy item
-            cout << AndresShop[colItem].keyName << "을 구매하였습니다. !" << '\n';
+            cout << NoxShop[colItem - 5].keyName << "을 구매!" << '\n';
 
-            AndresShop[colItem].isSell = true;
-            AndresShop[colItem].frame = { 0,0 };
+            for (int i = 0; i < 3; i++)
+            {
+                NoxShop[i].isSell = true;
+                NoxShop[i].frame = { 0,0 };
+            }
 
             //1. 여기에 player stat을 조정
-            PLAYERDATA->setStat(AndresShop[colItem].keyName);
+            PLAYERDATA->setStat(NoxShop[colItem - 5].keyName);
 
             //2. vector<string> vInven에 push_Back
-            PLAYERDATA->pushInven(AndresShop[colItem].keyName);
-
-            //3. 아이템의 가격만큼 코인을 잃음
-            PLAYERDATA->setCoin(PLAYERDATA->getCoin() - AndresShop[colItem].price);
+            PLAYERDATA->pushInven(NoxShop[colItem - 5].keyName);
         }
-        else cout << "잔액이 부족합니다!" << '\n';
     }
 }
