@@ -1231,7 +1231,7 @@ void player::chargeSkillGauge(int atkPower, int skillNum)
 	switch (skillNum)
 	{
 	case 0:
-		skillGauge += 10/*(float)(atkPower / atkPower) * 1.5f*/;
+		skillGauge += (float)(atkPower / atkPower) * 1.5f;
 		break;
 	case 1:
 		if (count % 15 == 0)
