@@ -222,7 +222,7 @@ HRESULT itemManager::init()
 
 void itemManager::addImage()
 {
-	IMAGEMANAGER->addFrameImage("itemFrame", "Images/item/ItemSprite.bmp", 360, 80, 9, 2);
+	IMAGEMANAGER->addFrameImage("itemFrame", "Images/item/ItemSprite.bmp", 360, 120, 9, 3);
 }
 
 //아이템 매니져에 아이템을 추가하기 위함
@@ -278,7 +278,7 @@ void itemManager::addItem(string keyName, float damage, float criDamage, float c
 		CoolTimeReduction,
 		glassMirror,
 
-		vampireBlood,price,
+		vampireBlood,
 
 		doubleDamage,
 		ManaRejection,
@@ -287,6 +287,7 @@ void itemManager::addItem(string keyName, float damage, float criDamage, float c
 		halfFace,
 		bloodGold,
 
+		price,
 		description,frame };
 	vItem.push_back(item);
 }
