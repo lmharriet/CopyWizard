@@ -7,11 +7,24 @@ struct tagStat
 	float criDamage;		//크리티컬 데미지
 	float criChance;		//크리티컬 확률
 
+	//normal item
 	float potionDropChance;	//포션 드랍율
 	float defenceChance;	//공격 방어율
 	float burnChance;		//불태울 확률
 
+	bool goldPig;			//추가 코인 획득
+	int CoolTimeReduction;	//스킬 쿨타임 감소
+	bool glassMirror;		//유리 장막 유무
+
+	//curse item
 	bool vampireBlood;		//흡혈기능
+
+	bool doubleDamage;		//2배의 피해
+	bool ManaRejection;		//몬스터를 공격했을 때 마나 획득 유무
+	bool criRejection;		//치명타 발생 유무
+	bool reducedVisibility;	//시야 감소
+	bool halfFace;			//체력이 50% 이하일 때 공격력 증가 유무
+	bool bloodGold;			//보유 코인에 따라 공격력 증가 유무
 };
 class playerData : public singletonBase <playerData>
 {

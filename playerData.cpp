@@ -8,15 +8,29 @@ HRESULT playerData::init()
 	coin = 0;
 	_gaugeTime = 0;
 	skillGauge = 0;
+
 	stat.damage = 1.f;				//100%
 	stat.criDamage = 0.5f;			//100% + 50% = 150%
 	stat.criChance = 0.15f;			// 15%
 
+	//normal
 	stat.potionDropChance = 0.f;	//  0%
 	stat.defenceChance = 0.1f;		// 10%
 	stat.burnChance = 0.f;			//  0%
 
+	stat.goldPig = false;
+	stat.CoolTimeReduction = 0;
+	stat.glassMirror = false;
+
+	//curse
 	stat.vampireBlood = false;
+
+	stat.doubleDamage = false;
+	stat.ManaRejection = false;
+	stat.criRejection = false;
+	stat.reducedVisibility = false;
+	stat.halfFace = false;
+	stat.bloodGold = false;
 
 	return S_OK;
 }

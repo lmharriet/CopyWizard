@@ -229,6 +229,7 @@ void shop::buyItem()
         {
             //buy item
             cout << AndresShop[colItem].keyName << "을 구매하였습니다. !" << '\n';
+
             AndresShop[colItem].isSell = true;
             AndresShop[colItem].frame = { 0,0 };
 
@@ -238,12 +239,8 @@ void shop::buyItem()
             //2. vector<string> vInven에 push_Back
             PLAYERDATA->pushInven(AndresShop[colItem].keyName);
 
+            //3. 아이템의 가격만큼 코인을 잃음
             PLAYERDATA->setCoin(PLAYERDATA->getCoin() - AndresShop[colItem].price);
-
-            //3. 벡터의 string이 들어있으므로 itemManager 에서 getItem을 사용하여 frameKeyName, frameX, frameY을 가져온 뒤
-            //   지정한 자리에 출력을 하면 끝.
-
-            //ex) CAMERAMANAGER->frameRender(getmemDC(), "itemFrame", x위치, y위치, frameX, frameY);
         }
         else cout << "잔액이 부족합니다!" << '\n';
     }
