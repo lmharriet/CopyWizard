@@ -169,9 +169,12 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="inventory.h" />
     <ClInclude Include="itemManager.h" />
+    <ClInclude Include="loading.h" />
+    <ClInclude Include="loadingScene.h" />
     <ClInclude Include="mainGame.h" />
     <ClInclude Include="mapToolScene.h" />
     <ClInclude Include="knight.h" />
+    <ClInclude Include="progressBar.h" />
     <ClInclude Include="shop.h" />
     <ClInclude Include="summoner.h" />
     <ClInclude Include="monster.h" />
@@ -210,9 +213,12 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="inventory.cpp" />
     <ClCompile Include="itemManager.cpp" />
+    <ClCompile Include="loading.cpp" />
+    <ClCompile Include="loadingScene.cpp" />
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="mapToolScene.cpp" />
     <ClCompile Include="knight.cpp" />
+    <ClCompile Include="progressBar.cpp" />
     <ClCompile Include="shop.cpp" />
     <ClCompile Include="summoner.cpp" />
     <ClCompile Include="monster.cpp" />
