@@ -93,7 +93,7 @@ void uiManager::infoRender(HDC hdc, int destX, int destY)
 
 	img = IMAGEMANAGER->findImage("hpBar");
 
-	int hpBar = (float)img->getWidth() * ((float)hp / 500);
+	int hpBar = (float)img->getWidth() * ((float)hp / PLAYERDATA->getMaxHp());
 	img->render(hdc, destX + 75, destY + 23, 0, 0, hpBar, img->getHeight());
 
 	img = IMAGEMANAGER->findImage("skillGaugeBar");
@@ -113,7 +113,10 @@ void uiManager::infoRender(HDC hdc, int destX, int destY)
 		img->frameRender(hdc, destX + 180 + (i * 17), destY + 2, tmp[i], 0);
 	}
 
-	int arr[4] = { 10,5,0,0 };
+	int arr[4] = { 10, 
+		PLAYERDATA->getMaxHp() / 100,
+		PLAYERDATA->getMaxHp() / 10 % 10,
+		PLAYERDATA->getMaxHp() % 10 };
 
 	for (int i = 0; i < 4; i++)
 	{
