@@ -34,6 +34,14 @@ HRESULT playerData::init()
 	stat.halfFace = false;
 	stat.bloodGold = false;
 
+	gShroud.currentTime = 0;
+	gShroud.curSize = 0;
+	gShroud.endSize = 1.f;
+	gShroud.endTime = 200;
+	gShroud.isActives = false;
+	//add image
+	IMAGEMANAGER->addImage("glassShroud", "Images/item/glassShroud.bmp", 120, 120, true, RGB(255, 0, 255));
+
 	return S_OK;
 }
 
@@ -51,12 +59,47 @@ void playerData::update()
 	UI->setSkillGauge(skillGauge);
 
 	//item special ability
-	//if (stat.bloodGold)
-	//{
-	//	float defaultAttack = stat.damage;
+	if (stat.glassMirror)
+	{
+		if (gShroud.isActives == false)
+		{
+			gShroud.currentTime++;
 
-	//	stat.damage = defaultAttack + (coin * 0.25f);
-	//}
+			if (gShroud.currentTime >= gShroud.endTime)
+			{
+				gShroud.isActives = true;
+				gShroud.currentTime = 0;
+			}
+		}
+	}
+}
+
+void playerData::shroudRender(HDC hdc)
+{
+	if (stat.glassMirror == false)return;
+
+	if (gShroud.isActives)
+	{
+		image* img = IMAGEMANAGER->findImage("glassShroud");
+
+		if (gShroud.curSize < gShroud.endSize)
+		{
+			gShroud.curSize += 0.025f;
+
+
+
+			img->stretchRender(hdc,
+				WINSIZEX / 2 + 4 - (img->getWidth() * gShroud.curSize / 2) ,
+				WINSIZEY / 2 - (img->getHeight() * gShroud.curSize / 2) ,
+				gShroud.curSize);
+		}
+
+		else
+		{
+			img->alphaRender(hdc, WINSIZEX / 2 - 62, WINSIZEY / 2 - 50, 100);
+		}
+	}
+	else gShroud.curSize = 0;
 }
 
 void playerData::setStat(string itemName)
@@ -77,7 +120,11 @@ void playerData::setStat(string itemName)
 
 	else if (item.CoolTimeReduction != 0)stat.CoolTimeReduction = item.CoolTimeReduction;
 
-	else if (item.glassMirror)stat.glassMirror = true;
+	else if (item.glassMirror)
+	{
+		stat.glassMirror = true;
+		gShroud.isActives = true;
+	}
 
 	//curse
 	else if (item.vampireBlood)stat.vampireBlood = true;

@@ -26,6 +26,15 @@ struct tagStat
 	bool halfFace;			//체력이 50% 이하일 때 공격력 증가 유무
 	bool bloodGold;			//보유 코인에 따라 공격력 증가 유무
 };
+struct tagGlass
+{
+	bool isActives;
+	int currentTime;
+	int endTime;
+
+	float curSize;
+	float endSize;
+};
 class playerData : public singletonBase <playerData>
 {
 private:
@@ -42,6 +51,7 @@ private:
 	bool isGauging;
 	int _gaugeTime;
 
+	tagGlass gShroud;
 
 	vector<string> vInven;
 
@@ -55,6 +65,10 @@ public:
 	HRESULT init();
 	void release();
 	void update();
+
+	void shroudRender(HDC hdc);
+	void setShroud(bool check) { gShroud.isActives = check; }
+	bool getShroud() { return gShroud.isActives; }
 
 	int getMaxHp() { return maxHp; }
 	int getHp() { return hp; }

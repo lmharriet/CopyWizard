@@ -390,6 +390,8 @@ void gameScene::render()
 		enemy->getMinion()[i]->render();
 	}
 
+	PLAYERDATA->shroudRender(getMemDC());
+
 	//PARTICLE->render(getMemDC(), CAMERAMANAGER->getRect());
 	PARTICLE->render(getMemDC());
 	EFFECT->render(getMemDC());
@@ -401,7 +403,7 @@ void gameScene::render()
 
 	//CAMERAMANAGER->Rectangle(getMemDC(), _player->getRect());
 	//uiImg->render(getMemDC());
-
+	
 
 	UI->render(getMemDC(), 50, 50);
 	_player->invenRender();
@@ -570,7 +572,12 @@ void gameScene::enemyAttack()
 	{
 		if (colCheck(enemy->getBullet()->getRect(i), _player->getRect()))
 		{
-			_player->damage(enemy->getBullet()->getBullet()[i].atkPower, enemy->getBullet()->getBullet()[i].angle, 4.f);
+			if (PLAYERDATA->getShroud() == false)
+			{
+				_player->damage(enemy->getBullet()->getBullet()[i].atkPower, enemy->getBullet()->getBullet()[i].angle, 4.f);
+			}
+			else PLAYERDATA->setShroud(false);
+
 			if (enemy->getBullet()->getBullet()[i].kind == MONSTERKIND::SUMMONER)
 			{
 				PARTICLE->crashRockParticlePlay(_player->getX(), _player->getY());

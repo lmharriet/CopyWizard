@@ -112,7 +112,7 @@ HRESULT itemManager::init()
 		false, 0, true,
 
 		false, false, false, false, false, false, false,
-		999,
+		150,
 		"데미지를 5초간 입지 않을 때 공격을 한번 막아주는 유리 장막을 생성한다.",
 		{ 2,1 });
 
