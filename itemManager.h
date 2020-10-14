@@ -22,8 +22,8 @@ struct tagItem
 	bool vampireBlood;		//흡혈기능
 
 	bool doubleDamage;		//2배의 피해
-	bool ManaRejection;		//몬스터를 공격했을 때 마나 획득 유무
-	bool criRejection;		//치명타 발생 유무
+	bool ManaRejection;		//몬스터를 공격했을 때 마나 거부
+	bool criRejection;		//치명타 발생 거부
 	bool reducedVisibility;	//시야 감소
 	bool halfFace;			//체력이 50% 이하일 때 공격력 증가 유무
 	bool bloodGold;			//보유 코인에 따라 공격력 증가 유무

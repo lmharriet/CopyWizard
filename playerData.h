@@ -73,6 +73,8 @@ public:
 	tagStat getStat() { return stat; }
 	void setStat(string itemName);
 
+	int damageCul(int damage, bool isCritical);
+
 	//inven
 	void pushInven(string name) { vInven.push_back(name); }
 	vector<string> getInven() { return vInven; }
