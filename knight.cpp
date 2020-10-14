@@ -354,5 +354,5 @@ void knight::stateDIE()
     }
 
 
-    coinDrop(1, 10);
+    coinDrop(10, 40);
 }
