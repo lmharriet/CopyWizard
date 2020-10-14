@@ -34,3 +34,8 @@ enum class MOVE
 	LEFT_DOWN,
 	RIGHT_DOWN,
 };
+
+enum ARCANA_NAME
+{
+	BLAZE, 
+};

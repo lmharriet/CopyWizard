@@ -149,7 +149,7 @@ public:
 
 	void damagedCool();
 
-	void chargeSkillGauge(int atkPower);
+	void chargeSkillGauge(int atkPower, int skillNum);
 
 	void skillGaugeSetUp();
 

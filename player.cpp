@@ -708,7 +708,7 @@ void player::takeCoin()
 		if (colCheck(rc, DROP->getCoinRect(i)))
 		{
 			PLAYERDATA->setCoin(PLAYERDATA->getCoin() + DROP->getCoinVec()[i].money);
-			
+
 			if (PLAYERDATA->getStat().goldPig)PLAYERDATA->setCoin(PLAYERDATA->getCoin() + RANDOM->range(1, 2));
 
 			DROP->delCoin(i);
@@ -1226,10 +1226,30 @@ void player::damagedCool()
 	}
 }
 
-void player::chargeSkillGauge(int atkPower)
+void player::chargeSkillGauge(int atkPower, int skillNum)
 {
 
-	skillGauge += (float)(atkPower / atkPower) * 1.5f;
+	switch (skillNum)
+	{
+	case 0:
+			skillGauge += (float)(atkPower / atkPower) * 1.5f;
+		break;
+	case 1:
+		if (count  % 15==0)
+			skillGauge += (float)(atkPower / atkPower) * 1.5f;
+			break;
+	case 2:
+		if (count % 15 == 0)
+			skillGauge += (float)(atkPower / atkPower) * 1.5f;
+		break;
+	case 3:
+		if (count % 20 == 0)
+			skillGauge += (float)(atkPower / atkPower) * 1.5f;
+		break;
+	case 4:
+		break;
+	}
+	
 
 	//cout << "현재 게이지:" << skillGauge << '\n';
 
@@ -1239,7 +1259,7 @@ void player::skillGaugeSetUp()
 {
 	//gauge
 	if (skillGauge < 100 && skillGauge >= 0 && !upgradeReady && count % 10 == 0)
-	 	skillGauge -= 0.3f;
+		skillGauge -= 0.3f;
 
 	else if (skillGauge >= 100)
 	{

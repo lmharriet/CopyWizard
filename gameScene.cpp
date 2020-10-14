@@ -449,7 +449,7 @@ void gameScene::playerAttack()
 				//gauge
 				if (PLAYERDATA->getStat().ManaRejection == false)
 				{
-					_player->chargeSkillGauge(damage);
+					_player->chargeSkillGauge(damage,0);
 				}
 
 
@@ -482,7 +482,7 @@ void gameScene::playerAttack()
 				//gauge
 				if (PLAYERDATA->getStat().ManaRejection == false)
 				{
-					_player->chargeSkillGauge(damage);
+					_player->chargeSkillGauge(damage, _player->getMeteor()->getSkillNum());
 				}
 
 				enemy->getMinion()[j]->hit(damage, _player->getMeteor()->getAngle(i),
@@ -508,7 +508,7 @@ void gameScene::playerAttack()
 				//gauge
 				if (PLAYERDATA->getStat().ManaRejection == false)
 				{
-					_player->chargeSkillGauge(damage);
+					_player->chargeSkillGauge(damage, _player->getDashFire()->getSkillNum());
 				}
 
 				enemy->getMinion()[j]->hit(damage, 70.f, 20.f, _player->getDashFire()->getSkillNum(), criCheck);
@@ -548,7 +548,7 @@ void gameScene::playerAttack()
 				//gauge
 				if (PLAYERDATA->getStat().ManaRejection == false)
 				{
-					_player->chargeSkillGauge(damage);
+					_player->chargeSkillGauge(damage,3);
 				}
 
 				float angle = getAngle(enemyX + 40, enemyY + 40,

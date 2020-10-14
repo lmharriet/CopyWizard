@@ -197,7 +197,7 @@ void bossScene::attackBoss()
 			//gauge
 			if (PLAYERDATA->getStat().ManaRejection == false)
 			{
-				_player->chargeSkillGauge(damage);
+				_player->chargeSkillGauge(damage,0);
 			}
 
 
@@ -208,6 +208,27 @@ void bossScene::attackBoss()
 			// -> boss damaged
 
 			_player->getBlaze()->setCol(i, true);
+
+		}
+	}
+	//meteor
+	for (int i = 0; i < _player->getMeteor()->getColSize(); i++)
+	{
+		if (colCheck(_player->getMeteor()->getColRect(i), _boss->getBossRect()))
+		{
+			int damage = _player->getMeteor()->getAtkPower(i) + RANDOM->range(0, 5);
+			bool isCri = PLAYERDATA->criAppear();
+
+
+			if (isCri) damage = (float)damage * PLAYERDATA->getStat().criDamage;
+			else damage = (float)damage * PLAYERDATA->getStat().damage;
+			//gauge
+			if (PLAYERDATA->getStat().ManaRejection == false)
+			{
+				_player->chargeSkillGauge(damage, 1);
+			}
+
+			//-> boss damaged
 
 		}
 	}
@@ -231,7 +252,7 @@ void bossScene::attackBoss()
 			//gauge
 			if (PLAYERDATA->getStat().ManaRejection == false)
 			{
-				_player->chargeSkillGauge(damage);
+				_player->chargeSkillGauge(damage,2);
 			}
 
 
@@ -268,7 +289,7 @@ void bossScene::attackBoss()
 		//gauge
 		if (PLAYERDATA->getStat().ManaRejection == false)
 		{
-			_player->chargeSkillGauge(damage);
+			_player->chargeSkillGauge(damage,0);
 		}
 		float angle = getAngle(_boss->getBoss().center.x, _boss->getBoss().center.y,
 			_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
@@ -282,26 +303,4 @@ void bossScene::attackBoss()
 
 	}
 
-
-	//meteor
-	for (int i = 0; i < _player->getMeteor()->getColSize(); i++)
-	{
-		if (colCheck(_player->getMeteor()->getColRect(i), _boss->getBossRect()))
-		{
-			int damage = _player->getMeteor()->getAtkPower(i) + RANDOM->range(0, 5);
-			bool isCri = PLAYERDATA->criAppear();
-			
-			
-			if (isCri) damage = (float)damage * PLAYERDATA->getStat().criDamage;
-			else damage = (float)damage * PLAYERDATA->getStat().damage;
-			//gauge
-			if (PLAYERDATA->getStat().ManaRejection == false)
-			{
-				_player->chargeSkillGauge(damage);
-			}
-
-			//-> boss damaged
-
-		}
-	}
 }
