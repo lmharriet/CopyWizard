@@ -319,7 +319,9 @@ void astarManager::setNodeColor(tileNode* node, COLORREF color, HDC hdc)
 
 HRESULT monster::init(tagTile* tile, POINT _pos)
 {
-	if (!tile)
+	addInit();
+
+	if (kind==MONSTERKIND::SUMMONER)
 	{
 		isAstar = false;
 	}
@@ -330,11 +332,12 @@ HRESULT monster::init(tagTile* tile, POINT _pos)
 		astar->init(tile);
 	}
 
-
+	wall = tile;
 	cul = { 0,0 };
 	pos.x = _pos.x;
 	pos.y = _pos.y;
 	hitTime = 0;
+	
 	for (int i = 0; i < STATEMAX; i++)
 	{
 		frameIndexL[i] = { 0,0 };
@@ -346,7 +349,7 @@ HRESULT monster::init(tagTile* tile, POINT _pos)
 		bulletDirection[i] = false;
 	}
 	
-	addInit();
+	
 	
 
 	return S_OK;
@@ -363,6 +366,7 @@ void monster::release()
 
 void monster::commonUpdate()
 {
+	
 	rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
 	if (distanceMax > getDistance(pos.x /*+ img->getFrameWidth() * 0.5*/, pos.y/* + img->getFrameHeight() * 1.5*/, playerRC.left, playerRC.top))
@@ -380,8 +384,20 @@ void monster::commonUpdate()
 
 		if (isKnockBack ) // ¹Ð·Á³².
 		{
-			pos.x += cos(hitAngle) * knockBack*0.25;
-			pos.y += -sin(hitAngle) * knockBack*0.25;
+			for (int i = 0; i < PLAYERDATA->getWall().size(); i++)
+			{
+				if (colCheck(rc, wall[PLAYERDATA->getWall()[i]].rc))
+				{
+					isWallcol = true;
+					break;
+				}
+			}
+			if (!isWallcol)
+			{
+				pos.x += cos(hitAngle) * knockBack * 0.25;
+				pos.y += -sin(hitAngle) * knockBack * 0.25;
+			}
+			isWallcol = false;
 		}
 
 		if (hitTime % 6 == 0)
@@ -429,8 +445,8 @@ void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum, 
 		state = STATEIMAGE::HIT;
 
 	isHit = true;
-	//hit sound
 	
+	//hit sound
 	switch (kind)
 	{
 	case MONSTERKIND::GOLEM:
@@ -442,7 +458,7 @@ void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum, 
 		SOUNDMANAGER->play(str, false,-0.38f);
 		break;
 	case MONSTERKIND::SUMMONER:
-		SOUNDMANAGER->play("golemHit", false,-0.3f); //hit sound change
+		SOUNDMANAGER->play("golemHit", false,-0.3f); 
 		break;
 	
 	}

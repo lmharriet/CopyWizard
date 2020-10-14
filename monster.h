@@ -93,8 +93,9 @@ protected:
 
 		STATEMAX
 	};
-	image* img;
-	image* skillImg;
+	image* img = nullptr;
+	image* skillImg = nullptr;
+	tagTile* wall= nullptr;
 	POINT frameIndexL[STATEIMAGE::STATEMAX];
 	POINT frameIndexR[STATEIMAGE::STATEMAX];
 	POINT pos;
@@ -114,6 +115,8 @@ protected:
 	int count = 0;
 	int delay = 0;
 	int hitTime;
+	int colCount = 0;
+	bool isWallcol = false;
 	bool isFindWayOn = false;
 	bool isLeft = false;
 	bool isATK = false;
@@ -123,6 +126,7 @@ protected:
 	bool isFxAppear = false;
 	bool isRanger = false;
 	bool isBulletFire = false;
+	
 	//bool isBulletEmpty = true;
 	bool isAstar;
 	bool isKnockBack ;

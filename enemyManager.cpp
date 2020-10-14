@@ -87,7 +87,7 @@ void enemyManager::setMinion(tagTile* _subTile, POINT _monPt)
 
 		case UNIT_KIND::MAGE:
 		{monster* _summoner = new summoner;
-		_summoner->init(nullptr, { _subTile[i].pos.x - _monPt.x, _subTile[i].pos.y - _monPt.y });
+		_summoner->init(tile, { _subTile[i].pos.x - _monPt.x, _subTile[i].pos.y - _monPt.y });
 		_vMinion.push_back(_summoner); }
 			break;
 		case UNIT_KIND::GOLEM:
