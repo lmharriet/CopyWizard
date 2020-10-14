@@ -307,6 +307,8 @@ private:
 	bool isActive;
 	bool gauging;
 
+	int gaugeTime;
+
 	int time;
 
 
@@ -320,10 +322,10 @@ private:
 public:
 	HRESULT init();
 	void release();
-	void update(int *gaugeTime);
+	void update();
 	void render();
-	void fire(float x, float y,float angle, int *gaugeTime);
-	void move( int gaugeTime);
+	void fire(float x, float y,float angle);
+	void move();
 	bool CheckCollision(RECT enemy);
 	int getSkillNum() { return 3; }
 
