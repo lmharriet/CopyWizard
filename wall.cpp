@@ -282,8 +282,12 @@ void wall::render2()
 
 void wall::collisionTile()
 {
+	//vTile.reserve(1100);
+	//vWall.reserve(250);
 	vTile.clear();
 	vWall.clear();
+	
+	
 	for (int i = 0; i < MAXTILE; i++)
 	{
 		if (colCheck(*cam, tile[i].rc))
@@ -293,7 +297,7 @@ void wall::collisionTile()
 			if (tile[i].kind == TERRAIN::WALL)vWall.push_back(i);
 		}
 	}
-
+	
 	_player->setTileAd0(vTile);
 	PLAYERDATA->setTile(vTile);
 	_player->setTileAd1(vWall);

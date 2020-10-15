@@ -103,11 +103,32 @@ void gameScene::update()
 
 	_player->update();
 	_player->animation();
-	UNITRENDER->update();
+	
 
 	enemy->setPlayerRC(RectMake(_player->getX(), _player->getY(), 100, 100));
 	enemy->update();
 
+	UNITRENDER->enemyClear();
+	for (int i = 0; i < enemy->getMinion().size(); i++)
+	{
+		switch (enemy->getMinion()[i]->getMonsterKind())
+		{
+		case MONSTERKIND::GOLEM:
+			if (enemy->getMinion()[i]->getHit())
+				UNITRENDER->enemyInit(4, enemy->getMinion()[i]->getCurrentFrame(), enemy->getMinion()[i]->getPos());//°ñ·½È÷Æ®½Ã
+			else
+				UNITRENDER->enemyInit(0, enemy->getMinion()[i]->getCurrentFrame(), enemy->getMinion()[i]->getPos());
+			break;
+		case MONSTERKIND::KNIGHT:
+			UNITRENDER->enemyInit(1, enemy->getMinion()[i]->getCurrentFrame(), enemy->getMinion()[i]->getPos());
+			break;
+		case MONSTERKIND::SUMMONER:
+			UNITRENDER->enemyInit(2, enemy->getMinion()[i]->getCurrentFrame(), enemy->getMinion()[i]->getPos());
+			break;
+		}
+
+	}
+	UNITRENDER->update();
 
 	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX + 15, WINSIZEY + 15);
 
@@ -150,30 +171,16 @@ void gameScene::render()
 	DROP->render(getMemDC());
 	EFFECT->pRender(getMemDC());
 
-	bool* eRender = new bool[enemy->getMinion().size()];
+	
 
-
-	for (int i = 0; i < enemy->getMinion().size(); i++)
-	{
-		if (_player->getY() >= enemy->getMinion()[i]->getCenterY())
-		{
-			enemy->getMinion()[i]->render();
-			eRender[i] = true;
-		}
-	}
-
-	enemy->render();
 
 	_player->render();
 
 	UNITRENDER->render(getMemDC());
 
-	for (int i = 0; i < enemy->getMinion().size(); i++)
-	{
-		if (eRender[i] == true)continue;
+	enemy->render();
 
-		enemy->getMinion()[i]->render();
-	}
+	
 
 	PLAYERDATA->shroudRender(getMemDC());
 

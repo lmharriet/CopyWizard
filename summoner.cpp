@@ -107,7 +107,8 @@ void summoner::stateIDLE()
         frameIndexL[STATEIMAGE::DIE].x = 4;
         frameIndexL[STATEIMAGE::DIE].y = 6;
         
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);
+        currentFrame = { frameIndexL[STATEIMAGE::IDLE].x ,frameIndexL[STATEIMAGE::IDLE].y};
+        //img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);
     }
     else if(atkDirection[MONSTER_RIGHT])
     {
@@ -118,7 +119,8 @@ void summoner::stateIDLE()
         frameIndexR[STATEIMAGE::DIE].x = 0;
         frameIndexR[STATEIMAGE::DIE].y = 4;
 
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
+        currentFrame = { frameIndexR[STATEIMAGE::IDLE].x ,frameIndexR[STATEIMAGE::IDLE].y };
+        //img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
     }
    
 }
@@ -180,7 +182,8 @@ void summoner::stateATK()
                 frameIndexL[STATEIMAGE::ATK].y = 1;
             }
         }
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::ATK].x, frameIndexL[STATEIMAGE::ATK].y);
+        currentFrame = { frameIndexL[STATEIMAGE::ATK].x ,frameIndexL[STATEIMAGE::ATK].y };
+        //img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::ATK].x, frameIndexL[STATEIMAGE::ATK].y);
     }
     else
     {
@@ -227,7 +230,8 @@ void summoner::stateATK()
                 }
             }
         }
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::ATK].x, frameIndexR[STATEIMAGE::ATK].y);
+        currentFrame = { frameIndexR[STATEIMAGE::ATK].x ,frameIndexR[STATEIMAGE::ATK].y };
+        //img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::ATK].x, frameIndexR[STATEIMAGE::ATK].y);
     }
    
 }
@@ -268,7 +272,8 @@ void summoner::stateDIE()
                 }
             }
         }
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::DIE].x, frameIndexL[STATEIMAGE::DIE].y);
+        currentFrame = { frameIndexL[STATEIMAGE::DIE].x ,frameIndexL[STATEIMAGE::DIE].y };
+        //img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::DIE].x, frameIndexL[STATEIMAGE::DIE].y);
     }
     else if(atkDirection[MONSTER_RIGHT])
     {
@@ -298,7 +303,8 @@ void summoner::stateDIE()
                 frameIndexR[STATEIMAGE::DIE].x = 0;
             }
         }
-    img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::DIE].x, frameIndexR[STATEIMAGE::DIE].y);
+        currentFrame = { frameIndexR[STATEIMAGE::DIE].x ,frameIndexR[STATEIMAGE::DIE].y };
+        //img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::DIE].x, frameIndexR[STATEIMAGE::DIE].y);
     }
 
     

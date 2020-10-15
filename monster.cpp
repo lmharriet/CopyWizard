@@ -430,12 +430,13 @@ void monster::commonUpdate()
 			state = STATEIMAGE::DIE;
 		}
 	}
+	if (isMonsterApeear)
+		stateImageRender();
 }
 
 void monster::render()
 {
-	if(isMonsterApeear)
-	stateImageRender();
+	
 	// astar->render(getMemDC());
 	// FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
 	// FrameRect(getMemDC(), rc, RGB(255, 255, 255));

@@ -98,6 +98,7 @@ protected:
 	tagTile* wall= nullptr;
 	POINT frameIndexL[STATEIMAGE::STATEMAX];
 	POINT frameIndexR[STATEIMAGE::STATEMAX];
+	POINT currentFrame;
 	POINT pos;
 	POINT cul;
 	STATEIMAGE state = IDLE;
@@ -151,7 +152,7 @@ public:
 	void release();
 	void commonUpdate();
 	virtual void update()=0;
-	void render();
+	virtual void render();
 	virtual void stateImageRender() = 0;
 	virtual void addInit()=0;
 
@@ -164,6 +165,7 @@ public:
 
 	inline POINT getPos() { return pos; }
 	inline POINT getCulPos() { return cul; }
+	inline POINT getCurrentFrame() { return currentFrame; }
 	inline RECT getRC() { return rc; }
 	inline MONSTERKIND getMonsterKind() { return kind; }
 	inline bool getDelete() { return isDelete; }
@@ -171,14 +173,13 @@ public:
 	inline bool getRange() { return isRanger; }
 	inline bool getFx() { return isFxAppear; }
 	inline bool getBulletFire() { return isBulletFire; }
+	inline bool getDie() { return isDie; }
+	inline bool getHit() { return isHit; }
 	inline int getBulletDirection() { for (int i = 0; i < MONSTER_MAX; i++) if (bulletDirection[i])return i; }
 	inline int getHp() { return hp; }
 	inline int getAttack() { return atk; }
 	inline int getArmour() { return armour; }
-	inline bool getDie() { return isDie; }
 	inline int getCenterY() { return pos.y + img->getFrameHeight() / 2; }
-
-	//inline bool 
 
 	void setPt(float x, float y);
 	inline void setX(int X) { pos.x = X; }
@@ -189,7 +190,6 @@ public:
 	inline void setATK(bool atk) { isATK = atk; }
 	inline void setFx(bool Fx) {  isFxAppear = Fx; }
 	inline void setBulletFire(bool isFire) { isBulletFire = isFire; }
-	//inline void setBulletEmpty(bool isEmpty) { isBulletEmpty = isEmpty; }
 	
 	void hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical = false);
 	bool hitCheck(int skillNum);

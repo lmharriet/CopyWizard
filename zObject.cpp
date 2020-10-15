@@ -30,8 +30,13 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
 
     else if (type == "monster")
     {
-        //image* img = IMAGEMANAGER->findImage(keyName);
-        //rc = RectMakeCenter(WINSIZEX / 2 - 50, WINSIZEY / 2 - 50, img->getFrameWidth(), img->getFrameHeight());
+        image* img = IMAGEMANAGER->findImage(keyName);
+        if(keyName == "summoner")
+            rc = RectMakeCenter(x - img->getFrameWidth()/2, y +100, img->getFrameWidth(), img->getFrameHeight());
+        else if(keyName == "knight")
+            rc = RectMakeCenter(x - img->getFrameWidth()/2, y + 200, img->getFrameWidth(), img->getFrameHeight());
+        else if(keyName == "golem" || keyName=="golemHit")
+            rc = RectMakeCenter(x - img->getFrameWidth()/2, y + 300, img->getFrameWidth(), img->getFrameHeight());
         tile = nullptr;
     }
 
@@ -78,6 +83,10 @@ void zObject::render(HDC hdc)
 
     else if (type == "monster")
     {
-
+        //img->frameRender(hdc, x, y, frame.x, frame.y);
+        //RECT monRC=RectMake(x, y, img->getFrameWidth(),img->getFrameHeight());
+        //CAMERAMANAGER->Rectangle(hdc, monRC);
+        CAMERAMANAGER->FrameRender(hdc, img, x, y, frame.x, frame.y);
+        //Rectangle(hdc, x, y, x+img->getFrameWidth(), img->getFrameHeight());
     }
 }

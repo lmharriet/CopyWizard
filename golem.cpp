@@ -5,7 +5,7 @@
 void golem::addInit()
 {
     smallSlashIndex = { 0,0 };
-    hitImg = IMAGEMANAGER->addFrameImage("golemHit", "resource/enemy/golemHit.bmp", 1080, 630, 6, 3);
+    hitImg = IMAGEMANAGER->findImage("golemHit");
     kind = MONSTERKIND::GOLEM;
     atk = 30;
     armour = 8;
@@ -76,135 +76,10 @@ void golem::update()
    
 }
 
-
-void golem::stateImageRender()
+void golem::render()
 {
-    switch (state)
-    {
-    case STATEIMAGE::IDLE:
-        stateIDLE();
-        break;
-    case STATEIMAGE::WALK:
-        stateWalk();
-        break;
-    case STATEIMAGE::ATK:
-        stateATK();
-        break;
-    case STATEIMAGE::DIE:
-        stateDIE();
-      
-        break;
-    
-    }
-}
 
-void golem::stateIDLE()
-{
-    isATK = false;
-    
-    if (atkDirection[MONSTER_LEFT])
-    {
-        frameIndexL[STATEIMAGE::IDLE].x = 5;
-        frameIndexL[STATEIMAGE::IDLE].y = 0;
-        frameIndexL[STATEIMAGE::WALK].x = 5;
-        frameIndexL[STATEIMAGE::WALK].y = 2;
-        frameIndexL[STATEIMAGE::ATK].x = 0;
-        frameIndexL[STATEIMAGE::ATK].y = 0;
-        frameIndexL[STATEIMAGE::DIE].x = 5;
-        frameIndexL[STATEIMAGE::DIE].y = 4;
-
-        if(isHit)
-        hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);
-        else
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);
-    }
-    else
-    {
-        frameIndexR[STATEIMAGE::IDLE].x = 0;
-        frameIndexR[STATEIMAGE::IDLE].y = 0;
-        frameIndexR[STATEIMAGE::WALK].x = 0;
-        frameIndexR[STATEIMAGE::WALK].y = 1;
-        frameIndexR[STATEIMAGE::ATK].x = 0;
-        frameIndexR[STATEIMAGE::ATK].y = 0;
-        frameIndexR[STATEIMAGE::DIE].x = 0;
-        frameIndexR[STATEIMAGE::DIE].y = 3;
-        
-        if(isHit)
-            hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
-        else
-            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
-    }
-
-}
-
-void golem::stateATK()
-{
-    if (atkDirection[MONSTER_LEFT])
-    {
-        frameIndexL[ATK].y = 0;
-        count++;
-        if (count % 40 == 0)
-        {
-           // count = 0;
-            frameIndexL[ATK].x--;
-            if (frameIndexL[ATK].x == 3)
-            {
-                isFxAppear = true;
-                isAtkImgCount = true;
-            }
-            if (frameIndexL[ATK].x < 3)
-            {
-                frameIndexL[ATK].x = 3;
-                delay++;
-                if (delay > 3)
-                {
-                    isATK = false;
-                    delay = 0;
-                    frameIndexL[ATK].x = 5;
-                }
-            }
-        }
-        if(isHit)
-            hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[ATK].x, frameIndexL[ATK].y);
-        else
-            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[ATK].x, frameIndexL[ATK].y);
-    }
-    else
-    {
-        frameIndexR[ATK].y = 0;
-        count++;
-        if (count % 40 == 0)
-        {
-            //count = 0;
-            frameIndexR[ATK].x++;
-            if (frameIndexR[ATK].x == 2)
-            {
-                isFxAppear = true;
-                isAtkImgCount = true;
-            }
-            if (frameIndexR[ATK].x > 2)
-            {
-                frameIndexR[ATK].x = 2;
-                delay++;
-                if (delay > 3)
-                {
-
-                    isATK = false;
-                    delay = 0;
-                    frameIndexR[ATK].x = 0;
-                }
-            }
-
-        }
-        if(isHit)
-            hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[ATK].x, frameIndexR[ATK].y);
-        else
-            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[ATK].x, frameIndexR[ATK].y);
-    }
-
-
-
-    if (!isFxAppear && !isAtkImgCount)
+    if (!isFxAppear && !isAtkImgCount) // 스킬이미지
     {
         smallSlashIndex = { -1,0 };
         if (atkDirection[MONSTER_LEFT])
@@ -215,13 +90,13 @@ void golem::stateATK()
 
     if (isAtkImgCount)
     {
-       /* char str[50];
-        sprintf(str, "knight_atk%d", RANDOM->range(4));
-        SOUNDMANAGER->play(str, false);*/
-        
+        /* char str[50];
+         sprintf(str, "knight_atk%d", RANDOM->range(4));
+         SOUNDMANAGER->play(str, false);*/
+
         int frameSpeed = 8;
-       
-        if (atkDirection[MONSTER_UP] && atkDirection[MONSTER_LEFT] && playerRC.left > rc.left && playerRC.right < rc.right )
+
+        if (atkDirection[MONSTER_UP] && atkDirection[MONSTER_LEFT] && playerRC.left > rc.left && playerRC.right < rc.right)
         {
             bulletDirection[MONSTER_UP] = true;
             bulletDirection[MONSTER_DOWN] = false;
@@ -240,7 +115,7 @@ void golem::stateATK()
 
             }
             //EFFECT->setEffect("samllSlash", { cul.x + 10, cul.y - 30 });
-           skillImg->frameRender(getMemDC(), cul.x + 10, cul.y - 30, smallSlashIndex.x, smallSlashIndex.y);
+            skillImg->frameRender(getMemDC(), cul.x + 10, cul.y - 30, smallSlashIndex.x, smallSlashIndex.y);
         }
         else if (atkDirection[MONSTER_UP] && atkDirection[MONSTER_RIGHT] && playerRC.left > rc.left - 20 && playerRC.right < rc.right + 40)
         {
@@ -262,7 +137,7 @@ void golem::stateATK()
             skillImg->frameRender(getMemDC(), cul.x + 10, cul.y - 30, smallSlashIndex.x, smallSlashIndex.y);
         }
 
-        else if (atkDirection[MONSTER_DOWN] && atkDirection[MONSTER_LEFT] && playerRC.left > rc.left&& playerRC.right > rc.right-30 )
+        else if (atkDirection[MONSTER_DOWN] && atkDirection[MONSTER_LEFT] && playerRC.left > rc.left && playerRC.right > rc.right - 30)
         {
             bulletDirection[MONSTER_DOWN] = true;
             bulletDirection[MONSTER_UP] = false;
@@ -280,7 +155,7 @@ void golem::stateATK()
             }
             skillImg->frameRender(getMemDC(), cul.x + 10, cul.y + 90, smallSlashIndex.x, smallSlashIndex.y);
         }
-        else if (atkDirection[MONSTER_DOWN] && atkDirection[MONSTER_RIGHT] && playerRC.left > rc.left +img->getFrameWidth()/2 && playerRC.right < rc.right + 80)
+        else if (atkDirection[MONSTER_DOWN] && atkDirection[MONSTER_RIGHT] && playerRC.left > rc.left + img->getFrameWidth() / 2 && playerRC.right < rc.right + 80)
         {
             bulletDirection[MONSTER_DOWN] = true;
             bulletDirection[MONSTER_UP] = false;
@@ -338,6 +213,143 @@ void golem::stateATK()
         }
 
     }
+}
+
+
+
+
+void golem::stateImageRender()
+{
+    switch (state)
+    {
+    case STATEIMAGE::IDLE:
+        stateIDLE();
+        break;
+    case STATEIMAGE::WALK:
+        stateWalk();
+        break;
+    case STATEIMAGE::ATK:
+        stateATK();
+        break;
+    case STATEIMAGE::DIE:
+        stateDIE();
+      
+        break;
+    
+    }
+}
+
+void golem::stateIDLE()
+{
+    isATK = false;
+    
+    if (atkDirection[MONSTER_LEFT])
+    {
+        frameIndexL[STATEIMAGE::IDLE].x = 5;
+        frameIndexL[STATEIMAGE::IDLE].y = 0;
+        frameIndexL[STATEIMAGE::WALK].x = 5;
+        frameIndexL[STATEIMAGE::WALK].y = 2;
+        frameIndexL[STATEIMAGE::ATK].x = 0;
+        frameIndexL[STATEIMAGE::ATK].y = 0;
+        frameIndexL[STATEIMAGE::DIE].x = 5;
+        frameIndexL[STATEIMAGE::DIE].y = 4;
+
+        currentFrame = { frameIndexL[STATEIMAGE::IDLE].x,frameIndexL[STATEIMAGE::IDLE].y };
+        /*if (isHit)
+            hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);
+        else
+            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);*/
+    }
+    else
+    {
+        frameIndexR[STATEIMAGE::IDLE].x = 0;
+        frameIndexR[STATEIMAGE::IDLE].y = 0;
+        frameIndexR[STATEIMAGE::WALK].x = 0;
+        frameIndexR[STATEIMAGE::WALK].y = 1;
+        frameIndexR[STATEIMAGE::ATK].x = 0;
+        frameIndexR[STATEIMAGE::ATK].y = 0;
+        frameIndexR[STATEIMAGE::DIE].x = 0;
+        frameIndexR[STATEIMAGE::DIE].y = 3;
+        
+        currentFrame = { frameIndexR[STATEIMAGE::IDLE].x,frameIndexR[STATEIMAGE::IDLE].y };
+
+       /* if(isHit)
+            hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
+        else
+            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);*/
+    }
+
+}
+
+void golem::stateATK()
+{
+    if (atkDirection[MONSTER_LEFT])
+    {
+        frameIndexL[ATK].y = 0;
+        count++;
+        if (count % 40 == 0)
+        {
+           // count = 0;
+            frameIndexL[ATK].x--;
+            if (frameIndexL[ATK].x == 3)
+            {
+                isFxAppear = true;
+                isAtkImgCount = true;
+            }
+            if (frameIndexL[ATK].x < 3)
+            {
+                frameIndexL[ATK].x = 3;
+                delay++;
+                if (delay > 3)
+                {
+                    isATK = false;
+                    delay = 0;
+                    frameIndexL[ATK].x = 5;
+                }
+            }
+        }
+        currentFrame = { frameIndexL[ATK].x,frameIndexL[ATK].y };
+       /* if(isHit)
+            hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[ATK].x, frameIndexL[ATK].y);
+        else
+            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[ATK].x, frameIndexL[ATK].y);*/
+    }
+    else
+    {
+        frameIndexR[ATK].y = 0;
+        count++;
+        if (count % 40 == 0)
+        {
+            //count = 0;
+            frameIndexR[ATK].x++;
+            if (frameIndexR[ATK].x == 2)
+            {
+                isFxAppear = true;
+                isAtkImgCount = true;
+            }
+            if (frameIndexR[ATK].x > 2)
+            {
+                frameIndexR[ATK].x = 2;
+                delay++;
+                if (delay > 3)
+                {
+
+                    isATK = false;
+                    delay = 0;
+                    frameIndexR[ATK].x = 0;
+                }
+            }
+
+        }
+        currentFrame = { frameIndexR[ATK].x,frameIndexR[ATK].y };
+        /*if(isHit)
+            hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[ATK].x, frameIndexR[ATK].y);
+        else
+            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[ATK].x, frameIndexR[ATK].y);*/
+    }
+
+
+
 
 }
 
@@ -362,7 +374,8 @@ void golem::stateDIE()
                 }
             }
         }
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::DIE].x, frameIndexL[STATEIMAGE::DIE].y);
+        currentFrame = { frameIndexL[STATEIMAGE::DIE].x ,frameIndexL[STATEIMAGE::DIE].y};
+        //img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::DIE].x, frameIndexL[STATEIMAGE::DIE].y);
     }
     else
     {
@@ -382,7 +395,8 @@ void golem::stateDIE()
                 }
             }
         }
-        img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::DIE].x, frameIndexR[STATEIMAGE::DIE].y);
+        currentFrame = { frameIndexR[STATEIMAGE::DIE].x ,frameIndexR[STATEIMAGE::DIE].y };
+        //img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::DIE].x, frameIndexR[STATEIMAGE::DIE].y);
     }
 
     coinDrop(50, 70);
@@ -404,10 +418,11 @@ void golem::stateWalk()
                 frameIndexL[WALK].x = 5;
             }
         }
-        if (isHit)
+        currentFrame = { frameIndexL[WALK].x ,frameIndexL[WALK].y };
+       /* if (isHit)
             hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[WALK].x, frameIndexL[WALK].y);
         else
-            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[WALK].x, frameIndexL[WALK].y);
+            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[WALK].x, frameIndexL[WALK].y);*/
     }
     else
     {
@@ -423,11 +438,12 @@ void golem::stateWalk()
                 frameIndexR[WALK].x = 0;
             }
         }
-        if (isHit)
+        currentFrame = { frameIndexR[WALK].x ,frameIndexR[WALK].y };
+        /*if (isHit)
             hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[WALK].x, frameIndexR[WALK].y);
 
         else
-            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[WALK].x, frameIndexR[WALK].y);
+            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[WALK].x, frameIndexR[WALK].y);*/
     }
 
 }

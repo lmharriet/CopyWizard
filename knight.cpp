@@ -114,7 +114,8 @@ void knight::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
             if (frameIndexL[STATEIMAGE::WALK].x < indexX_R)
                 frameIndexL[STATEIMAGE::WALK].x = indexX_L;
         }
-        img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexL[STATEIMAGE::WALK].x, frameIndexL[STATEIMAGE::WALK].y);
+        currentFrame = { frameIndexL[STATEIMAGE::WALK].x, frameIndexL[STATEIMAGE::WALK].y };
+        //img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexL[STATEIMAGE::WALK].x, frameIndexL[STATEIMAGE::WALK].y);
     }
     else
     {
@@ -132,7 +133,8 @@ void knight::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
                 frameIndexR[STATEIMAGE::WALK].x = indexX_R; 
 
         }
-        img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexR[STATEIMAGE::WALK].x, frameIndexR[STATEIMAGE::WALK].y);
+        currentFrame = { frameIndexR[STATEIMAGE::WALK].x, frameIndexR[STATEIMAGE::WALK].y };
+       // img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexR[STATEIMAGE::WALK].x, frameIndexR[STATEIMAGE::WALK].y);
     }
 
     
@@ -152,7 +154,8 @@ void knight::stateIDLE()
         frameIndexL[STATEIMAGE::ATK].y = 3;
         frameIndexL[STATEIMAGE::DIE].x = 0;
         frameIndexL[STATEIMAGE::DIE].y = 4;
-        img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);
+        currentFrame = { frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y };
+        //img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexL[STATEIMAGE::IDLE].x, frameIndexL[STATEIMAGE::IDLE].y);
     }
     else
     {
@@ -164,7 +167,8 @@ void knight::stateIDLE()
         frameIndexR[STATEIMAGE::ATK].y = 3;
         frameIndexR[STATEIMAGE::DIE].x = 5;
         frameIndexR[STATEIMAGE::DIE].y = 6;
-        img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
+        currentFrame = { frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y };
+        //img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexR[STATEIMAGE::IDLE].x, frameIndexR[STATEIMAGE::IDLE].y);
     }
     bulletDirection[MONSTER_DOWN] = false;
     bulletDirection[MONSTER_UP] = false;
@@ -240,7 +244,8 @@ void knight::stateATK()
                 }
             }
         }
-        img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexL[STATEIMAGE::ATK].x, frameIndexL[STATEIMAGE::ATK].y);
+        currentFrame = { frameIndexL[STATEIMAGE::ATK].x ,frameIndexL[STATEIMAGE::ATK].y };
+        //img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexL[STATEIMAGE::ATK].x, frameIndexL[STATEIMAGE::ATK].y);
     }
     else
     {
@@ -276,7 +281,8 @@ void knight::stateATK()
             }
 
         }
-        img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexR[STATEIMAGE::ATK].x, frameIndexR[STATEIMAGE::ATK].y);
+        currentFrame = { frameIndexR[STATEIMAGE::ATK].x ,frameIndexR[STATEIMAGE::ATK].y };
+       // img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexR[STATEIMAGE::ATK].x, frameIndexR[STATEIMAGE::ATK].y);
     }
 
 
@@ -313,7 +319,8 @@ void knight::stateDIE()
 
             }
         }
-        img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexL[STATEIMAGE::DIE].x, frameIndexL[STATEIMAGE::DIE].y);
+        currentFrame = { frameIndexL[STATEIMAGE::DIE].x ,frameIndexL[STATEIMAGE::DIE].y };
+        //img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexL[STATEIMAGE::DIE].x, frameIndexL[STATEIMAGE::DIE].y);
     }
     else
     {
@@ -344,7 +351,8 @@ void knight::stateDIE()
             }
 
         }
-        img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexR[STATEIMAGE::DIE].x, frameIndexR[STATEIMAGE::DIE].y);
+        currentFrame = { frameIndexR[STATEIMAGE::DIE].x ,frameIndexR[STATEIMAGE::DIE].y };
+        //img->frameRender(getMemDC(), cul.x, cul.y+30, frameIndexR[STATEIMAGE::DIE].x, frameIndexR[STATEIMAGE::DIE].y);
     }
 
 
