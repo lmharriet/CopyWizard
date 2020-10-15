@@ -36,6 +36,12 @@ HRESULT wall::init()
 		UNITRENDER->addUnit(i, tile[i].keyName, "wall", tile[i].frame);
 		count++;
 	}
+
+	//for (int i = 0; i < MAXTILE; i++)
+	//{
+	//	if (tile[i].kind != TERRAIN::DECO)
+	//}
+
 	cout << count << '\n';
 
 	return S_OK;
@@ -159,6 +165,17 @@ void wall::render2()
 		CAMERAMANAGER->FrameRender(getMemDC(), img, tile[num].rc.left, tile[num].rc.top, tile[num].frame.x, tile[num].frame.y);
 	}
 
+	//object image render
+	for (int i = 0; i < vTile.size(); i++)
+	{
+		int num = vTile[i];
+
+		if (subTile[num].kind != TERRAIN::DECO) continue;
+
+		image* img = IMAGEMANAGER->findImage(subTile[num].keyName);
+		
+		CAMERAMANAGER->Render(getMemDC(), img, tile[num].rc.left, tile[num].rc.top);
+	}
 	//string key;
 	//image* img;
 	//int width, height;
@@ -255,27 +272,10 @@ void wall::render2()
 	//			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
 	//		}
 
-	//		//if (key == "wallFrame0" || key == "wallFrame1" || key == "wallFrame2" || key == "wallFrame3")
-	//		//{
-	//		//	image* img = IMAGEMANAGER->findImage(tile[i].keyName);
-
-	//		//	CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top, tile[i].frame.x, tile[i].frame.y);
-	//		//}
-
-	//		else if (key == "wall0" || key == "wall1" || key == "wall2")
-	//		{
-	//			height = 3 * TILESIZE;
-
-	//			img = IMAGEMANAGER->findImage(key);
-
-	//			CAMERAMANAGER->FrameRender(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height, tile[i].frame.x, tile[i].frame.y);
-	//		}
-
 	//		break;
 	//	}
 	//}
 
-	//cout << vWall.size() << '\n';
 
 	//index, keyName 
 }

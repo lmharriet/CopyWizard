@@ -36,7 +36,6 @@ HRESULT bossScene::init()
 	//UI->setCoin(PLAYERDATA->getCoin());
 	//UI->setHp(PLAYERDATA->getHp());
 
-
 	//sound
 	soundInit();
 	
@@ -105,7 +104,6 @@ void bossScene::update()
 	{
 		SCENEMANAGER->loadScene("시작화면");
 	}
-
 }
 
 void bossScene::bossCutScene()
@@ -138,8 +136,8 @@ void bossScene::render()
 	//CAMERAMANAGER->Rectangle(getMemDC(), area);
 
 	EFFECT->pRender(getMemDC());
-	_player->render();
 
+	_player->render(1);
 	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	//CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("boss"), rc.left, rc.top, 0, 0);
 

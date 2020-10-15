@@ -102,7 +102,7 @@ public:
 	void release();
 	void update();
 	void other_update();
-	void render();
+	void render(int _index = 0);
 	void invenRender();
 
 	void bulletClassInit();
@@ -138,8 +138,8 @@ public:
 
 
 	//animation
-	void animation();
-	void frameAnimation(int frameX, int frameY);
+	void animation(int _index = 0);
+	void frameAnimation(int frameX, int frameY, int _index = 0);
 	void changeState();
 
 
