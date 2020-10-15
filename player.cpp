@@ -258,26 +258,13 @@ void player::other_update()
 	makeCol2(3, 45, 60);
 
 
-
-	if (!uiOn && INPUT->GetKeyDown('F'))
-	{
-		uiOn = true;
-	}
-	if (uiOn && INPUT->GetKeyDown('F'))
-	{
-		uiOn = false;
-	}
-
-
-	if (uiOn)
+	if (INPUT->GetKeyDown('F'))
 	{
 		UI->setSkillSlot(arcana[0].skillName, arcana[0].coolTime);
 		UI->setSkillSlot(arcana[1].skillName, arcana[1].coolTime);
 		UI->setSkillSlot(arcana[2].skillName, arcana[2].coolTime);
 		UI->setSkillSlot(arcana[3].skillName, arcana[3].coolTime);
-
 	}
-
 
 
 	changeState();
@@ -698,8 +685,8 @@ void player::dashSetUp()
 
 void player::standardSetUp()
 {
-	if (INPUT->GetKeyDown(VK_RBUTTON) && frozenTime == 0 && !inferno->getGauging() &&isDead
-		&&speed==0 && meteorStateCool==0)
+	if (INPUT->GetKeyDown(VK_RBUTTON) && frozenTime == 0 && !inferno->getGauging() && !isDead
+		&& speed == 0 && meteorStateCool == 0)
 	{
 		standard = true;
 		saveAngle2 = attackAngle;
@@ -1119,7 +1106,7 @@ void player::tileCol()
 	}
 }
 
-void player::colorCheck(image * img)
+void player::colorCheck(image* img)
 {
 	for (int i = 0; i < 8; i++)
 	{
