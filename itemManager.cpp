@@ -102,7 +102,7 @@ HRESULT itemManager::init()
 		false, 1, false,
 
 		false, false, false, false, false, false, false,
-		999,
+		125,
 		"스킬의 쿨타임을 1초 감소시킨다.",
 		{ 1,1 });
 
