@@ -1381,7 +1381,6 @@ void player::frameAnimation(int frameX, int frameY, int _index)
 
 	else
 	{
-		cout << frameX << " " << frameY << '\n';
 		CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, frameX, frameY);
 	}
 }
