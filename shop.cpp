@@ -125,7 +125,7 @@ void shop::addImage()
 {
     IMAGEMANAGER->addImage("Nox", "Images/npc/blackMarketNPC.bmp", 56, 100, true, RGB(255, 0, 255));
     IMAGEMANAGER->addImage("Doki", "Images/npc/richNPC.bmp", 82, 112, true, RGB(255, 0, 255));
-    IMAGEMANAGER->addImage("Andres", "Images/npc/shopNPC.bmp", 84, 129, true, RGB(255, 0, 255));
+    IMAGEMANAGER->addImage("Andres", "Images/npc/shopNPC.bmp", 107, 129, true, RGB(255, 0, 255));
 
     IMAGEMANAGER->addImage("oldFabric", "Images/npc/oldFabric.bmp", 360, 126, true, RGB(255, 0, 255));
     IMAGEMANAGER->addImage("desk", "Images/npc/desk.bmp", 390, 153, true, RGB(255, 0, 255));

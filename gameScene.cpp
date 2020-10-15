@@ -47,7 +47,7 @@ HRESULT gameScene::init()
 	_shop = new shop;
 	_shop->init();
 
-	POINT ptArr[3] = { { -2040,-1509 },{ 2075,-35 },{ 1176,2134 } };
+	POINT ptArr[3] = { { -2074,-1588 },{ 2027,-68 },{ 1125,2116 } };
 	_shop->generate(ptArr);
 
 
@@ -382,7 +382,9 @@ void gameScene::enemyAttack()
 
 void gameScene::viewText()
 {
-	//
+	char str[126];
+	sprintf(str, "%.f, %.f", _player->getX(), _player->getY());
+	TextOut(getMemDC(), _ptMouse.x, _ptMouse.y, str, strlen(str));
 }
 
 void gameScene::soundInit()
