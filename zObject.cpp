@@ -34,7 +34,7 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
         if(keyName == "summoner")
             rc = RectMakeCenter(x - img->getFrameWidth()/2, y +100, img->getFrameWidth(), img->getFrameHeight());
         else if(keyName == "knight")
-            rc = RectMakeCenter(x - img->getFrameWidth()/2, y + 200, img->getFrameWidth(), img->getFrameHeight());
+            rc = RectMakeCenter(x - img->getFrameWidth()/2, y + 170, img->getFrameWidth(), img->getFrameHeight());
         else if(keyName == "golem" || keyName=="golemHit")
             rc = RectMakeCenter(x - img->getFrameWidth()/2, y + 300, img->getFrameWidth(), img->getFrameHeight());
         tile = nullptr;

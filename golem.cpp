@@ -17,6 +17,8 @@ void golem::addInit()
     isRanger = false;
     isAtkImgCount = false;
 
+    fxCount = 0;
+
 }
 
 void golem::update()
@@ -86,10 +88,12 @@ void golem::render()
         {
             smallSlashIndex.x = 3;
         }
+           
     }
 
     if (isAtkImgCount)
     {
+        fxCount++;
         /* char str[50];
          sprintf(str, "knight_atk%d", RANDOM->range(4));
          SOUNDMANAGER->play(str, false);*/
@@ -103,7 +107,7 @@ void golem::render()
             bulletDirection[MONSTER_LEFT] = false;
             bulletDirection[MONSTER_RIGHT] = false;
             smallSlashIndex.y = 5;
-            if (count % frameSpeed == 0)
+            if (fxCount % frameSpeed == 0)
             {
 
                 smallSlashIndex.x--;
@@ -111,6 +115,7 @@ void golem::render()
                 {
                     isAtkImgCount = false;
                     bulletDirection[MONSTER_UP] = false;
+                    fxCount = 0;
                 }
 
             }
@@ -124,13 +129,14 @@ void golem::render()
             bulletDirection[MONSTER_LEFT] = false;
             bulletDirection[MONSTER_RIGHT] = false;
             smallSlashIndex.y = 4;
-            if (count % frameSpeed == 0)
+            if (fxCount % frameSpeed == 0)
             {
                 smallSlashIndex.x++;
                 if (smallSlashIndex.x > 2)
                 {
                     isAtkImgCount = false;
                     bulletDirection[MONSTER_UP] = false;
+                    fxCount = 0;
                 }
             }
 
@@ -144,13 +150,14 @@ void golem::render()
             bulletDirection[MONSTER_LEFT] = false;
             bulletDirection[MONSTER_RIGHT] = false;
             smallSlashIndex.y = 3;
-            if (count % frameSpeed == 0)
+            if (fxCount % frameSpeed == 0)
             {
                 smallSlashIndex.x--;
                 if (smallSlashIndex.x < 0)
                 {
                     isAtkImgCount = false;
                     bulletDirection[MONSTER_DOWN] = false;
+                    fxCount = 0;
                 }
             }
             skillImg->frameRender(getMemDC(), cul.x + 10, cul.y + 90, smallSlashIndex.x, smallSlashIndex.y);
@@ -162,13 +169,14 @@ void golem::render()
             bulletDirection[MONSTER_LEFT] = false;
             bulletDirection[MONSTER_RIGHT] = false;
             smallSlashIndex.y = 2;
-            if (count % frameSpeed == 0)
+            if (fxCount % frameSpeed == 0)
             {
                 smallSlashIndex.x++;
                 if (smallSlashIndex.x > 2)
                 {
                     isAtkImgCount = false;
                     bulletDirection[MONSTER_DOWN] = false;
+                    fxCount = 0;
                 }
             }
             skillImg->frameRender(getMemDC(), cul.x + 10, cul.y + 90, smallSlashIndex.x, smallSlashIndex.y);
@@ -180,13 +188,14 @@ void golem::render()
             bulletDirection[MONSTER_LEFT] = false;
             bulletDirection[MONSTER_RIGHT] = true;
             smallSlashIndex.y = 0;
-            if (count % frameSpeed == 0)
+            if (fxCount % frameSpeed == 0)
             {
                 smallSlashIndex.x++;
                 if (smallSlashIndex.x > 2)
                 {
                     isAtkImgCount = false;
                     bulletDirection[MONSTER_RIGHT] = false;
+                    fxCount = 0;
                 }
 
             }
@@ -199,7 +208,7 @@ void golem::render()
             bulletDirection[MONSTER_LEFT] = true;
             bulletDirection[MONSTER_RIGHT] = false;
             smallSlashIndex.y = 1;
-            if (count % frameSpeed == 0)
+            if (fxCount % frameSpeed == 0)
             {
                 
                 smallSlashIndex.x--;
@@ -207,6 +216,7 @@ void golem::render()
                 {
                     isAtkImgCount = false;
                     bulletDirection[MONSTER_LEFT] = false;
+                    fxCount = 0;
                 }
             }
             skillImg->frameRender(getMemDC(), cul.x - 80, cul.y + 20, smallSlashIndex.x, smallSlashIndex.y);
@@ -249,7 +259,7 @@ void golem::stateIDLE()
         frameIndexL[STATEIMAGE::IDLE].y = 0;
         frameIndexL[STATEIMAGE::WALK].x = 5;
         frameIndexL[STATEIMAGE::WALK].y = 2;
-        frameIndexL[STATEIMAGE::ATK].x = 0;
+        frameIndexL[STATEIMAGE::ATK].x = 5;
         frameIndexL[STATEIMAGE::ATK].y = 0;
         frameIndexL[STATEIMAGE::DIE].x = 5;
         frameIndexL[STATEIMAGE::DIE].y = 4;
@@ -406,6 +416,10 @@ void golem::stateWalk()
 {
     if (atkDirection[MONSTER_LEFT])
     {
+        frameIndexL[STATEIMAGE::ATK].x = 5;
+        frameIndexL[STATEIMAGE::ATK].y = 0;
+        
+
         frameIndexL[WALK].y = 2;
         count++;
         if (count % 10 == 0)
@@ -426,6 +440,8 @@ void golem::stateWalk()
     }
     else
     {
+        frameIndexL[STATEIMAGE::ATK].x = 0;
+        frameIndexL[STATEIMAGE::ATK].y = 0;
         frameIndexR[WALK].y = 1;
         count++;
         if (count % 10 == 0)

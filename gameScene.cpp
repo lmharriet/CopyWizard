@@ -114,7 +114,7 @@ void gameScene::update()
 		switch (enemy->getMinion()[i]->getMonsterKind())
 		{
 		case MONSTERKIND::GOLEM:
-			if (enemy->getMinion()[i]->getHit())
+			if (enemy->getMinion()[i]->getHit() && !enemy->getMinion()[i]->getDie())
 				UNITRENDER->enemyInit(4, enemy->getMinion()[i]->getCurrentFrame(), enemy->getMinion()[i]->getPos());//°ñ·½È÷Æ®½Ã
 			else
 				UNITRENDER->enemyInit(0, enemy->getMinion()[i]->getCurrentFrame(), enemy->getMinion()[i]->getPos());
@@ -178,7 +178,6 @@ void gameScene::render()
 
 	UNITRENDER->render(getMemDC());
 
-	enemy->render();
 
 	
 
@@ -187,6 +186,7 @@ void gameScene::render()
 	PARTICLE->render(getMemDC());
 	EFFECT->render(getMemDC());
 	EFFECT->dRender(getMemDC());
+	enemy->render();
 
 	DAMAGE->render(getMemDC());
 
@@ -388,10 +388,8 @@ void gameScene::viewText()
 void gameScene::soundInit()
 {
 	//sound 
-	SOUNDMANAGER->stop("mapToolBGM");
-	SOUNDMANAGER->stop("ingameBGM");
-	SOUNDMANAGER->stop("bossBGM");
-	SOUNDMANAGER->play("ingameBGM", true);
+	
+	
 
 	isIngameBGM = true;
 	fadeIn = 0.f;
@@ -416,6 +414,8 @@ void gameScene::soundInit()
 	SOUNDMANAGER->addSound("summonerFire", "Sound/summoner_fire.mp3");
 	SOUNDMANAGER->addSound("summonerAtk", "Sound/summoner_atk.mp3");
 
-
-
+	SOUNDMANAGER->stop("mapToolBGM");
+	SOUNDMANAGER->stop("titleBGM");
+	SOUNDMANAGER->stop("bossBGM");
+	SOUNDMANAGER->play("ingameBGM", true);
 }

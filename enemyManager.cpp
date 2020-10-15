@@ -128,7 +128,6 @@ void enemyManager::minionBulletFire(float aimX, float aimY)
 		float angle = getAngle((float)(*_viMinion)->getCulCenterX(), (float)(*_viMinion)->getCulCenterY(), (float)aimX, (float)aimY);
 		switch ((*_viMinion)->getMonsterKind())
 		{
-			
 		case MONSTERKIND::GOLEM:
 			golemBullet( angle);
 			break;

@@ -381,7 +381,10 @@ void monster::commonUpdate()
 	{
 		if (!isCardFxAppear)
 		{
+			if(kind != MONSTERKIND::KNIGHT)
 			EFFECT->setEffect("flipCard", { pos.x + img->getFrameWidth()/2,pos.y + img->getFrameHeight()/2 },false,true,100); // false,false,0,
+			else
+			EFFECT->setEffect("flipCard", { pos.x + img->getFrameWidth()/2,pos.y + img->getFrameHeight()/2+70 },false,true,100); // false,false,0,
 			isCardFxAppear = true;
 		}
 		monsterAppearCount++;

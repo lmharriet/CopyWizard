@@ -9,6 +9,7 @@ private:
 	image* hitImg;
 
 	bool isAtkImgCount;
+	int fxCount;
 
 public:
 	void addInit()override;

@@ -8,10 +8,11 @@ private:
 	bool isCharging;
 	float imgSize;
 	int randomTime;
+	int fireCount;
 public:
 	void addInit()override;
 	void update() override;
-
+	void render();
 	void stateImageRender() override;
 
 	void stateIDLE() override;
