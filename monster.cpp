@@ -438,8 +438,8 @@ void monster::render()
 {
 	
 	// astar->render(getMemDC());
-	// FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
-	// FrameRect(getMemDC(), rc, RGB(255, 255, 255));
+	 //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
+	 //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
 }
 
 void monster::setPt(float x, float y)
@@ -594,13 +594,15 @@ void monster::stateHIT(POINT lPos, POINT rPos)
 	{
 		frameIndexL[STATEIMAGE::HIT].x = lPos.x;
 		frameIndexL[STATEIMAGE::HIT].y = lPos.y;
-		img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::HIT].x, frameIndexL[STATEIMAGE::HIT].y);
+		currentFrame = { frameIndexL[STATEIMAGE::HIT].x ,frameIndexL[STATEIMAGE::HIT].y };
+		//img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[STATEIMAGE::HIT].x, frameIndexL[STATEIMAGE::HIT].y);
 	}
 	else
 	{
 		frameIndexR[STATEIMAGE::HIT].x = rPos.x;
 		frameIndexR[STATEIMAGE::HIT].y = rPos.y;
-		img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::HIT].x, frameIndexR[STATEIMAGE::HIT].y);
+		currentFrame = { frameIndexR[STATEIMAGE::HIT].x ,frameIndexR[STATEIMAGE::HIT].y };
+		//img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::HIT].x, frameIndexR[STATEIMAGE::HIT].y);
 	}
 
 }

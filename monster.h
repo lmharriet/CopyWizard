@@ -180,6 +180,9 @@ public:
 	inline int getAttack() { return atk; }
 	inline int getArmour() { return armour; }
 	inline int getCenterY() { return pos.y + img->getFrameHeight() / 2; }
+	inline int getCenterX() { return pos.x + img->getFrameWidth() / 2; }
+	inline int getCulCenterX() { return cul.x + img->getFrameWidth() / 2; }
+	inline int getCulCenterY() { return cul.y + img->getFrameHeight() / 2; }
 
 	void setPt(float x, float y);
 	inline void setX(int X) { pos.x = X; }
