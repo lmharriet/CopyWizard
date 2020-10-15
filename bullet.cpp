@@ -345,7 +345,7 @@ void meteor::update()
 			makeCircle(save.x + ranX, save.y + ranY);
 
 			isCoolTime = true;
-			UI->addCoolTime("meteorIcon");
+			UI->addCoolTime("skill_meteor");
 			meteorCount--;
 		}
 
@@ -427,7 +427,7 @@ void meteor::creatMeteor(float x, float y, float angle)
 		vMeteor.push_back(meteor);
 		makeCircle(x, y);
 		isCoolTime = true;
-		UI->addCoolTime("meteorIcon");
+		UI->addCoolTime("skill_meteor");
 	}
 
 	else
@@ -485,7 +485,7 @@ void meteor::coolTimeReduction()
 	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
 	{
 		coolTime = 300 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
-		UI->fixCoolTime("meteorIcon", coolTime);
+		UI->fixCoolTime("skill_meteor", coolTime);
 	/*	cout <<"Item 구매 후 :" <<coolTime << '\n';
 
 
@@ -496,7 +496,7 @@ void meteor::coolTimeReduction()
 	else
 	{
 		coolTime = 300;
-		UI->fixCoolTime("meteorIcon", coolTime);
+		UI->fixCoolTime("skill_meteor", coolTime);
 	/*	cout <<"Item 구매 전 :" <<coolTime << '\n';
 
 		cout << UI->getSkillSlot(3).maxCoolTime << '\n';
@@ -605,12 +605,12 @@ void dashFire::coolTimeReduction()
 	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
 	{
 		coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
-		UI->fixCoolTime("searingDash", coolTime);
+		UI->fixCoolTime("skill_searingDash", coolTime);
 	}
 	else
 	{
 		coolTime = 240;
-		UI->fixCoolTime("searingDash", coolTime);
+		UI->fixCoolTime("skill_searingDash", coolTime);
 	}
 
 }
@@ -738,7 +738,7 @@ void RagingInferno::fire(float x, float y, float angle)
 	gauging = true;
 	PLAYERDATA->setGauging(gauging);
 	isCoolTime = true;
-	UI->addCoolTime("infernoIcon");
+	UI->addCoolTime("skill_inferno");
 }
 
 void RagingInferno::move()
@@ -820,12 +820,12 @@ void RagingInferno::coolTimeReduction()
 	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
 	{
 		coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
-		UI->fixCoolTime("infernoIcon", coolTime);
+		UI->fixCoolTime("skill_inferno", coolTime);
 	}
 	else
 	{
 		coolTime = 240;
-		UI->fixCoolTime("infernoIcon", coolTime);
+		UI->fixCoolTime("skill_inferno", coolTime);
 	}
 }
 
