@@ -32,6 +32,14 @@ struct tagBlock
 	bool isFire;
 	bool isHit;
 };
+
+struct tagHit0
+{
+	int skillNum;
+	int currentTime;
+	int endTime;
+};
+
 class player;
 class boss : public gameNode
 {
@@ -50,6 +58,9 @@ private:
 	vector<tagBlock*> punchBlock;
 	vector<tagBlock*> wallBlock;
 	vector<tagBlock*> shockBlock;
+	
+	//damage calculate
+	vector<tagHit0> vDamage;
 
 	int count, timer;
 	int posX, posY;
@@ -112,6 +123,14 @@ public:
 	void bossDamaged();
 	void bossDie();
 	
+
+
+	bool damageCheck(int skillNum);
+
+	void damage(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical);
+
+	void damageCul();
+
 	void bossFinalAttack(int patternType);
 
 
@@ -127,7 +146,7 @@ public:
 	void setRect(int x, int y) { boss.rc = RectMakeCenter(x, y, 150, 150); }
 	void setCenter(POINT pt) { boss.center = { pt.x,pt.y }; }
 	void setBossHit(bool bossHit) { boss.isHit = bossHit; }
-	void setBossHp(int bosshp) { boss.bossHp -= bosshp; }
+	//void setBossHp(int bosshp) { boss.bossHp -= bosshp; }
 };
 
 

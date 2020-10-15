@@ -117,7 +117,7 @@ void damageManager::render(HDC hdc)
 
 void damageManager::generator(POINT pt, string keyName, int damage, bool isLeft, bool isCritical)
 {
-	tagDamage Damage;
+	tagHit Damage;
 	Damage.keyName = keyName;
 
 	Damage.x = pt.x;

@@ -183,15 +183,12 @@ void bossScene::attackBoss()
 	{
 		if (colCheck(_player->getBlaze()->getBullet()[i].rc, _boss->getBossRect()))
 		{
-			int damage = _player->getBlaze()->getBullet()[i].atkPower + RANDOM->range(0, 3);
+			
 
 			bool isCri = PLAYERDATA->criAppear();
 
-			if (isCri) //critical damage
-				damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
-			//normal damage
-			else damage = (float)damage * PLAYERDATA->getStat().damage;
 
+			int damage = PLAYERDATA->damageCul(_player->getBlaze()->getBullet()[i].atkPower, isCri);
 			//gauge
 			if (PLAYERDATA->getStat().ManaRejection == false)
 			{
@@ -204,8 +201,9 @@ void bossScene::attackBoss()
 				_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
 
 			// -> boss damaged
-			_boss->setBossHp(10);
-			DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", 10);
+			//_boss->setBossHp(10);
+			_boss->damage(damage, 0, 0, 0, isCri);
+
 			if (!_boss->getBossAtack()) {
 				_boss->setBossHit(true);
 			}
@@ -219,12 +217,10 @@ void bossScene::attackBoss()
 	{
 		if (colCheck(_player->getMeteor()->getColRect(i), _boss->getBossRect()))
 		{
-			int damage = _player->getMeteor()->getAtkPower(i) + RANDOM->range(0, 5);
+			
 			bool isCri = PLAYERDATA->criAppear();
+			int damage = PLAYERDATA->damageCul(_player->getMeteor()->getAtkPower(i), isCri);
 
-
-			if (isCri) damage = (float)damage * PLAYERDATA->getStat().criDamage;
-			else damage = (float)damage * PLAYERDATA->getStat().damage;
 			//gauge
 			if (PLAYERDATA->getStat().ManaRejection == false)
 			{
@@ -232,12 +228,9 @@ void bossScene::attackBoss()
 			}
 
 			//-> boss damaged
-			_boss->setBossHp(10);
-			DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", 10);
-			if (!_boss->getBossAtack()) {
-				_boss->setBossHit(true);
-			}
+			//_boss->setBossHp(10);
 
+			_boss->damage(damage, 0, 0, _player->getMeteor()->getSkillNum(), isCri);
 		}
 	}
 
@@ -246,16 +239,12 @@ void bossScene::attackBoss()
 	{
 		if (colCheck(_player->getDashFire()->getRect(i), _boss->getBossRect()))
 		{
-			int damage = _player->getDashFire()->getAtk(i) + RANDOM->range(0, 5);
+			
 
 			bool isCri = PLAYERDATA->criAppear();
 
+			int damage = PLAYERDATA->damageCul(_player->getDashFire()->getAtk(i), isCri);
 
-			if (isCri) //critical damage
-				damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
-			
-			//normal damage
-			else damage = (float)damage * PLAYERDATA->getStat().damage;
 
 			//gauge
 			if (PLAYERDATA->getStat().ManaRejection == false)
@@ -265,11 +254,8 @@ void bossScene::attackBoss()
 
 
 			//-> boss damaged
-			_boss->setBossHp(10);
-			DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", 10);
-			if (!_boss->getBossAtack()) {
-				_boss->setBossHit(true);
-			}
+			//_boss->setBossHp(10);
+			_boss->damage(damage, 0, 0, _player->getDashFire()->getSkillNum(), isCri);
 		}
 	}
 
@@ -290,20 +276,16 @@ void bossScene::attackBoss()
 	}
 	else if (PLAYERDATA->getGaugeTime() >= 50 &&_player->getInferno()->CheckCollision(_boss->getBossRect()))
 	{
-		int damage = _player->getInferno()->getInf().atkPower;
-
 		bool isCri = PLAYERDATA->criAppear();
-
-		
-
-		if (isCri) damage = (float)damage * (PLAYERDATA->getStat().damage + PLAYERDATA->getStat().criDamage);
-		else damage = (float)damage * PLAYERDATA->getStat().damage;
+	
+		int damage = PLAYERDATA->damageCul(_player->getInferno()->getInf().atkPower, isCri);
 
 		//gauge
 		if (PLAYERDATA->getStat().ManaRejection == false)
 		{
-			_player->chargeSkillGauge(damage,0);
+			_player->chargeSkillGauge(damage,3);
 		}
+		
 		float angle = getAngle(_boss->getBoss().center.x, _boss->getBoss().center.y,
 			_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
 		
@@ -313,8 +295,10 @@ void bossScene::attackBoss()
 		_boss->setCenter({ (long)x, (long)y });
 		_boss->setRect((int)x, (int)y);
 		//-> boss damaged
-		_boss->setBossHp(10);
-		DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", 10);
+		//_boss->setBossHp(10);
+		
+		_boss->damage(damage, 0, 0, 3, isCri);
+		//DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", damage);
 
 		if (!_boss->getBossAtack()) {
 			_boss->setBossHit(true);

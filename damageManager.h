@@ -1,6 +1,6 @@
 #pragma once
 #include "singletonBase.h"
-struct tagDamage
+struct tagHit
 {
 	string keyName;
 
@@ -20,7 +20,7 @@ struct tagDamage
 };
 class damageManager : public singletonBase<damageManager>
 {
-	vector<tagDamage> vDamage;
+	vector<tagHit> vDamage;
 	int time;
 public:
 	HRESULT init();

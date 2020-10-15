@@ -13,7 +13,7 @@ struct tagPlayer  //나중에 버릴 것
 
 };
 
-struct tagHit
+struct tagHit1
 {
 	int skillNum;
 	int currentTime;
@@ -146,7 +146,7 @@ protected:
 	RECT playerRC;
 	RECT camRC;
 
-	vector<tagHit> vHit;
+	vector<tagHit1> vHit;
 public:
 	HRESULT init(tagTile* tile, POINT _pos); 
 	void release();

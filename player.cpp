@@ -111,8 +111,6 @@ void player::release()
 
 void player::update()
 {
-	
-
 	PLAYERDATA->update();
 
 	blaze->update();
@@ -167,10 +165,6 @@ void player::update()
 	signatureSetUp();
 	/////////////////
 
-
-	/*
-	meteorSetUp();
-	dragonArcSetUp();*/
 
 	damagedCool();
 
@@ -235,8 +229,6 @@ void player::other_update()
 		controller();
 	}
 
-	//tileCol(); 
-
 	makeCol((int)DIRECTION::TOP, 0, -30);
 	makeCol((int)DIRECTION::BOTTOM, 0, 60);
 	makeCol((int)DIRECTION::LEFT, -45, 0);
@@ -253,14 +245,14 @@ void player::other_update()
 	makeCol2(3, 45, 60);
 
 
-
-
 	changeState();
+
+	////////////////
 	basicSetUp();
 	dashSetUp();
 	standardSetUp();
 	signatureSetUp();
-	dragonArcSetUp();
+	/////////////////
 
 	damagedCool();
 	grabbedCool();
@@ -722,12 +714,13 @@ void player::standardSetUp()
 void player::signatureSetUp()
 {
 	Meteor->setUpgrade(upgradeReady);
+	dragon->setUpgrade(upgradeReady);
 
 	float mouseX = CAMERAMANAGER->GetAbsoluteX(_ptMouse.x);
 	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
 
-	if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead && !Meteor->getCool()
-		&& !inferno->getGauging() && speed == 0)
+	if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !dragon->getCool() && !isDead && !Meteor->getCool()
+		&& !inferno->getGauging() && speed == 0) 
 	{
 		signature = true;
 	}
@@ -743,35 +736,50 @@ void player::signatureSetUp()
 					meteorStateCool = 30;
 					Meteor->creatMeteor(mouseX, mouseY, 0);
 				}
-			}
-			if (meteorStateCool > 0)
-			{
-				state = STATE::SIGNATURE;
-				meteorStateCool--;
 
-				if (meteorStateCool == 0) signature = false;
+				if (meteorStateCool > 0)
+				{
+					state = STATE::SIGNATURE;
+					meteorStateCool--;
+
+					if (meteorStateCool == 0) signature = false;
+				}
+			}
+
+			else if (arcana[3].skillName == "skill_dragonArc")
+			{
+				dragon->fire(posX, posY, attackAngle);
 			}
 		}
 		else
 		{
-			if (meteorStateCool == 0)
+			if (arcana[3].skillName == "skill_meteor")
 			{
-				meteorStateCool = 30;
-				Meteor->creatMeteor(mouseX, mouseY, 0);
+				if (meteorStateCool == 0)
+				{
+					meteorStateCool = 30;
+					Meteor->creatMeteor(mouseX, mouseY, 0);
 
-				//skillGauge 초기화
-				skillGauge = 0;
+					//skillGauge 초기화
+					skillGauge = 0;
+				}
+				if (meteorStateCool > 0)
+				{
+					state = STATE::SIGNATURE;
+					meteorStateCool--;
 
+					if (meteorStateCool == 0) signature = false;
+				}
 			}
-			if (meteorStateCool > 0)
+			else if (arcana[3].skillName == "skill_dragonArc")
 			{
-				state = STATE::SIGNATURE;
-				meteorStateCool--;
-
-				if (meteorStateCool == 0) signature = false;
+				dragon->phoenixFire(posX, posY, attackAngle);
 			}
 		}
 	}
+
+
+
 }
 
 void player::takeCoin()

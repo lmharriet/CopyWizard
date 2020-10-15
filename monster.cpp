@@ -505,7 +505,7 @@ bool monster::hitCheck(int skillNum)
 		if (vHit[i].skillNum == skillNum)return false;
 	}
 
-	tagHit hit;
+	tagHit1 hit;
 	hit.skillNum = skillNum;
 	hit.currentTime = 0;
 	switch (hit.skillNum)

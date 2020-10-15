@@ -59,8 +59,6 @@ HRESULT boss::init(int _posX, int _posY)
 	bossDied = false;
 
 	niddleAngle = 0.0f;
-
-
 	//sound
 
 	isPlayDrillSFX = isPlayJumpSFX = isPlayWallSFX = isPlayNiddleSFX = isPlayPunchSFX = false;
@@ -79,9 +77,10 @@ void boss::update()
 	}
 	BOSSMANAGER->update();
 
-	cout << isFinalAttack << endl;
 	this->bossDie();
 	this->animation();
+
+	this->damageCul();
 }
 
 void boss::render()
@@ -1176,6 +1175,78 @@ void boss::bossDie()
 	}
 }
 
+bool boss::damageCheck(int skillNum)
+{
+
+	for (int i = 0; i < vDamage.size(); i++)
+	{
+		if (vDamage[i].skillNum == skillNum)return false;
+	}
+
+	tagHit0 damage;
+	damage.skillNum = skillNum;
+	damage.currentTime = 0;
+	switch (damage.skillNum)
+	{
+	case 0:
+		damage.endTime = 2;
+		break;
+	case 1:
+		damage.endTime = 10;
+		break;
+	case 2:
+		damage.endTime = 15;
+		break;
+	case 3:
+		damage.endTime = 20;
+		break;
+	}
+	vDamage.push_back(damage);
+
+	return true;
+}
+
+void boss::damage(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical = false)
+{
+	if (damageCheck(skillNum) == false)return;
+	
+	image* img = IMAGEMANAGER->findImage("boss");
+	POINT pt = { boss.center.x - img->getFrameWidth() / 2,boss.center.y - img->getFrameHeight() / 2 };
+
+	EFFECT->damageEffect(pt);
+
+	boss.bossHp -= damage;
+		
+	DAMAGE->generator(pt, "numbers", damage, true, isCritical);
+
+	//if (cos(_hitAngle) * 2.f > 0)
+	//	DAMAGE->generator(pt, "numbers", damage, false, isCritical);
+	//else
+	//	DAMAGE->generator(pt, "numbers", damage, true, isCritical);
+
+	//넉백부분은 일단보류
+	//hitAngle = _hitAngle;
+	//knockBack =knockBack;
+
+}
+
+void boss::damageCul()
+{
+	for (int i = 0; i < vDamage.size(); )
+	{
+		//삭제 확인
+		if (vDamage[i].currentTime == vDamage[i].endTime)
+		{
+			vDamage.erase(vDamage.begin() + i);
+		}
+		else
+		{
+			vDamage[i].currentTime++;
+			i++;
+		}
+
+	}
+}
 void boss::bossFinalAttack(int patternType)
 {
 	RECT temp;
