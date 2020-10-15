@@ -8,7 +8,7 @@ HRESULT itemManager::init()
 
 		false, false, false, false, false, false, false, 
 		999,
-		"ERROR", 
+		"ERROR",
 		{ 0,0 });
 
 	//normal
