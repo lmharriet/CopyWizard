@@ -32,7 +32,7 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
     {
         image* img = IMAGEMANAGER->findImage(keyName);
         if(keyName == "summoner")
-            rc = RectMakeCenter(x - img->getFrameWidth()/2, y +100, img->getFrameWidth(), img->getFrameHeight());
+            rc = RectMakeCenter(x - img->getFrameWidth()/2, y + 100, img->getFrameWidth(), img->getFrameHeight());
         else if(keyName == "knight")
             rc = RectMakeCenter(x - img->getFrameWidth()/2, y + 170, img->getFrameWidth(), img->getFrameHeight());
         else if(keyName == "golem" || keyName=="golemHit")
