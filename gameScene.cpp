@@ -47,9 +47,6 @@ HRESULT gameScene::init()
 	_shop = new shop;
 	_shop->init();
 
-	POINT ptArr[3] = { { -2074,-1588 },{ 2027,-68 },{ 1125,2116 } };
-	_shop->generate(ptArr);
-
 
 	UNITRENDER->addUnit(0, "playerFrame", "player", { 0,0 });
 

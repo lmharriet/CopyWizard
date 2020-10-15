@@ -43,7 +43,7 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
     else if (type == "npc")
     {
         image* img = IMAGEMANAGER->findImage(keyName);
-        rc = RectMake(x, y + 100, img->getWidth(), img->getHeight());
+        rc = RectMakeCenter(x - img->getWidth()/2, y - img->getHeight()/2 + 100, img->getWidth(), img->getHeight());
     }
 
     return S_OK;
@@ -99,6 +99,6 @@ void zObject::render(HDC hdc)
     else if (type == "npc")
     {
         //CAMERAMANAGER->Rectangle(hdc, rc);
-        CAMERAMANAGER->Render(hdc, img, x, y);
+        CAMERAMANAGER->Render(hdc, img, x - img->getWidth() / 2, y - img->getWidth() / 2);
     }
 }

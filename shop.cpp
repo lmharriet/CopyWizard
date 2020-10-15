@@ -118,6 +118,9 @@ HRESULT shop::init()
     colItem = -1;
 
     addImage();
+
+    POINT ptArr[3] = { { -2074,-1588 },{ 2027,-68 },{ 1125,2116 } };
+    generate(ptArr);
     return S_OK;
 }
 
@@ -181,13 +184,6 @@ void shop::render()
 {
     for (int i = 0; i < 3; i++) // NPC NUMBER
     {
-        //image* img = IMAGEMANAGER->findImage(npc[i].keyName);
-        //CAMERAMANAGER->Render(getMemDC(), img,
-        //    npc[i].pt.x - img->getWidth() / 2,
-        //    npc[i].pt.y - img->getHeight() / 2);
-
-        //CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(npc[i].pt.x, npc[i].pt.y, 50, 50));
-
         if (npc[i].keyName == "Nox")
         {
             //oldFabric.bmp
@@ -196,6 +192,9 @@ void shop::render()
                 IMAGEMANAGER->findImage("oldFabric"),
                 npc[i].pt.x - ig->getWidth() / 2,
                 npc[i].pt.y - ig->getHeight() / 2 + 150);
+
+
+            CAMERAMANAGER->Rectangle(getMemDC(), RectMakeCenter(npc[i].pt.x, npc[i].pt.y, 150, 150));
 
             //아이템 출력
             if (NoxShop[0].isSell == false) // 하나라도 팔리면 다 없어짐
@@ -228,8 +227,6 @@ void shop::render()
                     NoxShop[j].rc = RectMake(NoxShop[j].pt.x - img->getFrameWidth() / 2,
                         NoxShop[j].pt.y - img->getFrameHeight() / 2,
                         70, 70);
-
-                    //CAMERAMANAGER->Rectangle(getMemDC(), NoxShop[j].rc);
                 }
                 EFFECT->curseRenderFront(getMemDC());
             }
