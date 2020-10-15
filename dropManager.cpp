@@ -6,6 +6,10 @@ HRESULT dropManager::init()
     IMAGEMANAGER->addFrameImage("coin", "Images/item/coinV3.bmp", 80, 60, 4, 3);
     IMAGEMANAGER->addFrameImage("healBall", "Images/item/healing ball.bmp", 300, 50, 6, 1);
 
+    IMAGEMANAGER->addImage("bronzeCoin", "Images/effect/bronzeCoin.bmp", 21, 12, true, RGB(255, 0, 255));
+    IMAGEMANAGER->addImage("silverCoin", "Images/effect/silverCoin.bmp", 21, 12, true, RGB(255, 0, 255));
+    IMAGEMANAGER->addImage("goldCoin", "Images/effect/goldCoin.bmp", 21, 12, true, RGB(255, 0, 255));
+
     dtime = 0;
     return S_OK;
 }
@@ -64,6 +68,30 @@ void dropManager::render(HDC hdc)
         }
 
         if (vHealBall[i].currentFrameX == img->getMaxFrameX())vHealBall[i].currentFrameX = 0;
+    }
+}
+
+void dropManager::coinEffectRender(HDC hdc)
+{
+    //coin drop render
+    for (int i = 0; i < coinView.size();)
+    {
+        //렌더
+        image* img = IMAGEMANAGER->findImage(coinView[i].keyName);
+        img->alphaRender(hdc, coinView[i].pt.x, coinView[i].pt.y, coinView[i].curOpacity);
+
+        //이동
+        coinView[i].pt.y -= 2;
+
+        //투명도 변경
+        coinView[i].curOpacity-=5;
+
+        //삭제
+        if (coinView[i].curOpacity == 0.f)
+        {
+            coinView.erase(coinView.begin() + i);
+        }
+        else i++;
     }
 }
 
@@ -152,4 +180,28 @@ void dropManager::coinGenerator()
 
         iter = vTransfer.erase(iter);
     }
+}
+
+void dropManager::getCoinEffect(int money)
+{
+    tagCoinView cView;
+
+    cView.curOpacity = 255;
+    cView.speed = 3.f;
+    cView.pt = { WINSIZEX / 2 - 22,WINSIZEY - 50 };
+
+    switch (money)
+    {
+    case 1:
+        cView.keyName = "bronzeCoin";
+        break;
+    case 5:
+        cView.keyName = "silverCoin";
+        break;
+    case 10:
+        cView.keyName = "goldCoin";
+        break;
+    }
+
+    coinView.push_back(cView);
 }

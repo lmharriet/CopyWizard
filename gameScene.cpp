@@ -129,6 +129,11 @@ void gameScene::update()
 	{
 		SCENEMANAGER->loadScene("º¸½º¹æ");
 	}
+
+	if (INPUT->GetKeyDown(VK_BACK))
+	{
+		DROP->getCoinEffect(1);
+	}
 	
 	UNITRENDER->setPlayerRect(_player->getRect());
 
@@ -179,6 +184,8 @@ void gameScene::render()
 	DAMAGE->render(getMemDC());
 
 	EFFECT->portalRender(getMemDC());
+
+	DROP->coinEffectRender(getMemDC());
 
 	UI->render(getMemDC(), 50, 50);
 	_player->invenRender();
