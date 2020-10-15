@@ -7,6 +7,9 @@ HRESULT boss::init(int _posX, int _posY)
 	IMAGEMANAGER->addFrameImage("boss", "resource/boss/bossSprite.bmp", 1500, 1200, 10, 8, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("punch", "resource/boss/0.bmp", 81, 87, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("drill", "resource/boss/1.bmp", 105, 156, 1, 2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("bossDie", "resource/boss/bossDie.bmp", 1044, 250, 6, 1, true, RGB(255, 0, 255));
+
+	IMAGEMANAGER->addImage("bossNpc", "resource/npc/warpNpc.bmp", 107, 164, true, RGB(255, 0, 255));
 
 	frameX = 0;
 	frameY = 5;
@@ -51,6 +54,9 @@ HRESULT boss::init(int _posX, int _posY)
 	bossAtack = false;
 	finalAttack = false;
 	tempDown = false;
+	isFinalAttack = false;
+	gameOver = false;
+	bossDied = false;
 
 	niddleAngle = 0.0f;
 
@@ -67,19 +73,28 @@ void boss::release()
 
 void boss::update()
 {
-
-	this->bossPattern();
-	this->collCheck();
-
+	if (!bossDied) {
+		this->bossPattern();
+		this->collCheck();
+	}
 	BOSSMANAGER->update();
+
+	cout << isFinalAttack << endl;
+	this->bossDie();
 	this->animation();
 }
 
 void boss::render()
 {
 	//CAMERAMANAGER->Rectangle(getMemDC(), boss.rc);
-	if (boss.bossState != BOSSDIE) {
+	if (!gameOver) {
 		CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("boss"), boss.rc.left, boss.rc.top, frameX, frameY);
+		if (boss.bossState == BOSSDIE) {
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("bossDie"), boss.rc.left - 10, boss.rc.top - 50, frameX, frameY);
+		}
+	}
+	else {
+		CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("bossNpc"), 730, 240);
 	}
 
 	if (boss.bossState == DRILL) {
@@ -120,7 +135,12 @@ void boss::animation()
 			frameX = 0;
 			count = 0;
 			timer = 0;
-			boss.bossState = BOSSIDLE;
+			if (boss.bossHp <= 0) {
+				boss.bossState = BOSSDIE;
+			}
+			else {
+				boss.bossState = BOSSIDLE;
+			}
 		}
 		break;
 	case BOSSIDLE:
@@ -506,6 +526,14 @@ void boss::animation()
 		frameY = 6;
 		break;
 	case BOSSDIE:
+		frameY = 0;
+		count++;
+		if (count % 10 == 0) {
+			frameX++;
+			if (frameX > 5) {
+				frameX = 5;
+			}
+		}
 		break;
 	case FINALATTACK:
 		if (!tempDown) {
@@ -960,9 +988,8 @@ void boss::wall(int patternType)
 
 void boss::bossPattern()
 {
-	if (boss.bossState == BOSSIDLE || boss.bossState == BOSSDAMAGED) {
+	if ((boss.bossState == BOSSIDLE || boss.bossState == BOSSDAMAGED) && patternCount != 3) {
 		pattern = RANDOM->range(5) + 1;
-		pattern = 6;
 		if (samePattern == pattern) {
 			while (true)
 			{
@@ -973,6 +1000,10 @@ void boss::bossPattern()
 			}
 		}
 		samePattern = pattern;
+		if (boss.bossHp < 300 && !isFinalAttack) {
+			isFinalAttack = true;
+			pattern = 6;
+		}
 		patternStart = true;
 	}
 
@@ -1012,7 +1043,6 @@ void boss::collCheck()
 				if (!isHit) {
 					float _jumpAngle = getAngle(boss.center.x, boss.center.y, _player->getX(), _player->getY());
 					int damage = RANDOM->range(75, 91);
-					DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", damage);
 					_player->damage(damage, _jumpAngle, 10);
 					isHit = true;
 				}
@@ -1026,7 +1056,6 @@ void boss::collCheck()
 							niddleBlock[j]->isHit = true;
 							niddleBlock.erase(niddleBlock.begin() + j);
 							int damage = RANDOM->range(8, 13);
-							DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", damage);
 							_player->damage(damage, _niddelAngle, 3);
 							break;
 						}
@@ -1038,7 +1067,6 @@ void boss::collCheck()
 				if (!isHit) {
 					float _wallAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left, BOSSMANAGER->getVector()[i]->getRect().top, _player->getRect().left, _player->getRect().top);
 					int damage = RANDOM->range(8, 13);
-					DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", damage);
 					_player->damage(damage, _wallAngle, 8);
 					isHit = true;
 				}
@@ -1053,7 +1081,6 @@ void boss::collCheck()
 			if (IntersectRect(&temp, &_player->getRect(), &punchBlock[i]->rc)) {
 				float _punchAngle = getAngle(punchBlock[i]->rc.left, punchBlock[i]->rc.top, _player->getRect().left, _player->getRect().top);
 				int damage = RANDOM->range(10, 20);
-				DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", damage);
 				_player->damage(damage, _punchAngle, 6);
 				PARTICLE->crashRockParticlePlay(punchBlock[i]->rc.left + 50, punchBlock[i]->rc.top + 50);
 				punchBlock.erase(punchBlock.begin() + i);
@@ -1066,7 +1093,6 @@ void boss::collCheck()
 		if (!isHit) {
 			float _drillBlock = getAngle(drillBlock.rc.left, drillBlock.rc.top, _player->getRect().left, _player->getRect().top);
 			int damage = RANDOM->range(1, 5);
-			DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", damage);
 			_player->damage(damage, _drillBlock, 10);
 			isHit = true;
 		}
@@ -1128,8 +1154,25 @@ void boss::bossDamaged()
 
 void boss::bossDie()
 {
-	if (boss.bossHp <= 0) {
-		boss.bossState = BOSSDIE;
+	if (boss.bossHp <= 0 && boss.bossState == BOSSIDLE) {
+		patternCount = 3;
+		frameX = 0;
+		frameY = 5;
+		boss.bossHp = 0;
+		bossDied = true;
+		boss.rc = RectMakeCenter(752, 288, 150, 150);
+	}
+
+	if (bossDied && boss.bossState != BOSSDIE) {
+		boss.bossState = RESPONE;
+	}
+	if (boss.bossState == BOSSDIE) {
+		if (frameX >= 5) {
+			timer++;
+			if (timer > 150) {
+				gameOver = true;
+			}
+		}
 	}
 }
 
@@ -1180,13 +1223,12 @@ void boss::bossFinalAttack(int patternType)
 				if (count < 90) {
 					if (!isHit) {
 						int damage = RANDOM->range(8, 12);
-						DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", damage);
 						_player->finalAttackDamaged(damage, 40);
 						isHit = true;
 					}
 					if (isHit) {
 						hitTimer++;
-						if (hitTimer > 30) {
+						if (hitTimer > 60) {
 							hitTimer = 0;
 							isHit = false;
 						}
@@ -1201,13 +1243,12 @@ void boss::bossFinalAttack(int patternType)
 				else {
 					if (!isHit) {
 						int damage = RANDOM->range(3, 6);
-						DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", damage);
 						_player->finalAttackDamaged(damage, 100);
 						isHit = true;
 					}
 					if (isHit) {
 						hitTimer++;
-						if (hitTimer > 10) {
+						if (hitTimer > 20) {
 							hitTimer = 0;
 							isHit = false;
 						}
@@ -1223,7 +1264,7 @@ void boss::bossFinalAttack(int patternType)
 			}
 			else {
 				if (_player->getY() > -600) {
-					_player->setY(_player->getY() - 20);
+					_player->setY(_player->getY() - 30);
 				}
 				else {
 					if (boss.center.y > _player->getY() - 70) {
@@ -1253,7 +1294,6 @@ void boss::bossFinalAttack(int patternType)
 					CAMERAMANAGER->Shake(30, 30, 2);
 					if (!isHit) {
 						int damage = RANDOM->range(15, 25);
-						DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", damage);
 						_player->finalAttackDamaged(damage, 10);
 						isHit = true;
 					}

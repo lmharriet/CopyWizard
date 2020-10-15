@@ -75,6 +75,9 @@ private:
 	bool niddlePattern;
 	bool wallPattern;
 	bool isHit;
+	bool isFinalAttack;
+	bool gameOver;
+	bool bossDied;
 
 	bool bossAtack;
 	bool finalAttack;
