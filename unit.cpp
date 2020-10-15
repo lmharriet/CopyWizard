@@ -1,6 +1,12 @@
 #include "stdafx.h"
 #include "unit.h"
 
+HRESULT unit::init()
+{
+    tile = PLAYERDATA->_getTile();
+    return S_OK;
+}
+
 void unit::addUnit(int _index, string _keyName, string type, POINT frame, float _x, float _y)
 {
     zObject* zo = new zObject;
@@ -13,16 +19,20 @@ void unit::addUnit(int _index, string _keyName, string type, POINT frame, float 
 
 void unit::release()
 {
+    SAFE_DELETE(tile);
 }
 
 void unit::update()
 {
     wall = PLAYERDATA->getWall();
 
-    vUnit.clear();
-    vUnit.push_back(player);
+    for (int i = 0; i < vUnit.size(); i++)
+    {
+        vector<zObject*> tempObj;
+        tempObj.swap(vUnit);
+    }
 
-    tagTile* tile = PLAYERDATA->_getTile();
+    vUnit.push_back(player);
 
     for (int i = 0; i < wall.size(); i++)
     {

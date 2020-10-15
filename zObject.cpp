@@ -11,6 +11,8 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
     keyName = _keyName;
     frame = _frame;
 
+    tagTile* tile = PLAYERDATA->_getTile();
+
     if (type == "wall")
     {
         tile = PLAYERDATA->_getTile();
@@ -22,12 +24,15 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
     {
         image* img = IMAGEMANAGER->findImage(keyName);
         rc = RectMakeCenter(WINSIZEX / 2 - 50, WINSIZEY / 2 - 50, img->getFrameWidth(), img->getFrameHeight());
+
+        tile = nullptr;
     }
 
     else if (type == "monster")
     {
         //image* img = IMAGEMANAGER->findImage(keyName);
         //rc = RectMakeCenter(WINSIZEX / 2 - 50, WINSIZEY / 2 - 50, img->getFrameWidth(), img->getFrameHeight());
+        tile = nullptr;
     }
 
     return S_OK;
@@ -35,7 +40,6 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
 
 void zObject::release()
 {
-    SAFE_DELETE(tile);
 }
 
 void zObject::render(HDC hdc)

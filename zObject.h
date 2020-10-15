@@ -12,7 +12,7 @@ private:
 	int Index;
 	string keyName;
 
-	tagTile* tile;
+	//tagTile* tile;
 	RECT rc;
 public:
 	HRESULT init(int _index, string _keyName, string _type, POINT _frame, float _x, float _y);

@@ -53,6 +53,8 @@ HRESULT gameScene::init()
 
 	UNITRENDER->addUnit(0, "playerFrame", "player", { 0,0 });
 
+	UNITRENDER->init();
+
 	//sound
 	soundInit();
 	return S_OK;

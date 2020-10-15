@@ -40,7 +40,7 @@ HRESULT playerData::init()
 	gShroud.endTime = 200;
 	gShroud.isActives = false;
 	//add image
-	IMAGEMANAGER->addImage("glassShroud", "Images/item/glassShroud.bmp", 120, 120, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("glassShroud", "Images/item/glassShroud_high.bmp", 120, 120, true, RGB(255, 0, 255));
 
 	return S_OK;
 }
