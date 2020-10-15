@@ -158,7 +158,7 @@ HRESULT itemManager::init()
 		"최대 체력이 250 감소하지만, 체력이 50% 이하가 되면 공격력이 50% 증가 한다.",
 		{ 3,2 });
 
-	//구현 중 (gameScene.cpp)
+	//구현 완료 (gameScene.cpp)
 	addItem(
 		"고학자의 깨진 안경", 0.3f, 0, 0, 0, 0, 0, 0, 
 		false, 0, false,
@@ -223,6 +223,7 @@ HRESULT itemManager::init()
 void itemManager::addImage()
 {
 	IMAGEMANAGER->addFrameImage("itemFrame", "Images/item/ItemSprite.bmp", 360, 120, 9, 3);
+	IMAGEMANAGER->addImage("glassEffect", "Images/item/brokenGlass.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 }
 
 //아이템 매니져에 아이템을 추가하기 위함
