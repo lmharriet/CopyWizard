@@ -111,6 +111,8 @@ void player::release()
 
 void player::update()
 {
+	
+
 	PLAYERDATA->update();
 
 	blaze->update();
@@ -165,14 +167,6 @@ void player::update()
 	signatureSetUp();
 	/////////////////
 
-	if (INPUT->GetKeyDown('F'))
-	{
-		UI->setSkillSlot(arcana[0].skillName, arcana[0].coolTime);
-		UI->setSkillSlot(arcana[1].skillName, arcana[1].coolTime);
-		UI->setSkillSlot(arcana[2].skillName, arcana[2].coolTime);
-		UI->setSkillSlot(arcana[3].skillName, arcana[3].coolTime);
-
-	}
 
 	/*
 	meteorSetUp();
@@ -218,7 +212,7 @@ void player::other_update()
 	searingRush->update();
 
 	inferno->update();
-	//gaugeTime++;
+
 
 	animation(1);
 
@@ -259,13 +253,6 @@ void player::other_update()
 	makeCol2(3, 45, 60);
 
 
-	if (INPUT->GetKeyDown('F'))
-	{
-		UI->setSkillSlot(arcana[0].skillName, arcana[0].coolTime);
-		UI->setSkillSlot(arcana[1].skillName, arcana[1].coolTime);
-		UI->setSkillSlot(arcana[2].skillName, arcana[2].coolTime);
-		UI->setSkillSlot(arcana[3].skillName, arcana[3].coolTime);
-	}
 
 
 	changeState();
@@ -273,8 +260,6 @@ void player::other_update()
 	dashSetUp();
 	standardSetUp();
 	signatureSetUp();
-	//infernoSetUp();
-	//meteorSetUp();
 	dragonArcSetUp();
 
 	damagedCool();
@@ -535,6 +520,12 @@ void player::skillInit()
 	arcana[3].type = ARCANA_TYPE::TYPE_SIGNATURE;
 	arcana[3].skillName = "skill_meteor";
 	arcana[3].coolTime = 300;
+
+	UI->setSkillSlot(arcana[0].skillName, arcana[0].coolTime);
+	UI->setSkillSlot(arcana[1].skillName, arcana[1].coolTime);
+	UI->setSkillSlot(arcana[2].skillName, arcana[2].coolTime);
+	UI->setSkillSlot(arcana[3].skillName, arcana[3].coolTime);
+
 }
 
 void player::basicSetUp()
@@ -706,7 +697,7 @@ void player::dashSetUp()
 void player::standardSetUp()
 {
 	if (INPUT->GetKeyDown(VK_RBUTTON) && frozenTime == 0 && !inferno->getGauging() && !isDead
-		&& speed == 0 && meteorStateCool == 0)
+		&& speed == 0 && meteorStateCool == 0 && !inferno->getCool())
 	{
 		standard = true;
 		saveAngle2 = attackAngle;
@@ -906,12 +897,13 @@ void player::animation(int _index)
 			}
 			break;
 		case STATE::DAMAGED:
-			if (frozenTime > 0)
+			if (frozenTime > 0 || grabbedTime > 0)
 			{
 				frameAnimation(6, 0);
-				if (!isDamaged) move = MOVE::LEFT;
+				if (!isDamaged || !isGrabbed) move = MOVE::LEFT;
+
 			}
-			//각도별로 
+					//각도별로 
 
 			//if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
 			//{
@@ -1188,6 +1180,12 @@ void player::animation(int _index)
 			{
 				frameAnimation(6, 0, 1);
 				if (!isDamaged) move = MOVE::LEFT;
+				
+			}
+			if (grabbedTime > 0)
+			{
+				frameAnimation(6, 0, 1);
+				if (!isGrabbed) move = MOVE::LEFT;
 			}
 			//각도별로 
 
@@ -1588,6 +1586,8 @@ void player::finalAttackDamaged(int damage, int frozenCount)
 	isGrabbed = true;
 	grabbedTime = frozenCount;
 
+	state = STATE::DAMAGED;
+
 	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
 
 	DAMAGE->generator({ (long)posX, (long)posY }, "rNumbers", damage, false);
@@ -1595,22 +1595,20 @@ void player::finalAttackDamaged(int damage, int frozenCount)
 
 void player::grabbedCool()
 {
-	if (isGrabbed)
-	{
-		state = STATE::DAMAGED;
-	}
 	if (grabbedTime > 0)
 	{
+		state = STATE::DAMAGED;
 		grabbedTime--;
 		if (grabbedTime <= 0)
 		{
 			grabbedTime = 0;
 			isGrabbed = false;
-			state = STATE::IDLE;
 		}
 	}
 
+
 }
+
 void player::chargeSkillGauge(int atkPower, int skillNum)
 {
 	switch (skillNum)

@@ -113,17 +113,14 @@ public:
 	////////////////////////
 	////  skill setUp   ////
 
-	void meteorSetUp();
-
-	void dragonArcSetUp();
 
 	void skillInit();
-
 	void basicSetUp();
 	void dashSetUp();
 	void standardSetUp();
 	void signatureSetUp();
 
+	void dragonArcSetUp();
 	///////////////////////
 
 
