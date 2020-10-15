@@ -57,7 +57,7 @@ void golem::update()
                 atkDirection[MONSTER_DOWN] = true;
             }
         }
-        else if(!isDie &&!isATK)
+        else if(!isDie &&!isATK&&!isHit)
         {
             state = STATEIMAGE::ATK;
             isATK = true;
@@ -201,7 +201,7 @@ void golem::render()
             smallSlashIndex.y = 1;
             if (count % frameSpeed == 0)
             {
-                cout << count << endl;
+                
                 smallSlashIndex.x--;
                 if (smallSlashIndex.x < 0)
                 {
@@ -287,7 +287,7 @@ void golem::stateATK()
     {
         frameIndexL[ATK].y = 0;
         count++;
-        if (count % 40 == 0)
+        if (count % 30 == 0)
         {
            // count = 0;
             frameIndexL[ATK].x--;
@@ -300,7 +300,7 @@ void golem::stateATK()
             {
                 frameIndexL[ATK].x = 3;
                 delay++;
-                if (delay > 3)
+                if (delay > 1)
                 {
                     isATK = false;
                     delay = 0;
@@ -318,7 +318,7 @@ void golem::stateATK()
     {
         frameIndexR[ATK].y = 0;
         count++;
-        if (count % 40 == 0)
+        if (count % 30 == 0)
         {
             //count = 0;
             frameIndexR[ATK].x++;
@@ -331,7 +331,7 @@ void golem::stateATK()
             {
                 frameIndexR[ATK].x = 2;
                 delay++;
-                if (delay > 3)
+                if (delay > 1)
                 {
 
                     isATK = false;
