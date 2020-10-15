@@ -75,7 +75,10 @@ void enemyManager::render()
 {
 	//°ø¿ëÃÑ¾Ë ·»´õ
 	_bullet->render();
-	
+	for (int i = 0; i < _vMinion.size(); i++)
+	{
+		_vMinion[i]->render();
+	}
 
 
 }
@@ -122,7 +125,7 @@ void enemyManager::minionBulletFire(float aimX, float aimY)
 	{
 		if ((*_viMinion)->getFx() == false)continue;
 		
-		float angle = getAngle((float)(*_viMinion)->getCulPos().x, (float)(*_viMinion)->getCulPos().y, (float)aimX, (float)aimY);
+		float angle = getAngle((float)(*_viMinion)->getCulCenterX(), (float)(*_viMinion)->getCulCenterY(), (float)aimX, (float)aimY);
 		switch ((*_viMinion)->getMonsterKind())
 		{
 			
@@ -130,10 +133,9 @@ void enemyManager::minionBulletFire(float aimX, float aimY)
 			golemBullet( angle);
 			break;
 		case MONSTERKIND::KNIGHT:
+			angle = getAngle((float)(*_viMinion)->getCulCenterX(), (float)(*_viMinion)->getCulCenterY()+50, (float)aimX, (float)aimY);
 			knightBullet(angle);
-
 			break;
-			
 		case MONSTERKIND::SUMMONER:
 			angle = getAngle((float)(*_viMinion)->getCulPos().x+50, (float)(*_viMinion)->getCulPos().y-52, 
 				(float)aimX, (float)aimY);
