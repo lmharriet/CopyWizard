@@ -245,6 +245,9 @@ void effectManager::addImage()
 
     //damage
     IMAGEMANAGER->addFrameImage("damageEffect", "Images/effect/monster/damageEffect.bmp", 300, 300, 4, 4);
+
+    //curse
+    IMAGEMANAGER->addFrameImage("curseEffect", "Images/effect/curseItem.bmp", 112, 248, 4, 4);
 }
 
 void effectManager::dashEffect(MOVE direction, POINT pos)
@@ -400,5 +403,115 @@ void effectManager::lightEffect(POINT pt, int maxEffect)
         str += itoa(ranStr, ch, 10);
 
         setEffect(str, { pt.x + ranX,pt.y + ranY }, 35, 75);
+    }
+}
+
+void effectManager::SetCursePoint(POINT _pt0, POINT _pt1, POINT _pt2)
+{
+    cursePoint.createDelay = 60;
+    cursePoint.isActive = true;
+
+    cursePoint.pt[0] = _pt0;
+    cursePoint.pt[1] = _pt1;
+    cursePoint.pt[2] = _pt2;
+
+    cursePoint.renderIndex = 0;
+    cursePoint.curTime = 0;
+}
+
+void effectManager::cursePointActive()
+{
+    cursePoint.curTime++;
+
+    if (cursePoint.curTime == 30)
+    {
+        //积己1
+        image* img = IMAGEMANAGER->findImage("curseEffect");
+
+        for (int i = 0; i < 3; i++)
+        {
+            tagCurseEffect eft;
+            eft.curTime = RANDOM->range(0, 12);
+            eft.frame = { 0,RANDOM->range(0,img->getMaxFrameY()) };
+            eft.maxFrame = img->getMaxFrameX();
+
+            eft.pos = { cursePoint.pt[i].x + RANDOM->range(-15,15), cursePoint.pt[i].y + RANDOM->range(-8,8) };
+            curseBackEft.push_back(eft);
+        }
+    }
+
+    if (cursePoint.curTime == cursePoint.createDelay)
+    {
+        cursePoint.curTime = 0;
+        
+        //积己2
+        image* img = IMAGEMANAGER->findImage("curseEffect");
+
+        for (int i = 0; i < 3; i++)
+        {
+            tagCurseEffect eft;
+            eft.curTime = RANDOM->range(0, 12);
+            eft.frame = { 0,RANDOM->range(0,img->getMaxFrameY()) };
+            eft.maxFrame = img->getMaxFrameX();
+
+            eft.pos = { cursePoint.pt[i].x + RANDOM->range(-12,12),cursePoint.pt[i].y + RANDOM->range(-6,6) };
+            curseFrontEft.push_back(eft);
+        }
+    }
+}
+
+void effectManager::curseRenderBack(HDC hdc)
+{
+    for (int i = 0; i < curseBackEft.size();)
+    {
+        //坊歹
+        CAMERAMANAGER->FrameRender(hdc, IMAGEMANAGER->findImage("curseEffect"),
+            curseBackEft[i].pos.x - IMAGEMANAGER->findImage("curseEffect")->getFrameWidth() / 2,
+            curseBackEft[i].pos.y - IMAGEMANAGER->findImage("curseEffect")->getFrameHeight() / 2,
+            curseBackEft[i].frame.x,
+            curseBackEft[i].frame.y);
+
+        if (curseBackEft[i].curTime == 12)
+        {
+            curseBackEft[i].curTime = 0;
+            curseBackEft[i].frame.x++;
+        }
+
+        curseBackEft[i].curTime++;
+
+        //昏力
+        if (curseBackEft[i].frame.x == curseBackEft[0].maxFrame)
+        {
+            curseBackEft.erase(curseBackEft.begin() + i);
+        }
+        else i++;
+    }
+}
+
+void effectManager::curseRenderFront(HDC hdc)
+{
+    for (int i = 0; i < curseFrontEft.size();)
+    {
+        //坊歹
+        CAMERAMANAGER->FrameRender(hdc, IMAGEMANAGER->findImage("curseEffect"),
+            curseFrontEft[i].pos.x - IMAGEMANAGER->findImage("curseEffect")->getFrameWidth() / 2,
+            curseFrontEft[i].pos.y - IMAGEMANAGER->findImage("curseEffect")->getFrameHeight() / 2, 
+            curseFrontEft[i].frame.x,
+            curseFrontEft[i].frame.y);
+
+        if (curseFrontEft[i].curTime == 12)
+        {
+            curseFrontEft[i].curTime = 0;
+            curseFrontEft[i].frame.x++;
+        }
+        
+        curseFrontEft[i].curTime++;
+
+        //昏力
+        if (curseFrontEft[i].frame.x == curseFrontEft[0].maxFrame)
+        {
+            curseFrontEft.erase(curseFrontEft.begin() + i);
+        }
+        else i++;
     }
 }

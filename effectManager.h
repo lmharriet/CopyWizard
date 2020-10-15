@@ -56,17 +56,43 @@ struct tagPortalEffect
 	bool isActive;
 };
 
+struct tagCursePoint
+{
+	int curTime;
+
+	POINT pt[3];
+	int renderIndex;
+	int createDelay;
+
+	bool isActive;
+};
+
+struct tagCurseEffect
+{
+	int curTime;
+
+	POINT frame;
+	int maxFrame;
+
+	POINT pos;
+};
+
 class effectManager : public singletonBase <effectManager>
 {
 private:
+	//대쉬 이펙트 관리
 	vector<tagDashEffect> vDashEft;
-	
 	//maxFrame이 되면 erase되는 이펙트 관리
 	vector<tagEffect> vEft;
 	//데미지 이펙트 관리
 	vector<tagDamageEffect> dEft;
-
+	//포탈 이펙트 
 	tagPortalEffect pEft;
+
+	//저주 이펙트
+	tagCursePoint cursePoint;
+	vector<tagCurseEffect> curseBackEft;
+	vector<tagCurseEffect> curseFrontEft;
 
 	int time;			// 프레임렌더를 하기 위해 필요, 'time++' 을 해주기 위함
 public:
@@ -93,4 +119,9 @@ public:
 
 	void damageEffect(POINT pt);
 	void lightEffect(POINT pt, int maxEffect);
+
+	void SetCursePoint(POINT _pt0, POINT _pt1, POINT _pt2);
+	void cursePointActive();
+	void curseRenderBack(HDC hdc);
+	void curseRenderFront(HDC hdc);
 };
