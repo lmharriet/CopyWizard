@@ -20,6 +20,9 @@ HRESULT player::init()
 	state = STATE::IDLE;
 	move = MOVE::DOWN;
 
+	//skill init
+	skillInit();
+
 	memset(tileCheck, 0, sizeof(tileCheck));
 	memset(diagonalCheck, 0, sizeof(diagonalCheck));
 
@@ -58,6 +61,8 @@ HRESULT player::init()
 
 	//불렛 클래스
 	bulletClassInit();
+
+
 	//인벤토리
 	inven = new inventory;
 	inven->init();
@@ -68,8 +73,9 @@ HRESULT player::init()
 
 	//damage 
 	damageAngle = 0;
-	damageAngleTenth = frozenTime = 0;
+	damageAngleTenth = frozenTime = grabbedTime = 0;
 
+	isGrabbed = false;
 	isDamaged = false;
 	isDead = false;
 
@@ -77,6 +83,7 @@ HRESULT player::init()
 	skillGauge = 0;
 	gaugeMaxCool = 120;
 	upgradeReady = false;
+
 
 
 	//sound
@@ -104,7 +111,6 @@ void player::release()
 
 void player::update()
 {
-
 	PLAYERDATA->update();
 
 	blaze->update();
@@ -150,13 +156,27 @@ void player::update()
 	makeCol2(3, 45, 60);
 
 
-	dashFunction();
 	changeState();
-	blazeSetUp();
-	infernoSetUp();
-	meteorSetUp();
 
-	dragonArcSetUp();
+	////////////////
+	basicSetUp();
+	dashSetUp();
+	standardSetUp();
+	signatureSetUp();
+	/////////////////
+
+	if (INPUT->GetKeyDown('F'))
+	{
+		UI->setSkillSlot(arcana[0].skillName, arcana[0].coolTime);
+		UI->setSkillSlot(arcana[1].skillName, arcana[1].coolTime);
+		UI->setSkillSlot(arcana[2].skillName, arcana[2].coolTime);
+		UI->setSkillSlot(arcana[3].skillName, arcana[3].coolTime);
+
+	}
+
+	/*
+	meteorSetUp();
+	dragonArcSetUp();*/
 
 	damagedCool();
 
@@ -173,6 +193,7 @@ void player::update()
 		rc = RectMakeCenter(posX, posY, 50, 50);
 	}
 
+
 	skillGaugeSetUp();
 
 
@@ -184,7 +205,6 @@ void player::update()
 	death();
 	//don't touch!
 	buttonDown();
-
 
 }
 
@@ -214,7 +234,8 @@ void player::other_update()
 	angleTenth = (int)(saveAngle * (18 / PI));
 
 
-	if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && !isDead && !inferno->getGauging())
+	if (speed == 0 && stateCool == 0 && meteorStateCool == 0
+		&& !isDead && !inferno->getGauging() && !isGrabbed)
 	{
 		controller();
 	}
@@ -237,14 +258,39 @@ void player::other_update()
 	makeCol2(3, 45, 60);
 
 
-	dashFunction();
+
+	if (!uiOn && INPUT->GetKeyDown('F'))
+	{
+		uiOn = true;
+	}
+	if (uiOn && INPUT->GetKeyDown('F'))
+	{
+		uiOn = false;
+	}
+
+
+	if (uiOn)
+	{
+		UI->setSkillSlot(arcana[0].skillName, arcana[0].coolTime);
+		UI->setSkillSlot(arcana[1].skillName, arcana[1].coolTime);
+		UI->setSkillSlot(arcana[2].skillName, arcana[2].coolTime);
+		UI->setSkillSlot(arcana[3].skillName, arcana[3].coolTime);
+
+	}
+
+
+
 	changeState();
-	blazeSetUp();
-	infernoSetUp();
-	meteorSetUp();
+	basicSetUp();
+	dashSetUp();
+	standardSetUp();
+	signatureSetUp();
+	//infernoSetUp();
+	//meteorSetUp();
 	dragonArcSetUp();
 
 	damagedCool();
+	grabbedCool();
 
 	// knockBack lerp
 	if (isDamaged)
@@ -255,6 +301,8 @@ void player::other_update()
 		posY -= sinf(knockBack.angle) * (knockBack.speed + knockBack.percent);
 		rc = RectMakeCenter(posX, posY, 50, 50);
 	}
+
+
 
 	skillGaugeSetUp();
 
@@ -275,7 +323,7 @@ void player::render()
 	int tempAngle = attackAngle * (18 / PI);
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
 	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, tempAngle, 0, 50);
-	
+
 	//bool isRender = false;
 
 	// DASH FIRE RENDER
@@ -318,7 +366,7 @@ void player::invenRender()
 void player::bulletClassInit()
 {
 	blaze = new bomb;
-	blaze->init(3, 350);
+	blaze->init(10, 300);
 
 	dragon = new dragonArc;
 	dragon->init();
@@ -391,6 +439,7 @@ void player::controller()
 	//DASH
 	if (INPUT->GetKeyDown(VK_SPACE) && speed == 0)
 	{
+		//dash = true;
 		//대쉬 이펙트 생성
 		EFFECT->dashEffect(move, { (long)posX,(long)posY });
 		SOUNDMANAGER->play("playerNomalDash", false);
@@ -434,22 +483,113 @@ void player::controller()
 
 }
 
-void player::dashFunction()
+void player::dragonArcSetUp()
+{
+	dragon->setUpgrade(upgradeReady);
+
+	float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
+
+	if (!upgradeReady)
+	{
+		if (INPUT->GetKeyDown('E'))
+		{
+			dragon->fire(posX, posY, angle);
+		}
+	}
+	else
+	{
+		if (INPUT->GetKeyDown('E'))
+		{
+			dragon->phoenixFire(posX, posY, angle);
+
+			//skillGauge초기화 수정 필요..
+			//skillGauge = 0;
+		}
+
+		//조건 넣어서 skill gauge 0 으로 초기화하고 upgradeReady false로 만들기
+
+	}
+}
+
+void player::skillInit()
+{
+	arcana[0].type = ARCANA_TYPE::TYPE_BASIC;
+	arcana[0].skillName = "skill_blaze";
+	arcana[0].coolTime = 50;
+
+	arcana[1].type = ARCANA_TYPE::TYPE_DASH;
+	arcana[1].skillName = "skill_searingDash";
+	arcana[1].coolTime = 240;
+
+	arcana[2].type = ARCANA_TYPE::TYPE_STANDARD;
+	arcana[2].skillName = "skill_inferno";
+	arcana[2].coolTime = 240;
+
+	arcana[3].type = ARCANA_TYPE::TYPE_SIGNATURE;
+	arcana[3].skillName = "skill_meteor";
+	arcana[3].coolTime = 300;
+}
+
+void player::basicSetUp()
+{
+	if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool())
+	{
+		saveAngle = attackAngle;
+		basic = true;
+	}
+	if (basic)
+	{
+		if (arcana[0].skillName == "skill_blaze")
+		{
+			float x = cosf(saveAngle) * 50.f + posX;
+			float y = -sinf(saveAngle) * 50 + posY;
+
+			if (stateCool == 0 && blazeCount == 0)
+			{
+				blazeCount = 3;
+				stateCool = 30;
+			}
+
+			if (blazeCount > 0)
+			{
+				if (stateCool % 10 == 0)
+				{
+					blaze->fire(x, y, 10, saveAngle, 2);
+					blazeCount--;
+				}
+				UI->addCoolTime("skill_blaze");
+			}
+			if (stateCool > 0)
+			{
+				state = STATE::BASIC;
+				stateCool--;
+			}
+			if (stateCool == 0) basic = false;
+		}
+	}
+
+}
+
+void player::dashSetUp()
 {
 	if (speed == 0) return;
 
-	if (!searingRush->getIsCoolTime() &&
-		(speed == 8 || speed == 11 || speed == 14 || speed == 17))
-
-		searingRush->fire(posX, posY);
-
-	if (!searingRush->getIsCoolTime() && speed == 17) //sound
-		SOUNDMANAGER->play("playerfireDash", false);
-
-	if (speed == 7)
+	if (arcana[1].skillName == "skill_searingDash")
 	{
-		UI->addCoolTime("searingDash");
-		searingRush->setIsCoolTime(true);
+		if (!searingRush->getIsCoolTime() &&
+			(speed == 8 || speed == 11 || speed == 14 || speed == 17))
+
+			searingRush->fire(posX, posY);
+
+		if (!searingRush->getIsCoolTime() && speed == 17) //sound
+			SOUNDMANAGER->play("playerfireDash", false);
+
+		if (speed == 7)
+		{
+			UI->addCoolTime("skill_searingDash");
+			searingRush->setIsCoolTime(true);
+		}
+
 	}
 
 	if (dashLeft)
@@ -550,61 +690,16 @@ void player::dashFunction()
 	}
 	speed--;
 	if (speed == 0) resetKey();
+
+
+
+
 }
 
-//bullet
-
-void player::blazeSetUp()
+void player::standardSetUp()
 {
-	if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool() && frozenTime == 0 && !isDead
-		&& !inferno->getGauging() && meteorStateCool == 0 && speed == 0)
-	{
-		UI->addCoolTime(0);
-		blazeCount = 3;
-		basic = true;
-		saveAngle = attackAngle;
-	}
-
-	if (stateCool == 0 && basic)
-	{
-		//basic 공격 할 때 앵글을 저장
-
-		stateCool = 10;
-
-		float x = cosf(attackAngle) * 50.f + posX;
-		float y = -sinf(attackAngle) * 50.f + posY;
-
-		blaze->fire(x, y, 10, saveAngle, 2);
-		blazeCount--;
-	}
-
-	if (stateCool > 0)
-	{
-		state = STATE::BASIC;
-		stateCool--;
-
-	}
-
-	if (blazeCount == 0)basic = false;
-
-	for (int i = 0; i < blaze->getSize(); i++)
-	{
-		if (blaze->getCol(i))
-		{
-			blaze->removeBomb(i);
-		}
-	}
-	//	//	// 저장된 앵글 방향으로 움직이기
-	//	//	/*posX += cosf(saveAngle);
-	//	//	posY += -sinf(saveAngle);*/
-	//	//}
-	//	//else basic = false;
-}
-
-void player::infernoSetUp()
-{
-	if (INPUT->GetKeyDown(VK_RBUTTON) && frozenTime == 0 && !isDead
-		&& !inferno->getCool() && meteorStateCool == 0 && speed == 0)
+	if (INPUT->GetKeyDown(VK_RBUTTON) && frozenTime == 0 && !inferno->getGauging() &&isDead
+		&&speed==0 && meteorStateCool==0)
 	{
 		standard = true;
 		saveAngle2 = attackAngle;
@@ -612,49 +707,55 @@ void player::infernoSetUp()
 	else standard = false;
 
 	if (standard)
-		inferno->fire(posX, posY, attackAngle);
+	{
+		if (arcana[2].skillName == "skill_inferno")
+		{
+			inferno->fire(posX, posY, attackAngle);
+		}
+	}
 
+	//state Change
 	if (inferno->getGauging())
 	{
 		state = STATE::STANDARD;
 	}
 }
 
-void player::meteorSetUp()
+void player::signatureSetUp()
 {
 	Meteor->setUpgrade(upgradeReady);
 
 	float mouseX = CAMERAMANAGER->GetAbsoluteX(_ptMouse.x);
 	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
-	//Attack
-	if (!upgradeReady)
-	{
-		if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead
-			&& !Meteor->getCool() && !inferno->getGauging() && speed == 0)
-		{
-			signature = true;
 
-			if (meteorStateCool == 0)
+	if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead && !Meteor->getCool()
+		&& !inferno->getGauging() && speed == 0)
+	{
+		signature = true;
+	}
+
+	if (signature)
+	{
+		if (!upgradeReady)
+		{
+			if (arcana[3].skillName == "skill_meteor")
 			{
-				meteorStateCool = 30;
-				Meteor->creatMeteor(mouseX, mouseY, 0);
+				if (meteorStateCool == 0)
+				{
+					meteorStateCool = 30;
+					Meteor->creatMeteor(mouseX, mouseY, 0);
+				}
+			}
+			if (meteorStateCool > 0)
+			{
+				state = STATE::SIGNATURE;
+				meteorStateCool--;
+
+				if (meteorStateCool == 0) signature = false;
 			}
 		}
-		if (meteorStateCool > 0)
+		else
 		{
-			state = STATE::SIGNATURE;
-			meteorStateCool--;
-
-			if (meteorStateCool == 0) signature = false;
-		}
-	}
-	else
-	{
-		if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead
-			&& !Meteor->getCool() && !inferno->getGauging() && speed == 0)
-		{
-			signature = true;
-
 			if (meteorStateCool == 0)
 			{
 				meteorStateCool = 30;
@@ -662,65 +763,17 @@ void player::meteorSetUp()
 
 				//skillGauge 초기화
 				skillGauge = 0;
-			
+
+			}
+			if (meteorStateCool > 0)
+			{
+				state = STATE::SIGNATURE;
+				meteorStateCool--;
+
+				if (meteorStateCool == 0) signature = false;
 			}
 		}
-		if (meteorStateCool > 0)
-		{
-			state = STATE::SIGNATURE;
-			meteorStateCool--;
-
-			if (meteorStateCool == 0) signature = false;
-		}
 	}
-}
-
-void player::dragonArcSetUp()
-{
-	dragon->setUpgrade(upgradeReady);
-
-	float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
-	
-	if (!upgradeReady)
-	{
-		if (INPUT->GetKeyDown('E'))
-		{
-			dragon->fire(posX, posY, angle);	
-		}
-	}
-	else
-	{
-		if (INPUT->GetKeyDown('E'))
-		{
-			dragon->phoenixFire(posX, posY, angle);
-			
-			//skillGauge초기화 수정 필요..
-			//skillGauge = 0;
-		}
-
-		//조건 넣어서 skill gauge 0 으로 초기화하고 upgradeReady false로 만들기
-
-	}
-}
-
-void player::skillInit()
-{
-}
-
-void player::basicSetUp()
-{
-}
-
-void player::dashSetUp()
-{
-}
-
-void player::standardSetUp()
-{
-}
-
-void player::signatureSetUp()
-{
 }
 
 void player::takeCoin()
@@ -732,7 +785,7 @@ void player::takeCoin()
 			PLAYERDATA->setCoin(PLAYERDATA->getCoin() + DROP->getCoinVec()[i].money);
 			DROP->getCoinEffect(DROP->getCoinVec()[i].money);
 			if (PLAYERDATA->getStat().goldPig)PLAYERDATA->setCoin(PLAYERDATA->getCoin() + RANDOM->range(1, 2));
-			
+
 			DROP->delCoin(i);
 			SOUNDMANAGER->play("coinGet", false, 0.13f);
 		}
@@ -1066,7 +1119,7 @@ void player::tileCol()
 	}
 }
 
-void player::colorCheck(image* img)
+void player::colorCheck(image * img)
 {
 	for (int i = 0; i < 8; i++)
 	{
@@ -1181,18 +1234,6 @@ void player::changeState()
 	}
 }
 
-void player::buttonDown()
-{
-	//key
-	if (INPUT->GetKey(VK_LEFT) || INPUT->GetKey('A'))isLeft = true;
-	else isLeft = false;
-	if (INPUT->GetKey(VK_RIGHT) || INPUT->GetKey('D'))isRight = true;
-	else isRight = false;
-	if (INPUT->GetKey(VK_UP) || INPUT->GetKey('W'))isUp = true;
-	else isUp = false;
-	if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))isDown = true;
-	else isDown = false;
-}
 
 void player::death()
 {
@@ -1224,8 +1265,6 @@ void player::damage(int damage, float attackAngle, float knockBackSpeed)
 
 	if (inferno->getGauging() && meteorStateCool != 0 && basic)return;
 
-	int index;
-	for (int i = 0; i < 4; i++)	index = i;
 }
 
 void player::damagedCool()
@@ -1248,9 +1287,38 @@ void player::damagedCool()
 	}
 }
 
+void player::finalAttackDamaged(int damage, int frozenCount)
+{
+	if (PLAYERDATA->getHp() <= 0) return;
+
+	isGrabbed = true;
+	grabbedTime = frozenCount;
+
+	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
+
+	DAMAGE->generator({ (long)posX, (long)posY }, "rNumbers", damage, false);
+}
+
+void player::grabbedCool()
+{
+	if (isGrabbed)
+	{
+		state = STATE::DAMAGED;
+	}
+	if (grabbedTime > 0)
+	{
+		grabbedTime--;
+		if (grabbedTime <= 0)
+		{
+			grabbedTime = 0;
+			isGrabbed = false;
+			state = STATE::IDLE;
+		}
+	}
+
+}
 void player::chargeSkillGauge(int atkPower, int skillNum)
 {
-
 	switch (skillNum)
 	{
 	case 0:
@@ -1303,15 +1371,31 @@ void player::skillGaugeSetUp()
 	PLAYERDATA->setSkillGauge(skillGauge);
 }
 
-void player::arcanaCheck()
+void player::buttonDown()
 {
+	//key
+	if (INPUT->GetKey(VK_LEFT) || INPUT->GetKey('A'))isLeft = true;
+	else isLeft = false;
+	if (INPUT->GetKey(VK_RIGHT) || INPUT->GetKey('D'))isRight = true;
+	else isRight = false;
+	if (INPUT->GetKey(VK_UP) || INPUT->GetKey('W'))isUp = true;
+	else isUp = false;
+	if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))isDown = true;
+	else isDown = false;
 }
-
 //del
 void player::viewText()
 {
-	//wsprintf(str, "damageAngle : %d", damageAngle);
-	//textOut(getMemDC(), 100, 230, str, WHITE);
+	char test[256];
+	wsprintf(test, "basic : %d", basic);
+	textOut(getMemDC(), 100, 170, test, WHITE);
+	wsprintf(test, "standard : %d", standard);
+	textOut(getMemDC(), 100, 190, test, WHITE);
+	wsprintf(test, "signature : %d", signature);
+	textOut(getMemDC(), 100, 210, test, WHITE);
+
+
+
 
 	//wsprintf(str, "damageAngleTenth : %d", damageAngleTenth);
 	//textOut(getMemDC(), 100, 250, str, WHITE);

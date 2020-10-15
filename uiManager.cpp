@@ -20,12 +20,12 @@ HRESULT uiManager::init()
 
 	//fire
 	IMAGEMANAGER->addImage("default1", "Images/ui/skill/defaultAttack.bmp", 34, 34);
-	IMAGEMANAGER->addImage("searingDash", "Images/ui/skill/fireDash.bmp", 34, 34);
-	IMAGEMANAGER->addImage("fireDragon", "Images/ui/skill/fireDragon.bmp", 34, 34);
+	IMAGEMANAGER->addImage("skill_searingDash", "Images/ui/skill/fireDash.bmp", 34, 34);
+	IMAGEMANAGER->addImage("skill_dragonArc", "Images/ui/skill/fireDragon.bmp", 34, 34);
 
-	IMAGEMANAGER->addImage("blazeIcon", "Images/ui/skill/blaze.bmp", 34, 34);
-	IMAGEMANAGER->addImage("infernoIcon", "Images/ui/skill/inferno.bmp", 34, 34);
-	IMAGEMANAGER->addImage("meteorIcon", "Images/ui/skill/meteor.bmp", 34, 34);
+	IMAGEMANAGER->addImage("skill_blaze", "Images/ui/skill/blaze.bmp", 34, 34);
+	IMAGEMANAGER->addImage("skill_inferno", "Images/ui/skill/inferno.bmp", 34, 34);
+	IMAGEMANAGER->addImage("skill_meteor", "Images/ui/skill/meteor.bmp", 34, 34);
 
 
 	IMAGEMANAGER->addImage("coolTime", "Images/ui/coolTime.bmp", 34, 34);
@@ -40,17 +40,30 @@ HRESULT uiManager::init()
 		skillSlot[i].available = true;
 	}
 
-	skillSlot[0].keyName = "blazeIcon";
-	skillSlot[0].maxCoolTime = 10;
 
-	skillSlot[1].keyName = "searingDash";
-	skillSlot[1].maxCoolTime = 240;	// 4초
+	skillSlot[0].keyName = "nonSkill";
+	skillSlot[0].maxCoolTime = 0;
 
-	skillSlot[2].keyName = "infernoIcon";
-	skillSlot[2].maxCoolTime = 240; // 4초
+	skillSlot[1].keyName = "nonSkill";
+	skillSlot[1].maxCoolTime = 0;	// 4초
 
-	skillSlot[3].keyName = "meteorIcon";
-	skillSlot[3].maxCoolTime = 300; // 5초
+	skillSlot[2].keyName = "nonSkill";
+	skillSlot[2].maxCoolTime = 0; // 4초
+
+	skillSlot[3].keyName = "nonSkill";
+	skillSlot[3].maxCoolTime = 0; // 5초
+
+	//skillSlot[0].keyName = "blazeIcon";
+	//skillSlot[0].maxCoolTime = 0;
+
+	//skillSlot[1].keyName = "searingDash";
+	//skillSlot[1].maxCoolTime = 240;	// 4초
+
+	//skillSlot[2].keyName = "infernoIcon";
+	//skillSlot[2].maxCoolTime = 240; // 4초
+
+	//skillSlot[3].keyName = "meteorIcon";
+	//skillSlot[3].maxCoolTime = 300; // 5초
 
 	coin = 0;
 	hp = 0;
@@ -201,10 +214,10 @@ void uiManager::skillRender(HDC hdc)
 	}
 }
 
-//1sec = 60 ('초 단위'를 넣어주면 됨)
-void uiManager::setSkillSlot(string keyName, int sec)
+
+void uiManager::setSkillSlot(string keyName, int _time)
 {
-	int time = sec * 60;
+	int time = _time;
 
 	for (int i = 0; i < 4; i++)
 	{

@@ -147,7 +147,8 @@ private:
 	bool bossScene;
 
 public:
-	HRESULT init(int bulletMax, float range);
+	
+	HRESULT init(int maxBullet, float range);
 	void release();
 	void update();
 	void render();
