@@ -14,7 +14,7 @@ private:
 	vector<tagEnemy> vEnemy;
 	vector<int> wall;
 	zObject* player;
-
+	zObject npc[3];
 	//
 	tagTile* tile;
 public:

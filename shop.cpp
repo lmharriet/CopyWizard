@@ -163,6 +163,8 @@ void shop::generate(POINT arr[3])
                 { npc[i].pt.x + 90, npc[i].pt.y + 120 });
         }
 
+        UNITRENDER->addUnit(i, npc[i].keyName, "npc", { 0,0 }, npc[i].pt.x, npc[i].pt.y);
+
         cout << npc[i].keyName << " " << npc[i].pt.x << ", " << npc[i].pt.y << '\n';
     }
 }
@@ -318,6 +320,12 @@ void shop::render()
 
 void shop::colRender()
 {
+    HFONT myFont = CreateFont(25, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "font/MunroSmall.ttf");
+    HFONT oldFont = (HFONT)SelectObject(getMemDC(), myFont);
+
+    image* back = IMAGEMANAGER->findImage("itemBackBoardFrame");
+    RECT rt;
+    int frameX = 0;
     for (int j = 0; j < 5; j++)
     {
         if (!AndresShop[j].isCol || AndresShop[j].isSell) continue;
@@ -325,28 +333,21 @@ void shop::colRender()
         //정보 출력
         if (AndresShop[j].isCol && !AndresShop[j].isSell)
         {
-            RECT rt = RectMakeCenter(
+            rt = RectMakeCenter(
                 CAMERAMANAGER->GetRelativeX(AndresShop[j].pt.x) + 20,
                 CAMERAMANAGER->GetRelativeY(AndresShop[j].pt.y),
                 280, 70);
 
-            //Rectangle(getMemDC(), rt);
-            image* back = IMAGEMANAGER->findImage("itemBackBoardFrame");
-
             //==========================================================
-            int frameX = 0;
-            if (AndresShop[j].Explanation.size() > 66) frameX = 2;
+            if (AndresShop[j].Explanation.size() > 69) frameX = 2;
 
-            else if (AndresShop[j].Explanation.size() > 33) frameX = 1;
+            else if (AndresShop[j].Explanation.size() > 34) frameX = 1;
 
             CAMERAMANAGER->AlphaFrameRender(getMemDC(), back,
                 AndresShop[j].pt.x + 20 - back->getFrameWidth() / 2,
                 AndresShop[j].pt.y - 10 - back->getFrameHeight() / 2,
                 frameX, 0, 130);
             //==========================================================
-
-            HFONT myFont = CreateFont(25, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "font/MunroSmall.ttf");
-            HFONT oldFont = (HFONT)SelectObject(getMemDC(), myFont);
 
             SetTextColor(getMemDC(), RGB(255, 255, 255));
 
@@ -357,9 +358,6 @@ void shop::colRender()
             const char* ch = AndresShop[j].Explanation.c_str();
 
             DrawText(getMemDC(), ch, -1, &rt, DT_CENTER | DT_WORDBREAK);
-
-            SelectObject(getMemDC(), oldFont);
-            DeleteObject(myFont);
         }
     }
 
@@ -369,43 +367,36 @@ void shop::colRender()
         {
             if (NoxShop[j].isCol == false)continue;
 
-            RECT rt = RectMakeCenter(
+            rt = RectMakeCenter(
                 CAMERAMANAGER->GetRelativeX(NoxShop[j].pt.x) + 20,
-                CAMERAMANAGER->GetRelativeY(NoxShop[j].pt.y),
-                280, 70);
-
-            //Rectangle(getMemDC(), rt);
-            image* back = IMAGEMANAGER->findImage("itemBackBoardFrame");
+                CAMERAMANAGER->GetRelativeY(NoxShop[j].pt.y) - 40,
+                320, 70);
 
             //==========================================================
-            int frameX = 0;
-            if (NoxShop[j].Explanation.size() > 66) frameX = 2;
+            if (NoxShop[j].Explanation.size() > 69) frameX = 2;
 
-            else if (NoxShop[j].Explanation.size() > 33) frameX = 1;
+            else if (NoxShop[j].Explanation.size() > 34) frameX = 1;
 
             CAMERAMANAGER->AlphaFrameRender(getMemDC(), back,
                 NoxShop[j].pt.x + 20 - back->getFrameWidth() / 2,
-                NoxShop[j].pt.y - 10 - back->getFrameHeight() / 2,
+                NoxShop[j].pt.y - 50 - back->getFrameHeight() / 2,
                 frameX, 0, 130);
             //==========================================================
-
-            HFONT myFont = CreateFont(25, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "font/MunroSmall.ttf");
-            HFONT oldFont = (HFONT)SelectObject(getMemDC(), myFont);
 
             SetTextColor(getMemDC(), RGB(255, 255, 255));
 
             TextOut(getMemDC(), CAMERAMANAGER->GetRelativeX(NoxShop[j].pt.x) - 30,
-                CAMERAMANAGER->GetRelativeY(NoxShop[j].pt.y) - 70,
+                CAMERAMANAGER->GetRelativeY(NoxShop[j].pt.y) - 110,
                 NoxShop[j].keyName.c_str(), NoxShop[j].keyName.length());
 
             const char* ch = NoxShop[j].Explanation.c_str();
 
             DrawText(getMemDC(), ch, -1, &rt, DT_CENTER | DT_WORDBREAK);
-
-            SelectObject(getMemDC(), oldFont);
-            DeleteObject(myFont);
         }
     }
+
+    SelectObject(getMemDC(), oldFont);
+    DeleteObject(myFont);
 }
 
 void shop::shopCollider(RECT rc)

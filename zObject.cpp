@@ -40,6 +40,12 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
         tile = nullptr;
     }
 
+    else if (type == "npc")
+    {
+        image* img = IMAGEMANAGER->findImage(keyName);
+        rc = RectMake(x, y + 100, img->getWidth(), img->getHeight());
+    }
+
     return S_OK;
 }
 
@@ -88,5 +94,11 @@ void zObject::render(HDC hdc)
         //CAMERAMANAGER->Rectangle(hdc, monRC);
         CAMERAMANAGER->FrameRender(hdc, img, x, y, frame.x, frame.y);
         //Rectangle(hdc, x, y, x+img->getFrameWidth(), img->getFrameHeight());
+    }
+
+    else if (type == "npc")
+    {
+        //CAMERAMANAGER->Rectangle(hdc, rc);
+        CAMERAMANAGER->Render(hdc, img, x, y);
     }
 }
