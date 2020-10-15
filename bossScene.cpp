@@ -206,6 +206,11 @@ void bossScene::attackBoss()
 				_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
 
 			// -> boss damaged
+			_boss->setBossHp(10);
+			DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", 10);
+			if (!_boss->getBossAtack()) {
+				_boss->setBossHit(true);
+			}
 
 			_player->getBlaze()->setCol(i, true);
 
@@ -229,6 +234,11 @@ void bossScene::attackBoss()
 			}
 
 			//-> boss damaged
+			_boss->setBossHp(10);
+			DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", 10);
+			if (!_boss->getBossAtack()) {
+				_boss->setBossHit(true);
+			}
 
 		}
 	}
@@ -257,6 +267,11 @@ void bossScene::attackBoss()
 
 
 			//-> boss damaged
+			_boss->setBossHp(10);
+			DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", 10);
+			if (!_boss->getBossAtack()) {
+				_boss->setBossHit(true);
+			}
 		}
 	}
 
@@ -300,7 +315,12 @@ void bossScene::attackBoss()
 		_boss->setCenter({ (long)x, (long)y });
 		_boss->setRect((int)x, (int)y);
 		//-> boss damaged
+		_boss->setBossHp(10);
+		DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", 10);
 
+		if (!_boss->getBossAtack()) {
+			_boss->setBossHit(true);
+		}
 	}
 
 }

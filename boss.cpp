@@ -21,6 +21,8 @@ HRESULT boss::init(int _posX, int _posY)
 	boss.center.y = posY;
 	boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
 	boss.angle = 0;
+	boss.bossHp = 1000;
+	boss.isHit = false;
 
 	posPlayer = 5;
 	punchCount = 0;
@@ -45,6 +47,10 @@ HRESULT boss::init(int _posX, int _posY)
 	niddlePattern = false;
 	wallPattern = false;
 	isHit = false;
+
+	bossAtack = false;
+	finalAttack = false;
+	tempDown = false;
 
 	niddleAngle = 0.0f;
 
@@ -71,8 +77,10 @@ void boss::update()
 
 void boss::render()
 {
-	CAMERAMANAGER->Rectangle(getMemDC(), boss.rc);
-	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("boss"), boss.rc.left, boss.rc.top, frameX, frameY);
+	//CAMERAMANAGER->Rectangle(getMemDC(), boss.rc);
+	if (boss.bossState != BOSSDIE) {
+		CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("boss"), boss.rc.left, boss.rc.top, frameX, frameY);
+	}
 
 	if (boss.bossState == DRILL) {
 		if (!leftCheck) {
@@ -493,6 +501,111 @@ void boss::animation()
 			frameX = 2;
 		}
 		break;
+	case BOSSDAMAGED:
+		frameX = 0;
+		frameY = 6;
+		break;
+	case BOSSDIE:
+		break;
+	case FINALATTACK:
+		if (!tempDown) {
+			CAMERAMANAGER->Shake(5, 5, 2);
+			if (!finalAttack) {
+				if (leftCheck) {
+					frameX = 8;
+					frameY = 2;
+				}
+				else {
+					frameX = 1;
+					frameY = 2;
+				}
+			}
+			else {
+				count++;
+				if (leftCheck) {
+					if (count < 30) {
+						frameX = 7;
+						frameY = 2;
+					}
+					else if (count >= 30 && count < 60) {
+						frameX = 8;
+						frameY = 2;
+					}
+					else if (count >= 60 && count < 90) {
+						frameX = 7;
+						frameY = 2;
+					}
+					else if (count >= 90 && count < 100) {
+						frameX = 6;
+						frameY = 6;
+					}
+					else if (count >= 100 && count < 110) {
+						frameX = 1;
+						frameY = 2;
+					}
+					else if (count >= 110 && count < 120) {
+						frameX = 6;
+						frameY = 6;
+					}
+					else if (count >= 120 && count < 130) {
+						frameX = 3;
+						frameY = 0;
+					}
+					else if (count >= 130 && count < 180) {
+						frameX = 2;
+						frameY = 0;
+					}
+					else if (count >= 180) {
+						frameX = 1;
+						frameY = 7;
+					}
+				}
+				else {
+					if (count < 30) {
+						frameX = 6;
+						frameY = 6;
+					}
+					else if (count >= 30 && count < 60) {
+						frameX = 1;
+						frameY = 2;
+					}
+					else if (count >= 60 && count < 90) {
+						frameX = 6;
+						frameY = 6;
+					}
+					else if (count >= 90 && count < 100) {
+						frameX = 7;
+						frameY = 2;
+					}
+					else if (count >= 100 && count < 110) {
+						frameX = 8;
+						frameY = 2;
+					}
+					else if (count >= 110 && count < 120) {
+						frameX = 7;
+						frameY = 2;
+					}
+					else if (count >= 120 && count < 130) {
+						frameX = 8;
+						frameY = 3;
+					}
+					else if (count >= 130 && count < 180) {
+						frameX = 2;
+						frameY = 0;
+					}
+					else if (count >= 180) {
+						frameX = 1;
+						frameY = 7;
+					}
+				}
+			}
+		}
+		else {
+			frameX = 2;
+			frameY = 7;
+		}
+		
+		break;
 	}
 }
 //플레이어 위치, 보스 범위 조정 필요
@@ -712,6 +825,7 @@ void boss::niddle(int patternType)
 		timer++;
 		if (timer > 400 || niddleBlock.size() == 0) {
 			timer = 0;
+			count = 0;
 			boss.bossState = BOSSIDLE;
 			patternCount++;
 			startNiddle = false;
@@ -786,6 +900,8 @@ void boss::wall(int patternType)
 		count++;
 		CAMERAMANAGER->Shake(5, 5, 60);
 		if (count > 260) {
+			count = 0;
+			timer = 0;
 			boss.bossState = BOSSIDLE;
 			patternCount++;
 			patternStart = false;
@@ -844,9 +960,9 @@ void boss::wall(int patternType)
 
 void boss::bossPattern()
 {
-	if (boss.bossState == BOSSIDLE) {
+	if (boss.bossState == BOSSIDLE || boss.bossState == BOSSDAMAGED) {
 		pattern = RANDOM->range(5) + 1;
-		//pattern = 5;
+		pattern = 6;
 		if (samePattern == pattern) {
 			while (true)
 			{
@@ -866,9 +982,12 @@ void boss::bossPattern()
 		this->punch(pattern);
 		this->niddle(pattern);
 		this->wall(pattern);
+		this->bossFinalAttack(pattern);
 	}
 
 	if (patternCount == 3) {
+		this->bossDamaged();
+		bossAtack = false;
 		patternTimer++;
 		if (patternTimer > 250) {
 			patternTimer = 0;
@@ -876,21 +995,17 @@ void boss::bossPattern()
 			samePattern = 0;
 		}
 	}
+	else {
+		bossAtack = true;
+	}
 }
 
 void boss::collCheck()
 {
 	RECT temp;
 
-	/*if (boss.rc.left + 75 < _player->getX()) {
-		leftCheck = true;
-	}
-	else {
-		leftCheck = false;
-	}*/
-
 	for (int i = 0; i < BOSSMANAGER->getVector().size(); i++) {
-		if (IntersectRect(&temp, &BOSSMANAGER->getVector()[i]->getRect(), &_player->getRect())) {
+		if (IntersectRect(&temp, &BOSSMANAGER->getVector()[i]->getRect(), &_player->getRect()) && boss.bossState != FINALATTACK) {
 			switch (pattern)
 			{
 			case 1: {
@@ -991,6 +1106,181 @@ void boss::punchRectMove()
 			punchBlock[i]->isFire = true;
 			punchBlock[i]->angle = boss.angle;
 			break;
+		}
+	}
+}
+
+void boss::bossDamaged()
+{
+	if (boss.isHit) {
+		count++;
+		boss.bossState = BOSSDAMAGED;
+		if (count > 50) {
+			boss.bossState = BOSSIDLE;
+			boss.isHit = false;
+			count = 0;
+		}
+	}
+}
+
+void boss::bossDie()
+{
+	if (boss.bossHp <= 0) {
+		boss.bossState = BOSSDIE;
+	}
+}
+
+void boss::bossFinalAttack(int patternType)
+{
+	RECT temp;
+	if (patternType == 6 && !finalAttack) {
+		count++;
+		this->bossPlayerAngle();
+		if (boss.center.x > _player->getX()) {
+			leftCheck = true;
+		}
+		else {
+			leftCheck = false;
+		}
+		boss.bossState = FINALATTACK;
+		boss.center.x += cosf(boss.angle) * 7;
+		boss.center.y += -sinf(boss.angle) * 7;
+		boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
+		if (count % 5 == 0) {
+			BOSSMANAGER->init(boss.center.x - 20, boss.center.y, 20, 1);
+		}
+		if (IntersectRect(&temp, &boss.rc, &_player->getRect())) {
+			count = 0;
+			finalAttack = true;
+			shockBlock.clear();
+			for (int i = 0; i < 8; i++) {
+				tagBlock* _block = new tagBlock;
+				_block->angle = _block->isHit = false;
+				_block->angle = (i * 45) * PI / 180;
+				_block->center.x = cosf(_block->angle) * 30 + WINSIZEX / 2 + 20;
+				_block->center.y = -sinf(_block->angle) * 30 + WINSIZEY / 2 - 75;
+				_block->rc = RectMakeCenter(_block->center.x, _block->center.y, 20, 20);
+				shockBlock.push_back(_block);
+			}
+		}
+		if (count > 200) {
+			count = 0;
+			patternCount++;
+			boss.bossState = BOSSIDLE;
+		}
+	}
+
+	if (boss.bossState == FINALATTACK) {
+		if (finalAttack && !tempDown) {
+			if (count < 130) {
+				boss.center.y = _player->getY() - 30;
+				if (count < 90) {
+					if (!isHit) {
+						DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", 10);
+						//_player->damage(RANDOM->range(10), boss.angle, 10);
+						isHit = true;
+					}
+					if (isHit) {
+						hitTimer++;
+						if (hitTimer > 30) {
+							hitTimer = 0;
+							isHit = false;
+						}
+					}
+					if (leftCheck) {
+						boss.center.x = _player->getX() + 50;
+					}
+					else {
+						boss.center.x = _player->getX() - 50;
+					}
+				}
+				else {
+					if (!isHit) {
+						DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", 10);
+						//_player->damage(RANDOM->range(10), boss.angle, 10);
+						isHit = true;
+					}
+					if (isHit) {
+						hitTimer++;
+						if (hitTimer > 10) {
+							hitTimer = 0;
+							isHit = false;
+						}
+					}
+					if (leftCheck) {
+						boss.center.x = _player->getX() - 50;
+					}
+					else {
+						boss.center.x = _player->getX() + 50;
+					}
+
+				}
+			}
+			else {
+				if (_player->getY() > -600) {
+					_player->setY(_player->getY() - 20);
+				}
+				else {
+					if (boss.center.y > _player->getY() - 50) {
+						boss.center.x = _player->getX();
+						boss.center.y -= 20;
+					}
+					else {
+						tempDown = true;
+						finalAttack = false;
+						count = 0;
+						boss.center.x = WINSIZEX / 2 + 100;
+						_player->setX(WINSIZEX / 2 + 100);
+					}
+				}
+			}
+			boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
+		}
+
+		if (tempDown) {
+			if (boss.rc.bottom <= WINSIZEY / 2 + 75) {
+				boss.center.y += 50;
+				_player->setY(_player->getY() + 50);
+			}
+			else {
+				if (count < 60) {
+					timer++;
+					count++;
+					CAMERAMANAGER->Shake(30, 30, 2);
+					if (!isHit) {
+						DAMAGE->generator({ (long)_player->getX(), (long)_player->getY() }, "rNumbers", 10);
+						//_player->damage(RANDOM->range(10), boss.angle, 10);
+						isHit = true;
+					}
+					if (isHit) {
+						hitTimer++;
+						if (hitTimer > 5) {
+							hitTimer = 0;
+							isHit = false;
+						}
+					}
+					for (int i = 0; i < shockBlock.size(); i++) {
+						shockBlock[i]->center.x += cosf(shockBlock[i]->angle) * 10;
+						shockBlock[i]->center.y += -sinf(shockBlock[i]->angle) * 10;
+						if (timer % 5 == 0) {
+							timer = 0;
+							BOSSMANAGER->init(shockBlock[i]->center.x, shockBlock[i]->center.y, 40, 0);
+						}
+					}
+				}
+				else {
+					hitTimer++;
+					if (hitTimer > 100) {
+						timer = 0;
+						count = 0;
+						hitTimer = 0;
+						tempDown = false;
+						boss.bossState = BOSSIDLE;
+						patternCount++;
+					}
+				}
+			}
+			boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
 		}
 	}
 }

@@ -21,7 +21,7 @@ HRESULT bossSkill::init(float x, float y, int deleteTime, int type)
 
 		_wallImg = IMAGEMANAGER->findImage("wall");
 
-		temp = RectMake(_posX + 35, _posY + 100, 48, 48);
+		temp = RectMake(_posX + 29, _posY + 94, 60, 60);
 		_frameX = 0;
 		_frameY = 0;
 		break;
