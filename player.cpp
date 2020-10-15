@@ -79,11 +79,6 @@ HRESULT player::init()
 	upgradeReady = false;
 
 
-	//test
-	arcana.name = "nonSkill";
-	arcana.type = ARCANA::EMPTY;
-
-
 	//sound
 	walkCount = 0;
 
@@ -472,7 +467,7 @@ void player::dashFunction()
 		}
 		else if (dashDown)
 		{
-			if (!tileCheck[(int)DIRECTION::LEFT_DOWN].isCol &&
+			if (!tileCheck[(int)DIRECTION::LEFT_DOWN].isCol && !tileCheck[(int)DIRECTION::BOTTOM].isCol &&
 				!diagonalCheck[2].isCol)
 			{
 				posX -= speed;
@@ -483,7 +478,8 @@ void player::dashFunction()
 		}
 		else // 그냥 순수 LEFT
 		{
-			if (!tileCheck[(int)DIRECTION::LEFT].isCol)
+			if (!tileCheck[(int)DIRECTION::LEFT].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol
+				&& !tileCheck[(int)DIRECTION::LEFT_TOP].isCol)
 
 			{
 				posX -= speed;
@@ -622,7 +618,6 @@ void player::infernoSetUp()
 	{
 		state = STATE::STANDARD;
 	}
-
 }
 
 void player::meteorSetUp()
@@ -690,8 +685,7 @@ void player::dragonArcSetUp()
 	{
 		if (INPUT->GetKeyDown('E'))
 		{
-			dragon->fire(posX, posY, angle);
-		
+			dragon->fire(posX, posY, angle);	
 		}
 	}
 	else
@@ -709,6 +703,26 @@ void player::dragonArcSetUp()
 	}
 }
 
+void player::skillInit()
+{
+}
+
+void player::basicSetUp()
+{
+}
+
+void player::dashSetUp()
+{
+}
+
+void player::standardSetUp()
+{
+}
+
+void player::signatureSetUp()
+{
+}
+
 void player::takeCoin()
 {
 	for (int i = 0; i < DROP->getCoinVec().size(); i++)
@@ -716,9 +730,9 @@ void player::takeCoin()
 		if (colCheck(rc, DROP->getCoinRect(i)))
 		{
 			PLAYERDATA->setCoin(PLAYERDATA->getCoin() + DROP->getCoinVec()[i].money);
-
+			DROP->getCoinEffect(DROP->getCoinVec()[i].money);
 			if (PLAYERDATA->getStat().goldPig)PLAYERDATA->setCoin(PLAYERDATA->getCoin() + RANDOM->range(1, 2));
-
+			
 			DROP->delCoin(i);
 			SOUNDMANAGER->play("coinGet", false, 0.13f);
 		}

@@ -39,3 +39,29 @@ enum ARCANA_NAME
 {
 	BLAZE, SEARING_DASH, INFERNO,METEOR, DRAGONARC
 };
+
+struct tagBasic
+{
+	string keyname;
+	ARCANA_NAME arcanaName;
+};
+struct tagDash
+{
+	string keyname;
+	ARCANA_NAME arcanaName;
+	int coolTime;
+};
+struct tagStandard
+{
+	string keyname;
+	ARCANA_NAME arcanaName;
+	int coolTime;
+
+};
+struct tagSignature
+{
+	string keyname;
+	ARCANA_NAME arcanaName;
+	int coolTime;
+	bool upgrade;
+};

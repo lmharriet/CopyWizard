@@ -6,31 +6,12 @@
 #include "unitNode.h"
 #include "inventory.h";
 
-//test
-enum class ARCANA
-{
-	EMPTY,
-	BASIC,
-	DASH,
-	STANDARD,
-	SIGNATURE
-};
-//test
-struct tagAllSkill
-{
-	string name;
-	ARCANA type;
-
-};
 class player : public gameNode
 {
 private:
 	tagTile* tile;
 	vector<int> vTile;
 	vector<int> vWall;
-	
-	//test
-	tagAllSkill arcana;
 
 	//bullet class
 
@@ -44,6 +25,12 @@ private:
 	inventory* inven;
 
 private:
+
+	tagBasic Basic;
+	tagDash Dash;
+	tagStandard Standard;
+	tagSignature Signature;
+
 
 	MOVE move;
 	STATE state;
@@ -120,11 +107,25 @@ public:
 	void controller();
 	void dashFunction();
 	void resetKey();
+
+	//////////////////////////
+	////  skill setUp   ////
+
 	void blazeSetUp();
 	void infernoSetUp();
 	void meteorSetUp();
 
 	void dragonArcSetUp();
+
+	void skillInit();
+
+	void basicSetUp();
+	void dashSetUp();
+	void standardSetUp();
+	void signatureSetUp();
+
+	/////////////////////////
+
 
 	void takeCoin();
 	void takeHealball();
