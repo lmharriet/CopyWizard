@@ -47,7 +47,9 @@ private:
 	vector<infoTransfer> vTransfer;
 
 	vector<tagCoinView> coinView;
+	vector<tagCoinView> saveCoinView;
 	int dtime;
+	int cTime;
 public:
 	HRESULT init();
 	void update();

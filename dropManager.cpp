@@ -11,6 +11,7 @@ HRESULT dropManager::init()
     IMAGEMANAGER->addImage("goldCoin", "Images/effect/goldCoin.bmp", 21, 12, true, RGB(255, 0, 255));
 
     dtime = 0;
+    cTime = 0;
     return S_OK;
 }
 
@@ -73,6 +74,19 @@ void dropManager::render(HDC hdc)
 
 void dropManager::coinEffectRender(HDC hdc)
 {
+    //하나씩 전달
+    if (saveCoinView.size() > 0)
+    {
+        cTime++;
+
+        if (cTime % 10 == 0)
+        {
+            coinView.push_back(saveCoinView[0]);
+            saveCoinView.erase(saveCoinView.begin());
+            cTime = 0;
+        }
+    }
+
     //coin drop render
     for (int i = 0; i < coinView.size();)
     {
@@ -203,5 +217,5 @@ void dropManager::getCoinEffect(int money)
         break;
     }
 
-    coinView.push_back(cView);
+    saveCoinView.push_back(cView);
 }

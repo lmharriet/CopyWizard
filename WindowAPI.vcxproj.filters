@@ -203,7 +203,6 @@
     <ClCompile Include="boss.cpp">
       <Filter>MainGame\씬 모음\보스</Filter>
     </ClCompile>
-    <ClCompile Include="shop.cpp" />
     <ClCompile Include="loading.cpp">
       <Filter>GameFramework\매니져\로딩</Filter>
     </ClCompile>
@@ -216,6 +215,9 @@
     <ClCompile Include="wall.cpp" />
     <ClCompile Include="unit.cpp" />
     <ClCompile Include="zObject.cpp" />
+    <ClCompile Include="shop.cpp">
+      <Filter>GameFramework\매니져\상점</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -334,7 +336,6 @@
     <ClInclude Include="startScene.h">
       <Filter>MainGame\씬 모음\시작</Filter>
     </ClInclude>
-    <ClInclude Include="shop.h" />
     <ClInclude Include="loading.h">
       <Filter>GameFramework\매니져\로딩</Filter>
     </ClInclude>
@@ -347,5 +348,8 @@
     <ClInclude Include="wall.h" />
     <ClInclude Include="unit.h" />
     <ClInclude Include="zObject.h" />
+    <ClInclude Include="shop.h">
+      <Filter>GameFramework\매니져\상점</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

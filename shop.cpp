@@ -13,6 +13,7 @@ HRESULT shop::init()
     {
         AndresShop[i].isSell = false;
         AndresShop[i].keyName = "";
+        AndresShop[i].Explanation = "";
         AndresShop[i].price = 0;
         AndresShop[i].pt = { 0,0 };
         AndresShop[i].frame = { 0,0 };
@@ -22,6 +23,7 @@ HRESULT shop::init()
         {
             NoxShop[i].isSell = false;
             NoxShop[i].keyName = "";
+            NoxShop[i].Explanation = "";
             NoxShop[i].price = 0;
             NoxShop[i].pt = { 0,0 };
             NoxShop[i].frame = { 0,0 };
@@ -38,6 +40,7 @@ HRESULT shop::init()
         if (count == 0)
         {
             AndresShop[count].keyName = item.keyName;
+            AndresShop[count].Explanation = item.Explanation;
             AndresShop[count].price = item.price;
             AndresShop[count].frame = item.frame;
 
@@ -61,6 +64,7 @@ HRESULT shop::init()
             if (check == false)
             {
                 AndresShop[count].keyName = item.keyName;
+                AndresShop[count].Explanation = item.Explanation;
                 AndresShop[count].price = item.price;
                 AndresShop[count].frame = item.frame;
 
@@ -80,6 +84,7 @@ HRESULT shop::init()
         if (count == 0)
         {
             NoxShop[count].keyName = item.keyName;
+            NoxShop[count].Explanation = item.Explanation;
             NoxShop[count].price = item.price;
             NoxShop[count].frame = item.frame;
 
@@ -101,6 +106,7 @@ HRESULT shop::init()
             if (check == false)
             {
                 NoxShop[count].keyName = item.keyName;
+                NoxShop[count].Explanation = item.Explanation;
                 NoxShop[count].price = item.price;
                 NoxShop[count].frame = item.frame;
 
@@ -292,6 +298,46 @@ void shop::render()
                         AndresShop[j].pt.y + 73);
                 }
             }
+        }
+    }
+}
+
+void shop::colRender()
+{
+    for (int j = 0; j < 5; j++)
+    {
+        if (!AndresShop[j].isCol || AndresShop[j].isSell) continue;
+
+        //정보 출력
+        if (AndresShop[j].isCol && !AndresShop[j].isSell)
+        {
+            //wsprintf(tsr, (LPSTR)AndresShop[j].keyName);
+            RECT rt = RectMakeCenter(
+                CAMERAMANAGER->GetRelativeX(AndresShop[j].pt.x) + 20,
+                CAMERAMANAGER->GetRelativeY(AndresShop[j].pt.y),
+                300, 150);
+
+            HFONT myFont = CreateFont(25, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "font/MunroSmall.ttf");
+            HFONT oldFont = (HFONT)SelectObject(getMemDC(), myFont);
+
+            SetTextColor(getMemDC(), RGB(255, 255, 255));
+
+            TextOut(getMemDC(), CAMERAMANAGER->GetRelativeX(AndresShop[j].pt.x), CAMERAMANAGER->GetRelativeY(AndresShop[j].pt.y),
+                AndresShop[j].keyName.c_str(), AndresShop[j].keyName.length());
+
+            const char* ch = AndresShop[j].Explanation.c_str();
+            DrawText(getMemDC(), ch, -1, &rt, DT_CENTER | DT_WORDBREAK);
+
+            SelectObject(getMemDC(), oldFont);
+            DeleteObject(myFont);
+        }
+    }
+
+    if (NoxShop->isSell == false)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+
         }
     }
 }

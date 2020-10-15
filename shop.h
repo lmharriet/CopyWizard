@@ -9,6 +9,7 @@ struct tagShop
 struct tagSellItem
 {
 	string keyName;
+	string Explanation;
 
 	POINT pt;
 	POINT frame;
@@ -38,6 +39,8 @@ public:
 	void generate(POINT arr[3]);
 	void zRender(HDC hdc, int index);
 	void render();
+
+	void colRender();
 
 	void shopCollider(RECT rc);
 

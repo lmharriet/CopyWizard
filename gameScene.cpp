@@ -187,6 +187,8 @@ void gameScene::render()
 
 	DROP->coinEffectRender(getMemDC());
 
+	_shop->colRender();
+
 	UI->render(getMemDC(), 50, 50);
 	_player->invenRender();
 

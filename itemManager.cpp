@@ -232,7 +232,7 @@ void itemManager::addItem(string keyName, float damage, float criDamage, float c
 
 	bool vampireBlood, bool doubleDamage, bool ManaRejection, 
 	bool criRejection, bool reducedVisibility, bool halfFace, bool bloodGold,
-	int price,string description, POINT frame)
+	int price,string Explanation, POINT frame)
 {
 	/*
 	string keyName;			//아이템 이름
@@ -288,7 +288,7 @@ void itemManager::addItem(string keyName, float damage, float criDamage, float c
 		bloodGold,
 
 		price,
-		description,frame };
+		Explanation,frame };
 	vItem.push_back(item);
 }
 
