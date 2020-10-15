@@ -13,7 +13,6 @@ struct tagKnockBack
 	float percent;
 };
 
-
 //Dash,RUN
 enum class STATE
 {
@@ -35,33 +34,19 @@ enum class MOVE
 	RIGHT_DOWN,
 };
 
-enum ARCANA_NAME
+enum class ARCANA_TYPE
 {
-	BLAZE, SEARING_DASH, INFERNO,METEOR, DRAGONARC
+	TYPE_EMPTY,TYPE_BASIC,TYPE_DASH, TYPE_STANDARD,TYPE_SIGNATURE
 };
 
-struct tagBasic
+enum class ARCANA_NAME
 {
-	string keyname;
-	ARCANA_NAME arcanaName;
+	NONE, BLAZE, SEARING_DASH, INFERNO, METEOR, DRAGONARC
 };
-struct tagDash
-{
-	string keyname;
-	ARCANA_NAME arcanaName;
-	int coolTime;
-};
-struct tagStandard
-{
-	string keyname;
-	ARCANA_NAME arcanaName;
-	int coolTime;
 
-};
-struct tagSignature
+struct tagWizardArcana
 {
-	string keyname;
-	ARCANA_NAME arcanaName;
+	ARCANA_TYPE type;
+	string skillName;
 	int coolTime;
-	bool upgrade;
 };

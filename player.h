@@ -26,14 +26,11 @@ private:
 
 private:
 
-	tagBasic Basic;
-	tagDash Dash;
-	tagStandard Standard;
-	tagSignature Signature;
-
+	tagWizardArcana arcana[4];
 
 	MOVE move;
 	STATE state;
+	
 
 	RECT rc;
 
@@ -76,7 +73,9 @@ private:
 	float damageAngle;
 	int damageAngleTenth;
 	int frozenTime;
+	int grabbedTime;
 	bool isDamaged;
+	bool isGrabbed;
 	
 	tagKnockBack knockBack;
 
@@ -91,6 +90,10 @@ private:
 	
 	bool isDead;
 
+
+	//temp
+	bool uiOn;
+
 	//sound
 	int walkCount;
 
@@ -99,20 +102,17 @@ public:
 	void release();
 	void update();
 	void other_update();
-	void render();
+	void render(int _index = 0);
 	void invenRender();
 
 	void bulletClassInit();
 
 	void controller();
-	void dashFunction();
 	void resetKey();
 
-	//////////////////////////
+	////////////////////////
 	////  skill setUp   ////
 
-	void blazeSetUp();
-	void infernoSetUp();
 	void meteorSetUp();
 
 	void dragonArcSetUp();
@@ -124,22 +124,22 @@ public:
 	void standardSetUp();
 	void signatureSetUp();
 
-	/////////////////////////
+	///////////////////////
 
 
 	void takeCoin();
 	void takeHealball();
+
 	//collision detection
 	void tileCol();
 	void colorCheck(image* img);
 	void makeCol(int index, int destX, int destY, int rcSize = 7);
-
 	void makeCol2(int index, int destX, int destY, int rcSize = 10);
 
 
 	//animation
-	void animation();
-	void frameAnimation(int frameX, int frameY);
+	void animation(int _index = 0);
+	void frameAnimation(int frameX, int frameY, int _index = 0);
 	void changeState();
 
 
@@ -150,13 +150,15 @@ public:
 
 	void damagedCool();
 
+	void finalAttackDamaged(int damage, int frozenCount);
+
+	void grabbedCool();
+
 	void chargeSkillGauge(int atkPower, int skillNum);
 
 	void skillGaugeSetUp();
 
-
-	void arcanaCheck();
-
+	//Don't touch
 	void buttonDown();
 	void viewText();
 

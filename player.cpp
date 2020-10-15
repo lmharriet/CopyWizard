@@ -20,6 +20,9 @@ HRESULT player::init()
 	state = STATE::IDLE;
 	move = MOVE::DOWN;
 
+	//skill init
+	skillInit();
+
 	memset(tileCheck, 0, sizeof(tileCheck));
 	memset(diagonalCheck, 0, sizeof(diagonalCheck));
 
@@ -58,6 +61,8 @@ HRESULT player::init()
 
 	//불렛 클래스
 	bulletClassInit();
+
+
 	//인벤토리
 	inven = new inventory;
 	inven->init();
@@ -68,8 +73,9 @@ HRESULT player::init()
 
 	//damage 
 	damageAngle = 0;
-	damageAngleTenth = frozenTime = 0;
+	damageAngleTenth = frozenTime = grabbedTime = 0;
 
+	isGrabbed = false;
 	isDamaged = false;
 	isDead = false;
 
@@ -77,6 +83,7 @@ HRESULT player::init()
 	skillGauge = 0;
 	gaugeMaxCool = 120;
 	upgradeReady = false;
+
 
 
 	//sound
@@ -104,7 +111,6 @@ void player::release()
 
 void player::update()
 {
-
 	PLAYERDATA->update();
 
 	blaze->update();
@@ -150,13 +156,27 @@ void player::update()
 	makeCol2(3, 45, 60);
 
 
-	dashFunction();
 	changeState();
-	blazeSetUp();
-	infernoSetUp();
-	meteorSetUp();
 
-	dragonArcSetUp();
+	////////////////
+	basicSetUp();
+	dashSetUp();
+	standardSetUp();
+	signatureSetUp();
+	/////////////////
+
+	if (INPUT->GetKeyDown('F'))
+	{
+		UI->setSkillSlot(arcana[0].skillName, arcana[0].coolTime);
+		UI->setSkillSlot(arcana[1].skillName, arcana[1].coolTime);
+		UI->setSkillSlot(arcana[2].skillName, arcana[2].coolTime);
+		UI->setSkillSlot(arcana[3].skillName, arcana[3].coolTime);
+
+	}
+
+	/*
+	meteorSetUp();
+	dragonArcSetUp();*/
 
 	damagedCool();
 
@@ -173,6 +193,7 @@ void player::update()
 		rc = RectMakeCenter(posX, posY, 50, 50);
 	}
 
+
 	skillGaugeSetUp();
 
 
@@ -184,7 +205,6 @@ void player::update()
 	death();
 	//don't touch!
 	buttonDown();
-
 
 }
 
@@ -198,8 +218,9 @@ void player::other_update()
 	searingRush->update();
 
 	inferno->update();
-	gaugeTime++;
+	//gaugeTime++;
 
+	animation(1);
 
 	inven->update();
 
@@ -214,7 +235,8 @@ void player::other_update()
 	angleTenth = (int)(saveAngle * (18 / PI));
 
 
-	if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && !isDead && !inferno->getGauging())
+	if (speed == 0 && stateCool == 0 && meteorStateCool == 0
+		&& !isDead && !inferno->getGauging() && !isGrabbed)
 	{
 		controller();
 	}
@@ -237,14 +259,26 @@ void player::other_update()
 	makeCol2(3, 45, 60);
 
 
-	dashFunction();
+	if (INPUT->GetKeyDown('F'))
+	{
+		UI->setSkillSlot(arcana[0].skillName, arcana[0].coolTime);
+		UI->setSkillSlot(arcana[1].skillName, arcana[1].coolTime);
+		UI->setSkillSlot(arcana[2].skillName, arcana[2].coolTime);
+		UI->setSkillSlot(arcana[3].skillName, arcana[3].coolTime);
+	}
+
+
 	changeState();
-	blazeSetUp();
-	infernoSetUp();
-	meteorSetUp();
+	basicSetUp();
+	dashSetUp();
+	standardSetUp();
+	signatureSetUp();
+	//infernoSetUp();
+	//meteorSetUp();
 	dragonArcSetUp();
 
 	damagedCool();
+	grabbedCool();
 
 	// knockBack lerp
 	if (isDamaged)
@@ -255,6 +289,8 @@ void player::other_update()
 		posY -= sinf(knockBack.angle) * (knockBack.speed + knockBack.percent);
 		rc = RectMakeCenter(posX, posY, 50, 50);
 	}
+
+
 
 	skillGaugeSetUp();
 
@@ -270,27 +306,46 @@ void player::other_update()
 
 }
 
-void player::render()
+void player::render(int _index)
 {
 	int tempAngle = attackAngle * (18 / PI);
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
 	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, tempAngle, 0, 50);
-	
-	//bool isRender = false;
+
+
+	if (_index == 0)
+	{
+		//bool isRender = false;
 
 	// DASH FIRE RENDER
-	for (int i = 0; i < searingRush->getSize(); i++)
-	{
-		if (/*!isRender && */(searingRush->getY(i) > posY))
+		for (int i = 0; i < searingRush->getSize(); i++)
 		{
-			//isRender = true;
-			animation();
-			searingRush->singleRender(i);
+			if (/*!isRender && */(searingRush->getY(i) > posY))
+			{
+				//isRender = true;
+				animation();
+				searingRush->singleRender(i);
+			}
+			else searingRush->singleRender(i);
 		}
-		else searingRush->singleRender(i);
+
+		//if (!isRender)animation(); // z렌더 같은 눈속임.. (나중에 frame이 떨어지면 포기하는 기능..)
 	}
 
-	//if (!isRender)animation(); // z렌더 같은 눈속임.. (나중에 frame이 떨어지면 포기하는 기능..)
+	else
+	{
+		for (int i = 0; i < searingRush->getSize(); i++)
+		{
+			if (searingRush->getY(i) > posY)
+			{
+				//animation(1);
+				searingRush->singleRender(i);
+			}
+			else searingRush->singleRender(i);
+		}
+
+		animation(1);
+	}
 
 	blaze->render();
 	dragon->render();
@@ -318,7 +373,7 @@ void player::invenRender()
 void player::bulletClassInit()
 {
 	blaze = new bomb;
-	blaze->init(3, 350);
+	blaze->init(10, 300);
 
 	dragon = new dragonArc;
 	dragon->init();
@@ -391,6 +446,7 @@ void player::controller()
 	//DASH
 	if (INPUT->GetKeyDown(VK_SPACE) && speed == 0)
 	{
+		//dash = true;
 		//대쉬 이펙트 생성
 		EFFECT->dashEffect(move, { (long)posX,(long)posY });
 		SOUNDMANAGER->play("playerNomalDash", false);
@@ -434,22 +490,113 @@ void player::controller()
 
 }
 
-void player::dashFunction()
+void player::dragonArcSetUp()
+{
+	dragon->setUpgrade(upgradeReady);
+
+	float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
+
+	if (!upgradeReady)
+	{
+		if (INPUT->GetKeyDown('E'))
+		{
+			dragon->fire(posX, posY, angle);
+		}
+	}
+	else
+	{
+		if (INPUT->GetKeyDown('E'))
+		{
+			dragon->phoenixFire(posX, posY, angle);
+
+			//skillGauge초기화 수정 필요..
+			//skillGauge = 0;
+		}
+
+		//조건 넣어서 skill gauge 0 으로 초기화하고 upgradeReady false로 만들기
+
+	}
+}
+
+void player::skillInit()
+{
+	arcana[0].type = ARCANA_TYPE::TYPE_BASIC;
+	arcana[0].skillName = "skill_blaze";
+	arcana[0].coolTime = 50;
+
+	arcana[1].type = ARCANA_TYPE::TYPE_DASH;
+	arcana[1].skillName = "skill_searingDash";
+	arcana[1].coolTime = 240;
+
+	arcana[2].type = ARCANA_TYPE::TYPE_STANDARD;
+	arcana[2].skillName = "skill_inferno";
+	arcana[2].coolTime = 240;
+
+	arcana[3].type = ARCANA_TYPE::TYPE_SIGNATURE;
+	arcana[3].skillName = "skill_meteor";
+	arcana[3].coolTime = 300;
+}
+
+void player::basicSetUp()
+{
+	if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool())
+	{
+		saveAngle = attackAngle;
+		basic = true;
+	}
+	if (basic)
+	{
+		if (arcana[0].skillName == "skill_blaze")
+		{
+			float x = cosf(saveAngle) * 50.f + posX;
+			float y = -sinf(saveAngle) * 50 + posY;
+
+			if (stateCool == 0 && blazeCount == 0)
+			{
+				blazeCount = 3;
+				stateCool = 30;
+			}
+
+			if (blazeCount > 0)
+			{
+				if (stateCool % 10 == 0)
+				{
+					blaze->fire(x, y, 10, saveAngle, 2);
+					blazeCount--;
+				}
+				UI->addCoolTime("skill_blaze");
+			}
+			if (stateCool > 0)
+			{
+				state = STATE::BASIC;
+				stateCool--;
+			}
+			if (stateCool == 0) basic = false;
+		}
+	}
+
+}
+
+void player::dashSetUp()
 {
 	if (speed == 0) return;
 
-	if (!searingRush->getIsCoolTime() &&
-		(speed == 8 || speed == 11 || speed == 14 || speed == 17))
-
-		searingRush->fire(posX, posY);
-
-	if (!searingRush->getIsCoolTime() && speed == 17) //sound
-		SOUNDMANAGER->play("playerfireDash", false);
-
-	if (speed == 7)
+	if (arcana[1].skillName == "skill_searingDash")
 	{
-		UI->addCoolTime("searingDash");
-		searingRush->setIsCoolTime(true);
+		if (!searingRush->getIsCoolTime() &&
+			(speed == 8 || speed == 11 || speed == 14 || speed == 17))
+
+			searingRush->fire(posX, posY);
+
+		if (!searingRush->getIsCoolTime() && speed == 17) //sound
+			SOUNDMANAGER->play("playerfireDash", false);
+
+		if (speed == 7)
+		{
+			UI->addCoolTime("skill_searingDash");
+			searingRush->setIsCoolTime(true);
+		}
+
 	}
 
 	if (dashLeft)
@@ -550,61 +697,16 @@ void player::dashFunction()
 	}
 	speed--;
 	if (speed == 0) resetKey();
+
+
+
+
 }
 
-//bullet
-
-void player::blazeSetUp()
+void player::standardSetUp()
 {
-	if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool() && frozenTime == 0 && !isDead
-		&& !inferno->getGauging() && meteorStateCool == 0 && speed == 0)
-	{
-		UI->addCoolTime(0);
-		blazeCount = 3;
-		basic = true;
-		saveAngle = attackAngle;
-	}
-
-	if (stateCool == 0 && basic)
-	{
-		//basic 공격 할 때 앵글을 저장
-
-		stateCool = 10;
-
-		float x = cosf(attackAngle) * 50.f + posX;
-		float y = -sinf(attackAngle) * 50.f + posY;
-
-		blaze->fire(x, y, 10, saveAngle, 2);
-		blazeCount--;
-	}
-
-	if (stateCool > 0)
-	{
-		state = STATE::BASIC;
-		stateCool--;
-
-	}
-
-	if (blazeCount == 0)basic = false;
-
-	for (int i = 0; i < blaze->getSize(); i++)
-	{
-		if (blaze->getCol(i))
-		{
-			blaze->removeBomb(i);
-		}
-	}
-	//	//	// 저장된 앵글 방향으로 움직이기
-	//	//	/*posX += cosf(saveAngle);
-	//	//	posY += -sinf(saveAngle);*/
-	//	//}
-	//	//else basic = false;
-}
-
-void player::infernoSetUp()
-{
-	if (INPUT->GetKeyDown(VK_RBUTTON) && frozenTime == 0 && !isDead
-		&& !inferno->getCool() && meteorStateCool == 0 && speed == 0)
+	if (INPUT->GetKeyDown(VK_RBUTTON) && frozenTime == 0 && !inferno->getGauging() && !isDead
+		&& speed == 0 && meteorStateCool == 0)
 	{
 		standard = true;
 		saveAngle2 = attackAngle;
@@ -612,49 +714,55 @@ void player::infernoSetUp()
 	else standard = false;
 
 	if (standard)
-		inferno->fire(posX, posY, attackAngle);
+	{
+		if (arcana[2].skillName == "skill_inferno")
+		{
+			inferno->fire(posX, posY, attackAngle);
+		}
+	}
 
+	//state Change
 	if (inferno->getGauging())
 	{
 		state = STATE::STANDARD;
 	}
 }
 
-void player::meteorSetUp()
+void player::signatureSetUp()
 {
 	Meteor->setUpgrade(upgradeReady);
 
 	float mouseX = CAMERAMANAGER->GetAbsoluteX(_ptMouse.x);
 	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
-	//Attack
-	if (!upgradeReady)
-	{
-		if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead
-			&& !Meteor->getCool() && !inferno->getGauging() && speed == 0)
-		{
-			signature = true;
 
-			if (meteorStateCool == 0)
+	if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead && !Meteor->getCool()
+		&& !inferno->getGauging() && speed == 0)
+	{
+		signature = true;
+	}
+
+	if (signature)
+	{
+		if (!upgradeReady)
+		{
+			if (arcana[3].skillName == "skill_meteor")
 			{
-				meteorStateCool = 30;
-				Meteor->creatMeteor(mouseX, mouseY, 0);
+				if (meteorStateCool == 0)
+				{
+					meteorStateCool = 30;
+					Meteor->creatMeteor(mouseX, mouseY, 0);
+				}
+			}
+			if (meteorStateCool > 0)
+			{
+				state = STATE::SIGNATURE;
+				meteorStateCool--;
+
+				if (meteorStateCool == 0) signature = false;
 			}
 		}
-		if (meteorStateCool > 0)
+		else
 		{
-			state = STATE::SIGNATURE;
-			meteorStateCool--;
-
-			if (meteorStateCool == 0) signature = false;
-		}
-	}
-	else
-	{
-		if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead
-			&& !Meteor->getCool() && !inferno->getGauging() && speed == 0)
-		{
-			signature = true;
-
 			if (meteorStateCool == 0)
 			{
 				meteorStateCool = 30;
@@ -662,65 +770,17 @@ void player::meteorSetUp()
 
 				//skillGauge 초기화
 				skillGauge = 0;
-			
+
+			}
+			if (meteorStateCool > 0)
+			{
+				state = STATE::SIGNATURE;
+				meteorStateCool--;
+
+				if (meteorStateCool == 0) signature = false;
 			}
 		}
-		if (meteorStateCool > 0)
-		{
-			state = STATE::SIGNATURE;
-			meteorStateCool--;
-
-			if (meteorStateCool == 0) signature = false;
-		}
 	}
-}
-
-void player::dragonArcSetUp()
-{
-	dragon->setUpgrade(upgradeReady);
-
-	float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
-	
-	if (!upgradeReady)
-	{
-		if (INPUT->GetKeyDown('E'))
-		{
-			dragon->fire(posX, posY, angle);	
-		}
-	}
-	else
-	{
-		if (INPUT->GetKeyDown('E'))
-		{
-			dragon->phoenixFire(posX, posY, angle);
-			
-			//skillGauge초기화 수정 필요..
-			//skillGauge = 0;
-		}
-
-		//조건 넣어서 skill gauge 0 으로 초기화하고 upgradeReady false로 만들기
-
-	}
-}
-
-void player::skillInit()
-{
-}
-
-void player::basicSetUp()
-{
-}
-
-void player::dashSetUp()
-{
-}
-
-void player::standardSetUp()
-{
-}
-
-void player::signatureSetUp()
-{
 }
 
 void player::takeCoin()
@@ -732,7 +792,7 @@ void player::takeCoin()
 			PLAYERDATA->setCoin(PLAYERDATA->getCoin() + DROP->getCoinVec()[i].money);
 			DROP->getCoinEffect(DROP->getCoinVec()[i].money);
 			if (PLAYERDATA->getStat().goldPig)PLAYERDATA->setCoin(PLAYERDATA->getCoin() + RANDOM->range(1, 2));
-			
+
 			DROP->delCoin(i);
 			SOUNDMANAGER->play("coinGet", false, 0.13f);
 		}
@@ -753,289 +813,576 @@ void player::takeHealball()
 	}
 }
 
-void player::animation()
+void player::animation(int _index)
 {
-	int tempAngle = saveAngle2 * (18 / PI);
-
-	switch (state)
+	if (_index == 0)
 	{
-	case STATE::IDLE:
+		int tempAngle = saveAngle2 * (18 / PI);
 
-		if (move == MOVE::LEFT)frameAnimation(3, 0);
-		else if (move == MOVE::RIGHT) frameAnimation(2, 0);
-		else if (move == MOVE::UP) frameAnimation(1, 0);
-		else frameAnimation(0, 0);
-
-		break;
-	case STATE::RUN:
-		if (move == MOVE::LEFT || move == MOVE::LEFT_TOP || move == MOVE::LEFT_DOWN)
+		switch (state)
 		{
-			if (count % 6 == 0)
+		case STATE::IDLE:
+
+			if (move == MOVE::LEFT)frameAnimation(3, 0);
+			else if (move == MOVE::RIGHT) frameAnimation(2, 0);
+			else if (move == MOVE::UP) frameAnimation(1, 0);
+			else frameAnimation(0, 0);
+
+			break;
+		case STATE::RUN:
+			if (move == MOVE::LEFT || move == MOVE::LEFT_TOP || move == MOVE::LEFT_DOWN)
 			{
-				index--;
-				if (index < 0)index = 4;
+				if (count % 6 == 0)
+				{
+					index--;
+					if (index < 0)index = 4;
+				}
+				frameAnimation(index, 4);
 			}
-			frameAnimation(index, 4);
-		}
-		else if (move == MOVE::RIGHT || move == MOVE::RIGHT_TOP || move == MOVE::RIGHT_DOWN)
-		{
-			if (count % 6 == 0)
+			else if (move == MOVE::RIGHT || move == MOVE::RIGHT_TOP || move == MOVE::RIGHT_DOWN)
 			{
+				if (count % 6 == 0)
+				{
+					index++;
+					if (index > 4) index = 0;
+				}
+				frameAnimation(index, 3);
+			}
+			else if (move == MOVE::UP)
+			{
+				if (count % 5 == 0)
+				{
+					index++;
+					if (index > 9)index = 0;
+				}
+				frameAnimation(index, 2);
+			}
+			else if (move == MOVE::DOWN)
+			{
+				if (count % 5 == 0)
+				{
+					index++;
+					if (index > 9)index = 0;
+				}
+				frameAnimation(index, 1);
+			}
+			break;
+		case STATE::DASH:
+			if (dashLeft)
+			{
+				if (dashCount % 3 == 0)
+				{
+					dashIndex++;
+					if (dashIndex > 9) dashIndex = 0;
+				}
+				frameAnimation(dashIndex, 8);
+			}
+			else if (dashRight)
+			{
+				if (dashCount % 3 == 0)
+				{
+					dashIndex++;
+					if (dashIndex > 9 || speed == 0)dashIndex = 0;
+				}
+				frameAnimation(dashIndex, 7);
+			}
+			else if (dashUp)
+			{
+				if (dashCount % 3 == 0)
+				{
+					dashIndex++;
+					if (dashIndex > 9 || speed == 0)dashIndex = 0;
+				}
+				frameAnimation(dashIndex, 18);
+			}
+			else if (dashDown)
+			{
+				if (dashCount % 5 == 0)
+				{
+					dashIndex++;
+					if (dashIndex > 9 || speed == 0)dashIndex = 0;
+				}
+				frameAnimation(dashIndex, 19);
+			}
+			break;
+		case STATE::DAMAGED:
+			if (frozenTime > 0)
+			{
+				frameAnimation(6, 0);
+				if (!isDamaged) move = MOVE::LEFT;
+			}
+			//각도별로 
+
+			//if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
+			//{
+			//	frameAnimation(6, 0);
+			//	if (!isDamaged) move = MOVE::LEFT;
+			//}
+			//else if (damageAngleTenth <= 4 || damageAngleTenth > 32) //right
+			//{
+			//	frameAnimation(7, 0);
+			//	if (!isDamaged) move = MOVE::RIGHT;
+			//}
+			//else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //up
+			//{
+			//	frameAnimation(5, 0);
+			//	if (!isDamaged) move = MOVE::UP;
+			//}
+			//else if (damageAngleTenth > 23 && damageAngleTenth <= 32) //down
+			//{
+			//	frameAnimation(4, 0);
+			//	if (!isDamaged)	move = MOVE::DOWN;
+			//}
+			break;
+		case STATE::DIE:
+			if (index < 5 && count % 30 == 0)
 				index++;
-				if (index > 4) index = 0;
-			}
-			frameAnimation(index, 3);
-		}
-		else if (move == MOVE::UP)
-		{
-			if (count % 5 == 0)
-			{
+
+			if (index >= 5 && count % 7 == 0)
 				index++;
-				if (index > 9)index = 0;
-			}
-			frameAnimation(index, 2);
-		}
-		else if (move == MOVE::DOWN)
-		{
-			if (count % 5 == 0)
-			{
-				index++;
-				if (index > 9)index = 0;
-			}
-			frameAnimation(index, 1);
-		}
-		break;
-	case STATE::DASH:
-		if (dashLeft)
-		{
-			if (dashCount % 3 == 0)
-			{
-				dashIndex++;
-				if (dashIndex > 9) dashIndex = 0;
-			}
-			frameAnimation(dashIndex, 8);
-		}
-		else if (dashRight)
-		{
-			if (dashCount % 3 == 0)
-			{
-				dashIndex++;
-				if (dashIndex > 9 || speed == 0)dashIndex = 0;
-			}
-			frameAnimation(dashIndex, 7);
-		}
-		else if (dashUp)
-		{
-			if (dashCount % 3 == 0)
-			{
-				dashIndex++;
-				if (dashIndex > 9 || speed == 0)dashIndex = 0;
-			}
-			frameAnimation(dashIndex, 18);
-		}
-		else if (dashDown)
-		{
-			if (dashCount % 5 == 0)
-			{
-				dashIndex++;
-				if (dashIndex > 9 || speed == 0)dashIndex = 0;
-			}
-			frameAnimation(dashIndex, 19);
-		}
-		break;
-	case STATE::DAMAGED:
-		if (frozenTime > 0)
-		{
-			frameAnimation(6, 0);
-			if (!isDamaged) move = MOVE::LEFT;
-		}
-		//각도별로 
 
-		//if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
-		//{
-		//	frameAnimation(6, 0);
-		//	if (!isDamaged) move = MOVE::LEFT;
-		//}
-		//else if (damageAngleTenth <= 4 || damageAngleTenth > 32) //right
-		//{
-		//	frameAnimation(7, 0);
-		//	if (!isDamaged) move = MOVE::RIGHT;
-		//}
-		//else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //up
-		//{
-		//	frameAnimation(5, 0);
-		//	if (!isDamaged) move = MOVE::UP;
-		//}
-		//else if (damageAngleTenth > 23 && damageAngleTenth <= 32) //down
-		//{
-		//	frameAnimation(4, 0);
-		//	if (!isDamaged)	move = MOVE::DOWN;
-		//}
-		break;
-	case STATE::DIE:
-		if (index < 5 && count % 30 == 0)
-			index++;
+			if (index > 9) index = 9;
+			frameAnimation(index, 9);
+			break;
+		case STATE::BASIC:
 
-		if (index >= 5 && count % 7 == 0)
-			index++;
+			if (angleTenth > 14 && angleTenth <= 23)//left
+			{
+				if (basicCount % 5 == 0)
+				{
+					basicIndex++;
+					if (basicIndex > 6 || stateCool == 0) basicIndex = 0;
+				}
+				frameAnimation(basicIndex, 5);
+				//왼쪽 공격 끝나면 왼쪽 향하기
+				if (stateCool == 0)
+					move = MOVE::LEFT;
+			}
+			else if (angleTenth <= 4 || angleTenth > 32) //right
+			{
+				if (basicCount % 5 == 0)
+				{
+					basicIndex++;
+					if (basicIndex > 6 || stateCool == 0) basicIndex = 0;
+				}
+				frameAnimation(basicIndex, 6);
 
-		if (index > 9) index = 9;
-		frameAnimation(index, 9);
-		break;
-	case STATE::BASIC:
+				// 오른쪽 공격 끝나면 오른쪽 향하기
+				if (basicCount == 0)
+					move = MOVE::RIGHT;
+			}
+			else if (angleTenth > 4 && angleTenth <= 14) //up
+			{
+				if (basicCount % 5 == 0)
+				{
+					basicIndex++;
+					if (basicIndex > 6 || stateCool == 0)basicIndex = 0;
+				}
+				frameAnimation(basicIndex, 14);
+				//위쪽 공격 끝나면 위쪽 향하기
+				if (stateCool == 0)
+					move = MOVE::UP;
+			}
+			else if (angleTenth > 23 && angleTenth <= 32) //down
+			{
+				if (basicCount % 5 == 0)
+				{
+					basicIndex++;
+					if (basicIndex > 6 || stateCool == 0)basicIndex = 0;
+				}
+				frameAnimation(basicIndex, 6);
+				//아래쪽 공격 끝나면 아래쪽 향하기
+				if (stateCool == 0)
+					move = MOVE::DOWN;
+			}
+			break;
+		case STATE::STANDARD:
 
-		if (angleTenth > 14 && angleTenth <= 23)//left
-		{
-			if (basicCount % 5 == 0)
+			if (tempAngle > 14 && tempAngle <= 23)//left
 			{
-				basicIndex++;
-				if (basicIndex > 6 || stateCool == 0) basicIndex = 0;
-			}
-			frameAnimation(basicIndex, 5);
-			//왼쪽 공격 끝나면 왼쪽 향하기
-			if (stateCool == 0)
-				move = MOVE::LEFT;
-		}
-		else if (angleTenth <= 4 || angleTenth > 32) //right
-		{
-			if (basicCount % 5 == 0)
-			{
-				basicIndex++;
-				if (basicIndex > 6 || stateCool == 0) basicIndex = 0;
-			}
-			frameAnimation(basicIndex, 6);
-
-			// 오른쪽 공격 끝나면 오른쪽 향하기
-			if (basicCount == 0)
-				move = MOVE::RIGHT;
-		}
-		else if (angleTenth > 4 && angleTenth <= 14) //up
-		{
-			if (basicCount % 5 == 0)
-			{
-				basicIndex++;
-				if (basicIndex > 6 || stateCool == 0)basicIndex = 0;
-			}
-			frameAnimation(basicIndex, 14);
-			//위쪽 공격 끝나면 위쪽 향하기
-			if (stateCool == 0)
-				move = MOVE::UP;
-		}
-		else if (angleTenth > 23 && angleTenth <= 32) //down
-		{
-			if (basicCount % 5 == 0)
-			{
-				basicIndex++;
-				if (basicIndex > 6 || stateCool == 0)basicIndex = 0;
-			}
-			frameAnimation(basicIndex, 6);
-			//아래쪽 공격 끝나면 아래쪽 향하기
-			if (stateCool == 0)
-				move = MOVE::DOWN;
-		}
-		break;
-	case STATE::STANDARD:
-
-		if (tempAngle > 14 && tempAngle <= 23)//left
-		{
-			if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
-			else
-			{
-				atkIndex++;
-				if (atkIndex > 3) atkIndex = 3;
-			}
-			frameAnimation(atkIndex, 6);
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+				frameAnimation(atkIndex, 6);
 
 
-			//왼쪽 공격 끝나면 왼쪽 향하기
-			if (gaugeTime > 50) move = MOVE::LEFT;
-		}
-		else if (tempAngle <= 4 || tempAngle > 32) //right
-		{
-			if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
-			else
+				//왼쪽 공격 끝나면 왼쪽 향하기
+				if (gaugeTime > 50) move = MOVE::LEFT;
+			}
+			else if (tempAngle <= 4 || tempAngle > 32) //right
 			{
-				atkIndex++;
-				if (atkIndex > 3) atkIndex = 3;
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+
+				frameAnimation(atkIndex, 5);
+				// 오른쪽 공격 끝나면 오른쪽 향하기
+				if (gaugeTime > 50) move = MOVE::RIGHT;
+			}
+			else if (tempAngle > 4 && tempAngle <= 12) //up
+			{
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+				frameAnimation(atkIndex, 14);
+				//위쪽 공격 끝나면 위쪽 향하기
+				if (gaugeTime > 50) move = MOVE::UP;
+			}
+			else if (tempAngle > 23 && tempAngle <= 32) //down
+			{
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+				frameAnimation(atkIndex, 6);
+				//아래쪽 공격 끝나면 아래쪽 향하기
+				if (gaugeTime > 50) move = MOVE::DOWN;
 			}
 
-			frameAnimation(atkIndex, 5);
-			// 오른쪽 공격 끝나면 오른쪽 향하기
-			if (gaugeTime > 50) move = MOVE::RIGHT;
-		}
-		else if (tempAngle > 4 && tempAngle <= 12) //up
-		{
-			if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
-			else
-			{
-				atkIndex++;
-				if (atkIndex > 3) atkIndex = 3;
-			}
-			frameAnimation(atkIndex, 14);
-			//위쪽 공격 끝나면 위쪽 향하기
-			if (gaugeTime > 50) move = MOVE::UP;
-		}
-		else if (tempAngle > 23 && tempAngle <= 32) //down
-		{
-			if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
-			else
-			{
-				atkIndex++;
-				if (atkIndex > 3) atkIndex = 3;
-			}
-			frameAnimation(atkIndex, 6);
-			//아래쪽 공격 끝나면 아래쪽 향하기
-			if (gaugeTime > 50) move = MOVE::DOWN;
-		}
+			break;
+		case STATE::SIGNATURE:
 
-		break;
-	case STATE::SIGNATURE:
-
-		if (move == MOVE::LEFT)
-		{
-			if (atkCount % 10 == 0)
+			if (move == MOVE::LEFT)
 			{
-				atkIndex++;
-				if (atkIndex > 9)atkIndex = 0;
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				frameAnimation(atkIndex, 10);
 			}
-			frameAnimation(atkIndex, 10);
-		}
-		else if (move == MOVE::RIGHT)
-		{
-			if (atkCount % 10 == 0)
+			else if (move == MOVE::RIGHT)
 			{
-				atkIndex++;
-				if (atkIndex > 9)atkIndex = 0;
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				frameAnimation(atkIndex, 20);
 			}
-			frameAnimation(atkIndex, 20);
-		}
-		else if (move == MOVE::UP || move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
-		{
-			if (atkCount % 10 == 0)
+			else if (move == MOVE::UP || move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
 			{
-				atkIndex++;
-				if (atkIndex > 9)atkIndex = 0;
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				frameAnimation(atkIndex, 20);
 			}
-			frameAnimation(atkIndex, 20);
-		}
-		else if (move == MOVE::DOWN || move == MOVE::LEFT_DOWN || move == MOVE::RIGHT_DOWN)
-		{
-			if (atkCount % 10 == 0)
+			else if (move == MOVE::DOWN || move == MOVE::LEFT_DOWN || move == MOVE::RIGHT_DOWN)
 			{
-				atkIndex++;
-				if (atkIndex > 9)atkIndex = 0;
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				frameAnimation(atkIndex, 10);
 			}
-			frameAnimation(atkIndex, 10);
+			break;
 		}
-		break;
 	}
 
+	else
+	{
+		int tempAngle = saveAngle2 * (18 / PI);
+
+		switch (state)
+		{
+		case STATE::IDLE:
+
+			if (move == MOVE::LEFT)frameAnimation(3, 0, 1);
+			else if (move == MOVE::RIGHT) frameAnimation(2, 0, 1);
+			else if (move == MOVE::UP) frameAnimation(1, 0, 1);
+			else frameAnimation(0, 0, 1);
+
+			break;
+		case STATE::RUN:
+			if (move == MOVE::LEFT || move == MOVE::LEFT_TOP || move == MOVE::LEFT_DOWN)
+			{
+				if (count % 6 == 0)
+				{
+					index--;
+					if (index < 0)index = 4;
+				}
+				frameAnimation(index, 4, 1);
+			}
+			else if (move == MOVE::RIGHT || move == MOVE::RIGHT_TOP || move == MOVE::RIGHT_DOWN)
+			{
+				if (count % 6 == 0)
+				{
+					index++;
+					if (index > 4) index = 0;
+				}
+				frameAnimation(index, 3, 1);
+			}
+			else if (move == MOVE::UP)
+			{
+				if (count % 5 == 0)
+				{
+					index++;
+					if (index > 9)index = 0;
+				}
+				frameAnimation(index, 2, 1);
+			}
+			else if (move == MOVE::DOWN)
+			{
+				if (count % 5 == 0)
+				{
+					index++;
+					if (index > 9)index = 0;
+				}
+				frameAnimation(index, 1, 1);
+			}
+			break;
+		case STATE::DASH:
+			if (dashLeft)
+			{
+				if (dashCount % 3 == 0)
+				{
+					dashIndex++;
+					if (dashIndex > 9) dashIndex = 0;
+				}
+				frameAnimation(dashIndex, 8, 1);
+			}
+			else if (dashRight)
+			{
+				if (dashCount % 3 == 0)
+				{
+					dashIndex++;
+					if (dashIndex > 9 || speed == 0)dashIndex = 0;
+				}
+				frameAnimation(dashIndex, 7, 1);
+			}
+			else if (dashUp)
+			{
+				if (dashCount % 3 == 0)
+				{
+					dashIndex++;
+					if (dashIndex > 9 || speed == 0)dashIndex = 0;
+				}
+				frameAnimation(dashIndex, 18, 1);
+			}
+			else if (dashDown)
+			{
+				if (dashCount % 5 == 0)
+				{
+					dashIndex++;
+					if (dashIndex > 9 || speed == 0)dashIndex = 0;
+				}
+				frameAnimation(dashIndex, 19, 1);
+			}
+			break;
+		case STATE::DAMAGED:
+			if (frozenTime > 0)
+			{
+				frameAnimation(6, 0, 1);
+				if (!isDamaged) move = MOVE::LEFT;
+			}
+			//각도별로 
+
+			//if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
+			//{
+			//	frameAnimation(6, 0);
+			//	if (!isDamaged) move = MOVE::LEFT;
+			//}
+			//else if (damageAngleTenth <= 4 || damageAngleTenth > 32) //right
+			//{
+			//	frameAnimation(7, 0);
+			//	if (!isDamaged) move = MOVE::RIGHT;
+			//}
+			//else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //up
+			//{
+			//	frameAnimation(5, 0);
+			//	if (!isDamaged) move = MOVE::UP;
+			//}
+			//else if (damageAngleTenth > 23 && damageAngleTenth <= 32) //down
+			//{
+			//	frameAnimation(4, 0);
+			//	if (!isDamaged)	move = MOVE::DOWN;
+			//}
+			break;
+		case STATE::DIE:
+			if (index < 5 && count % 30 == 0)
+				index++;
+
+			if (index >= 5 && count % 7 == 0)
+				index++;
+
+			if (index > 9) index = 9;
+			frameAnimation(index, 9, 1);
+			break;
+		case STATE::BASIC:
+
+			if (angleTenth > 14 && angleTenth <= 23)//left
+			{
+				if (basicCount % 5 == 0)
+				{
+					basicIndex++;
+					if (basicIndex > 6 || stateCool == 0) basicIndex = 0;
+				}
+				frameAnimation(basicIndex, 5, 1);
+				//왼쪽 공격 끝나면 왼쪽 향하기
+				if (stateCool == 0)
+					move = MOVE::LEFT;
+			}
+			else if (angleTenth <= 4 || angleTenth > 32) //right
+			{
+				if (basicCount % 5 == 0)
+				{
+					basicIndex++;
+					if (basicIndex > 6 || stateCool == 0) basicIndex = 0;
+				}
+				frameAnimation(basicIndex, 6, 1);
+
+				// 오른쪽 공격 끝나면 오른쪽 향하기
+				if (basicCount == 0)
+					move = MOVE::RIGHT;
+			}
+			else if (angleTenth > 4 && angleTenth <= 14) //up
+			{
+				if (basicCount % 5 == 0)
+				{
+					basicIndex++;
+					if (basicIndex > 6 || stateCool == 0)basicIndex = 0;
+				}
+				frameAnimation(basicIndex, 14, 1);
+				//위쪽 공격 끝나면 위쪽 향하기
+				if (stateCool == 0)
+					move = MOVE::UP;
+			}
+			else if (angleTenth > 23 && angleTenth <= 32) //down
+			{
+				if (basicCount % 5 == 0)
+				{
+					basicIndex++;
+					if (basicIndex > 6 || stateCool == 0)basicIndex = 0;
+				}
+				frameAnimation(basicIndex, 6, 1);
+				//아래쪽 공격 끝나면 아래쪽 향하기
+				if (stateCool == 0)
+					move = MOVE::DOWN;
+			}
+			break;
+		case STATE::STANDARD:
+
+			if (tempAngle > 14 && tempAngle <= 23)//left
+			{
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+				frameAnimation(atkIndex, 6, 1);
+
+
+				//왼쪽 공격 끝나면 왼쪽 향하기
+				if (gaugeTime > 50) move = MOVE::LEFT;
+			}
+			else if (tempAngle <= 4 || tempAngle > 32) //right
+			{
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+
+				frameAnimation(atkIndex, 5, 1);
+				// 오른쪽 공격 끝나면 오른쪽 향하기
+				if (gaugeTime > 50) move = MOVE::RIGHT;
+			}
+			else if (tempAngle > 4 && tempAngle <= 12) //up
+			{
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+				frameAnimation(atkIndex, 14, 1);
+				//위쪽 공격 끝나면 위쪽 향하기
+				if (gaugeTime > 50) move = MOVE::UP;
+			}
+			else if (tempAngle > 23 && tempAngle <= 32) //down
+			{
+				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
+				else
+				{
+					atkIndex++;
+					if (atkIndex > 3) atkIndex = 3;
+				}
+				frameAnimation(atkIndex, 6, 1);
+				//아래쪽 공격 끝나면 아래쪽 향하기
+				if (gaugeTime > 50) move = MOVE::DOWN;
+			}
+
+			break;
+		case STATE::SIGNATURE:
+
+			if (move == MOVE::LEFT)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				frameAnimation(atkIndex, 10, 1);
+			}
+			else if (move == MOVE::RIGHT)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				frameAnimation(atkIndex, 20, 1);
+			}
+			else if (move == MOVE::UP || move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				frameAnimation(atkIndex, 20, 1);
+			}
+			else if (move == MOVE::DOWN || move == MOVE::LEFT_DOWN || move == MOVE::RIGHT_DOWN)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				frameAnimation(atkIndex, 10, 1);
+			}
+			break;
+		}
+	}
 }
 
-void player::frameAnimation(int frameX, int frameY)
+void player::frameAnimation(int frameX, int frameY, int _index)
 {
-	//CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, frameX, frameY);
-	UNITRENDER->setFramePlayer({ frameX,frameY });
+	if (_index == 0)
+	{
+		UNITRENDER->setFramePlayer({ frameX,frameY });
+	}
+
+	else
+	{
+		CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, frameX, frameY);
+	}
 }
 
 void player::tileCol()
@@ -1181,18 +1528,6 @@ void player::changeState()
 	}
 }
 
-void player::buttonDown()
-{
-	//key
-	if (INPUT->GetKey(VK_LEFT) || INPUT->GetKey('A'))isLeft = true;
-	else isLeft = false;
-	if (INPUT->GetKey(VK_RIGHT) || INPUT->GetKey('D'))isRight = true;
-	else isRight = false;
-	if (INPUT->GetKey(VK_UP) || INPUT->GetKey('W'))isUp = true;
-	else isUp = false;
-	if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))isDown = true;
-	else isDown = false;
-}
 
 void player::death()
 {
@@ -1224,8 +1559,6 @@ void player::damage(int damage, float attackAngle, float knockBackSpeed)
 
 	if (inferno->getGauging() && meteorStateCool != 0 && basic)return;
 
-	int index;
-	for (int i = 0; i < 4; i++)	index = i;
 }
 
 void player::damagedCool()
@@ -1248,9 +1581,38 @@ void player::damagedCool()
 	}
 }
 
+void player::finalAttackDamaged(int damage, int frozenCount)
+{
+	if (PLAYERDATA->getHp() <= 0) return;
+
+	isGrabbed = true;
+	grabbedTime = frozenCount;
+
+	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
+
+	DAMAGE->generator({ (long)posX, (long)posY }, "rNumbers", damage, false);
+}
+
+void player::grabbedCool()
+{
+	if (isGrabbed)
+	{
+		state = STATE::DAMAGED;
+	}
+	if (grabbedTime > 0)
+	{
+		grabbedTime--;
+		if (grabbedTime <= 0)
+		{
+			grabbedTime = 0;
+			isGrabbed = false;
+			state = STATE::IDLE;
+		}
+	}
+
+}
 void player::chargeSkillGauge(int atkPower, int skillNum)
 {
-
 	switch (skillNum)
 	{
 	case 0:
@@ -1303,15 +1665,31 @@ void player::skillGaugeSetUp()
 	PLAYERDATA->setSkillGauge(skillGauge);
 }
 
-void player::arcanaCheck()
+void player::buttonDown()
 {
+	//key
+	if (INPUT->GetKey(VK_LEFT) || INPUT->GetKey('A'))isLeft = true;
+	else isLeft = false;
+	if (INPUT->GetKey(VK_RIGHT) || INPUT->GetKey('D'))isRight = true;
+	else isRight = false;
+	if (INPUT->GetKey(VK_UP) || INPUT->GetKey('W'))isUp = true;
+	else isUp = false;
+	if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))isDown = true;
+	else isDown = false;
 }
-
 //del
 void player::viewText()
 {
-	//wsprintf(str, "damageAngle : %d", damageAngle);
-	//textOut(getMemDC(), 100, 230, str, WHITE);
+	char test[256];
+	wsprintf(test, "basic : %d", basic);
+	textOut(getMemDC(), 100, 170, test, WHITE);
+	wsprintf(test, "standard : %d", standard);
+	textOut(getMemDC(), 100, 190, test, WHITE);
+	wsprintf(test, "signature : %d", signature);
+	textOut(getMemDC(), 100, 210, test, WHITE);
+
+
+
 
 	//wsprintf(str, "damageAngleTenth : %d", damageAngleTenth);
 	//textOut(getMemDC(), 100, 250, str, WHITE);

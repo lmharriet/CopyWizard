@@ -154,6 +154,15 @@ void shop::generate(POINT arr[3])
     {
         npc[i].keyName = ranStr[i];
         npc[i].pt = arr[i];
+
+        if (npc[i].keyName == "Nox")
+        {
+            EFFECT->SetCursePoint(
+                { npc[i].pt.x - 90, npc[i].pt.y + 120 },
+                { npc[i].pt.x +  0, npc[i].pt.y + 120 },
+                { npc[i].pt.x + 90, npc[i].pt.y + 120 });
+        }
+
         cout << npc[i].keyName << " " << npc[i].pt.x << ", " << npc[i].pt.y << '\n';
     }
 }
@@ -189,6 +198,7 @@ void shop::render()
             //아이템 출력
             if (NoxShop[0].isSell == false) // 하나라도 팔리면 다 없어짐
             {
+                EFFECT->cursePointActive();
                 //shadow
                 image* shadow = IMAGEMANAGER->findImage("oldFabricShadow");
 
@@ -197,6 +207,7 @@ void shop::render()
                     npc[i].pt.y - ig->getHeight() / 2 + 150
                 , 140);
 
+                EFFECT->curseRenderBack(getMemDC());
                 for (int j = 0; j < 3; j++)
                 {
                     image* img = IMAGEMANAGER->findImage("itemFrame");
@@ -218,6 +229,7 @@ void shop::render()
 
                     //CAMERAMANAGER->Rectangle(getMemDC(), NoxShop[j].rc);
                 }
+                EFFECT->curseRenderFront(getMemDC());
             }
         }
         else if (npc[i].keyName == "Andres")

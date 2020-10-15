@@ -36,7 +36,6 @@ HRESULT bossScene::init()
 	//UI->setCoin(PLAYERDATA->getCoin());
 	//UI->setHp(PLAYERDATA->getHp());
 
-
 	//sound
 	soundInit();
 	
@@ -105,7 +104,6 @@ void bossScene::update()
 	{
 		SCENEMANAGER->loadScene("시작화면");
 	}
-
 }
 
 void bossScene::bossCutScene()
@@ -138,8 +136,8 @@ void bossScene::render()
 	//CAMERAMANAGER->Rectangle(getMemDC(), area);
 
 	EFFECT->pRender(getMemDC());
-	_player->render();
 
+	_player->render(1);
 	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	//CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("boss"), rc.left, rc.top, 0, 0);
 
@@ -206,6 +204,11 @@ void bossScene::attackBoss()
 				_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
 
 			// -> boss damaged
+			_boss->setBossHp(10);
+			DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", 10);
+			if (!_boss->getBossAtack()) {
+				_boss->setBossHit(true);
+			}
 
 			_player->getBlaze()->setCol(i, true);
 
@@ -229,6 +232,11 @@ void bossScene::attackBoss()
 			}
 
 			//-> boss damaged
+			_boss->setBossHp(10);
+			DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", 10);
+			if (!_boss->getBossAtack()) {
+				_boss->setBossHit(true);
+			}
 
 		}
 	}
@@ -257,6 +265,11 @@ void bossScene::attackBoss()
 
 
 			//-> boss damaged
+			_boss->setBossHp(10);
+			DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", 10);
+			if (!_boss->getBossAtack()) {
+				_boss->setBossHit(true);
+			}
 		}
 	}
 
@@ -300,7 +313,12 @@ void bossScene::attackBoss()
 		_boss->setCenter({ (long)x, (long)y });
 		_boss->setRect((int)x, (int)y);
 		//-> boss damaged
+		_boss->setBossHp(10);
+		DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", 10);
 
+		if (!_boss->getBossAtack()) {
+			_boss->setBossHit(true);
+		}
 	}
 
 }

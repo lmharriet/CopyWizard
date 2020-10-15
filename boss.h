@@ -8,14 +8,19 @@ enum BOSSSTATE
 	DRILL,
 	NIDDLE,
 	PUNCH,
-	WALL
+	WALL,
+	BOSSDAMAGED,
+	BOSSDIE,
+	FINALATTACK
 };
 struct tagBoss
 {
 	RECT rc;
 	POINT center;
 	BOSSSTATE bossState;
+	int bossHp;
 	float angle;
+	bool isHit;
 };
 struct tagBlock
 {
@@ -44,6 +49,7 @@ private:
 	vector<tagBlock*> niddleBlock;
 	vector<tagBlock*> punchBlock;
 	vector<tagBlock*> wallBlock;
+	vector<tagBlock*> shockBlock;
 
 	int count, timer;
 	int posX, posY;
@@ -69,6 +75,10 @@ private:
 	bool niddlePattern;
 	bool wallPattern;
 	bool isHit;
+
+	bool bossAtack;
+	bool finalAttack;
+	bool tempDown;
 
 	float niddleAngle;
 
@@ -96,6 +106,10 @@ public:
 	void collCheck();
 	void punchSet();
 	void punchRectMove();
+	void bossDamaged();
+	void bossDie();
+	
+	void bossFinalAttack(int patternType);
 
 
 	//getter / setter
@@ -103,9 +117,14 @@ public:
 	RECT getBossRect() {
 		return boss.rc;
 	}
+	bool getBossAtack() {
+		return bossAtack;
+	}
 	
 	void setRect(int x, int y) { boss.rc = RectMakeCenter(x, y, 150, 150); }
 	void setCenter(POINT pt) { boss.center = { pt.x,pt.y }; }
+	void setBossHit(bool bossHit) { boss.isHit = bossHit; }
+	void setBossHp(int bosshp) { boss.bossHp -= bosshp; }
 };
 
 

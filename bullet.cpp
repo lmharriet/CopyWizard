@@ -122,17 +122,17 @@ void bullet::removeBullet(int index)
 //=============================================================
 //	## bomb ## (폭탄처럼 한발씩 발사하고 생성하고 자동삭제)
 //=============================================================
-HRESULT bomb::init(int bulletMax, float range)
+HRESULT bomb::init(int maxBullet, float range)
 {
 	//총알 사거리 및 총알 갯수 초기화
 	_range = range;
-	_bulletMax = bulletMax;
+	_bulletMax = maxBullet;
 
 	count = index = 0;
 
 	bossScene = false;
 	isCoolTime = false;
-	coolTime = 30;
+	coolTime = 50;
 	currentCoolTime = 0;
 	return S_OK;
 }
@@ -143,6 +143,8 @@ void bomb::release()
 
 void bomb::update()
 {
+
+
 	count++;
 
 	//
@@ -183,16 +185,9 @@ void bomb::render()
 
 void bomb::fire(float x, float y, float speed, float angle, float radius)
 {
-	//총알 벡터에 담는것을 제한한다
 	if (_bulletMax < _vBullet.size() + 1) return;
-
 	//총알 구조체 선언
 	tagBullet bullet;
-	//총알 구조체 초기화
-	//제로메모리, 멤셋
-	//구조체 변수들의 값을 한번에 0으로 초기화 시켜준다
-
-
 	bullet.bulletImage = IMAGEMANAGER->addFrameImage("blaze", "resource/player/blaze.bmp", 288, 96, 3, 1, true, RGB(255, 0, 255));
 	bullet.x = bullet.fireX = x;
 	bullet.y = bullet.fireY = y;
@@ -204,7 +199,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	bullet.atkPower = 12;
 
 	_vBullet.push_back(bullet);
-
+	
 	isCoolTime = true;
 
 	//sound
@@ -214,7 +209,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 
 void bomb::move() // blaze tile충돌은 gameScene에서만 되도록 처리하기
 {
-	for (int i = 0; i < _vBullet.size(); i++)
+	for (int i = 0; i < _vBullet.size();i++ )
 	{
 		_vBullet[i].x += cosf(_vBullet[i].angle) * _vBullet[i].speed;
 		_vBullet[i].y += -sinf(_vBullet[i].angle) * _vBullet[i].speed;
@@ -227,6 +222,13 @@ void bomb::move() // blaze tile충돌은 gameScene에서만 되도록 처리하기
 			SOUNDMANAGER->play("blazeExp", false);
 			//_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
 			_vBullet[i].collision = true;
+			
+		
+		}
+		if (_vBullet[i].collision)
+		{
+			_vBullet.erase(_vBullet.begin());
+			break;
 		}
 
 		//타일 충돌
@@ -240,11 +242,13 @@ void bomb::move() // blaze tile충돌은 gameScene에서만 되도록 처리하기
 				{
 					PARTICLE->explosionGenerate("explosionParticle", _vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3, true);
 					SOUNDMANAGER->play("blazeExp", false);
-					_vBullet.erase(_vBullet.begin());
+					_vBullet.erase(_vBullet.begin() + i);
 					break;
 				}
 			}
 		}
+		else i++;
+		
 	}
 }
 //폭탄삭제
@@ -341,7 +345,7 @@ void meteor::update()
 			makeCircle(save.x + ranX, save.y + ranY);
 
 			isCoolTime = true;
-			UI->addCoolTime("meteorIcon");
+			UI->addCoolTime("skill_meteor");
 			meteorCount--;
 		}
 
@@ -423,7 +427,7 @@ void meteor::creatMeteor(float x, float y, float angle)
 		vMeteor.push_back(meteor);
 		makeCircle(x, y);
 		isCoolTime = true;
-		UI->addCoolTime("meteorIcon");
+		UI->addCoolTime("skill_meteor");
 	}
 
 	else
@@ -481,7 +485,7 @@ void meteor::coolTimeReduction()
 	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
 	{
 		coolTime = 300 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
-		UI->fixCoolTime("meteorIcon", coolTime);
+		UI->fixCoolTime("skill_meteor", coolTime);
 	/*	cout <<"Item 구매 후 :" <<coolTime << '\n';
 
 
@@ -492,7 +496,7 @@ void meteor::coolTimeReduction()
 	else
 	{
 		coolTime = 300;
-		UI->fixCoolTime("meteorIcon", coolTime);
+		UI->fixCoolTime("skill_meteor", coolTime);
 	/*	cout <<"Item 구매 전 :" <<coolTime << '\n';
 
 		cout << UI->getSkillSlot(3).maxCoolTime << '\n';
@@ -601,12 +605,12 @@ void dashFire::coolTimeReduction()
 	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
 	{
 		coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
-		UI->fixCoolTime("searingDash", coolTime);
+		UI->fixCoolTime("skill_searingDash", coolTime);
 	}
 	else
 	{
 		coolTime = 240;
-		UI->fixCoolTime("searingDash", coolTime);
+		UI->fixCoolTime("skill_searingDash", coolTime);
 	}
 
 }
@@ -734,7 +738,7 @@ void RagingInferno::fire(float x, float y, float angle)
 	gauging = true;
 	PLAYERDATA->setGauging(gauging);
 	isCoolTime = true;
-	UI->addCoolTime("infernoIcon");
+	UI->addCoolTime("skill_inferno");
 }
 
 void RagingInferno::move()
@@ -816,12 +820,12 @@ void RagingInferno::coolTimeReduction()
 	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
 	{
 		coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
-		UI->fixCoolTime("infernoIcon", coolTime);
+		UI->fixCoolTime("skill_inferno", coolTime);
 	}
 	else
 	{
 		coolTime = 240;
-		UI->fixCoolTime("infernoIcon", coolTime);
+		UI->fixCoolTime("skill_inferno", coolTime);
 	}
 }
 
