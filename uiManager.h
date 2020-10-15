@@ -35,6 +35,7 @@ public:
 	void setSkillGauge(float gauge) { skillGauge = gauge; }
 
 	void setSkillSlot(string keyName, int sec);
+	void fixCoolTime(string keyName, int time);
 	void addCoolTime(int index) { skillSlot[index].available = false; }
 	void addCoolTime(string keyName);
 

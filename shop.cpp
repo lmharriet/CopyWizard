@@ -41,6 +41,8 @@ HRESULT shop::init()
             AndresShop[count].price = item.price;
             AndresShop[count].frame = item.frame;
 
+            cout << AndresShop[count].keyName << '\n';
+
             count++;
         }
         else
@@ -61,6 +63,8 @@ HRESULT shop::init()
                 AndresShop[count].keyName = item.keyName;
                 AndresShop[count].price = item.price;
                 AndresShop[count].frame = item.frame;
+
+                cout << AndresShop[count].keyName << '\n';
 
                 count++;
             }

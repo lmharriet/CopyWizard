@@ -210,12 +210,20 @@ void uiManager::setSkillSlot(string keyName, int sec)
 	{
 		if (skillSlot[i].keyName != "nonSkill") continue;
 
-		if (skillSlot[i].keyName != keyName) continue;
-
 		skillSlot[i].keyName = keyName;
 		skillSlot[i].maxCoolTime = time;
 
 		break;
+	}
+}
+
+void uiManager::fixCoolTime(string keyName, int time)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		if (keyName != skillSlot[i].keyName) continue;
+
+		skillSlot[i].maxCoolTime = time;
 	}
 }
 

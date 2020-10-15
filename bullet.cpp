@@ -481,7 +481,7 @@ void meteor::coolTimeReduction()
 	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
 	{
 		coolTime = 300 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
-		UI->setSkillSlot("meteorIcon", coolTime/60);
+		UI->fixCoolTime("meteorIcon", coolTime);
 	/*	cout <<"Item 구매 후 :" <<coolTime << '\n';
 
 
@@ -492,7 +492,7 @@ void meteor::coolTimeReduction()
 	else
 	{
 		coolTime = 300;
-		UI->setSkillSlot("meteorIcon", coolTime/60);
+		UI->fixCoolTime("meteorIcon", coolTime);
 	/*	cout <<"Item 구매 전 :" <<coolTime << '\n';
 
 		cout << UI->getSkillSlot(3).maxCoolTime << '\n';
@@ -601,12 +601,12 @@ void dashFire::coolTimeReduction()
 	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
 	{
 		coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
-		UI->setSkillSlot("searingDash", coolTime / 60);
+		UI->fixCoolTime("searingDash", coolTime);
 	}
 	else
 	{
 		coolTime = 240;
-		UI->setSkillSlot("searingDash", coolTime / 60);
+		UI->fixCoolTime("searingDash", coolTime);
 	}
 
 }
@@ -816,12 +816,12 @@ void RagingInferno::coolTimeReduction()
 	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
 	{
 		coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
-		UI->setSkillSlot("infernoIcon", coolTime / 60);
+		UI->fixCoolTime("infernoIcon", coolTime);
 	}
 	else
 	{
 		coolTime = 240;
-		UI->setSkillSlot("infernoIcon", coolTime / 60);
+		UI->fixCoolTime("infernoIcon", coolTime);
 	}
 }
 
