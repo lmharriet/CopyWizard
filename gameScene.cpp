@@ -328,7 +328,17 @@ void gameScene::enemyAttack()
 		{
 			if (PLAYERDATA->getShroud() == false)
 			{
-				_player->damage(enemy->getBullet()->getBullet()[i].atkPower, enemy->getBullet()->getBullet()[i].angle, 4.f);
+				int damage = enemy->getBullet()->getBullet()[i].atkPower;
+
+				if (PLAYERDATA->getStat().doubleDamage)
+				{
+					_player->damage(damage * 2, enemy->getBullet()->getBullet()[i].angle, 4.f);
+				}
+
+				else
+				{
+					_player->damage(damage, enemy->getBullet()->getBullet()[i].angle, 4.f);
+				}
 			}
 			else PLAYERDATA->setShroud(false);
 

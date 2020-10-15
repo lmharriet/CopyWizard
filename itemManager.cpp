@@ -96,7 +96,7 @@ HRESULT itemManager::init()
 		"데미지, 크리티컬 데미지, 크리티컬 확률이 25% 증가한다.",
 		{ 0,1 });
 
-	//구현 중 (player.cpp)
+	//구현 완료 (player.cpp)
 	addItem(
 		"신속의 마법서", 0, 0, 0, 0, 0, 0, 0,
 		false, 1, false,
@@ -106,7 +106,7 @@ HRESULT itemManager::init()
 		"스킬의 쿨타임을 1초 감소시킨다.",
 		{ 1,1 });
 
-	//구현 중
+	//구현 완료
 	addItem(
 		"유리 거울", 0, 0, 0, 0, 0, 0, 0,
 		false, 0, true,
