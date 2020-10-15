@@ -8,7 +8,7 @@ HRESULT itemManager::init()
 
 		false, false, false, false, false, false, false, 
 		999,
-		"ERROR", 
+		"ERROR",
 		{ 0,0 });
 
 	//normal
@@ -57,7 +57,7 @@ HRESULT itemManager::init()
 		
 		false, false, false, false, false, false, false,
 		70,
-		"코인 획득 시 50% 확률로 추가 코인 획득", 
+		"코인 획득 시 50% 확률로 추가 코인을 획득한다.", 
 		{ 5,0 });
 
 	addItem(
@@ -103,7 +103,7 @@ HRESULT itemManager::init()
 
 		false, false, false, false, false, false, false,
 		125,
-		"스킬의 쿨타임을 1초 감소시킨다.",
+		"스킬 쿨타임을 1초 감소시킨다.",
 		{ 1,1 });
 
 	//구현 완료
@@ -125,7 +125,7 @@ HRESULT itemManager::init()
 
 		false, true, false, false, false, false, false,
 		0,
-		"2배의 피해를 입지만, 치명타 확률이 40% 증가한다.",
+		"2배의 피해를 입지만, 치명타 확률이 40% 증가 한다.",
 		{ 0,2 });
 	
 	//구현 완료 (gameScene.cpp)
@@ -135,7 +135,7 @@ HRESULT itemManager::init()
 
 		false, false, true, false, false, false, false,
 		0,
-		"더이상 마력게이지가 차지않지만, 치명타 공격력이 50% 증가한다.",
+		"더이상 마력게이지가 차지않지만, 치명타 공격력이 50% 증가 한다.",
 		{ 1,2 });
 
 	//구현 완료 (playerData.cpp)
@@ -145,7 +145,7 @@ HRESULT itemManager::init()
 
 		false, false, false, true, false, false, false,
 		0,
-		"치명타가 발생하지 않지만, 공격력이 40% 증가한다.",
+		"치명타가 발생하지 않지만, 공격력이 40% 증가 한다.",
 		{ 2,2 });
 
 	//구현 완료 (playerData.cpp)
@@ -155,7 +155,7 @@ HRESULT itemManager::init()
 
 		false, false, false, false, false, true, false,
 		0,
-		"최대 체력이 250 감소하지만, 체력이 50% 이하가 되면 공격력이 50% 증가한다.",
+		"최대 체력이 250 감소하지만, 체력이 50% 이하가 되면 공격력이 50% 증가 한다.",
 		{ 3,2 });
 
 	//구현 중 (gameScene.cpp)
@@ -165,7 +165,7 @@ HRESULT itemManager::init()
 
 		false, false, false, false, true, false, false,
 		0,
-		"볼 수 있는 시야가 감소하지만, 데미지가 30% 증가한다.",
+		"볼 수 있는 시야가 감소하지만, 데미지가 30% 증가 한다.",
 		{ 4,2 });
 
 	//구현 완료 (playerData.cpp)
@@ -185,7 +185,7 @@ HRESULT itemManager::init()
 
 		false, false, false, false, false, false, true,
 		0,
-		"공격력이 20% 감소하지만, 보유한 코인 개수에 따라 공격력을 증가시킨다.",
+		"공격력이 20% 감소하지만, 보유한 코인 개수에 따라 공격력이 증가 한다.",
 		{ 6,2 });
 
 	//구현 완료
@@ -203,7 +203,7 @@ HRESULT itemManager::init()
 		
 		false, false, false, false, false, false, false,
 		0,
-		"최대 체력이 100감소하거나 증가하고, 공격력이 20% 증가하거나 감소한다.",
+		"최대 체력이 100 감소하거나 증가하고, 공격력이 20% 감소하거나 증가 한다.",
 		{ 7,2 });
 
 	//구현 중 (monster.cpp)
@@ -213,7 +213,7 @@ HRESULT itemManager::init()
 		
 		true, false, false, false, false, false, false,
 		0,
-		"최대 체력이 200 감소하지만 몬스터를 잡을 때 마다 일정 체력을 회복한다.",
+		"최대 체력이 200 감소하지만 몬스터를 잡을 때 마다 일정 체력을 회복 한다.",
 		{ 8,2 });
 
 	addImage();

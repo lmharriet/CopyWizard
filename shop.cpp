@@ -134,6 +134,8 @@ void shop::addImage()
     IMAGEMANAGER->addImage("soldOut", "Images/npc/soldOut.bmp", 11, 11, true, RGB(255, 0, 255));
 
     IMAGEMANAGER->addImage("oldFabricShadow", "Images/npc/oldFabricShadow.bmp", 360, 126, true, RGB(255, 0, 255));
+
+    IMAGEMANAGER->addFrameImage("itemBackBoardFrame", "Images/npc/backBoardFrame.bmp", 1125, 136, 3, 1);
 }
 
 void shop::generate(POINT arr[3])
@@ -311,21 +313,37 @@ void shop::colRender()
         //정보 출력
         if (AndresShop[j].isCol && !AndresShop[j].isSell)
         {
-            //wsprintf(tsr, (LPSTR)AndresShop[j].keyName);
             RECT rt = RectMakeCenter(
                 CAMERAMANAGER->GetRelativeX(AndresShop[j].pt.x) + 20,
                 CAMERAMANAGER->GetRelativeY(AndresShop[j].pt.y),
-                300, 150);
+                280, 70);
+
+            //Rectangle(getMemDC(), rt);
+            image* back = IMAGEMANAGER->findImage("itemBackBoardFrame");
+
+            //==========================================================
+            int frameX = 0;
+            if (AndresShop[j].Explanation.size() > 66) frameX = 2;
+
+            else if (AndresShop[j].Explanation.size() > 33) frameX = 1;
+
+            CAMERAMANAGER->AlphaFrameRender(getMemDC(), back,
+                AndresShop[j].pt.x + 20 - back->getFrameWidth() / 2,
+                AndresShop[j].pt.y - 10 - back->getFrameHeight() / 2,
+                frameX, 0, 130);
+            //==========================================================
 
             HFONT myFont = CreateFont(25, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "font/MunroSmall.ttf");
             HFONT oldFont = (HFONT)SelectObject(getMemDC(), myFont);
 
             SetTextColor(getMemDC(), RGB(255, 255, 255));
 
-            TextOut(getMemDC(), CAMERAMANAGER->GetRelativeX(AndresShop[j].pt.x), CAMERAMANAGER->GetRelativeY(AndresShop[j].pt.y),
+            TextOut(getMemDC(), CAMERAMANAGER->GetRelativeX(AndresShop[j].pt.x) - 30,
+                 CAMERAMANAGER->GetRelativeY(AndresShop[j].pt.y) - 70,
                 AndresShop[j].keyName.c_str(), AndresShop[j].keyName.length());
 
             const char* ch = AndresShop[j].Explanation.c_str();
+
             DrawText(getMemDC(), ch, -1, &rt, DT_CENTER | DT_WORDBREAK);
 
             SelectObject(getMemDC(), oldFont);
@@ -335,9 +353,45 @@ void shop::colRender()
 
     if (NoxShop->isSell == false)
     {
-        for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
         {
+            if (NoxShop[j].isCol == false)continue;
 
+            RECT rt = RectMakeCenter(
+                CAMERAMANAGER->GetRelativeX(NoxShop[j].pt.x) + 20,
+                CAMERAMANAGER->GetRelativeY(NoxShop[j].pt.y),
+                280, 70);
+
+            //Rectangle(getMemDC(), rt);
+            image* back = IMAGEMANAGER->findImage("itemBackBoardFrame");
+
+            //==========================================================
+            int frameX = 0;
+            if (NoxShop[j].Explanation.size() > 66) frameX = 2;
+
+            else if (NoxShop[j].Explanation.size() > 33) frameX = 1;
+
+            CAMERAMANAGER->AlphaFrameRender(getMemDC(), back,
+                NoxShop[j].pt.x + 20 - back->getFrameWidth() / 2,
+                NoxShop[j].pt.y - 10 - back->getFrameHeight() / 2,
+                frameX, 0, 130);
+            //==========================================================
+
+            HFONT myFont = CreateFont(25, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "font/MunroSmall.ttf");
+            HFONT oldFont = (HFONT)SelectObject(getMemDC(), myFont);
+
+            SetTextColor(getMemDC(), RGB(255, 255, 255));
+
+            TextOut(getMemDC(), CAMERAMANAGER->GetRelativeX(NoxShop[j].pt.x) - 30,
+                CAMERAMANAGER->GetRelativeY(NoxShop[j].pt.y) - 70,
+                NoxShop[j].keyName.c_str(), NoxShop[j].keyName.length());
+
+            const char* ch = NoxShop[j].Explanation.c_str();
+
+            DrawText(getMemDC(), ch, -1, &rt, DT_CENTER | DT_WORDBREAK);
+
+            SelectObject(getMemDC(), oldFont);
+            DeleteObject(myFont);
         }
     }
 }
