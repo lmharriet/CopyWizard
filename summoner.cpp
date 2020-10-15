@@ -60,6 +60,7 @@ void summoner::update()
         state = STATEIMAGE::ATK;
         isATK = true;
         PARTICLE->collectingGenerate("stoneX2", pos.x + 55, pos.y - 45, 18, 60.f, 2.f, 50, 20, 5);
+        fireCount = atkTime-1 ;
         
     }
     
@@ -67,7 +68,8 @@ void summoner::update()
     if (isATK&& !isHit && !isFxAppear )
     {
         fireCount++;
-        if (atkTime % (randomTime+70)==0)
+        
+        if (fireCount % (randomTime+70)==0)
         {
             randomTime = RANDOM->range(90, 150);
             atkTime = 0;

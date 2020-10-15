@@ -369,7 +369,7 @@ void monster::commonUpdate()
 	
 	rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
-	if (distanceMax > getDistance(pos.x /*+ img->getFrameWidth() * 0.5*/, pos.y/* + img->getFrameHeight() * 1.5*/, playerRC.left, playerRC.top))
+	if (distanceMax > getDistance(pos.x + img->getFrameWidth() * 0.5, pos.y + img->getFrameHeight() * 0.5, playerRC.left, playerRC.top))
 	{
 		isFindWayOn = true;
 		isCardAppear = true;
