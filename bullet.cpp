@@ -263,7 +263,7 @@ HRESULT meteor::init()
 	IMAGEMANAGER->addFrameImage("circle", "resource/player/castingCircle1.bmp", 3072, 128, 24, 1, true, RGB(255, 0, 0));
 
 	currentCoolTime = 0;
-	coolTime = 300;
+	coolTime = 300 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
 	isCoolTime = false;
 
 	count = index = 0;
@@ -284,8 +284,10 @@ void meteor::release()
 
 void meteor::update()
 {
+	
 	count++;
 
+	coolTimeReduction();
 	move();
 
 	if (isCoolTime)
@@ -344,7 +346,6 @@ void meteor::update()
 		}
 
 	}
-
 
 }
 
@@ -474,6 +475,33 @@ void meteor::move()
 	}
 }
 
+void meteor::coolTimeReduction()
+{
+
+	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
+	{
+		coolTime = 300 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
+		UI->setSkillSlot("meteorIcon", coolTime/60);
+	/*	cout <<"Item 구매 후 :" <<coolTime << '\n';
+
+
+		cout << UI->getSkillSlot(3).maxCoolTime << '\n';
+		cout << UI->getSkillSlot(3).coolTime << '\n';
+	*/
+	}
+	else
+	{
+		coolTime = 300;
+		UI->setSkillSlot("meteorIcon", coolTime/60);
+	/*	cout <<"Item 구매 전 :" <<coolTime << '\n';
+
+		cout << UI->getSkillSlot(3).maxCoolTime << '\n';
+		cout << UI->getSkillSlot(3).coolTime << '\n';*/
+	}
+
+}
+
+
 
 //DASH
 HRESULT dashFire::init()
@@ -491,6 +519,8 @@ void dashFire::release()
 
 void dashFire::update()
 {
+	coolTimeReduction();
+
 	if (isCoolTime)
 	{
 		currentCoolTime++;
@@ -564,6 +594,24 @@ void dashFire::fire(float x, float y)
 	vDash.push_back(dash);
 }
 
+
+void dashFire::coolTimeReduction()
+{
+
+	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
+	{
+		coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
+		UI->setSkillSlot("searingDash", coolTime / 60);
+	}
+	else
+	{
+		coolTime = 240;
+		UI->setSkillSlot("searingDash", coolTime / 60);
+	}
+
+}
+
+
 //추가 스킬 RAGING INFERNO
 
 HRESULT RagingInferno::init()
@@ -592,6 +640,7 @@ void RagingInferno::update()
 {
 	count++;
 	gaugeTime++;
+	coolTimeReduction();
 
 	PLAYERDATA->setGaugeTime(gaugeTime);
 	if (count % 3 == 0)
@@ -762,6 +811,20 @@ void RagingInferno::move()
 	}
 }
 
+void RagingInferno::coolTimeReduction()
+{
+	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
+	{
+		coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
+		UI->setSkillSlot("infernoIcon", coolTime / 60);
+	}
+	else
+	{
+		coolTime = 240;
+		UI->setSkillSlot("infernoIcon", coolTime / 60);
+	}
+}
+
 bool RagingInferno::CheckCollision(RECT enemy)
 {
 	RECT temp;
@@ -786,7 +849,7 @@ HRESULT dragonArc::init()
 
 	//memset(&dragonHead, 0, sizeof(dragonHead));
 
-	coolTime = 240;
+	coolTime = 300;
 	currentCoolTime = 0;
 	isCoolTime = false;
 	upgrade = false;
@@ -804,7 +867,7 @@ void dragonArc::update()
 
 	count++;
 
-
+//	coolTimeReduction();
 	move();
 
 	phoenixMove();
@@ -812,7 +875,7 @@ void dragonArc::update()
 
 	//coolTime
 	if (isCoolTime)
-	{	
+	{
 		currentCoolTime++;
 		if (currentCoolTime == coolTime)
 		{
@@ -1225,4 +1288,19 @@ void dragonArc::phoenixMove()
 			i++;
 		}
 	}
+}
+
+
+void dragonArc::coolTimeReduction()
+{
+	/*if (PLAYERDATA->getStat().CoolTimeReduction != 0)
+	{
+		coolTime = 300 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
+		UI->setSkillSlot("", coolTime / 60);
+	}
+	else
+	{
+		coolTime = 300;
+		UI->setSkillSlot("", coolTime / 60);
+	}*/
 }

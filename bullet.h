@@ -224,6 +224,7 @@ public:
 	
 	
 	void move();
+	void coolTimeReduction();
 	bool getCool() { return isCoolTime; }
 	int getSkillNum() { return 1; }
 	//생성된 메테오용
@@ -264,6 +265,8 @@ public:
 	void singleRender(int index);
 
 	void fire(float x, float y);
+
+	void coolTimeReduction();
 
 	//getter, setter
 	
@@ -327,6 +330,8 @@ public:
 	void fire(float x, float y,float angle);
 	void move();
 
+	void coolTimeReduction();
+	bool CheckCollision(RECT enemy);
 
 	//getter , setter
 	bool getFire() { return isFire; }
@@ -334,7 +339,7 @@ public:
 	bool getGauging() { return gauging; }
 	bool getActive() { return isActive; }
 	bool getCool() { return isCoolTime; }
-	bool CheckCollision(RECT enemy);
+	
 
 	int getSkillNum() { return 3; }
 	tagArcana getInf() { return inferno; }
@@ -381,6 +386,8 @@ public:
 	//upgrade skill
 	void phoenixFire(float x, float y, float angle);
 	void phoenixMove();
+
+	void coolTimeReduction();
 	
 
 	//getter ,setter

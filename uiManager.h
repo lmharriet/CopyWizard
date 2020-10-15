@@ -37,4 +37,9 @@ public:
 	void setSkillSlot(string keyName, int sec);
 	void addCoolTime(int index) { skillSlot[index].available = false; }
 	void addCoolTime(string keyName);
+
+	//del
+
+	tagSkill getSkillSlot(int index) { return skillSlot[index]; }
+
 };
