@@ -192,9 +192,16 @@ void gameScene::render()
 
 	EFFECT->portalRender(getMemDC());
 
+	if (PLAYERDATA->getStat().reducedVisibility)
+	{
+		IMAGEMANAGER->findImage("glassEffect")->render(getMemDC());
+	}
+
 	DROP->coinEffectRender(getMemDC());
 
 	_shop->colRender();
+
+
 
 	UI->render(getMemDC(), 50, 50);
 	_player->invenRender();
