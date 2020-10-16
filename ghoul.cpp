@@ -299,7 +299,7 @@ void ghoul::stateDIE()
         if (frameIndexL[STATEIMAGE::DIE].y != 4)
             frameIndexL[STATEIMAGE::DIE].y = 5;
         count++;
-        if (count % 10 == 0)
+        if (count % 7 == 0)
         {
             count = 0;
             frameIndexL[STATEIMAGE::DIE].x--;
@@ -330,7 +330,7 @@ void ghoul::stateDIE()
         if (frameIndexR[STATEIMAGE::DIE].y != 4)
             frameIndexR[STATEIMAGE::DIE].y = 3;
         count++;
-        if (count % 10 == 0)
+        if (count % 7 == 0)
         {
             count = 0;
 

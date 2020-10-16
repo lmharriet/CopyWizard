@@ -16,6 +16,7 @@ private:
 	RECT playerRC;
 	//vector<enemy*> _vBoss;
 	
+	
 
 	bullet* _bullet; //°ø¿ëÃÑ¾Ë
 public:
@@ -49,6 +50,6 @@ public:
 	void summonerBullet(float angle);
 
 	
-	enemyManager() {}
+	enemyManager();
 	~enemyManager() {}
 };

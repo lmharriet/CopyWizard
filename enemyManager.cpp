@@ -1,19 +1,21 @@
 #include "stdafx.h"
 #include "enemyManager.h"
 
+enemyManager::enemyManager():_bullet(nullptr){}
 
 
 HRESULT enemyManager::init(tagTile* _tile, tagTile* _subTile, POINT _monPt)
 {
 	
 	
-
+	
 	tile = _tile;
 	//미니언 생성
 	this->setMinion(_subTile, _monPt);
 
 	//공용총알 클래스 초기화
-	_bullet = new bullet;
+	if(_bullet==nullptr)
+		_bullet = new bullet;
 	_bullet->init("stoneFly", 15, 500);
 
 	return S_OK;
@@ -73,6 +75,12 @@ void enemyManager::render()
 
 void enemyManager::setMinion(tagTile* _subTile, POINT _monPt)
 {
+	for (int i = 0; i < _vMinion.size(); i++)
+	{
+		_vMinion[i]->release();
+	}
+		_vMinion.clear();
+
 	for (int i = 0; i < MAXTILE; i++)
 	{
 		POINT pos = { _subTile[i].pos.x - _monPt.x, _subTile[i].pos.y - _monPt.y };
@@ -212,3 +220,5 @@ void enemyManager::summonerBullet(float angle)
 		angle - PI / 4, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
 	(*_viMinion)->setFx(false);
 }
+
+

@@ -41,6 +41,15 @@ HRESULT astarManager::init(tagTile* _tile)
 
 void astarManager::release()
 {
+	for (int y = 0; y < MAXTILE_HEIGHT; y++)
+	{
+		for (int x = 0; x < MAXTILE_WIDTH; x++)
+		{
+			//새로운 노드와 렉트위치 설정
+			SAFE_DELETE(totalNode[x][y]);
+			
+		}
+	}
 }
 
 void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* angle)
@@ -92,31 +101,8 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 				monsterMove.x = x;
 				monsterMove.y = y;
 			}
-
-
 		}
-
 	}
-
-	//벽(장애물) 노드 세팅하기 (시작, 종료노드 설정전에 벽세우지 못하게 막기)
-	//if (INPUT->GetKeyDown(VK_RBUTTON) && startNode && endNode)
-	//{
-	//	for (int y = 0; y < MAXTILE_HEIGHT; y++)
-	//	{
-	//		for (int x = 0; x < MAXTILE_WIDTH; x++)
-	//		{
-	//			if (PtInRect(&totalNode[x][y]->rc, _ptMouse))
-	//			{
-	//				//시작노드, 종료노드는 선택하지 못하게 막기
-	//				if (totalNode[x][y]->nodeState == NODESTATE::NODE_START) continue;
-	//				if (totalNode[x][y]->nodeState == NODESTATE::NODE_END) continue;
-	//				totalNode[x][y]->nodeState = NODESTATE::NODE_WALL;
-	//			}
-	//		}
-	//	}
-	//}
-
-
 
 	this->pathFinding(); // 길찾기 시작.
 
@@ -211,7 +197,6 @@ void astarManager::pathFinding()
 		{
 			if (curNode == openList[i])
 			{
-
 				this->delOpenList(i);
 				closeList.push_back(curNode);
 			}
@@ -220,15 +205,11 @@ void astarManager::pathFinding()
 		//현재노드가 마지막 노드와 같냐? (길찾았다)
 		if (curNode == endNode)
 		{
-
-
 			tileNode* _endNode = endNode;
 			vector<tileNode*> tempNode;
 			//마지막 노드로부터 시작노드까지 부모노드를 벡터에 담는다
 			while (_endNode != startNode)
 			{
-
-
 				tempNode.push_back(_endNode);
 				_endNode = _endNode->parentNode;
 			}
@@ -242,7 +223,6 @@ void astarManager::pathFinding()
 			//종료하고 빠져 나온다
 			return;
 		}
-
 
 		addOpenList(curNode->idx + 1, curNode->idy + 1);	//우하
 		addOpenList(curNode->idx - 1, curNode->idy + 1);	//좌하
@@ -328,7 +308,7 @@ HRESULT monster::init(tagTile* tile, POINT _pos)
 	else
 	{
 		isAstar = true;
-		astar = make_shared< astarManager>();
+		astar = make_unique< astarManager>();
 		astar->init(tile);
 	}
 
@@ -357,11 +337,10 @@ HRESULT monster::init(tagTile* tile, POINT _pos)
 
 void monster::release()
 {
-	/*if (isAstar)
+	if (isAstar)
 	{
 		astar->release();
-		SAFE_DELETE(astar);
-	}*/
+	}
 }
 
 void monster::commonUpdate()
@@ -527,7 +506,7 @@ bool monster::hitCheck(int skillNum)
 		hit.endTime = 20;
 		break;
 	case 4:
-		hit.endTime = 10;
+		hit.endTime = 20;
 		break;
 	}
 	vHit.push_back(hit);
