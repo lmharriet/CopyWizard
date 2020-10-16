@@ -4,6 +4,7 @@
 #include "golem.h"
 #include "bullet.h" //공용총알 클래스 사용하기 위해
 #include "knight.h"
+#include "ghoul.h"
 
 class enemyManager : public gameNode
 {

@@ -24,4 +24,5 @@ enum class MONSTERKIND {
 	GOLEM,
 	KNIGHT,
 	SUMMONER,
+	GHOUL
 };

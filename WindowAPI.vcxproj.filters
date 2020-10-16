@@ -218,6 +218,9 @@
     <ClCompile Include="shop.cpp">
       <Filter>GameFramework\매니져\상점</Filter>
     </ClCompile>
+    <ClCompile Include="ghoul.cpp">
+      <Filter>MainGame\인게임\monster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -350,6 +353,9 @@
     <ClInclude Include="zObject.h" />
     <ClInclude Include="shop.h">
       <Filter>GameFramework\매니져\상점</Filter>
+    </ClInclude>
+    <ClInclude Include="ghoul.h">
+      <Filter>MainGame\인게임\monster</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

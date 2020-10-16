@@ -108,20 +108,24 @@ void gameScene::update()
 	UNITRENDER->enemyClear();
 	for (int i = 0; i < enemy->getMinion().size(); i++)
 	{
+		POINT currentFrame = enemy->getMinion()[i]->getCurrentFrame();
+		POINT monsterPos = enemy->getMinion()[i]->getPos();
 		switch (enemy->getMinion()[i]->getMonsterKind())
 		{
 		case MONSTERKIND::GOLEM:
 			if (enemy->getMinion()[i]->getHit() && !enemy->getMinion()[i]->getDie())
-				UNITRENDER->enemyInit(4, enemy->getMinion()[i]->getCurrentFrame(), enemy->getMinion()[i]->getPos());//°ñ·½È÷Æ®½Ã
+				UNITRENDER->enemyInit(4,currentFrame,monsterPos );//°ñ·½È÷Æ®½Ã
 			else
-				UNITRENDER->enemyInit(0, enemy->getMinion()[i]->getCurrentFrame(), enemy->getMinion()[i]->getPos());
+				UNITRENDER->enemyInit(0, currentFrame, monsterPos);
 			break;
 		case MONSTERKIND::KNIGHT:
-			UNITRENDER->enemyInit(1, enemy->getMinion()[i]->getCurrentFrame(), enemy->getMinion()[i]->getPos());
+			UNITRENDER->enemyInit(1, currentFrame, monsterPos);
 			break;
 		case MONSTERKIND::SUMMONER:
-			UNITRENDER->enemyInit(2, enemy->getMinion()[i]->getCurrentFrame(), enemy->getMinion()[i]->getPos());
+			UNITRENDER->enemyInit(2, currentFrame, monsterPos);
 			break;
+		case MONSTERKIND::GHOUL:
+			UNITRENDER->enemyInit(3, currentFrame, monsterPos);
 		}
 
 	}

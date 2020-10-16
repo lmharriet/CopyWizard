@@ -37,6 +37,8 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
             rc = RectMakeCenter(x - img->getFrameWidth()/2, y + 170, img->getFrameWidth(), img->getFrameHeight());
         else if(keyName == "golem" || keyName=="golemHit")
             rc = RectMakeCenter(x - img->getFrameWidth()/2, y + 300, img->getFrameWidth(), img->getFrameHeight());
+        else if(keyName == "ghoul")
+            rc = RectMakeCenter(x - img->getFrameWidth() / 2, y + 170, img->getFrameWidth(), img->getFrameHeight());
         tile = nullptr;
     }
 
@@ -89,11 +91,7 @@ void zObject::render(HDC hdc)
 
     else if (type == "monster")
     {
-        //img->frameRender(hdc, x, y, frame.x, frame.y);
-        //RECT monRC=RectMake(x, y, img->getFrameWidth(),img->getFrameHeight());
-        //CAMERAMANAGER->Rectangle(hdc, monRC);
         CAMERAMANAGER->FrameRender(hdc, img, x, y, frame.x, frame.y);
-        //Rectangle(hdc, x, y, x+img->getFrameWidth(), img->getFrameHeight());
     }
 
     else if (type == "npc")
