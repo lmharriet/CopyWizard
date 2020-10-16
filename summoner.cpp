@@ -12,7 +12,7 @@ void summoner::addInit()
 
     kind = MONSTERKIND::SUMMONER;
     atk = 15;
-    armour = 0;
+    armour = 1.f;
     speed = 0.f;
     hp = 80;
     img = IMAGEMANAGER->findImage("summoner");

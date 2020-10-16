@@ -441,8 +441,8 @@ void monster::render()
 {
 	
 	// astar->render(getMemDC());
-	 FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
-	 FrameRect(getMemDC(), rc, RGB(255, 255, 255));
+	 //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
+	 //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
 }
 
 void monster::setPt(float x, float y)
@@ -462,7 +462,7 @@ void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum, 
 
 	EFFECT->damageEffect(pt);
 
-	int allDamage = damage - armour;
+	int allDamage = (int)((float)damage * armour);
 	if(allDamage>0)
 		hp -= allDamage;
 

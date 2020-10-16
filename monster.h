@@ -110,7 +110,7 @@ protected:
 	MONSTERKIND kind;
 	int atk;
 	int atkTime;
-	int armour;
+	float armour;
 	int hp;
 	int hpMax;
 	int count = 0;

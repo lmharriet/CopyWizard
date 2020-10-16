@@ -5,7 +5,7 @@ void knight::addInit()
 {
     kind = MONSTERKIND::KNIGHT;
     atk = 5;
-    armour = 4;
+    armour = 0.7f;
     speed = 5.5f;
     hp = 100;
     img = IMAGEMANAGER->findImage("knight");
