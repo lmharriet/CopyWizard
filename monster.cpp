@@ -494,6 +494,10 @@ void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum, 
 	case MONSTERKIND::SUMMONER:
 		SOUNDMANAGER->play("golemHit", false,-0.3f); 
 		break;
+	case MONSTERKIND::GHOUL:
+		char str[50];
+		sprintf(str, "knightHit%d", RANDOM->range(2));
+		SOUNDMANAGER->play(str, false, -0.38f);
 	
 	}
 }
@@ -585,6 +589,9 @@ void monster::die()
 		case MONSTERKIND::SUMMONER:
 			SOUNDMANAGER->play("knightDie", false,-0.3f); //hit sound change
 			break;
+		case MONSTERKIND::GHOUL:
+			SOUNDMANAGER->play("knightDie", false,-0.3f); //hit sound change
+
 
 		}
 		
@@ -607,5 +614,8 @@ void monster::stateHIT(POINT lPos, POINT rPos)
 		currentFrame = { frameIndexR[STATEIMAGE::HIT].x ,frameIndexR[STATEIMAGE::HIT].y };
 		//img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::HIT].x, frameIndexR[STATEIMAGE::HIT].y);
 	}
-
+	if (kind == MONSTERKIND::GHOUL)
+	{
+		speed = 3.f;
+	}
 }
