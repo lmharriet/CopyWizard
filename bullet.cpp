@@ -871,8 +871,8 @@ HRESULT dragonArc::init()
 	currentCoolTime = 0;
 	isCoolTime = false;
 	upgrade = false;
-	
-	
+
+
 	return S_OK;
 }
 
@@ -925,17 +925,17 @@ void dragonArc::render()
 				vDragon[i].y - vDragon[i].img->getFrameHeight() / 2, vDragon[i].index, vDragon[i].frameY);
 		}
 	}
-	else
-	{
-		if (dragonHead.isFire)
-		{
-			image* img = IMAGEMANAGER->findImage("dragon");
 
-			if (count % 2 == 0) PARTICLE->explosionGenerate("frameParticle", dragonHead.x, dragonHead.y, 1, 0, 0.f, 2, true);
-			//CAMERAMANAGER->FrameRender(getMemDC(), img,
-			//	dragonHead.x - img->getFrameWidth() / 2,
-			//	dragonHead.y - img->getFrameHeight() / 2, dragonHead.index, dragonHead.frameY);
-		}
+	if (dragonHead.isFire)
+	{
+		image* img = IMAGEMANAGER->findImage("dragon");
+		for (int i = 0; i < vColRound.size(); i++)
+			CAMERAMANAGER->Ellipse(getMemDC(), vColRound[i].rc);
+		if (count % 2 == 0) PARTICLE->explosionGenerate("frameParticle", dragonHead.x, dragonHead.y, 1, 0, 0.f, 2, true);
+		//CAMERAMANAGER->FrameRender(getMemDC(), img,
+		//	dragonHead.x - img->getFrameWidth() / 2,
+		//	dragonHead.y - img->getFrameHeight() / 2, dragonHead.index, dragonHead.frameY);
+
 		for (int i = 0; i < vWings.size(); i++)
 		{
 			//CAMERAMANAGER->Ellipse(getMemDC(), vWings[i].rc);
@@ -944,8 +944,8 @@ void dragonArc::render()
 				PARTICLE->explosionGenerate("explosionParticle", vWings[i].x, vWings[i].y, 3, 7, 0.f, 2, true);
 			}
 		}
-
 	}
+
 }
 
 void dragonArc::fire(float x, float y, float angle)
@@ -1076,6 +1076,14 @@ void dragonArc::phoenixFire(float x, float y, float angle)
 		dragonHead.frameY = 0;
 		dragonHead.index = angle * (18 / PI);
 
+		tagDragonCol col;
+		col.angle = angle;
+		col.x = x;
+		col.y = y;
+		col.rc = RectMakeCenter(col.x, col.y, 200, 200);
+		vColRound.push_back(col);
+
+
 		//bullet x 2
 		tagDragon wings;
 		wings.currentTime = 0;
@@ -1085,6 +1093,7 @@ void dragonArc::phoenixFire(float x, float y, float angle)
 		wings.lifeTime = 200;
 		wings.speed = 7.f;
 		wings.rc = RectMakeCenter(wings.x, wings.y, 40, 40);
+		wings.atkPower = 25;
 
 		vWings.push_back(wings);
 		vWings.push_back(wings);
@@ -1111,8 +1120,21 @@ void dragonArc::phoenixMove()
 		dragonHead.x += cosf(dragonHead.angle) * dragonHead.speed * dragonHead.persent;
 		dragonHead.y -= sinf(dragonHead.angle) * dragonHead.speed * dragonHead.persent;
 		dragonHead.rc = RectMakeCenter(dragonHead.x, dragonHead.y, 40, 40);
+
+		for (int i = 0; i < vColRound.size(); i++)
+		{
+			vColRound[i].x += cosf(vColRound[i].angle) * dragonHead.speed * dragonHead.persent;
+			vColRound[i].y -= sinf(vColRound[i].angle) * dragonHead.speed * dragonHead.persent;
+			vColRound[i].rc = RectMakeCenter(vColRound[i].x, vColRound[i].y, 200, 200);
+
+		}
 		//del
-		if (dragonHead.currentTime == dragonHead.lifeTime)dragonHead.isFire = false;
+		if (dragonHead.currentTime == dragonHead.lifeTime)
+		{
+			dragonHead.isFire = false;
+			for (int i = 0; i < vColRound.size(); i++)
+				vColRound.erase(vColRound.begin() + i);
+		}
 
 		else dragonHead.currentTime++;
 	}
@@ -1122,6 +1144,7 @@ void dragonArc::phoenixMove()
 		vWings[i].x += cosf(vWings[i].angle) * vWings[i].speed * dragonHead.persent;
 		vWings[i].y -= sinf(vWings[i].angle) * vWings[i].speed * dragonHead.persent;
 		vWings[i].rc = RectMakeCenter(vWings[i].x, vWings[i].y, 40, 40);
+		
 		if (vWings[i].currentTime < 20)
 		{
 			if (i == 0) // static
@@ -1311,14 +1334,14 @@ void dragonArc::phoenixMove()
 
 void dragonArc::coolTimeReduction()
 {
-	/*if (PLAYERDATA->getStat().CoolTimeReduction != 0)
+	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
 	{
-		coolTime = 300 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
-		UI->setSkillSlot("", coolTime / 60);
+		coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
+		UI->fixCoolTime("skill_dragonArc", coolTime);
 	}
 	else
 	{
-		coolTime = 300;
-		UI->setSkillSlot("", coolTime / 60);
-	}*/
+		coolTime = 240;
+		UI->fixCoolTime("skill_dragonArc", coolTime);
+	}
 }

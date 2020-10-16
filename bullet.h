@@ -49,7 +49,7 @@ struct tagMeteor
 {
 	image* img;
 	RECT rc;
-	
+
 	float x, y;
 	float angle;
 	float speed;
@@ -58,7 +58,7 @@ struct tagMeteor
 
 	//삭제 조건
 	float endY;
-	
+
 
 };
 
@@ -98,13 +98,13 @@ private:
 	int _bulletMax;			//총알 최대갯수
 	bool _isFrameImg;		//프레임 이미지냐?
 
-	
+
 public:
 	HRESULT init(const char* imageName, int bulletMax, float range, bool isFrameImg = false);
 	void release();
 	void update();
 	void render();
-	
+
 	//총알발사
 	void fire(float x, float y, float angle, float speed, int damage, MONSTERKIND kind);
 	//총알무브
@@ -119,7 +119,7 @@ public:
 	vector<tagBullet> getBullet() { return _vBullet; }
 	//공용총알 렉트 가져오기
 	RECT getRect(int index) { return _vBullet[index].rc; }
-	
+
 };
 
 struct tagBomb
@@ -162,7 +162,7 @@ private:
 	bool bossScene;
 
 public:
-	
+
 	HRESULT init(int maxBullet);
 	void release();
 	void update();
@@ -171,7 +171,7 @@ public:
 	float getRange(float angle, float x, float y);
 
 	//총알발사
-	void fire(float x, float y, float speed,float angle);
+	void fire(float x, float y, float speed, float angle);
 	void bombActive();
 	//총알무브
 	void move();
@@ -223,7 +223,7 @@ private:
 
 	int count, index;
 
-	
+
 	//upgrade용
 	POINT save;
 	int ranCount;
@@ -236,12 +236,12 @@ public:
 	void release();
 	void update();
 	void render();
-	
-	void makeCircle(float x, float y);
-	void creatMeteor(float x, float y,float angle);
 
-	
-	
+	void makeCircle(float x, float y);
+	void creatMeteor(float x, float y, float angle);
+
+
+
 	void move();
 	void coolTimeReduction();
 	bool getCool() { return isCoolTime; }
@@ -288,7 +288,7 @@ public:
 	void coolTimeReduction();
 
 	//getter, setter
-	
+
 	RECT getRect(int index) { return vDash[index].rc; }
 	int getSize() { return vDash.size(); }
 	int getAtk(int index) { return vDash[index].atkPower; }
@@ -346,7 +346,7 @@ public:
 	void release();
 	void update();
 	void render();
-	void fire(float x, float y,float angle);
+	void fire(float x, float y, float angle);
 	void move();
 
 	void coolTimeReduction();
@@ -358,12 +358,12 @@ public:
 	bool getGauging() { return gauging; }
 	bool getActive() { return isActive; }
 	bool getCool() { return isCoolTime; }
-	
+
 
 	int getSkillNum() { return 3; }
 	tagArcana getInf() { return inferno; }
-	
-	
+
+
 	void setX(float X) { inferno.x = X; }
 	void setY(float Y) { inferno.y = Y; }
 	void setActive(bool temp) { isActive = temp; }
@@ -374,6 +374,13 @@ public:
 //=============================================================
 //	##dragonArc## 
 //=============================================================
+struct tagDragonCol
+{
+	RECT rc;
+	float x, y;
+	float angle;
+	
+};
 class dragonArc : public gameNode
 {
 private:
@@ -383,13 +390,15 @@ private:
 	vector<tagDragon> vWings;
 	tagDragon dragonHead;
 
- private:
+private:
 
-	 int coolTime;
-	 int currentCoolTime;
-	 bool isCoolTime;
+	vector<tagDragonCol> vColRound;
 
+	int coolTime;
+	int currentCoolTime;
+	bool isCoolTime;
 	bool upgrade;
+
 	int count, index;
 
 public:
@@ -398,7 +407,7 @@ public:
 	void update();
 	void render();
 
-	
+
 	void fire(float x, float y, float angle);
 	void move();
 
@@ -407,14 +416,22 @@ public:
 	void phoenixMove();
 
 	void coolTimeReduction();
-	
+
 
 	//getter ,setter
+
+	//non-Upgrade
 	RECT getDragonRC(int index) { return vDragon[index].rc; }
 	float getDragonAngle(int index) { return vDragon[index].angle; }
 	int getAtkPower(int index) { return vDragon[index].atkPower; }
 	int getSkillNum() { return 4; }
 	int getSize() { return vDragon.size(); }
+
+	//upgrade
+	RECT getColRc(int index) {return vColRound[index].rc;}
+	float getHeadAngle(int index) { return vColRound[index].angle; }
+	int getcolSize() { return vColRound.size(); }
+	int getUpgradeAtkPower(int index) { return vWings[index].atkPower; }
 
 	bool getUpgrade() { return upgrade; }
 	bool getCool() { return isCoolTime; }

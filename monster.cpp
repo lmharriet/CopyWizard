@@ -487,10 +487,12 @@ bool monster::hitCheck(int skillNum)
 	{
 		if (vHit[i].skillNum == skillNum)return false;
 	}
-
 	tagHit1 hit;
 	hit.skillNum = skillNum;
 	hit.currentTime = 0;
+
+	cout << hit.skillNum << '\n';
+	
 	switch (hit.skillNum)
 	{
 	case 0:
@@ -506,7 +508,7 @@ bool monster::hitCheck(int skillNum)
 		hit.endTime = 20;
 		break;
 	case 4:
-		hit.endTime = 20;
+		hit.endTime = 7;
 		break;
 	}
 	vHit.push_back(hit);

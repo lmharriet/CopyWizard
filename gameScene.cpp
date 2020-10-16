@@ -2,7 +2,7 @@
 #include "gameScene.h"
 
 gameScene::gameScene() :
-	enemy(nullptr), _player(nullptr), bgImg(nullptr), playerImg(nullptr), uiImg(nullptr), _shop(nullptr),_wall(nullptr) {}
+	enemy(nullptr), _player(nullptr), bgImg(nullptr), playerImg(nullptr), uiImg(nullptr), _shop(nullptr), _wall(nullptr) {}
 
 HRESULT gameScene::init()
 {
@@ -11,7 +11,7 @@ HRESULT gameScene::init()
 
 	if (_player == nullptr)
 		_player = new player;
-	
+
 	_player->init();
 	uiImg = IMAGEMANAGER->addImage("UI", "Images/gameUI.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 	playerImg = IMAGEMANAGER->findImage("playerFrame");
@@ -23,7 +23,7 @@ HRESULT gameScene::init()
 
 	PARTICLE->init();
 	EFFECT->init();
-	if(_wall==nullptr)
+	if (_wall == nullptr)
 		_wall = new wall;
 
 	_wall->getRectAd(&cam);
@@ -34,7 +34,7 @@ HRESULT gameScene::init()
 	UI->setCoin(PLAYERDATA->getCoin());
 	UI->setHp(PLAYERDATA->getHp());
 
-	
+
 	enemy = make_shared<enemyManager>();
 	enemy->init(_wall->getTile(), _wall->getSubTile(), _wall->getCulPt());
 
@@ -46,7 +46,7 @@ HRESULT gameScene::init()
 	EFFECT->setPortalEffect({ (long)_player->getX(),(long)_player->getY() });
 	SOUNDMANAGER->play("portalWarp", false);
 
-	if(_shop==nullptr)
+	if (_shop == nullptr)
 		_shop = new shop;
 	_shop->init();
 
@@ -102,7 +102,7 @@ void gameScene::update()
 
 	_player->update();
 	_player->animation();
-	
+
 
 	enemy->setPlayerRC(RectMake(_player->getX(), _player->getY(), 100, 100));
 	enemy->update();
@@ -137,7 +137,7 @@ void gameScene::update()
 		//DROP->getCoinEffect(1);
 		EFFECT->setEmotionEffect("buyEmote_Nox", { (long)_player->getX() ,(long)_player->getY() - 80 });
 	}
-	
+
 	UNITRENDER->setPlayerRect(_player->getRect());
 
 
@@ -153,7 +153,7 @@ void gameScene::render()
 	DROP->render(getMemDC());
 	EFFECT->pRender(getMemDC());
 
-	
+
 
 
 	_player->render();
@@ -161,7 +161,7 @@ void gameScene::render()
 	UNITRENDER->render(getMemDC());
 
 	EFFECT->emotionRender(getMemDC());
-	
+
 
 	PLAYERDATA->shroudRender(getMemDC());
 
@@ -209,7 +209,7 @@ void gameScene::playerAttack()
 				//gauge
 				if (PLAYERDATA->getStat().ManaRejection == false)
 				{
-					_player->chargeSkillGauge(damage,0);
+					_player->chargeSkillGauge(damage, 0);
 				}
 
 
@@ -302,12 +302,12 @@ void gameScene::playerAttack()
 			else if (PLAYERDATA->getGaugeTime() >= 50)
 			{
 				bool criCheck = PLAYERDATA->criAppear();
-			
+
 				int damage = PLAYERDATA->damageCul(_player->getInferno()->getInf().atkPower, criCheck);
 				//gauge
 				if (PLAYERDATA->getStat().ManaRejection == false)
 				{
-					_player->chargeSkillGauge(damage,3);
+					_player->chargeSkillGauge(damage, 3);
 				}
 
 				float angle = getAngle(enemyX + 40, enemyY + 40,
@@ -323,23 +323,48 @@ void gameScene::playerAttack()
 	}//end of for
 
 	//dragonArc
-	for (int i = 0; i < _player->getDragon()->getSize(); i++)
+	if (!_player->getDragon()->getUpgrade())
+	{
+		for (int i = 0; i < _player->getDragon()->getSize(); i++)
+		{
+			for (int j = 0; j < enemy->getMinion().size(); j++)
+			{
+				if (colCheck(_player->getDragon()->getDragonRC(i), enemy->getMinion()[j]->getRC()))
+				{
+					bool criCheck = PLAYERDATA->criAppear();
+
+					int damage = PLAYERDATA->damageCul(_player->getDragon()->getAtkPower(i) + RANDOM->range(0, 3), criCheck);
+
+					//gauge
+					if (PLAYERDATA->getStat().ManaRejection == false)
+					{
+						_player->chargeSkillGauge(damage, 4);
+					}
+					enemy->getMinion()[j]->hit(damage, _player->getDragon()->getDragonAngle(i), 10.f, 4, criCheck);
+				}
+			}
+		}
+	}
+
+	//upgrade
+	for (int i = 0; i < _player->getDragon()->getcolSize(); i++)
 	{
 		for (int j = 0; j < enemy->getMinion().size(); j++)
 		{
-			if (colCheck(_player->getDragon()->getDragonRC(i), enemy->getMinion()[j]->getRC()))
+			if (colCheck(_player->getDragon()->getColRc(i), enemy->getMinion()[j]->getRC()))
 			{
 				bool criCheck = PLAYERDATA->criAppear();
 
-				int damage = PLAYERDATA->damageCul(_player->getDragon()->getAtkPower(i) +RANDOM->range(0, 3), criCheck);
+				int damage = PLAYERDATA->damageCul(_player->getDragon()->getUpgradeAtkPower(i) + RANDOM->range(0, 3), criCheck);
 
 				//gauge
 				if (PLAYERDATA->getStat().ManaRejection == false)
 				{
 					_player->chargeSkillGauge(damage, 4);
 				}
-				enemy->getMinion()[j]->hit(damage, _player->getDragon()->getDragonAngle(i), 4, criCheck);
+				enemy->getMinion()[j]->hit(damage, _player->getDragon()->getHeadAngle(i), 10.f,4, criCheck);
 			}
+
 		}
 	}
 
@@ -423,8 +448,8 @@ void gameScene::viewText()
 void gameScene::soundInit()
 {
 	//sound 
-	
-	
+
+
 
 	isIngameBGM = true;
 	fadeIn = 0.f;

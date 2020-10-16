@@ -113,15 +113,13 @@ public:
 	////////////////////////
 	////  skill setUp   ////
 
-
 	void skillInit();
-	void setSkillUi(ARCANA_TYPE type, string keyName, int coolTime);
 	void basicSetUp();
 	void dashSetUp();
 	void standardSetUp();
 	void signatureSetUp();
 
-	void dragonArcSetUp();
+	void setSkillUi(ARCANA_TYPE type, string keyName, int coolTime);
 	///////////////////////
 
 

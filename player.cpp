@@ -78,9 +78,9 @@ HRESULT player::init()
 	isDead = false;
 
 	//upgrade gauge
-	skillGauge = 0;
+	skillGauge = 100;
 	gaugeMaxCool = 120;
-	upgradeReady = false;
+	upgradeReady = true;
 
 
 
@@ -464,34 +464,6 @@ void player::controller()
 	}
 }
 
-void player::dragonArcSetUp()
-{
-	//dragon->setUpgrade(upgradeReady);
-
-	//float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
-
-	//if (!upgradeReady)
-	//{
-	//	if (INPUT->GetKeyDown('E'))
-	//	{
-	//		dragon->fire(posX, posY, angle);
-	//	}
-	//}
-	//else
-	//{
-	//	if (INPUT->GetKeyDown('E'))
-	//	{
-	//		dragon->phoenixFire(posX, posY, angle);
-
-	//		//skillGauge초기화 수정 필요..
-	//		//skillGauge = 0;
-	//	}
-
-	//	//조건 넣어서 skill gauge 0 으로 초기화하고 upgradeReady false로 만들기
-
-	//}
-}
-
 void player::skillInit()
 {
 	arcana[0].type = ARCANA_TYPE::TYPE_BASIC;
@@ -772,8 +744,6 @@ void player::signatureSetUp()
 		{
 			if (arcana[3].skillName == "skill_meteor")
 			{
-
-
 				if (signatureStateCool == 0)
 				{
 					signatureStateCool = 30;
@@ -797,9 +767,7 @@ void player::signatureSetUp()
 				{
 					signatureStateCool = 30;
 					dragon->phoenixFire(posX, posY, attackAngle);
-
 					skillGauge = 0;
-
 				}
 				if (signatureStateCool >= 0)
 				{
@@ -1668,7 +1636,7 @@ void player::chargeSkillGauge(int atkPower, int skillNum)
 			skillGauge += (float)(atkPower / atkPower) * 1.5f;
 		break;
 	case 4:
-		if (count % 10 == 0)
+		if (count % 30 == 0)
 			skillGauge += (float)(atkPower / atkPower) * 1.5f;
 		break;
 	}
