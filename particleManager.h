@@ -55,11 +55,23 @@ struct tagParticlePoint
 class particleManager : public singletonBase<particleManager>
 {
 private:
-	vector<tagParticlePoint> vParticlePoint; // 파티클 생성자
-	vector<tagParticlePoint> vExplosion;	  // 폭팔 파티클 생성자
-	vector<tagParticle> vParticle;			  // 파티클
+	vector<tagParticlePoint*> vTemp;
+	vector<tagParticle*> vTempParticle;
+
+	vector<tagParticlePoint*> vParticlePoint;  // 파티클 생성자
+	vector<tagParticlePoint*> vExplosion;	  // 폭팔 파티클 생성자
+	vector<tagParticle*> vParticle;			  // 파티클
 public:
 	HRESULT init();
+
+	tagParticle* getTempParticle();
+
+	tagParticlePoint* getTempPoint();
+
+	void returnPoint(tagParticlePoint* particle);
+
+	void returnParticle(tagParticle* particle);
+
 	void render(HDC hdc);
 
 	void pointGenerate(string keyName, float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius, float particleSpeed, int frameDelay);

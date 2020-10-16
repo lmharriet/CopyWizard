@@ -17,12 +17,12 @@ HRESULT mainGame::init()
 	
 	/*씬추가*/
 
-	SCENEMANAGER->addScene("로딩화면", new loadingScene);
-	SCENEMANAGER->addScene("시작화면", new startScene);
-	SCENEMANAGER->addScene("인게임", new gameScene);
-	SCENEMANAGER->addScene("보스방", new bossScene);
+	SCENEMANAGER->addScene("로딩화면", make_shared<loadingScene>());
+	SCENEMANAGER->addScene("시작화면", make_shared <startScene>());
+	SCENEMANAGER->addScene("인게임", make_shared<gameScene>());
+	SCENEMANAGER->addScene("보스방", make_shared<bossScene>());
 
-	mapToolScene* maptool = new mapToolScene;
+	shared_ptr<mapToolScene> maptool = make_shared <mapToolScene>();
 	SCENEMANAGER->addScene("맵툴제작", maptool);
 	maptool->init();
 	maptool->addImage();

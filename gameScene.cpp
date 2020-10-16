@@ -2,14 +2,16 @@
 #include "gameScene.h"
 
 gameScene::gameScene() :
-	enemy(nullptr), _player(nullptr), bgImg(nullptr), playerImg(nullptr), uiImg(nullptr), _shop(nullptr) {}
+	enemy(nullptr), _player(nullptr), bgImg(nullptr), playerImg(nullptr), uiImg(nullptr), _shop(nullptr),_wall(nullptr) {}
 
 HRESULT gameScene::init()
 {
 	UI->init();
 	DROP->init();
 
-	_player = new player;
+	if (_player == nullptr)
+		_player = new player;
+	
 	_player->init();
 	uiImg = IMAGEMANAGER->addImage("UI", "Images/gameUI.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 	playerImg = IMAGEMANAGER->findImage("playerFrame");
@@ -21,8 +23,8 @@ HRESULT gameScene::init()
 
 	PARTICLE->init();
 	EFFECT->init();
-
-	_wall = new wall;
+	if(_wall==nullptr)
+		_wall = new wall;
 
 	_wall->getRectAd(&cam);
 	_wall->init();
@@ -32,7 +34,8 @@ HRESULT gameScene::init()
 	UI->setCoin(PLAYERDATA->getCoin());
 	UI->setHp(PLAYERDATA->getHp());
 
-	enemy = new enemyManager;
+	
+	enemy = make_shared<enemyManager>();
 	enemy->init(_wall->getTile(), _wall->getSubTile(), _wall->getCulPt());
 
 	PLAYERDATA->setTile(_wall->getTile());
@@ -43,8 +46,8 @@ HRESULT gameScene::init()
 	EFFECT->setPortalEffect({ (long)_player->getX(),(long)_player->getY() });
 	SOUNDMANAGER->play("portalWarp", false);
 
-	//npc
-	_shop = new shop;
+	if(_shop==nullptr)
+		_shop = new shop;
 	_shop->init();
 
 
@@ -65,7 +68,6 @@ void gameScene::release()
 		SAFE_DELETE(_player);
 
 		enemy->release();
-		SAFE_DELETE(enemy);
 
 		//_wall->release();
 		//SAFE_DELETE(_wall);
