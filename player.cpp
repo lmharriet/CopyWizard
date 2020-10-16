@@ -78,9 +78,9 @@ HRESULT player::init()
 	isDead = false;
 
 	//upgrade gauge
-	skillGauge = 100;
+	skillGauge = 0;
 	gaugeMaxCool = 120;
-	upgradeReady = true;
+	upgradeReady = false;
 
 
 

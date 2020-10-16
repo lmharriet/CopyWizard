@@ -490,9 +490,6 @@ bool monster::hitCheck(int skillNum)
 	tagHit1 hit;
 	hit.skillNum = skillNum;
 	hit.currentTime = 0;
-
-	cout << hit.skillNum << '\n';
-	
 	switch (hit.skillNum)
 	{
 	case 0:
