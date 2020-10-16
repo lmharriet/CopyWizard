@@ -44,7 +44,7 @@ tagParticle* particleManager::getTempParticle()
 		vTempParticle.erase(vTempParticle.begin());
 	}
 
-	cout << vTempParticle.size() << '\n';
+	//cout << vTempParticle.size() << '\n';
 
 	return particle;
 }
@@ -78,7 +78,7 @@ void particleManager::returnParticle(tagParticle* particle)
 {
 	vTempParticle.push_back(particle);
 
-	cout << vTempParticle.size() << '\n';
+	//cout << vTempParticle.size() << '\n';
 }
 
 void particleManager::render(HDC hdc)

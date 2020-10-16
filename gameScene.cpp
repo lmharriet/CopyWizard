@@ -135,7 +135,7 @@ void gameScene::update()
 	if (INPUT->GetKeyDown(VK_BACK))
 	{
 		//DROP->getCoinEffect(1);
-		EFFECT->setEmotionEffect("buyEmote", { (long)_player->getX() ,(long)_player->getY() - 80 });
+		EFFECT->setEmotionEffect("buyEmote_Nox", { (long)_player->getX() ,(long)_player->getY() - 80 });
 	}
 	
 	UNITRENDER->setPlayerRect(_player->getRect());

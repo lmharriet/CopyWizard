@@ -257,7 +257,8 @@ void effectManager::addImage()
     IMAGEMANAGER->addFrameImage("curseEffect", "Images/effect/curseItem.bmp", 112, 248, 4, 4);
 
     //emotion
-    IMAGEMANAGER->addFrameImage("buyEmote", "Images/effect/npc/buyEmote.bmp", 352, 56, 8, 1);
+    IMAGEMANAGER->addFrameImage("buyEmote_Andres", "Images/effect/npc/buyEmote1.bmp", 352, 56, 8, 1);
+    IMAGEMANAGER->addFrameImage("buyEmote_Nox", "Images/effect/npc/buyEmote2.bmp", 440, 56, 10, 1);
 }
 
 void effectManager::dashEffect(MOVE direction, POINT pos)

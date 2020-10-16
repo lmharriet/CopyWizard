@@ -462,7 +462,7 @@ void shop::buyItem()
                 PLAYERDATA->pushInven(_item);
 
                 //emotion play
-                EFFECT->setEmotionEffect("buyEmote", { AndresShop[2].pt.x + 20 , AndresShop[2].pt.y - 130 });
+                EFFECT->setEmotionEffect("buyEmote_Andres", { AndresShop[2].pt.x + 20 , AndresShop[2].pt.y - 130 });
                 //3. 아이템의 가격만큼 코인을 잃음
                 PLAYERDATA->setCoin(PLAYERDATA->getCoin() - AndresShop[colItem].price);
             }
@@ -491,7 +491,7 @@ void shop::buyItem()
             PLAYERDATA->pushInven(_item);
 
             //emotion play
-            EFFECT->setEmotionEffect("buyEmote", { NoxShop[1].pt.x + 20 , NoxShop[1].pt.y - 200 });
+            EFFECT->setEmotionEffect("buyEmote_Nox", { NoxShop[1].pt.x + 20 , NoxShop[1].pt.y - 200 });
         }
     }
 }
