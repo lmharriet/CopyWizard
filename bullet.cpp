@@ -100,13 +100,19 @@ void bullet::move()
 				_vBullet.erase(_vBullet.begin() + i);
 			break;
 		case MONSTERKIND::SUMMONER:
-			_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
+			{_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
 			float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
 				_vBullet[i].x, _vBullet[i].y);
 			if (_range < distance)//총알이 사거리 보다 커졌을때
 			{
 				_vBullet.erase(_vBullet.begin() + i);
-			}
+			}}
+			break;
+		case MONSTERKIND::GHOUL:
+			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 110, 150);
+			_vBullet[i].count++;
+			if (_vBullet[i].count >= 5)
+				_vBullet.erase(_vBullet.begin() + i);
 			break;
 		}
 	}

@@ -441,8 +441,8 @@ void monster::render()
 {
 	
 	// astar->render(getMemDC());
-	 //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
-	 //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
+	 FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
+	 FrameRect(getMemDC(), rc, RGB(255, 255, 255));
 }
 
 void monster::setPt(float x, float y)
@@ -615,5 +615,6 @@ void monster::stateHIT(POINT lPos, POINT rPos)
 	if (kind == MONSTERKIND::GHOUL)
 	{
 		speed = 3.f;
+		atk = 5;
 	}
 }
