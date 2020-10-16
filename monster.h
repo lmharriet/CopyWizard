@@ -140,7 +140,8 @@ protected:
 
 	const float distanceMax = 500.f;
 	
-	astarManager* astar;
+	shared_ptr<astarManager> astar;
+	//astarManager* astar;
 	
 	RECT rc;
 	RECT playerRC;

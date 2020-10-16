@@ -6,12 +6,17 @@ void ghoul::addInit()
     kind = MONSTERKIND::GHOUL;
     atk = 30;
     armour = 1.f;
-    speed = 16.f;
+    speed = 1.f;
     hp = 300;
     img = IMAGEMANAGER->findImage("ghoul");
     skillImg = NULL;
     isKnockBack = true;
     isRanger = false;
+
+    speedUpCount = 0;
+    isSpeedUp = false;
+    isIdle = false;
+
 }
 
 void ghoul::update()
@@ -64,9 +69,20 @@ void ghoul::update()
         if (!isHit && !isDie)
         {
             state = STATEIMAGE::IDLE;
+            isIdle = true;
+            
         }
     }
-
+    if (isMonsterApeear && !isSpeedUp)
+    {
+        speedUpCount++;
+        if (!(speedUpCount % 30) )
+        {
+            speed = 16.f;
+            speedUpCount = 0;
+            isSpeedUp = true;
+        }
+    }
 
 }
 
