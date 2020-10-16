@@ -4,6 +4,7 @@
 
 HRESULT wall::init()
 {
+	isLoad = false;
 	loadMap(0);
 
 	//culPt
@@ -49,6 +50,7 @@ HRESULT wall::init()
 
 void wall::loadMap(int index)
 {
+	if (isLoad) return;
 	char str[50], str1[50];
 
 	sprintf(str, "mapData/map%d.map", index);
@@ -64,6 +66,7 @@ void wall::loadMap(int index)
 	file = CreateFile(str1, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	ReadFile(file, subTile, sizeof(tagTile) * MAXTILE, &read, NULL);
 	CloseHandle(file);
+	isLoad = true;
 }
 
 void wall::update()

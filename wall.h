@@ -18,6 +18,7 @@ private:
 	//가져오기
 	RECT* cam;
 	player* _player;
+	bool isLoad;
 public:
 	HRESULT init();
 	void loadMap(int index);
