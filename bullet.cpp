@@ -917,7 +917,7 @@ void dragonArc::render()
 			if (count % 2 == 0)
 			{
 				PARTICLE->explosionGenerate("explosionParticle2", vDragon[i].x, vDragon[i].y, 3, 0.75f, 0.f, 3, true);
-				PARTICLE->explosionGenerate("explosionParticle2", vDragon[i].x, vDragon[i].y, 5, 1.25f, 0.f, 1, true);
+				//PARTICLE->explosionGenerate("explosionParticle2", vDragon[i].x, vDragon[i].y, 5, 1.25f, 0.f, 1, true);
 			}
 
 			CAMERAMANAGER->FrameRender(getMemDC(), vDragon[i].img,
@@ -941,10 +941,6 @@ void dragonArc::render()
 			//CAMERAMANAGER->Ellipse(getMemDC(), vWings[i].rc);
 			if (count % 2 == 0)
 			{
-				//PARTICLE->explosionGenerate("explosionParticle2", vWings[i].x, vWings[i].y, 7, 0.75f, 0, 2, true);
-				//PARTICLE->burningParticle2Play(vWings[i].x, vWings[i].y);
-				//PARTICLE->explosionGenerate("smokeX4", vWings[i].x, vWings[i].y, 2, 4, 0.f, 2, true);
-				//PARTICLE->explosionGenerate("frameParticle", vWings[i].x, vWings[i].y, 2, 0, 0.f, 2, true);
 				PARTICLE->explosionGenerate("explosionParticle", vWings[i].x, vWings[i].y, 3, 7, 0.f, 2, true);
 			}
 		}
