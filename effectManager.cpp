@@ -19,114 +19,108 @@ HRESULT effectManager::init()
 void effectManager::pRender(HDC hdc)
 {
     time++;
-    vector<tagDashEffect>::iterator iter;
-    for (iter = vDashEft.begin(); iter != vDashEft.end();)
+
+    for (int i = 0; i < vDashEft.size();)
     {
-        POINT position = { CAMERAMANAGER->GetRelativeX(iter->pos.x),CAMERAMANAGER->GetRelativeY(iter->pos.y) };
+        POINT position = { CAMERAMANAGER->GetRelativeX(vDashEft[i].pos.x),CAMERAMANAGER->GetRelativeY(vDashEft[i].pos.y) };
 
-        IMAGEMANAGER->findImage(iter->keyName)->frameRender(hdc, position.x, position.y, iter->imgCount, iter->frameY);
+        IMAGEMANAGER->findImage(vDashEft[i].keyName)->frameRender(hdc, position.x, position.y, vDashEft[i].imgCount, vDashEft[i].frameY);
 
-        if (!iter->flipImg)
+        if (!vDashEft[i].flipImg)
         {
-            if (time % 5 == 0)iter->imgCount++;
+            if (time % 5 == 0)vDashEft[i].imgCount++;
 
-            if (iter->imgCount == iter->maxFrame)
+            if (vDashEft[i].imgCount == vDashEft[i].maxFrame)
             {
-                iter = vDashEft.erase(iter);
+                vDashEft.erase(vDashEft.begin() + i);
             }
-            else iter++;
+            else i++;
         }
         else
         {
-            if (time % 5 == 0)iter->imgCount--;
+            if (time % 5 == 0)vDashEft[i].imgCount--;
 
-            if (iter->imgCount == 0)
+            if (vDashEft[i].imgCount == 0)
             {
-                iter = vDashEft.erase(iter);
+                vDashEft.erase(vDashEft.begin() + i);
             }
-            else iter++;
+            else i++;
         }
     }
 }
 
 void effectManager::render(HDC hdc)
 {
-    vector<tagEffect>::iterator iter;
-    for (iter = vEft.begin(); iter != vEft.end();)
+    for (int i = 0; i < vEft.size();)
     {
-        image* img = IMAGEMANAGER->findImage(iter->keyName);
+        image* img = IMAGEMANAGER->findImage(vEft[i].keyName);
 
-        if (iter->isFrame) // 프레임 이미지인지?
+        if (vEft[i].isFrame) // 프레임 이미지인지?
         {
 
-            //CAMERAMANAGER->FrameRender(hdc, img,
-            //    iter->pos.x - img->getFrameWidth() / 2,
-            //    iter->pos.y - img->getFrameHeight() / 2,
-            //    iter->imgCount, 0);
-
             CAMERAMANAGER->StretchFrameRender(hdc, img, 
-                iter->pos.x - img->getFrameWidth() * iter->currentSize / 2,
-                iter->pos.y - img->getFrameHeight() * iter->currentSize / 2,
-                iter->imgCount, 0, iter->currentSize);
+                vEft[i].pos.x - img->getFrameWidth() * vEft[i].currentSize / 2,
+                vEft[i].pos.y - img->getFrameHeight() * vEft[i].currentSize / 2,
+                vEft[i].imgCount, 0, vEft[i].currentSize);
 
-            if (iter->flipImg == false) // 애니메이션 정방향 출력
+            if (vEft[i].flipImg == false) // 애니메이션 정방향 출력
             {
-                if (time % iter->frameDelay == 0 && iter->imgCount < iter->maxFrame) iter->imgCount++;
+                if (time % vEft[i].frameDelay == 0 && vEft[i].imgCount < vEft[i].maxFrame) vEft[i].imgCount++;
 
-                if (iter->isEraseSize) // 삭제조건 : 사이즈
+                if (vEft[i].isEraseSize) // 삭제조건 : 사이즈
                 {
-                    iter->currentSize += iter->increaseSize;
+                    vEft[i].currentSize += vEft[i].increaseSize;
 
-                    float cul = abs(iter->currentSize - iter->endSize);
+                    float cul = abs(vEft[i].currentSize - vEft[i].endSize);
 
-                    if (cul < 0.01)iter = vEft.erase(iter);
-                    else iter++;
+                    if (cul < 0.01)vEft.erase(vEft.begin() + i);
+                    else i++;
                 }
 
-                else if (iter->isEraseTime == false) // 삭제조건 : 프레임
+                else if (vEft[i].isEraseTime == false) // 삭제조건 : 프레임
                 {
-                    if (iter->imgCount == iter->maxFrame) iter = vEft.erase(iter);
-                    else iter++;
+                    if (vEft[i].imgCount == vEft[i].maxFrame) vEft.erase(vEft.begin() + i);
+                    else i++;
                 }
 
                 else // 삭제조건 : 시간
                 {
-                    if (iter->currentTime == iter->eraseTime) iter = vEft.erase(iter);
+                    if (vEft[i].currentTime == vEft[i].eraseTime) vEft.erase(vEft.begin() + i);
                     else
                     {
-                        iter->currentTime++;
+                        vEft[i].currentTime++;
 
-                        iter++;
+                        i++;
                     }
                 }
             }
 
             else // 애니메이션 역방향 출력
             {
-                if (time % iter->frameDelay == 0 && iter->imgCount > 0) iter->imgCount--;
+                if (time % vEft[i].frameDelay == 0 && vEft[i].imgCount > 0) vEft[i].imgCount--;
 
-                if (iter->isEraseSize) // 삭제조건 : 사이즈
+                if (vEft[i].isEraseSize) // 삭제조건 : 사이즈
                 {
-                    float cul = abs(iter->currentSize - iter->endSize);
+                    float cul = abs(vEft[i].currentSize - vEft[i].endSize);
 
-                    if (cul < 0.01)iter = vEft.erase(iter);
-                    else iter++;
+                    if (cul < 0.01)vEft.erase(vEft.begin() + i);
+                    else i++;
                 }
 
-                else if (iter->isEraseTime == false) // 삭제조건 : 프레임
+                else if (vEft[i].isEraseTime == false) // 삭제조건 : 프레임
                 {
-                    if (iter->imgCount == 0) iter = vEft.erase(iter);
-                    else iter++;
+                    if (vEft[i].imgCount == 0) vEft.erase(vEft.begin() + i);
+                    else i++;
                 }
 
                 else // 삭제조건 : 시간
                 {
-                    if (iter->currentTime == iter->eraseTime) iter = vEft.erase(iter);
+                    if (vEft[i].currentTime == vEft[i].eraseTime) vEft.erase(vEft.begin() + i);
                     else
                     {
-                        iter->currentTime++;
+                        vEft[i].currentTime++;
 
-                        iter++;
+                        i++;
                     }
                 }
             }
@@ -135,42 +129,42 @@ void effectManager::render(HDC hdc)
 
         else // 프레임 이미지가 아님 (size로 삭제)
         {
-            if (iter->isEraseSize)
+            if (vEft[i].isEraseSize)
             {
                 //출력
                 CAMERAMANAGER->StretchRender(hdc, img,
-                    iter->pos.x - (img->getWidth() * iter->currentSize / 2),
-                    iter->pos.y - (img->getHeight() * iter->currentSize / 2),
-                    iter->currentSize);
+                    vEft[i].pos.x - (img->getWidth() * vEft[i].currentSize / 2),
+                    vEft[i].pos.y - (img->getHeight() * vEft[i].currentSize / 2),
+                    vEft[i].currentSize);
 
                 //사이즈 변경
-                iter->currentSize += iter->increaseSize;
+                vEft[i].currentSize += vEft[i].increaseSize;
 
                 //삭제
-                float cul = abs(iter->currentSize - iter->endSize);
+                float cul = abs(vEft[i].currentSize - vEft[i].endSize);
 
-                if (cul < 0.01) iter = vEft.erase(iter);
-                else iter++;
+                if (cul < 0.01) vEft.erase(vEft.begin() + i);
+                else i++;
             }
             
             else // time del
             {
                 //출력
                 CAMERAMANAGER->AlphaRender(hdc, img, 
-                    iter->pos.x - (img->getWidth() / 2),
-                    iter->pos.y - (img->getHeight() / 2),
-                    iter->opacity);
+                    vEft[i].pos.x - (img->getWidth() / 2),
+                    vEft[i].pos.y - (img->getHeight() / 2),
+                    vEft[i].opacity);
                 
                 //이동
-                if (time % 2 == 0) iter->pos.y--;
+                if (time % 2 == 0) vEft[i].pos.y--;
 
                 //투명도 변경
-                if(iter->opacity > 0)iter->opacity--;
+                if(vEft[i].opacity > 0)vEft[i].opacity--;
 
                 //삭제
-                if (iter->opacity == 0) iter = vEft.erase(iter);
+                if (vEft[i].opacity == 0) vEft.erase(vEft.begin() + i);
 
-                else iter++;
+                else i++;
             }
         }
     }
@@ -203,22 +197,21 @@ void effectManager::portalRender(HDC hdc)
 
 void effectManager::dRender(HDC hdc)
 {
-    vector<tagDamageEffect>::iterator iter = dEft.begin();
-    for (iter; iter != dEft.end();)
+    for (int i = 0; i < dEft.size();)
     {
         image* img = IMAGEMANAGER->findImage("damageEffect");
         CAMERAMANAGER->FrameRender(hdc, img, 
-            iter->pos.x - img->getFrameWidth()/2,
-            iter->pos.y - img->getFrameHeight()/2, 
-            iter->frameX, iter->frameY);
+            dEft[i].pos.x - img->getFrameWidth()/2,
+            dEft[i].pos.y - img->getFrameHeight()/2,
+            dEft[i].frameX, dEft[i].frameY);
 
-        if (time % 5 == 0) iter->frameX++;
+        if (time % 5 == 0) dEft[i].frameX++;
 
-        if (iter->frameX == iter->maxFrame)
+        if (dEft[i].frameX == dEft[i].maxFrame)
         {
-            iter = dEft.erase(iter);
+            dEft.erase(dEft.begin() + i);
         }
-        else iter++;
+        else i++;
     }
 }
 
