@@ -133,9 +133,27 @@ void mainGame::volumeControl()
 		SOUNDMANAGER->setVolumeSFX(sfxVolume);
 	}
 
-	if (INPUT->GetToggleKey(VK_OEM_3)) //mute
+	if (INPUT->GetKeyDown(VK_OEM_3)) //mute
 	{
-		SOUNDMANAGER->setVolumeSFX(-1.0f);
+		if (!isMute)
+		{
+			SOUNDMANAGER->setVolumeSFX(-1.0f);
+			SOUNDMANAGER->setBackGroundVolume("titleBGM", -1.0f);
+			SOUNDMANAGER->setBackGroundVolume("mapToolBGM", -1.0f);
+			SOUNDMANAGER->setBackGroundVolume("ingameBGM", -1.0f);
+			SOUNDMANAGER->setBackGroundVolume("bossBGM", -1.0f);
+			isMute = true;
+		}
+		else
+		{
+			SOUNDMANAGER->setVolumeSFX(sfxVolume);
+			SOUNDMANAGER->setBackGroundVolume("titleBGM", volume);
+			SOUNDMANAGER->setBackGroundVolume("mapToolBGM", volume);
+			SOUNDMANAGER->setBackGroundVolume("ingameBGM", volume);
+			SOUNDMANAGER->setBackGroundVolume("bossBGM", volume);
+			isMute = false;
+		}
+
 	}
 	
 }
@@ -166,4 +184,5 @@ void mainGame::soundInit()
 	
 
 	sfxVolume = 0.5f;
+	isMute = false;
 }
