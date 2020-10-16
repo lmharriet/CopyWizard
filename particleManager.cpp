@@ -3,6 +3,19 @@
 
 HRESULT particleManager::init()
 {
+	///object pooling///
+	for (int i = 0; i < 30; i++)
+	{
+		vTemp.push_back(new tagParticlePoint);
+	}
+
+	for (int i = 0; i < 1000; i++)
+	{
+		vTempParticle.push_back(new tagParticle);
+	}
+	//
+
+	//add image
 	IMAGEMANAGER->addFrameImage("frameParticle", "Images/particle/frameParticle.bmp", 240, 160, 6, 4);
 	IMAGEMANAGER->addFrameImage("explosionParticle", "Images/particle/explosionParticle.bmp", 480, 320, 6, 4);
 	IMAGEMANAGER->addFrameImage("explosionParticle2", "Images/particle/explosionParticle(320,213).bmp", 320, 213, 6, 4);
@@ -12,95 +25,163 @@ HRESULT particleManager::init()
 	IMAGEMANAGER->addFrameImage("stoneX2", "Images/particle/stoneX2.bmp", 34, 122, 1, 4);
 	IMAGEMANAGER->addFrameImage("smokeX2", "Images/particle/smokeParticle.bmp", 480, 320, 6, 4);
 	IMAGEMANAGER->addFrameImage("smokeX4", "Images/particle/smokeParticle.bmp", 480/2, 320/2, 6, 4);
+
 	return S_OK;
+}
+
+tagParticle* particleManager::getTempParticle()
+{
+	tagParticle* particle;
+
+	if (vTempParticle.empty())
+	{
+		particle = new tagParticle();
+	}
+
+	else
+	{
+		particle = vTempParticle[0];
+		vTempParticle.erase(vTempParticle.begin());
+	}
+	//cout << vTempParticle.size() << '\n';
+
+	return particle;
+}
+
+tagParticlePoint* particleManager::getTempPoint()
+{
+	tagParticlePoint* point;
+
+	if (vTemp.empty())
+	{
+		point = new tagParticlePoint;
+	}
+	else
+	{
+		point = vTemp[0];
+		vTemp.erase(vTemp.begin());
+	}
+
+	//cout << vTemp.size() << '\n';
+
+	return point;
+}
+
+void particleManager::returnPoint(tagParticlePoint* particle)
+{
+	vTemp.push_back(particle);
+	//cout << vTemp.size() << '\n';
+}
+
+void particleManager::returnParticle(tagParticle* particle)
+{
+	vTempParticle.push_back(particle);
+	//cout << vTempParticle.size() << '\n';
 }
 
 void particleManager::render(HDC hdc)
 {
+	if (vParticle.empty())return;
+
 	image* img = nullptr;
 
 	for (int i = 0; i < vParticle.size();)
 	{
-		img = IMAGEMANAGER->findImage(vParticle[i].keyName);
+		img = IMAGEMANAGER->findImage(vParticle[i]->keyName);
 
-		vParticle[i].time++;
+		vParticle[i]->time++;
 
 		//이동1
-		if (vParticle[i].isBack == false)
+		if (vParticle[i]->isBack == false)
 		{
-			vParticle[i].x += cosf(vParticle[i].angle) * vParticle[i].speed;
-			vParticle[i].y -= sinf(vParticle[i].angle) * vParticle[i].speed;
+			vParticle[i]->x += cosf(vParticle[i]->angle) * vParticle[i]->speed;
+			vParticle[i]->y -= sinf(vParticle[i]->angle) * vParticle[i]->speed;
 		}
 
 		//이동2
-		if (vParticle[i].isBack == true)
+		if (vParticle[i]->isBack == true)
 		{
-			if (vParticle[i].backTime > 0)
+			if (vParticle[i]->backTime > 0)
 			{
-				vParticle[i].backTime--;
+				vParticle[i]->backTime--;
 
-				vParticle[i].x += cosf(vParticle[i].angle) * vParticle[i].speed;
-				vParticle[i].y -= sinf(vParticle[i].angle) * vParticle[i].speed;
+				vParticle[i]->x += cosf(vParticle[i]->angle) * vParticle[i]->speed;
+				vParticle[i]->y -= sinf(vParticle[i]->angle) * vParticle[i]->speed;
 			}
 			else
 			{
-				float angle = getAngle(vParticle[i].x, vParticle[i].y, PLAYERDATA->getX(), PLAYERDATA->getY());
+				float angle = getAngle(vParticle[i]->x, vParticle[i]->y, PLAYERDATA->getX(), PLAYERDATA->getY());
 
-				vParticle[i].speed *= 1.05f;
+				vParticle[i]->speed *= 1.05f;
 
-				vParticle[i].x += cosf(angle) * vParticle[i].speed * 1.3f;
-				vParticle[i].y -= sinf(angle) * vParticle[i].speed * 1.3f;
+				vParticle[i]->x += cosf(angle) * vParticle[i]->speed * 1.3f;
+				vParticle[i]->y -= sinf(angle) * vParticle[i]->speed * 1.3f;
 			}
 		}
 
 		CAMERAMANAGER->FrameRender(hdc, img,
-			vParticle[i].x - img->getFrameWidth() / 2,
-			vParticle[i].y - img->getFrameHeight() / 2,
-			vParticle[i].frameX,
-			vParticle[i].frameY);
+			vParticle[i]->x - img->getFrameWidth() / 2,
+			vParticle[i]->y - img->getFrameHeight() / 2,
+			vParticle[i]->frameX,
+			vParticle[i]->frameY);
 
 		//이미지
-		if (vParticle[i].time % vParticle[i].delay == 0)
+		if (vParticle[i]->time % vParticle[i]->delay == 0)
 		{
-			vParticle[i].frameX++;
+			vParticle[i]->frameX++;
 		}
 
 		//제거
 
 		//(조건 ? 시간이 어느정도 지나거나, 중앙 좌표렉트와 충돌할 때)
-		if (vParticle[i].isCollect) // collect effect
+		if (vParticle[i]->isCollect) // collect effect
 		{
-			RECT rc1 = RectMakeCenter(vParticle[i].x, vParticle[i].y, 10, 10);
-			RECT rc2 = RectMakeCenter(vParticle[i].endX, vParticle[i].endY, 30, 30);
+			RECT rc1 = RectMakeCenter(vParticle[i]->x, vParticle[i]->y, 10, 10);
+			RECT rc2 = RectMakeCenter(vParticle[i]->endX, vParticle[i]->endY, 30, 30);
 
 			//CAMERAMANAGER->Rectangle(hdc, rc1);
 			//CAMERAMANAGER->Rectangle(hdc, rc2);
 
-			if(colCheck(rc1,rc2) || vParticle[i].time > 50) vParticle.erase(vParticle.begin() + i);
+			if (colCheck(rc1, rc2) || vParticle[i]->time > 50)
+			{
+				returnParticle(vParticle[i]);
+
+				vParticle.erase(vParticle.begin() + i);
+			}
 			else i++;
 		}
 
-		else if (vParticle[i].isBack)
+		else if (vParticle[i]->isBack)
 		{
-			RECT rc1 = RectMakeCenter(vParticle[i].x, vParticle[i].y, 10, 10);
+			RECT rc1 = RectMakeCenter(vParticle[i]->x, vParticle[i]->y, 10, 10);
 			RECT rc2 = RectMakeCenter(PLAYERDATA->getX(), PLAYERDATA->getY(), 20, 20);
 
-			if (vParticle[i].backTime != 0)
+			if (vParticle[i]->backTime != 0)
 			{
 				i++;
 				continue;
 			}
 
-			if (colCheck(rc1, rc2) || vParticle[i].time > 300)vParticle.erase(vParticle.begin() + i);
+			if (colCheck(rc1, rc2) || vParticle[i]->time > 300)
+			{
+				returnParticle(vParticle[i]);
+
+				vParticle.erase(vParticle.begin() + i);
+			}
 			else i++;
 		}
 
 		else // default
 		{
-			if (vParticle[i].isFrameDel) //(조건 ? maxFrame 되면 제거)
+			if (vParticle[i]->isFrameDel) //(조건 ? maxFrame 되면 제거)
 			{
 
-				if (vParticle[i].frameX == vParticle[i].maxFrameX) vParticle.erase(vParticle.begin() + i);
+				if (vParticle[i]->frameX == vParticle[i]->maxFrameX)
+				{
+					returnParticle(vParticle[i]);
+
+					vParticle.erase(vParticle.begin() + i);
+				}
 				else i++;
 
 			}
@@ -108,7 +189,12 @@ void particleManager::render(HDC hdc)
 			else //(조건 ? 시간이 되면 제거)
 			{
 				
-				if (vParticle[i].time == vParticle[i].lifeTime) vParticle.erase(vParticle.begin() + i);
+				if (vParticle[i]->time == vParticle[i]->lifeTime)
+				{
+					returnParticle(vParticle[i]);
+
+					vParticle.erase(vParticle.begin() + i);
+				}
 				else i++;
 
 			}
@@ -118,105 +204,110 @@ void particleManager::render(HDC hdc)
 
 void particleManager::pointGenerate(string keyName, float x, float y, int CreateDelay, int lifeTime, int maxAngle, float radius, float particleSpeed, int frameDelay)
 {
-	tagParticlePoint particlePoint;
-	particlePoint.x = x;
-	particlePoint.y = y;
-	particlePoint.currentTime = 0;
-	particlePoint.delay = CreateDelay;
-	particlePoint.lifeTime = lifeTime;
-	particlePoint.angleNum = 0;
-	particlePoint.maxAngle = maxAngle;
-	particlePoint.radius = radius;
+	tagParticlePoint* particlePoint = getTempPoint();
+	particlePoint->x = x;
+	particlePoint->y = y;
+	particlePoint->currentTime = 0;
+	particlePoint->delay = CreateDelay;
+	particlePoint->lifeTime = lifeTime;
+	particlePoint->angleNum = 0;
+	particlePoint->maxAngle = maxAngle;
+	particlePoint->radius = radius;
 
-	particlePoint.particleSpeed = particleSpeed;
-	particlePoint.frameDelay = frameDelay;
+	particlePoint->particleSpeed = particleSpeed;
+	particlePoint->frameDelay = frameDelay;
 
-	particlePoint.keyName = keyName;
+	particlePoint->keyName = keyName;
 
 	vParticlePoint.push_back(particlePoint);
 }
 
 void particleManager::explosionGenerate(string keyName, float x, float y, int maxAngle, float radius, float particleSpeed, int frameDelay, bool isFrameDel, int particleEndTime, bool isBack)
 {
-	tagParticlePoint particlePoint;
-	particlePoint.x = x;
-	particlePoint.y = y;
-	particlePoint.maxAngle = maxAngle;
-	particlePoint.radius = radius;
+	tagParticlePoint* particlePoint = getTempPoint();
 
-	particlePoint.particleSpeed = particleSpeed;
-	particlePoint.frameDelay = frameDelay;
+	particlePoint->x = x;
+	particlePoint->y = y;
+	particlePoint->maxAngle = maxAngle;
+	particlePoint->radius = radius;
 
-	particlePoint.keyName = keyName;
-	particlePoint.isBack = isBack;
-	particlePoint.isCollect = false;
+	particlePoint->particleSpeed = particleSpeed;
+	particlePoint->frameDelay = frameDelay;
 
-	particlePoint.currentTime = 0;
-	particlePoint.lifeTime = 0;
-	particlePoint.createDelay = 1;
+	particlePoint->keyName = keyName;
+	particlePoint->isBack = isBack;
+	particlePoint->isCollect = false;
 
-	particlePoint.isFrameDel = isFrameDel;
-	particlePoint.particleEndTime = particleEndTime;
+	particlePoint->currentTime = 0;
+	particlePoint->lifeTime = 0;
+	particlePoint->createDelay = 1;
+
+	particlePoint->isFrameDel = isFrameDel;
+	particlePoint->particleEndTime = particleEndTime;
 
 	vExplosion.push_back(particlePoint);
 }
 
 void particleManager::collectingGenerate(string keyName, float x, float y, int maxAngle, float radius, float particleSpeed, int frameDelay, int lifeTime , int createDelay)
 {
-	tagParticlePoint particlePoint;
+	tagParticlePoint* particlePoint = getTempPoint();
 
-	particlePoint.x = x;
-	particlePoint.y = y;
-	particlePoint.maxAngle = maxAngle;
-	particlePoint.radius = radius;
+	particlePoint->x = x;
+	particlePoint->y = y;
+	particlePoint->maxAngle = maxAngle;
+	particlePoint->radius = radius;
 
-	particlePoint.particleSpeed = particleSpeed;
-	particlePoint.frameDelay = frameDelay;
+	particlePoint->particleSpeed = particleSpeed;
+	particlePoint->frameDelay = frameDelay;
 
-	particlePoint.keyName = keyName;
-	particlePoint.isBack = false;
-	particlePoint.isCollect = true;
+	particlePoint->keyName = keyName;
+	particlePoint->isBack = false;
+	particlePoint->isCollect = true;
 
-	particlePoint.currentTime = 0;
-	particlePoint.lifeTime = lifeTime;
-	particlePoint.createDelay = createDelay;
+	particlePoint->currentTime = 0;
+	particlePoint->lifeTime = lifeTime;
+	particlePoint->createDelay = createDelay;
 
-	particlePoint.isFrameDel = false;
-	particlePoint.particleEndTime = 50;
+	particlePoint->isFrameDel = false;
+	particlePoint->particleEndTime = 50;
 
 	vExplosion.push_back(particlePoint);
 }
 
 void particleManager::pointActive()
 {
+	if (vParticlePoint.empty())return;
+
 	float* arr;
 	for (int i = 0; i < vParticlePoint.size();)
 	{
-		arr = new float[vParticlePoint[i].maxAngle];
+		arr = new float[vParticlePoint[i]->maxAngle];
 
-		for (int k = 0; k < vParticlePoint[i].maxAngle; k++)
+		for (int k = 0; k < vParticlePoint[i]->maxAngle; k++)
 		{
-			arr[k] = (((2.f * PI) / vParticlePoint[i].maxAngle) * k);
+			arr[k] = (((2.f * PI) / vParticlePoint[i]->maxAngle) * k);
 		}
 
-		vParticlePoint[i].currentTime++;
+		vParticlePoint[i]->currentTime++;
 
 		//생성
-		if (vParticlePoint[i].currentTime % vParticlePoint[i].delay == 0)
+		if (vParticlePoint[i]->currentTime % vParticlePoint[i]->delay == 0)
 		{
 			//해당 방향으로 조금.. 밀어줌 (중앙에서 조금 떨어지게)
-			float x = vParticlePoint[i].x + cosf(arr[vParticlePoint[i].angleNum]) * vParticlePoint[i].radius; // 10정도 밀어줌
-			float y = vParticlePoint[i].y - sinf(arr[vParticlePoint[i].angleNum]) * vParticlePoint[i].radius; // 10정도 밀어줌
+			float x = vParticlePoint[i]->x + cosf(arr[vParticlePoint[i]->angleNum]) * vParticlePoint[i]->radius; // 10정도 밀어줌
+			float y = vParticlePoint[i]->y - sinf(arr[vParticlePoint[i]->angleNum]) * vParticlePoint[i]->radius; // 10정도 밀어줌
 
-			generate(vParticlePoint[i].keyName, x, y, arr[vParticlePoint[i].angleNum], vParticlePoint[i].frameDelay, vParticlePoint[i].particleSpeed, true);
-			vParticlePoint[i].angleNum++;
+			generate(vParticlePoint[i]->keyName, x, y, arr[vParticlePoint[i]->angleNum], vParticlePoint[i]->frameDelay, vParticlePoint[i]->particleSpeed, true);
+			vParticlePoint[i]->angleNum++;
 
-			if (vParticlePoint[i].angleNum == vParticlePoint[i].maxAngle)vParticlePoint[i].angleNum = 0;
+			if (vParticlePoint[i]->angleNum == vParticlePoint[i]->maxAngle)vParticlePoint[i]->angleNum = 0;
 		}
 
 		//제거
-		if (vParticlePoint[i].currentTime == vParticlePoint[i].lifeTime)
+		if (vParticlePoint[i]->currentTime == vParticlePoint[i]->lifeTime)
 		{
+			returnPoint(vParticlePoint[i]);
+
 			vParticlePoint.erase(vParticlePoint.begin() + i);
 		}
 		else i++;
@@ -225,37 +316,44 @@ void particleManager::pointActive()
 
 void particleManager::explosionActive()
 {
+	if (vExplosion.empty())return;
+
 	for (int i = 0; i < vExplosion.size(); i++)
 	{
-		if (vExplosion[i].lifeTime > 0)
+		if (vExplosion[i]->lifeTime > 0)
 		{
-			vExplosion[i].currentTime++;
-			if (vExplosion[i].currentTime % vExplosion[i].createDelay != 0)continue;
+			vExplosion[i]->currentTime++;
+			if (vExplosion[i]->currentTime % vExplosion[i]->createDelay != 0)continue;
 		}
 
 		//생성
-		for (int k = 0; k < vExplosion[i].maxAngle; k++)
+		for (int k = 0; k < vExplosion[i]->maxAngle; k++)
 		{
-			float angle = (((2.f * PI) / vExplosion[i].maxAngle) * k) + RANDOM->range(-0.4f, 0.4f);
-			float speed = vExplosion[i].particleSpeed + RANDOM->range(-1.f, 1.f);
+			float angle = (((2.f * PI) / vExplosion[i]->maxAngle) * k) + RANDOM->range(-0.4f, 0.4f);
+			float speed = vExplosion[i]->particleSpeed + RANDOM->range(-1.f, 1.f);
 			if (speed <= 0.f)speed = 0.3f;
-			float delay = vExplosion[i].frameDelay + RANDOM->range(0, 4);
+			float delay = vExplosion[i]->frameDelay + RANDOM->range(0, 4);
 
-			float x = vExplosion[i].x + cosf(angle) * vExplosion[i].radius;
-			float y = vExplosion[i].y - sinf(angle) * vExplosion[i].radius;
+			float x = vExplosion[i]->x + cosf(angle) * vExplosion[i]->radius;
+			float y = vExplosion[i]->y - sinf(angle) * vExplosion[i]->radius;
 
 			float culAngle = 0.f;
-			if(vExplosion[i].isCollect) culAngle = getAngle(x, y, vExplosion[i].x, vExplosion[i].y);
+			if(vExplosion[i]->isCollect) culAngle = getAngle(x, y, vExplosion[i]->x, vExplosion[i]->y);
 
-			if (vExplosion[i].isCollect) generate2(vExplosion[i].keyName, x, y, culAngle, delay, speed, vExplosion[i].x, vExplosion[i].y);
-			else generate(vExplosion[i].keyName, x, y, angle, delay, speed, vExplosion[i].isFrameDel, vExplosion[i].particleEndTime, vExplosion[i].isBack, 37);
+			if (vExplosion[i]->isCollect) generate2(vExplosion[i]->keyName, x, y, culAngle, delay, speed, vExplosion[i]->x, vExplosion[i]->y);
+			else generate(vExplosion[i]->keyName, x, y, angle, delay, speed, vExplosion[i]->isFrameDel, vExplosion[i]->particleEndTime, vExplosion[i]->isBack, 37);
 		}
 
 		//제거
-		if (vExplosion[i].lifeTime > 0) // 시간 순?
+		if (vExplosion[i]->lifeTime > 0) // 시간 순?
 		{
 
-			if (vExplosion[i].currentTime == vExplosion[i].lifeTime) vExplosion.erase(vExplosion.begin() + i);
+			if (vExplosion[i]->currentTime == vExplosion[i]->lifeTime)
+			{
+				returnPoint(vExplosion[i]);
+
+				vExplosion.erase(vExplosion.begin() + i);
+			}
 
 			else
 			{
@@ -266,6 +364,8 @@ void particleManager::explosionActive()
 
 		else // 바로 삭제
 		{
+			returnPoint(vExplosion[i]);
+
 			vExplosion.erase(vExplosion.begin() + i);
 			i--;
 		}
@@ -274,59 +374,61 @@ void particleManager::explosionActive()
 
 void particleManager::generate(string keyName, float x, float y, float angle, int delay, float speed, bool isFrameDel, int particleEndTime, bool isBack, int backTime)
 {
-	tagParticle particle;
+	tagParticle* particle = getTempParticle();
 
 	//default info
-	particle.x = x;
-	particle.y = y;
-	particle.angle = angle;
-	particle.delay = delay;
-	particle.speed = speed;
-	particle.time = 0;
+	particle->x = x;
+	particle->y = y;
+	particle->angle = angle;
+	particle->delay = delay;
+	particle->speed = speed;
+	particle->time = 0;
 
-	particle.isFrameDel = isFrameDel;
-	particle.lifeTime = particleEndTime;
+	particle->isFrameDel = isFrameDel;
+	particle->lifeTime = particleEndTime;
 
 	image* img = IMAGEMANAGER->findImage(keyName);
-	particle.keyName = keyName;
+	particle->keyName = keyName;
 	//image info
-	particle.frameX = 0;
-	particle.maxFrameX = img->getMaxFrameX();
-	particle.frameY = RANDOM->range(0, img->getMaxFrameY());
+	particle->frameX = 0;
+	particle->maxFrameX = img->getMaxFrameX();
+	particle->frameY = RANDOM->range(0, img->getMaxFrameY());
 
-	particle.isBack = isBack;
-	particle.backTime = backTime;
-	particle.isCollect = false;
+	particle->isBack = isBack;
+	particle->backTime = backTime;
+	particle->isCollect = false;
 	vParticle.push_back(particle);
 }
 
 void particleManager::generate2(string keyName, float x, float y, float angle, int delay, float speed, float endX, float endY, bool isCollect)
 {
-	tagParticle particle;
+	tagParticle* particle = getTempParticle();
 
 	//default info
-	particle.x = x;
-	particle.y = y;
-	particle.angle = angle;
-	particle.delay = delay;
-	particle.speed = speed;
-	particle.time = 0;
+	particle->x = x;
+	particle->y = y;
+	particle->angle = angle;
+	particle->delay = delay;
+	particle->speed = speed;
+	particle->time = 0;
 
 	image* img = IMAGEMANAGER->findImage(keyName);
-	particle.keyName = keyName;
+	particle->keyName = keyName;
 	//image info
-	particle.frameX = 0;
-	particle.maxFrameX = img->getMaxFrameX();
-	particle.frameY = RANDOM->range(0, img->getMaxFrameY());
+	particle->frameX = 0;
+	particle->maxFrameX = img->getMaxFrameX();
+	particle->frameY = RANDOM->range(0, img->getMaxFrameY());
 
-	particle.isBack = false;
-	particle.backTime = 0;
+	particle->isBack = false;
+	particle->backTime = 0;
 
-	particle.isCollect = isCollect;
-	particle.endX = endX;
-	particle.endY = endY;
+	particle->isCollect = isCollect;
+	particle->endX = endX;
+	particle->endY = endY;
 	vParticle.push_back(particle);
 }
+
+//
 
 void particleManager::potionParticlePlay(float x, float y)
 {

@@ -18,6 +18,8 @@ HRESULT effectManager::init()
 
 void effectManager::pRender(HDC hdc)
 {
+    if (vDashEft.empty())return;
+    
     time++;
 
     for (int i = 0; i < vDashEft.size();)
@@ -51,6 +53,16 @@ void effectManager::pRender(HDC hdc)
 
 void effectManager::render(HDC hdc)
 {
+    //vector<tagEffect> vEft;
+    ////데미지 이펙트 관리
+    //vector<tagDamageEffect> dEft;
+    ////포탈 이펙트 
+    //tagPortalEffect pEft;
+    //cout << dEft.size() << '\n';
+
+
+    if (vEft.empty()) return;
+
     for (int i = 0; i < vEft.size();)
     {
         image* img = IMAGEMANAGER->findImage(vEft[i].keyName);
@@ -172,31 +184,32 @@ void effectManager::render(HDC hdc)
 
 void effectManager::portalRender(HDC hdc)
 {
-    if (pEft.isActive)
-    {
-        image* img = IMAGEMANAGER->findImage("portalEffect");
-        //렌더
-        CAMERAMANAGER->AlphaFrameRender(hdc, img,
-            pEft.pos.x - img->getFrameWidth() / 2,
-            pEft.pos.y - img->getFrameHeight() + 70,
-            pEft.frameX, 0, pEft.opacity[pEft.frameX]);
+    if (pEft.isActive == false)return;
 
-        //비활성화
-        if (pEft.frameX == pEft.maxFrame)
-        {
-            lightEffect(pEft.pos, 20);
-            pEft.isActive = false;
-        }
-        else
-        {
-            //프레임 증가
-            if (time % 4 == 0) pEft.frameX++;
-        }
+    image* img = IMAGEMANAGER->findImage("portalEffect");
+    //렌더
+    CAMERAMANAGER->AlphaFrameRender(hdc, img,
+        pEft.pos.x - img->getFrameWidth() / 2,
+        pEft.pos.y - img->getFrameHeight() + 70,
+        pEft.frameX, 0, pEft.opacity[pEft.frameX]);
+
+    //비활성화
+    if (pEft.frameX == pEft.maxFrame)
+    {
+        lightEffect(pEft.pos, 20);
+        pEft.isActive = false;
+    }
+    else
+    {
+        //프레임 증가
+        if (time % 4 == 0) pEft.frameX++;
     }
 }
 
 void effectManager::dRender(HDC hdc)
 {
+    if (dEft.empty())return;
+
     for (int i = 0; i < dEft.size();)
     {
         image* img = IMAGEMANAGER->findImage("damageEffect");
