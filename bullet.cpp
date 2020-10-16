@@ -128,10 +128,12 @@ void bullet::removeBullet(int index)
 //=============================================================
 //	## bomb ## (폭탄처럼 한발씩 발사하고 생성하고 자동삭제)
 //=============================================================
-HRESULT bomb::init(int maxBullet, float range)
+HRESULT bomb::init(int maxBullet)
 {
+	IMAGEMANAGER->addFrameImage("blaze", "resource/player/blaze.bmp", 288, 96, 3, 1, true, RGB(255, 0, 255));
+	bombCount = bTime = 0;
+
 	//총알 사거리 및 총알 갯수 초기화
-	_range = range;
 	_bulletMax = maxBullet;
 
 	count = index = 0;
@@ -140,6 +142,7 @@ HRESULT bomb::init(int maxBullet, float range)
 	isCoolTime = false;
 	coolTime = 40;
 	currentCoolTime = 0;
+
 	return S_OK;
 }
 
@@ -149,7 +152,7 @@ void bomb::release()
 
 void bomb::update()
 {
-
+	bombActive();
 
 	count++;
 
@@ -183,76 +186,97 @@ void bomb::render()
 	}
 }
 
-void bomb::fire(float x, float y, float speed, float angle, float radius)
+float bomb::getRange(float angle, float x, float y)
+{
+	float tmpIndex = 10;
+
+	for (int i = 1; i < 10; i++)
+	{
+		//32마다 비교
+		float posX = x + cosf(angle) * (32 * i);
+		float posY = y - sinf(angle) * (32 * i);
+		RECT rTmp = RectMakeCenter(posX, posY, 4, 4);
+
+		for (int j = 0; j < PLAYERDATA->getWall().size(); j++)
+		{
+			int num = PLAYERDATA->getWall()[j];
+
+			if (colCheck(rTmp, PLAYERDATA->_getTile()[num].rc) == false) continue;
+
+			return i * 32;
+		}
+	}
+
+	return 320.f;
+}
+
+void bomb::fire(float x, float y, float speed, float angle)
 {
 	if (_bulletMax < _vBullet.size() + 1) return;
+
 	//총알 구조체 선언
-	tagBullet bullet;
-	bullet.bulletImage = IMAGEMANAGER->addFrameImage("blaze", "resource/player/blaze.bmp", 288, 96, 3, 1, true, RGB(255, 0, 255));
+	tagBomb bullet;
+	bullet.bulletImage = IMAGEMANAGER->findImage("blaze");
 	bullet.x = bullet.fireX = x;
 	bullet.y = bullet.fireY = y;
 	bullet.speed = speed;
 	bullet.angle = angle;
-	bullet.radius = radius;
 	bullet.collision = false;
-	bullet.rc = RectMakeCenter(bullet.x, bullet.y, radius * 2, radius * 2);
+	bullet.rc = RectMakeCenter(bullet.x, bullet.y, 4, 4);
 	bullet.atkPower = 12;
 
-	_vBullet.push_back(bullet);
+	bullet.range = getRange(angle, x, y);	// 벽에 충돌하지않는 선에서 최대 거리 계산
+
+	//tmpBomb에 저장
+	tmpBomb = bullet;
+	bombCount = 3;
 
 	isCoolTime = true;
 
 	//sound
 	SOUNDMANAGER->play("blazeFire", false);
+}
 
+void bomb::bombActive()
+{
+	if (bombCount == 0) return;
+
+	bTime++;
+
+	if (bTime % 10 == 0)
+	{
+		_vBullet.push_back(tmpBomb);
+
+		//생성 완료
+		bombCount--;
+
+		//bTime 초기화
+		bTime = 0;
+	}
 }
 
 void bomb::move() // blaze tile충돌은 gameScene에서만 되도록 처리하기
 {
-	for (int i = 0; i < _vBullet.size(); i++)
+	for (int i = 0; i < _vBullet.size();)
 	{
 		_vBullet[i].x += cosf(_vBullet[i].angle) * _vBullet[i].speed;
 		_vBullet[i].y += -sinf(_vBullet[i].angle) * _vBullet[i].speed;
-		_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, _vBullet[i].radius * 2, _vBullet[i].radius * 2);
+		_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 4, 4);
 
 		float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY, _vBullet[i].x, _vBullet[i].y);
-		if (_range < distance)
-		{
-			PARTICLE->explosionGenerate("explosionParticle", _vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3, true);
-			SOUNDMANAGER->play("blazeExp", false);
-			//_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
-			_vBullet[i].collision = true;
 
-		}
-		if (_vBullet[i].collision)
+		if (_vBullet[i].range < distance || _vBullet[i].collision)
 		{
-			_vBullet.erase(_vBullet.begin());
-			break;
-		}
-
-		//타일 충돌
-		if (!bossScene)
-		{
-			for (int j = 0; j < PLAYERDATA->getWall().size(); j++)
-			{
-				int num = PLAYERDATA->getWall()[j];
-
-				if (colCheck(PLAYERDATA->_getTile()[num].rc, _vBullet[0].rc))
-				{
-					PARTICLE->explosionGenerate("explosionParticle", _vBullet[i].x + 20, _vBullet[i].y + 20, 5, 30, 2.f, 3, true);
-					SOUNDMANAGER->play("blazeExp", false);
-					_vBullet.erase(_vBullet.begin() + i);
-					break;
-				}
-			}
+			removeBomb(i);
 		}
 		else i++;
-
 	}
 }
 //폭탄삭제
 void bomb::removeBomb(int index)
 {
+	PARTICLE->explosionGenerate("explosionParticle", _vBullet[index].x + 20, _vBullet[index].y + 20, 5, 30, 2.f, 3, true);
+	SOUNDMANAGER->play("blazeExp", false);
 
 	_vBullet.erase(_vBullet.begin() + index);
 }

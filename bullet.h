@@ -122,7 +122,22 @@ public:
 	
 };
 
+struct tagBomb
+{
+	image* bulletImage;
+	RECT rc;
+	float x, y;
+	float fireX, fireY;
+	float speed;
+	float angle;
 
+	float range;	// 최대 거리
+	float distance; // firePos 부터 curPos 까지 거리
+
+	int atkPower;
+
+	bool collision;
+};
 //=============================================================
 //	## bomb ## (폭탄처럼 한발씩 발사하고 생성하고 자동삭제) 
 //=============================================================
@@ -130,14 +145,14 @@ class bomb : public gameNode
 {
 private:
 	//총알 구조체를 담을 벡터선언
-	vector<tagBullet> _vBullet;
-	vector<tagBullet>::iterator _viBullet;
-	
+	vector<tagBomb> _vBullet;
+	tagBomb tmpBomb;
+
+	int bombCount;
+	int bTime;
 private:
-	float _range;			//총알 사거리
 	int _bulletMax;			//총알 최대갯수
 	int count, index;
-
 
 	bool isCoolTime;	// 스킬 쿨타임이 돌고있는지 아닌지
 
@@ -148,13 +163,16 @@ private:
 
 public:
 	
-	HRESULT init(int maxBullet, float range);
+	HRESULT init(int maxBullet);
 	void release();
 	void update();
 	void render();
 
+	float getRange(float angle, float x, float y);
+
 	//총알발사
-	void fire(float x, float y, float speed,float angle, float radius);
+	void fire(float x, float y, float speed,float angle);
+	void bombActive();
 	//총알무브
 	void move();
 
@@ -162,7 +180,7 @@ public:
 	void removeBomb(int index);
 
 	//총알벡터 가져오기
-	vector<tagBullet> getBullet() { return _vBullet; }
+	vector<tagBomb> getBullet() { return _vBullet; }
 
 	bool getCool() { return isCoolTime; }
 	bool getCol(int index) { return _vBullet[index].collision; }
