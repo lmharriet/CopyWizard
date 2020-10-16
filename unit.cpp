@@ -4,12 +4,42 @@
 HRESULT unit::init()
 {
     tile = PLAYERDATA->_getTile();
+
+    for (int i = 0; i < 500; i++)
+    {
+        tempObject.push_back(new zObject);
+    }
+
     return S_OK;
+}
+
+zObject* unit::getObject()
+{
+    zObject* object;
+
+    if (tempObject.empty())
+    {
+        object = new zObject;
+    }
+
+    else
+    {
+        object = tempObject[0];
+        tempObject.erase(tempObject.begin());
+    }
+
+    return object;
+}
+
+void unit::rtnObject(zObject* _object)
+{
+    tempObject.push_back(_object);
 }
 
 void unit::addUnit(int _index, string _keyName, string type, POINT frame, float _x, float _y)
 {
-    zObject* zo = new zObject;
+    zObject* zo = getObject();
+
     zo->init(_index, _keyName, type, frame, _x, _y);
 
     if (type == "player")player = zo;
@@ -43,6 +73,8 @@ void unit::update()
 
     for (int i = 0; i < vUnit.size(); i++)
     {
+        rtnObject(vUnit[i]);
+
         vector<zObject*> tempObj;
         tempObj.swap(vUnit);
     }
@@ -53,14 +85,15 @@ void unit::update()
 
     for (int i = 0; i < wall.size(); i++)
     {
-        zObject* zo = new zObject;
+        zObject* zo = getObject();
+
         zo->init(wall[i], tile[wall[i]].keyName, "wall", tile[wall[i]].frame, 0, 0);
         vUnit.push_back(zo);
     }
 
     for (int i = 0; i < vEnemy.size(); i++)
     {
-        zObject* zo = new zObject;
+        zObject* zo = getObject();
        
         switch (vEnemy[i].kind)
         {

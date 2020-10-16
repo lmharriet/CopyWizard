@@ -12,13 +12,21 @@ private:
 	};
 	vector<zObject*> vUnit;
 	vector<tagEnemy> vEnemy;
+
 	vector<int> wall;
+
+	vector<zObject*> tempObject;
+
 	zObject* player;
 	zObject npc[3];
 	//
 	tagTile* tile;
 public:
 	HRESULT init();
+
+	//object pooling
+	zObject* getObject();
+	void rtnObject(zObject* _object);
 
 	void addUnit(int _index, string _keyName, string type, POINT frame, float _x = 0, float _y = 0);
 	void setFramePlayer(POINT frame) { player->setFrame(frame); }
