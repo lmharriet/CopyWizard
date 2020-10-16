@@ -1686,18 +1686,12 @@ void player::buttonDown()
 //del
 void player::viewText()
 {
-	char test[256];
-	wsprintf(test, "basic : %d", basic);
-	textOut(getMemDC(), 100, 170, test, WHITE);
-	wsprintf(test, "standard : %d", standard);
-	textOut(getMemDC(), 100, 190, test, WHITE);
-	wsprintf(test, "signature : %d", signature);
-	textOut(getMemDC(), 100, 210, test, WHITE);
-
-
-
-
-	//wsprintf(str, "damageAngleTenth : %d", damageAngleTenth);
-	//textOut(getMemDC(), 100, 250, str, WHITE);
+	//char test[256];
+	//wsprintf(test, "basic : %d", basic);
+	//textOut(getMemDC(), 100, 170, test, WHITE);
+	//wsprintf(test, "standard : %d", standard);
+	//textOut(getMemDC(), 100, 190, test, WHITE);
+	//wsprintf(test, "signature : %d", signature);
+	//textOut(getMemDC(), 100, 210, test, WHITE);
 
 }

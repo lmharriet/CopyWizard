@@ -36,6 +36,7 @@ using namespace std;
 #include "imageManager.h"
 #include "util.h"
 using namespace MY_UTIL;
+#include "itemManager.h"
 #include "playerData.h"
 #include "sceneManager.h"
 #include "soundManager.h"
@@ -44,7 +45,6 @@ using namespace MY_UTIL;
 #include "particleManager.h"
 #include "uiManager.h"
 #include "effectManager.h"
-#include "itemManager.h"
 #include "dropManager.h"
 #include "bossManager.h"
 #include "damageManager.h"

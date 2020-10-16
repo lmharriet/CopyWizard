@@ -457,7 +457,9 @@ void shop::buyItem()
                 PLAYERDATA->setStat(AndresShop[colItem].keyName);
 
                 //2. vector<string> vInven에 push_Back
-                PLAYERDATA->pushInven(AndresShop[colItem].keyName);
+
+                tagItem _item = ITEM->getItem(AndresShop[colItem].keyName);
+                PLAYERDATA->pushInven(_item);
 
                 //3. 아이템의 가격만큼 코인을 잃음
                 PLAYERDATA->setCoin(PLAYERDATA->getCoin() - AndresShop[colItem].price);
@@ -480,7 +482,8 @@ void shop::buyItem()
             PLAYERDATA->setStat(NoxShop[colItem - 5].keyName);
 
             //2. vector<string> vInven에 push_Back
-            PLAYERDATA->pushInven(NoxShop[colItem - 5].keyName);
+            tagItem _item = ITEM->getItem(NoxShop[colItem - 5].keyName);
+            PLAYERDATA->pushInven(_item);
         }
     }
 }

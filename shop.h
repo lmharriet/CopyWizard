@@ -20,6 +20,7 @@ struct tagSellItem
 	bool isSell;
 	bool isCol;
 };
+
 class shop : public gameNode
 {
 private:
