@@ -103,6 +103,9 @@
     <Filter Include="GameFramework\매니져\UI">
       <UniqueIdentifier>{a21989a8-ed51-4ccf-9b08-291ec7a11245}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\hello">
+      <UniqueIdentifier>{f7e50fb9-45fd-43f0-9090-f3e58acae789}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
