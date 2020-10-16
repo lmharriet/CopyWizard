@@ -348,7 +348,7 @@ void player::invenRender()
 void player::bulletClassInit()
 {
 	blaze = new bomb;
-	blaze->init(10, 300);
+	blaze->init(10);
 
 	dragon = new dragonArc;
 	dragon->init();
@@ -548,21 +548,15 @@ void player::basicSetUp()
 			float x = cosf(saveAngle) * 50.f + posX;
 			float y = -sinf(saveAngle) * 50 + posY;
 
-			if (basicStateCool == 0 && blazeCount == 0)
+			if (basicStateCool == 0)
 			{
-				blazeCount = 3;
 				basicStateCool = 30;
+				blaze->fire(x, y, 10, saveAngle);
 			}
 
-			if (blazeCount > 0)
-			{
-				if (basicStateCool % 10 == 0)
-				{
-					blaze->fire(x, y, 10, saveAngle, 2);
-					blazeCount--;
-				}
-				UI->addCoolTime("skill_blaze");
-			}
+			UI->addCoolTime("skill_blaze");
+
+		
 			if (basicStateCool > 0)
 			{
 				state = STATE::BASIC;
