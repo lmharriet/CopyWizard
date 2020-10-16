@@ -134,7 +134,8 @@ void gameScene::update()
 
 	if (INPUT->GetKeyDown(VK_BACK))
 	{
-		DROP->getCoinEffect(1);
+		//DROP->getCoinEffect(1);
+		EFFECT->setEmotionEffect("buyEmote", { (long)_player->getX() ,(long)_player->getY() - 80 });
 	}
 	
 	UNITRENDER->setPlayerRect(_player->getRect());
@@ -159,7 +160,7 @@ void gameScene::render()
 
 	UNITRENDER->render(getMemDC());
 
-
+	EFFECT->emotionRender(getMemDC());
 	
 
 	PLAYERDATA->shroudRender(getMemDC());

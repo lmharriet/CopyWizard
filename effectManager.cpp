@@ -255,6 +255,9 @@ void effectManager::addImage()
 
     //curse
     IMAGEMANAGER->addFrameImage("curseEffect", "Images/effect/curseItem.bmp", 112, 248, 4, 4);
+
+    //emotion
+    IMAGEMANAGER->addFrameImage("buyEmote", "Images/effect/npc/buyEmote.bmp", 352, 56, 8, 1);
 }
 
 void effectManager::dashEffect(MOVE direction, POINT pos)
@@ -519,6 +522,67 @@ void effectManager::curseRenderFront(HDC hdc)
         {
             curseFrontEft.erase(curseFrontEft.begin() + i);
         }
+        else i++;
+    }
+}
+
+void effectManager::setEmotionEffect(string keyName, POINT pt)
+{
+    tagBuyEmotion emotion;
+
+    emotion.keyName = keyName;
+    emotion.pos = pt;
+    emotion.frameX = 0;
+    emotion.maxFrame = IMAGEMANAGER->findImage(keyName)->getMaxFrameX();
+
+    emotion.opacity = 255;
+    emotion.curTime = 0;
+
+    vEmotion.push_back(emotion);
+}
+
+void effectManager::emotionRender(HDC hdc)
+{
+    if (vEmotion.empty()) return;
+
+    for (int i = 0; i < vEmotion.size();)
+    {
+        //렌더
+        image* img = IMAGEMANAGER->findImage(vEmotion[i].keyName);
+        CAMERAMANAGER->AlphaFrameRender(hdc, img,
+            vEmotion[i].pos.x - img->getFrameWidth() / 2,
+            vEmotion[i].pos.y - img->getFrameHeight() / 2,
+            vEmotion[i].frameX, 0,
+            vEmotion[i].opacity);
+
+        //증가
+        if (vEmotion[i].frameX != vEmotion[i].maxFrame)
+        {
+            vEmotion[i].curTime++;
+
+            if (vEmotion[i].curTime == 15)
+            {
+                vEmotion[i].curTime = 0;
+
+                vEmotion[i].frameX++;
+            }
+        }
+
+        else // frameX == maxFrame
+        {
+            if (vEmotion[i].curTime != 15)
+            {
+                vEmotion[i].curTime++;
+            }
+
+            else
+            {
+                vEmotion[i].opacity -= 15;
+            }
+        }
+
+        //삭제
+        if (vEmotion[i].opacity == 0) vEmotion.erase(vEmotion.begin());
         else i++;
     }
 }

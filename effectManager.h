@@ -77,6 +77,19 @@ struct tagCurseEffect
 	POINT pos;
 };
 
+struct tagBuyEmotion
+{
+	POINT pos;
+
+	string keyName;
+
+	int frameX;
+	int maxFrame;
+	int opacity;
+
+	int curTime;
+};
+
 class effectManager : public singletonBase <effectManager>
 {
 private:
@@ -93,6 +106,9 @@ private:
 	tagCursePoint cursePoint;
 	vector<tagCurseEffect> curseBackEft;
 	vector<tagCurseEffect> curseFrontEft;
+
+	//구매 이펙트
+	vector<tagBuyEmotion> vEmotion;
 
 	int time;			// 프레임렌더를 하기 위해 필요, 'time++' 을 해주기 위함
 public:
@@ -124,4 +140,7 @@ public:
 	void cursePointActive();
 	void curseRenderBack(HDC hdc);
 	void curseRenderFront(HDC hdc);
+
+	void setEmotionEffect(string keyName, POINT pt);
+	void emotionRender(HDC hdc);
 };

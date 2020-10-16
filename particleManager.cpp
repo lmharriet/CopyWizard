@@ -35,7 +35,7 @@ tagParticle* particleManager::getTempParticle()
 
 	if (vTempParticle.empty())
 	{
-		particle = new tagParticle();
+		particle = new tagParticle;
 	}
 
 	else
@@ -43,7 +43,8 @@ tagParticle* particleManager::getTempParticle()
 		particle = vTempParticle[0];
 		vTempParticle.erase(vTempParticle.begin());
 	}
-	//cout << vTempParticle.size() << '\n';
+
+	cout << vTempParticle.size() << '\n';
 
 	return particle;
 }
@@ -76,7 +77,8 @@ void particleManager::returnPoint(tagParticlePoint* particle)
 void particleManager::returnParticle(tagParticle* particle)
 {
 	vTempParticle.push_back(particle);
-	//cout << vTempParticle.size() << '\n';
+
+	cout << vTempParticle.size() << '\n';
 }
 
 void particleManager::render(HDC hdc)
