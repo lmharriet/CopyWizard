@@ -76,20 +76,15 @@ void inventory::render()
 
 void inventory::itemExplanation()
 {
-	HFONT myFont = CreateFont(25, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "font/MunroSmall.ttf");
-	HFONT oldFont = (HFONT)SelectObject(getMemDC(), myFont);
-
-	SetTextColor(getMemDC(), RGB(255, 255, 255));
+	//SetTextColor(getMemDC(), RGB(255, 255, 255));
 
 	for (int i = 0; i < 14; i++)
 	{
 		if (col[i].isCol)
 		{
 			const char* ch = vInven[i].Explanation.c_str();
-
+			
 			DrawText(getMemDC(), ch, -1, &descriptBox, DT_CENTER | DT_WORDBREAK);
 		}
 	}
-	SelectObject(getMemDC(), oldFont);
-	DeleteObject(myFont);
 }

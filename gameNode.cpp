@@ -19,6 +19,9 @@ HRESULT gameNode::init()
 	ITEM->init();
 	DAMAGE->init();
 	//DROP->init();
+	myFont = CreateFont(25, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "font/MunroSmall.ttf");
+	oldFont = (HFONT)SelectObject(getMemDC(), myFont);
+	SetTextColor(getMemDC(), RGB(255, 255, 255));
 	return S_OK;
 }
 
@@ -29,6 +32,10 @@ void gameNode::release()
 {
 	//타이머 해제
 	KillTimer(_hWnd, 1);
+
+	SelectObject(getMemDC(), oldFont);
+	DeleteObject(myFont);
+
 	//입력매니져 해제
 	INPUT->release();
 	INPUT->releaseSingleton();
@@ -57,6 +64,7 @@ void gameNode::release()
 	ITEM->releaseSingleton();
 	DROP->releaseSingleton();
 	DAMAGE->releaseSingleton();
+
 	//HDC 해제
 	ReleaseDC(_hWnd, _hdc);
 }

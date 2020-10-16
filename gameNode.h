@@ -8,7 +8,8 @@ class gameNode
 {
 private:
 	HDC _hdc;				//HDC
-
+	HFONT myFont;
+	HFONT oldFont;
 public:
 	virtual HRESULT init();
 	virtual void release();

@@ -88,12 +88,12 @@ void startScene::render()
 
 	IMAGEMANAGER->findImage("startScreen")->render(getMemDC(), 0, 0);
 
-	char pos[126];
-	wsprintf(pos, "x: %d, y: %d", x, y);
-	textOut(getMemDC(), 10, 30, pos, RGB(255, 156, 0));
+	//char pos[126];
+	//(pos, "x: %d, y: %d", x, y);
+	//textOut(getMemDC(), 10, 30, pos, RGB(255, 156, 0));
 
-	wsprintf(pos, "isCol:%d ", isCol);
-	textOut(getMemDC(), 10, 50, pos, RGB(255, 156, 0));
+	//wsprintf(pos, "isCol:%d ", isCol);
+	//textOut(getMemDC(), 10, 50, pos, RGB(255, 156, 0));
 
 	//for (int i = 0; i < 3; i++)
 	//{

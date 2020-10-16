@@ -42,7 +42,7 @@ void loadingScene::render()
 	//로딩클래스 렌더
 	_loading->render();
 
-	textOut(getMemDC(), 10, 10, "로딩화면");
+	//textOut(getMemDC(), 10, 10, "로딩화면");
 }
 
 void loadingScene::loadingImage()

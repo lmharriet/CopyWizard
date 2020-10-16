@@ -317,8 +317,8 @@ void shop::render()
 
 void shop::colRender()
 {
-    HFONT myFont = CreateFont(25, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "font/MunroSmall.ttf");
-    HFONT oldFont = (HFONT)SelectObject(getMemDC(), myFont);
+    //HFONT myFont = CreateFont(25, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "font/MunroSmall.ttf");
+    //HFONT oldFont = (HFONT)SelectObject(getMemDC(), myFont);
 
     image* back = IMAGEMANAGER->findImage("itemBackBoardFrame");
     RECT rt;
@@ -346,7 +346,7 @@ void shop::colRender()
                 frameX, 0, 130);
             //==========================================================
 
-            SetTextColor(getMemDC(), RGB(255, 255, 255));
+            //SetTextColor(getMemDC(), RGB(255, 255, 255));
 
             TextOut(getMemDC(), CAMERAMANAGER->GetRelativeX(AndresShop[j].pt.x) - 30,
                  CAMERAMANAGER->GetRelativeY(AndresShop[j].pt.y) - 70,
@@ -380,7 +380,7 @@ void shop::colRender()
                 frameX, 0, 130);
             //==========================================================
 
-            SetTextColor(getMemDC(), RGB(255, 255, 255));
+            //SetTextColor(getMemDC(), RGB(255, 255, 255));
 
             TextOut(getMemDC(), CAMERAMANAGER->GetRelativeX(NoxShop[j].pt.x) - 30,
                 CAMERAMANAGER->GetRelativeY(NoxShop[j].pt.y) - 110,
@@ -392,8 +392,8 @@ void shop::colRender()
         }
     }
 
-    SelectObject(getMemDC(), oldFont);
-    DeleteObject(myFont);
+    //SelectObject(getMemDC(), oldFont);
+    //DeleteObject(myFont);
 }
 
 void shop::shopCollider(RECT rc)
