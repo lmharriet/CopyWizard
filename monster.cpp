@@ -480,6 +480,8 @@ void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum, 
 
 	isHit = true;
 	
+	char str[50];
+	sprintf(str, "knightHit%d", RANDOM->range(2));
 	//hit sound
 	switch (kind)
 	{
@@ -487,16 +489,12 @@ void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum, 
 		SOUNDMANAGER->play("golemHit", false,-0.28f);
 		break;
 	case MONSTERKIND::KNIGHT:
-		char str[50];
-		sprintf(str, "knightHit%d", RANDOM->range(2));
 		SOUNDMANAGER->play(str, false,-0.38f);
 		break;
 	case MONSTERKIND::SUMMONER:
 		SOUNDMANAGER->play("golemHit", false,-0.3f); 
 		break;
 	case MONSTERKIND::GHOUL:
-		char str[50];
-		sprintf(str, "knightHit%d", RANDOM->range(2));
 		SOUNDMANAGER->play(str, false, -0.38f);
 	
 	}
