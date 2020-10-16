@@ -2,6 +2,11 @@
 #include "monster.h"
 class ghoul : public monster
 {
+private:
+	int speedUpCount;
+	bool isSpeedUp;
+	bool isIdle;
+public:
 	void addInit()override;
 	void update() override;
 

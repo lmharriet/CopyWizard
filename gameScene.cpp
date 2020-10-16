@@ -106,29 +106,7 @@ void gameScene::update()
 	enemy->update();
 
 	UNITRENDER->enemyClear();
-	for (int i = 0; i < enemy->getMinion().size(); i++)
-	{
-		POINT currentFrame = enemy->getMinion()[i]->getCurrentFrame();
-		POINT monsterPos = enemy->getMinion()[i]->getPos();
-		switch (enemy->getMinion()[i]->getMonsterKind())
-		{
-		case MONSTERKIND::GOLEM:
-			if (enemy->getMinion()[i]->getHit() && !enemy->getMinion()[i]->getDie())
-				UNITRENDER->enemyInit(4,currentFrame,monsterPos );//°ñ·½È÷Æ®½Ã
-			else
-				UNITRENDER->enemyInit(0, currentFrame, monsterPos);
-			break;
-		case MONSTERKIND::KNIGHT:
-			UNITRENDER->enemyInit(1, currentFrame, monsterPos);
-			break;
-		case MONSTERKIND::SUMMONER:
-			UNITRENDER->enemyInit(2, currentFrame, monsterPos);
-			break;
-		case MONSTERKIND::GHOUL:
-			UNITRENDER->enemyInit(3, currentFrame, monsterPos);
-		}
-
-	}
+	enemyUnitRenderInit(); // ¹«Á¶°Ç UNITERENDER->enemyClear¿Í UNITRENDER->update() »çÀÌ¿¡ ÀÖ¾î¾ßÇÔ.
 	UNITRENDER->update();
 
 	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX + 15, WINSIZEY + 15);
@@ -378,6 +356,33 @@ void gameScene::enemyAttack()
 		{
 			i++;
 		}
+	}
+}
+
+void gameScene::enemyUnitRenderInit()
+{
+	for (int i = 0; i < enemy->getMinion().size(); i++)
+	{
+		POINT currentFrame = enemy->getMinion()[i]->getCurrentFrame();
+		POINT monsterPos = enemy->getMinion()[i]->getPos();
+		switch (enemy->getMinion()[i]->getMonsterKind())
+		{
+		case MONSTERKIND::GOLEM:
+			if (enemy->getMinion()[i]->getHit() && !enemy->getMinion()[i]->getDie())
+				UNITRENDER->enemyInit(4, currentFrame, monsterPos);//°ñ·½È÷Æ®½Ã
+			else
+				UNITRENDER->enemyInit(0, currentFrame, monsterPos);
+			break;
+		case MONSTERKIND::KNIGHT:
+			UNITRENDER->enemyInit(1, currentFrame, monsterPos);
+			break;
+		case MONSTERKIND::SUMMONER:
+			UNITRENDER->enemyInit(2, currentFrame, monsterPos);
+			break;
+		case MONSTERKIND::GHOUL:
+			UNITRENDER->enemyInit(3, currentFrame, monsterPos);
+		}
+
 	}
 }
 

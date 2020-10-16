@@ -328,7 +328,7 @@ HRESULT monster::init(tagTile* tile, POINT _pos)
 	else
 	{
 		isAstar = true;
-		astar = new astarManager;
+		astar = make_shared< astarManager>();
 		astar->init(tile);
 	}
 
@@ -357,11 +357,11 @@ HRESULT monster::init(tagTile* tile, POINT _pos)
 
 void monster::release()
 {
-	if (isAstar)
+	/*if (isAstar)
 	{
 		astar->release();
 		SAFE_DELETE(astar);
-	}
+	}*/
 }
 
 void monster::commonUpdate()
