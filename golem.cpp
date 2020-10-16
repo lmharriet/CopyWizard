@@ -8,7 +8,7 @@ void golem::addInit()
     hitImg = IMAGEMANAGER->findImage("golemHit");
     kind = MONSTERKIND::GOLEM;
     atk = 30;
-    armour = 8;
+    armour = 0.4f;
     speed = 2.f;
     hp = 150;
     img = IMAGEMANAGER->findImage("golem");

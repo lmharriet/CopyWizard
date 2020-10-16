@@ -5,7 +5,7 @@ void ghoul::addInit()
 {
     kind = MONSTERKIND::GHOUL;
     atk = 30;
-    armour = 0;
+    armour = 1.f;
     speed = 16.f;
     hp = 300;
     img = IMAGEMANAGER->findImage("ghoul");
