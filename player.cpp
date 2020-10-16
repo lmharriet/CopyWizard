@@ -719,7 +719,7 @@ void player::signatureSetUp()
 	float mouseX = CAMERAMANAGER->GetAbsoluteX(_ptMouse.x);
 	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
 
-	if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !dragon->getCool() && !isDead && !Meteor->getCool()
+	if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead && (!Meteor->getCool()|| !dragon->getCool())
 		&& !inferno->getGauging() && speed == 0) 
 	{
 		signature = true;

@@ -79,9 +79,6 @@
     <Filter Include="GameFramework\매니져\데미지">
       <UniqueIdentifier>{4f253115-4fc0-44cf-a04f-ed1e40b96aaf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework\매니져\데미지\UI">
-      <UniqueIdentifier>{a21989a8-ed51-4ccf-9b08-291ec7a11245}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameFramework\총알">
       <UniqueIdentifier>{0850c6c3-b3ea-4bbc-818b-2f7be3085366}</UniqueIdentifier>
     </Filter>
@@ -102,6 +99,9 @@
     </Filter>
     <Filter Include="MainGame\z-order">
       <UniqueIdentifier>{ff395590-248c-438b-b8e3-563c83b21ccd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\매니져\UI">
+      <UniqueIdentifier>{a21989a8-ed51-4ccf-9b08-291ec7a11245}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -148,7 +148,7 @@
       <Filter>MainGame\인게임\monster</Filter>
     </ClCompile>
     <ClCompile Include="uiManager.cpp">
-      <Filter>GameFramework\매니져\데미지\UI</Filter>
+      <Filter>GameFramework\매니져\UI</Filter>
     </ClCompile>
     <ClCompile Include="effectManager.cpp">
       <Filter>GameFramework\매니져\이펙트</Filter>
@@ -291,7 +291,7 @@
       <Filter>MainGame\인게임\monster</Filter>
     </ClInclude>
     <ClInclude Include="uiManager.h">
-      <Filter>GameFramework\매니져\데미지\UI</Filter>
+      <Filter>GameFramework\매니져\UI</Filter>
     </ClInclude>
     <ClInclude Include="unitNode.h">
       <Filter>MainGame\인게임</Filter>
