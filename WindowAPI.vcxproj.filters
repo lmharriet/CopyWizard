@@ -19,9 +19,6 @@
     <Filter Include="GameFramework\이미지">
       <UniqueIdentifier>{1e616e04-3329-41d7-b6ed-02b7d269f51f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework\싱글톤데이터">
-      <UniqueIdentifier>{4f9c286a-e4c3-42c7-9fce-71a675503514}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MapTool">
       <UniqueIdentifier>{545b4c28-71eb-4d96-9f49-96a6c22af9fa}</UniqueIdentifier>
     </Filter>
@@ -82,9 +79,6 @@
     <Filter Include="GameFramework\매니져\데미지">
       <UniqueIdentifier>{4f253115-4fc0-44cf-a04f-ed1e40b96aaf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameFramework\매니져\데미지\UI">
-      <UniqueIdentifier>{a21989a8-ed51-4ccf-9b08-291ec7a11245}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameFramework\총알">
       <UniqueIdentifier>{0850c6c3-b3ea-4bbc-818b-2f7be3085366}</UniqueIdentifier>
     </Filter>
@@ -96,6 +90,15 @@
     </Filter>
     <Filter Include="MainGame\씬 모음\로딩">
       <UniqueIdentifier>{f1530a48-84ba-4fbc-bab2-c34ac7b34e6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\매니져\UI">
+      <UniqueIdentifier>{a21989a8-ed51-4ccf-9b08-291ec7a11245}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\인게임\PLAYER">
+      <UniqueIdentifier>{c6448bc1-94b4-496c-88b4-efc666f01660}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameFramework\매니져\카메라">
+      <UniqueIdentifier>{b42517f9-eca8-4ff9-8605-2eceff7911db}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -114,17 +117,11 @@
     <ClCompile Include="image.cpp">
       <Filter>GameFramework\이미지</Filter>
     </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>MainGame\인게임</Filter>
-    </ClCompile>
     <ClCompile Include="bullet.cpp">
       <Filter>GameFramework\총알</Filter>
     </ClCompile>
     <ClCompile Include="util.cpp">
       <Filter>GameFramework\유틸</Filter>
-    </ClCompile>
-    <ClCompile Include="playerData.cpp">
-      <Filter>GameFramework\싱글톤데이터</Filter>
     </ClCompile>
     <ClCompile Include="imageManager.cpp">
       <Filter>GameFramework\매니져\이미지</Filter>
@@ -135,7 +132,6 @@
     <ClCompile Include="soundManager.cpp">
       <Filter>GameFramework\매니져\사운드</Filter>
     </ClCompile>
-    <ClCompile Include="cameraManager.cpp" />
     <ClCompile Include="mainGame.cpp">
       <Filter>MainGame</Filter>
     </ClCompile>
@@ -149,7 +145,7 @@
       <Filter>MainGame\인게임\monster</Filter>
     </ClCompile>
     <ClCompile Include="uiManager.cpp">
-      <Filter>GameFramework\매니져\데미지\UI</Filter>
+      <Filter>GameFramework\매니져\UI</Filter>
     </ClCompile>
     <ClCompile Include="effectManager.cpp">
       <Filter>GameFramework\매니져\이펙트</Filter>
@@ -190,7 +186,6 @@
     <ClCompile Include="dropManager.cpp">
       <Filter>GameFramework\매니져\드롭</Filter>
     </ClCompile>
-    <ClCompile Include="inventory.cpp" />
     <ClCompile Include="damageManager.cpp">
       <Filter>GameFramework\매니져\데미지</Filter>
     </ClCompile>
@@ -221,6 +216,18 @@
     <ClCompile Include="ghoul.cpp">
       <Filter>MainGame\인게임\monster</Filter>
     </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>MainGame\인게임\PLAYER</Filter>
+    </ClCompile>
+    <ClCompile Include="inventory.cpp">
+      <Filter>MainGame\인게임\PLAYER</Filter>
+    </ClCompile>
+    <ClCompile Include="cameraManager.cpp">
+      <Filter>GameFramework\매니져\카메라</Filter>
+    </ClCompile>
+    <ClCompile Include="playerData.cpp">
+      <Filter>MainGame\인게임\PLAYER</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -244,17 +251,11 @@
     <ClInclude Include="image.h">
       <Filter>GameFramework\이미지</Filter>
     </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>MainGame\인게임</Filter>
-    </ClInclude>
     <ClInclude Include="bullet.h">
       <Filter>GameFramework\총알</Filter>
     </ClInclude>
     <ClInclude Include="util.h">
       <Filter>GameFramework\유틸</Filter>
-    </ClInclude>
-    <ClInclude Include="playerData.h">
-      <Filter>GameFramework\싱글톤데이터</Filter>
     </ClInclude>
     <ClInclude Include="tileNode.h">
       <Filter>MapTool</Filter>
@@ -271,7 +272,6 @@
     <ClInclude Include="soundManager.h">
       <Filter>GameFramework\매니져\사운드</Filter>
     </ClInclude>
-    <ClInclude Include="cameraManager.h" />
     <ClInclude Include="particleManager.h">
       <Filter>GameFramework\매니져\파티클</Filter>
     </ClInclude>
@@ -282,7 +282,7 @@
       <Filter>MainGame\인게임\monster</Filter>
     </ClInclude>
     <ClInclude Include="uiManager.h">
-      <Filter>GameFramework\매니져\데미지\UI</Filter>
+      <Filter>GameFramework\매니져\UI</Filter>
     </ClInclude>
     <ClInclude Include="unitNode.h">
       <Filter>MainGame\인게임</Filter>
@@ -323,7 +323,6 @@
     <ClInclude Include="dropManager.h">
       <Filter>GameFramework\매니져\드롭</Filter>
     </ClInclude>
-    <ClInclude Include="inventory.h" />
     <ClInclude Include="damageManager.h">
       <Filter>GameFramework\매니져\데미지</Filter>
     </ClInclude>
@@ -356,6 +355,18 @@
     </ClInclude>
     <ClInclude Include="ghoul.h">
       <Filter>MainGame\인게임\monster</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>MainGame\인게임\PLAYER</Filter>
+    </ClInclude>
+    <ClInclude Include="inventory.h">
+      <Filter>MainGame\인게임\PLAYER</Filter>
+    </ClInclude>
+    <ClInclude Include="cameraManager.h">
+      <Filter>GameFramework\매니져\카메라</Filter>
+    </ClInclude>
+    <ClInclude Include="playerData.h">
+      <Filter>MainGame\인게임\PLAYER</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
