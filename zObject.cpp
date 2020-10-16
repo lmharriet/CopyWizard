@@ -96,7 +96,7 @@ void zObject::render(HDC hdc)
 
     else if (type == "npc")
     {
-        CAMERAMANAGER->Rectangle(hdc, rc);
+        //CAMERAMANAGER->Rectangle(hdc, rc);
         CAMERAMANAGER->Render(hdc, img, x - img->getWidth()/2, rc.top - img->getHeight()/2);
     }
 }
