@@ -100,14 +100,14 @@ void bullet::move()
 				_vBullet.erase(_vBullet.begin() + i);
 			break;
 		case MONSTERKIND::SUMMONER:
-			{_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
-			float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
-				_vBullet[i].x, _vBullet[i].y);
-			if (_range < distance)//총알이 사거리 보다 커졌을때
-			{
-				_vBullet.erase(_vBullet.begin() + i);
-			}}
-			break;
+		{_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
+		float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
+			_vBullet[i].x, _vBullet[i].y);
+		if (_range < distance)//총알이 사거리 보다 커졌을때
+		{
+			_vBullet.erase(_vBullet.begin() + i);
+		}}
+		break;
 		case MONSTERKIND::GHOUL:
 			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 110, 150);
 			_vBullet[i].count++;
@@ -138,7 +138,7 @@ HRESULT bomb::init(int maxBullet, float range)
 
 	bossScene = false;
 	isCoolTime = false;
-	coolTime = 50;
+	coolTime = 40;
 	currentCoolTime = 0;
 	return S_OK;
 }
@@ -152,12 +152,6 @@ void bomb::update()
 
 
 	count++;
-
-	//
-	//if (ranAtk > 10 && count % 3 == 0)
-	//{
-	//	ranAtk = criticalHit;
-	//}
 
 	if (count % 2 == 0)
 	{
@@ -205,7 +199,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 	bullet.atkPower = 12;
 
 	_vBullet.push_back(bullet);
-	
+
 	isCoolTime = true;
 
 	//sound
@@ -215,7 +209,7 @@ void bomb::fire(float x, float y, float speed, float angle, float radius)
 
 void bomb::move() // blaze tile충돌은 gameScene에서만 되도록 처리하기
 {
-	for (int i = 0; i < _vBullet.size();i++ )
+	for (int i = 0; i < _vBullet.size(); i++)
 	{
 		_vBullet[i].x += cosf(_vBullet[i].angle) * _vBullet[i].speed;
 		_vBullet[i].y += -sinf(_vBullet[i].angle) * _vBullet[i].speed;
@@ -228,8 +222,7 @@ void bomb::move() // blaze tile충돌은 gameScene에서만 되도록 처리하기
 			SOUNDMANAGER->play("blazeExp", false);
 			//_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
 			_vBullet[i].collision = true;
-			
-		
+
 		}
 		if (_vBullet[i].collision)
 		{
@@ -254,7 +247,7 @@ void bomb::move() // blaze tile충돌은 gameScene에서만 되도록 처리하기
 			}
 		}
 		else i++;
-		
+
 	}
 }
 //폭탄삭제
@@ -294,7 +287,7 @@ void meteor::release()
 
 void meteor::update()
 {
-	
+
 	count++;
 
 	coolTimeReduction();
@@ -492,21 +485,12 @@ void meteor::coolTimeReduction()
 	{
 		coolTime = 300 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
 		UI->fixCoolTime("skill_meteor", coolTime);
-	/*	cout <<"Item 구매 후 :" <<coolTime << '\n';
 
-
-		cout << UI->getSkillSlot(3).maxCoolTime << '\n';
-		cout << UI->getSkillSlot(3).coolTime << '\n';
-	*/
 	}
 	else
 	{
 		coolTime = 300;
 		UI->fixCoolTime("skill_meteor", coolTime);
-	/*	cout <<"Item 구매 전 :" <<coolTime << '\n';
-
-		cout << UI->getSkillSlot(3).maxCoolTime << '\n';
-		cout << UI->getSkillSlot(3).coolTime << '\n';*/
 	}
 
 }
@@ -855,7 +839,7 @@ HRESULT dragonArc::init()
 {
 	IMAGEMANAGER->addFrameImage("dragon", "resource/player/dragonArc.bmp", 1800 * 3, 100 * 3, 36, 2);
 	count = index = 0;
-	return S_OK;
+
 
 	//memset(&dragonHead, 0, sizeof(dragonHead));
 
@@ -863,7 +847,9 @@ HRESULT dragonArc::init()
 	currentCoolTime = 0;
 	isCoolTime = false;
 	upgrade = false;
-
+	
+	
+	return S_OK;
 }
 
 void dragonArc::release()
@@ -877,12 +863,6 @@ void dragonArc::update()
 
 	count++;
 
-//	coolTimeReduction();
-	move();
-
-	phoenixMove();
-
-
 	//coolTime
 	if (isCoolTime)
 	{
@@ -893,6 +873,12 @@ void dragonArc::update()
 			currentCoolTime = 0;
 		}
 	}
+
+
+	//	coolTimeReduction();
+	move();
+
+	phoenixMove();
 
 }
 
@@ -972,9 +958,11 @@ void dragonArc::fire(float x, float y, float angle)
 		dragon.index = 36 - (angle * 18 / PI);//0-35
 
 		vDragon.push_back(dragon);
+		UI->addCoolTime("skill_dragonArc");
 
-		isCoolTime = true;
 	}
+
+	isCoolTime = true;
 }
 
 void dragonArc::move()
@@ -1052,7 +1040,6 @@ void dragonArc::move()
 
 void dragonArc::phoenixFire(float x, float y, float angle)
 {
-
 	//fire
 	if (dragonHead.isFire == false)
 	{
@@ -1091,6 +1078,7 @@ void dragonArc::phoenixFire(float x, float y, float angle)
 		vWings.push_back(wings);
 
 		isCoolTime = true;
+		UI->addCoolTime("skill_dragonArc");
 	}
 
 }

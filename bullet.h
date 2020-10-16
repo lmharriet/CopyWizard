@@ -396,7 +396,8 @@ public:
 	float getDragonAngle(int index) { return vDragon[index].angle; }
 	int getAtkPower(int index) { return vDragon[index].atkPower; }
 	int getSkillNum() { return 4; }
-	
+	int getSize() { return vDragon.size(); }
+
 	bool getUpgrade() { return upgrade; }
 	bool getCool() { return isCoolTime; }
 

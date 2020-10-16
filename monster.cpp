@@ -47,9 +47,9 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 {
 	//정보 가져오기
 	cam = _camRC;
-	monsterPosX =_monsterRC.left + (_monsterRC.right - _monsterRC.left) / 2;
+	monsterPosX = _monsterRC.left + (_monsterRC.right - _monsterRC.left) / 2;
 	monsterPosY = _monsterRC.bottom;
-	monsterMove.rc = RectMakeCenter(monsterPosX,monsterPosY, 32,32);
+	monsterMove.rc = RectMakeCenter(monsterPosX, monsterPosY, 32, 32);
 	playerMove.rc = RectMake(_playerRC.left, _playerRC.top, 32, 32);
 
 
@@ -61,7 +61,7 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 	startNode = NULL;
 	endNode = NULL;
 	curNode = NULL;
-	
+
 
 	//스타트랑 앤드 노드 정하는 용도.
 	for (int y = 0; y < MAXTILE_HEIGHT; y++)
@@ -74,7 +74,7 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 			{
 				if (totalNode[x][y]->kind == TERRAIN::WALL) continue;
 				if (totalNode[x][y]->kind == TERRAIN::NONE) continue;
-				
+
 
 				totalNode[x][y]->nodeState = NODESTATE::NODE_END;
 				endNode = totalNode[x][y];
@@ -86,7 +86,7 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 			{
 				if (totalNode[x][y]->kind == TERRAIN::WALL) continue;
 				if (totalNode[x][y]->kind == TERRAIN::NONE) continue;
-				
+
 				totalNode[x][y]->nodeState = NODESTATE::NODE_START;
 				startNode = totalNode[x][y];
 				monsterMove.x = x;
@@ -97,7 +97,7 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 		}
 
 	}
-	
+
 	//벽(장애물) 노드 세팅하기 (시작, 종료노드 설정전에 벽세우지 못하게 막기)
 	//if (INPUT->GetKeyDown(VK_RBUTTON) && startNode && endNode)
 	//{
@@ -115,9 +115,9 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 	//		}
 	//	}
 	//}
-	
 
-	
+
+
 	this->pathFinding(); // 길찾기 시작.
 
 	// 몬스터에게 각도 넘김
@@ -135,11 +135,11 @@ void astarManager::render(HDC hdc)
 	{
 		for (int x = 0; x < MAXTILE_WIDTH; x++)
 		{
-		
+
 
 			//  현재렉트만 보여주기
 			if (colCheck(cam, totalNode[x][y]->rc) == false || totalNode[x][y]->keyName == "") continue;
-			
+
 			if (totalNode[x][y]->kind == TERRAIN::WALL) setNodeColor(totalNode[x][y], RGB(250, 150, 0), hdc);
 			//else FrameRect(hdc, totalNode[x][y]->rc, RGB(0, 0, 0));
 
@@ -162,7 +162,7 @@ void astarManager::render(HDC hdc)
 				setNodeColor(totalNode[x][y], RGB(200, 150, 100), hdc);
 				textOut(hdc, totalNode[x][y]->rc.left + 100, totalNode[x][y]->rc.top + 10, "[WALL]");
 			}
-		
+
 		}
 	}
 
@@ -175,7 +175,7 @@ void astarManager::render(HDC hdc)
 			{
 				setNodeColor(finalList[i], RGB(255, 255, 0), hdc);
 			}
-			else 
+			else
 			{
 				setNodeColor(finalList[i], RGB(255, 255, 255), hdc);
 			}
@@ -190,13 +190,13 @@ void astarManager::pathFinding()
 {
 	if (!endNode)  return;
 
-	
+
 	openList.push_back(startNode);
 
 	while (openList.size() > 0)
 	{
 		curNode = openList[0];
-		
+
 
 		for (int i = 1; i < openList.size(); i++)
 		{
@@ -220,14 +220,14 @@ void astarManager::pathFinding()
 		//현재노드가 마지막 노드와 같냐? (길찾았다)
 		if (curNode == endNode)
 		{
-			
+
 
 			tileNode* _endNode = endNode;
 			vector<tileNode*> tempNode;
 			//마지막 노드로부터 시작노드까지 부모노드를 벡터에 담는다
 			while (_endNode != startNode)
 			{
-				
+
 
 				tempNode.push_back(_endNode);
 				_endNode = _endNode->parentNode;
@@ -243,8 +243,8 @@ void astarManager::pathFinding()
 			return;
 		}
 
-		
-	 	addOpenList(curNode->idx + 1, curNode->idy + 1);	//우하
+
+		addOpenList(curNode->idx + 1, curNode->idy + 1);	//우하
 		addOpenList(curNode->idx - 1, curNode->idy + 1);	//좌하
 		addOpenList(curNode->idx - 1, curNode->idy - 1);	//좌상
 		addOpenList(curNode->idx + 1, curNode->idy - 1);	//우상
@@ -259,7 +259,7 @@ void astarManager::pathFinding()
 void astarManager::addOpenList(int idx, int idy)
 {
 	//예외처리 인덱스 범위안에서 추가할 수 있어야 한다
-	
+
 	if (idx < monsterMove.x - 30 || idx >= monsterMove.x + 30 || idy < monsterMove.y - 20 || idy >= monsterMove.y + 20) return;
 
 	if (totalNode[curNode->idx][idy]->kind == TERRAIN::WALL && totalNode[idx][curNode->idy]->kind == TERRAIN::WALL) return;
@@ -287,7 +287,7 @@ void astarManager::addOpenList(int idx, int idy)
 		if (openList[i] == neighborNode) return;
 	}
 
-	
+
 	neighborNode->G = moveCost;
 	neighborNode->H = (abs(neighborNode->idx - endNode->idx) + abs(neighborNode->idy - endNode->idy)) * 10;
 	neighborNode->F = neighborNode->G + neighborNode->H;
@@ -321,7 +321,7 @@ HRESULT monster::init(tagTile* tile, POINT _pos)
 {
 	addInit();
 
-	if (kind==MONSTERKIND::SUMMONER)
+	if (kind == MONSTERKIND::SUMMONER)
 	{
 		isAstar = false;
 	}
@@ -337,7 +337,7 @@ HRESULT monster::init(tagTile* tile, POINT _pos)
 	pos.x = _pos.x;
 	pos.y = _pos.y;
 	hitTime = 0;
-	
+
 	for (int i = 0; i < STATEMAX; i++)
 	{
 		frameIndexL[i] = { 0,0 };
@@ -348,9 +348,9 @@ HRESULT monster::init(tagTile* tile, POINT _pos)
 		atkDirection[i] = false;
 		bulletDirection[i] = false;
 	}
-	
-	
-	
+
+
+
 
 	return S_OK;
 }
@@ -366,7 +366,7 @@ void monster::release()
 
 void monster::commonUpdate()
 {
-	
+
 	rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
 	if (distanceMax > getDistance(pos.x + img->getFrameWidth() * 0.5, pos.y + img->getFrameHeight() * 0.5, playerRC.left, playerRC.top))
@@ -381,10 +381,12 @@ void monster::commonUpdate()
 	{
 		if (!isCardFxAppear)
 		{
-			if(kind != MONSTERKIND::KNIGHT)
-			EFFECT->setEffect("flipCard", { pos.x + img->getFrameWidth()/2,pos.y + img->getFrameHeight()/2 },false,true,100); // false,false,0,
+			if (kind == MONSTERKIND::GOLEM)
+				EFFECT->setEffect("flipCard_big", { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 }, false, true, 100);
+			else if (kind != MONSTERKIND::KNIGHT)
+				EFFECT->setEffect("flipCard_small", { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 }, false, true, 100); // false,false,0,
 			else
-			EFFECT->setEffect("flipCard", { pos.x + img->getFrameWidth()/2,pos.y + img->getFrameHeight()/2+70 },false,true,100); // false,false,0,
+				EFFECT->setEffect("flipCard_small", { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 + 70 }, false, true, 100); // false,false,0,
 			isCardFxAppear = true;
 		}
 		monsterAppearCount++;
@@ -439,7 +441,7 @@ void monster::commonUpdate()
 
 void monster::render()
 {
-	
+
 	// astar->render(getMemDC());
 	 //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
 	 //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
@@ -448,13 +450,13 @@ void monster::render()
 void monster::setPt(float x, float y)
 {
 	wallCol();
-	if(!isWallcol)
-	 pos = { (long)x, (long)y }; 
+	if (!isWallcol)
+		pos = { (long)x, (long)y };
 
 	isWallcol = false;
 }
 
-void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum, bool isCritical)
+void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical)
 {
 	if (hitCheck(skillNum) == false)return;
 
@@ -463,40 +465,40 @@ void monster::hit(int damage , float _hitAngle, float _knockBack, int skillNum, 
 	EFFECT->damageEffect(pt);
 
 	int allDamage = (int)((float)damage * armour);
-	if(allDamage>0)
+	if (allDamage > 0)
 		hp -= allDamage;
 
-	if(cos(_hitAngle)*2.f>0)
-		DAMAGE->generator(pt, "numbers", allDamage,false, isCritical);
+	if (cos(_hitAngle) * 2.f > 0)
+		DAMAGE->generator(pt, "numbers", allDamage, false, isCritical);
 	else
-		DAMAGE->generator(pt, "numbers", allDamage,true, isCritical);
+		DAMAGE->generator(pt, "numbers", allDamage, true, isCritical);
 
 	hitAngle = _hitAngle;
 	knockBack = _knockBack;
-	
-	
-	if(kind != MONSTERKIND::GOLEM)
+
+
+	if (kind != MONSTERKIND::GOLEM)
 		state = STATEIMAGE::HIT;
 
 	isHit = true;
-	
+
 	char str[50];
 	sprintf(str, "knightHit%d", RANDOM->range(2));
 	//hit sound
 	switch (kind)
 	{
 	case MONSTERKIND::GOLEM:
-		SOUNDMANAGER->play("golemHit", false,-0.28f);
+		SOUNDMANAGER->play("golemHit", false, -0.28f);
 		break;
 	case MONSTERKIND::KNIGHT:
-		SOUNDMANAGER->play(str, false,-0.38f);
+		SOUNDMANAGER->play(str, false, -0.38f);
 		break;
 	case MONSTERKIND::SUMMONER:
-		SOUNDMANAGER->play("golemHit", false,-0.3f); 
+		SOUNDMANAGER->play("golemHit", false, -0.3f);
 		break;
 	case MONSTERKIND::GHOUL:
 		SOUNDMANAGER->play(str, false, -0.38f);
-	
+
 	}
 }
 
@@ -523,6 +525,9 @@ bool monster::hitCheck(int skillNum)
 		break;
 	case 3:
 		hit.endTime = 20;
+		break;
+	case 4:
+		hit.endTime = 10;
 		break;
 	}
 	vHit.push_back(hit);
@@ -564,7 +569,7 @@ void monster::coinDrop(int min, int max)
 {
 	if (isDelete)
 	{
-		DROP->dropPoint({ pos.x+img->getFrameWidth()/2,pos.y + img->getFrameHeight() },min,max);
+		DROP->dropPoint({ pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() }, min, max);
 	}
 }
 
@@ -572,27 +577,27 @@ void monster::die()
 {
 	if (hp <= 0)
 	{
-		
+
 		isDie = true;
-		
+
 		switch (kind)
 		{
 		case MONSTERKIND::GOLEM:
 			SOUNDMANAGER->play("golemDie", false, -0.2f);
 			break;
 		case MONSTERKIND::KNIGHT:
-			SOUNDMANAGER->play("knightDie", false,-0.3f);
-			
+			SOUNDMANAGER->play("knightDie", false, -0.3f);
+
 			break;
 		case MONSTERKIND::SUMMONER:
-			SOUNDMANAGER->play("knightDie", false,-0.3f); //hit sound change
+			SOUNDMANAGER->play("knightDie", false, -0.3f); //hit sound change
 			break;
 		case MONSTERKIND::GHOUL:
-			SOUNDMANAGER->play("knightDie", false,-0.3f); //hit sound change
+			SOUNDMANAGER->play("knightDie", false, -0.3f); //hit sound change
 
 
 		}
-		
+
 	}
 }
 

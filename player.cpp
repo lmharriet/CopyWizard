@@ -19,10 +19,8 @@ HRESULT player::init()
 	//enum 초기화
 	state = STATE::IDLE;
 	move = MOVE::DOWN;
-
 	//skill init
 	skillInit();
-
 	memset(tileCheck, 0, sizeof(tileCheck));
 	memset(diagonalCheck, 0, sizeof(diagonalCheck));
 
@@ -53,7 +51,7 @@ HRESULT player::init()
 
 	//animation count ,index
 	atkCount = atkIndex = index = dashIndex = count = dashCount = basicCount = basicIndex = 0;
-	stateCool = infernoStateCool = meteorStateCool = 0;
+	basicStateCool = infernoStateCool = signatureStateCool = 0;
 
 
 	//blaze 3번 발사 용도
@@ -111,6 +109,7 @@ void player::release()
 
 void player::update()
 {
+
 	PLAYERDATA->update();
 
 	blaze->update();
@@ -121,6 +120,7 @@ void player::update()
 	inferno->update();
 
 	inven->update();
+
 	//animation count
 	count++;
 	dashCount++;
@@ -132,7 +132,7 @@ void player::update()
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
 
-	if (speed == 0 && stateCool == 0 && meteorStateCool == 0 && frozenTime == 0
+	if (speed == 0 && basicStateCool == 0 && signatureStateCool == 0 && frozenTime == 0
 		&& !isDead && !inferno->getGauging())
 	{
 		controller();
@@ -223,7 +223,7 @@ void player::other_update()
 	angleTenth = (int)(saveAngle * (18 / PI));
 
 
-	if (speed == 0 && stateCool == 0 && meteorStateCool == 0
+	if (speed == 0 && basicStateCool == 0 && signatureStateCool == 0 && frozenTime == 0
 		&& !isDead && !inferno->getGauging() && !isGrabbed)
 	{
 		controller();
@@ -266,8 +266,6 @@ void player::other_update()
 		posY -= sinf(knockBack.angle) * (knockBack.speed + knockBack.percent);
 		rc = RectMakeCenter(posX, posY, 50, 50);
 	}
-
-
 
 	skillGaugeSetUp();
 
@@ -464,42 +462,41 @@ void player::controller()
 		}
 		speed = 20;
 	}
-
 }
 
 void player::dragonArcSetUp()
 {
-	dragon->setUpgrade(upgradeReady);
+	//dragon->setUpgrade(upgradeReady);
 
-	float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
+	//float angle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 
-	if (!upgradeReady)
-	{
-		if (INPUT->GetKeyDown('E'))
-		{
-			dragon->fire(posX, posY, angle);
-		}
-	}
-	else
-	{
-		if (INPUT->GetKeyDown('E'))
-		{
-			dragon->phoenixFire(posX, posY, angle);
+	//if (!upgradeReady)
+	//{
+	//	if (INPUT->GetKeyDown('E'))
+	//	{
+	//		dragon->fire(posX, posY, angle);
+	//	}
+	//}
+	//else
+	//{
+	//	if (INPUT->GetKeyDown('E'))
+	//	{
+	//		dragon->phoenixFire(posX, posY, angle);
 
-			//skillGauge초기화 수정 필요..
-			//skillGauge = 0;
-		}
+	//		//skillGauge초기화 수정 필요..
+	//		//skillGauge = 0;
+	//	}
 
-		//조건 넣어서 skill gauge 0 으로 초기화하고 upgradeReady false로 만들기
+	//	//조건 넣어서 skill gauge 0 으로 초기화하고 upgradeReady false로 만들기
 
-	}
+	//}
 }
 
 void player::skillInit()
 {
 	arcana[0].type = ARCANA_TYPE::TYPE_BASIC;
 	arcana[0].skillName = "skill_blaze";
-	arcana[0].coolTime = 50;
+	arcana[0].coolTime = 40;
 
 	arcana[1].type = ARCANA_TYPE::TYPE_DASH;
 	arcana[1].skillName = "skill_searingDash";
@@ -510,14 +507,31 @@ void player::skillInit()
 	arcana[2].coolTime = 240;
 
 	arcana[3].type = ARCANA_TYPE::TYPE_SIGNATURE;
-	arcana[3].skillName = "skill_meteor";
+	arcana[3].skillName = "skill_dragonArc";
+	//arcana[3].skillName = "skill_meteor";
 	arcana[3].coolTime = 300;
 
-	UI->setSkillSlot(arcana[0].skillName, arcana[0].coolTime);
-	UI->setSkillSlot(arcana[1].skillName, arcana[1].coolTime);
-	UI->setSkillSlot(arcana[2].skillName, arcana[2].coolTime);
-	UI->setSkillSlot(arcana[3].skillName, arcana[3].coolTime);
+	for (int i = 0; i < 4; i++)
+		UI->setSkillSlot(arcana[i].skillName, arcana[i].coolTime);
+}
 
+void player::setSkillUi(ARCANA_TYPE type, string keyName, int coolTime)
+{
+	if (keyName != "")
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			if (type == ARCANA_TYPE::TYPE_BASIC) i = 0;
+			else if (type == ARCANA_TYPE::TYPE_DASH) i = 1;
+			else if (type == ARCANA_TYPE::TYPE_STANDARD) i = 2;
+			else if (type == ARCANA_TYPE::TYPE_SIGNATURE) i = 3;
+
+			arcana[i].skillName = keyName;
+			arcana[i].coolTime = coolTime;
+
+			UI->setSkillSlot(arcana[i].skillName, arcana[i].coolTime);
+		}
+	}
 }
 
 void player::basicSetUp()
@@ -534,27 +548,27 @@ void player::basicSetUp()
 			float x = cosf(saveAngle) * 50.f + posX;
 			float y = -sinf(saveAngle) * 50 + posY;
 
-			if (stateCool == 0 && blazeCount == 0)
+			if (basicStateCool == 0 && blazeCount == 0)
 			{
 				blazeCount = 3;
-				stateCool = 30;
+				basicStateCool = 30;
 			}
 
 			if (blazeCount > 0)
 			{
-				if (stateCool % 10 == 0)
+				if (basicStateCool % 10 == 0)
 				{
 					blaze->fire(x, y, 10, saveAngle, 2);
 					blazeCount--;
 				}
 				UI->addCoolTime("skill_blaze");
 			}
-			if (stateCool > 0)
+			if (basicStateCool > 0)
 			{
 				state = STATE::BASIC;
-				stateCool--;
+				basicStateCool--;
 			}
-			if (stateCool == 0) basic = false;
+			if (basicStateCool == 0) basic = false;
 		}
 	}
 
@@ -587,7 +601,7 @@ void player::dashSetUp()
 		if (dashUp)
 		{
 			if (!tileCheck[(int)DIRECTION::LEFT_TOP].isCol &&
-				!diagonalCheck[0].isCol && !diagonalCheck[1].isCol)
+				!tileCheck[(int)DIRECTION::TOP].isCol && !diagonalCheck[0].isCol)
 			{
 				posX -= speed;
 				posY -= speed;
@@ -681,15 +695,12 @@ void player::dashSetUp()
 	speed--;
 	if (speed == 0) resetKey();
 
-
-
-
 }
 
 void player::standardSetUp()
 {
 	if (INPUT->GetKeyDown(VK_RBUTTON) && frozenTime == 0 && !inferno->getGauging() && !isDead
-		&& speed == 0 && meteorStateCool == 0 && !inferno->getCool())
+		&& speed == 0 && signatureStateCool == 0 && !inferno->getCool())
 	{
 		standard = true;
 		saveAngle2 = attackAngle;
@@ -719,8 +730,8 @@ void player::signatureSetUp()
 	float mouseX = CAMERAMANAGER->GetAbsoluteX(_ptMouse.x);
 	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
 
-	if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead && (!Meteor->getCool()|| !dragon->getCool())
-		&& !inferno->getGauging() && speed == 0) 
+	if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead && !inferno->getGauging() && speed == 0
+		&& !Meteor->getCool() && !dragon->getCool() && signatureStateCool == 0)
 	{
 		signature = true;
 	}
@@ -729,57 +740,83 @@ void player::signatureSetUp()
 	{
 		if (!upgradeReady)
 		{
-			if (arcana[3].skillName == "skill_meteor")
+			if (arcana[3].skillName == "skill_meteor" && !Meteor->getCool())
 			{
-				if (meteorStateCool == 0)
+
+				if (signatureStateCool == 0)
 				{
-					meteorStateCool = 30;
+					signatureStateCool = 30;
 					Meteor->creatMeteor(mouseX, mouseY, 0);
 				}
 
-				if (meteorStateCool > 0)
+				if (signatureStateCool > 0)
 				{
 					state = STATE::SIGNATURE;
-					meteorStateCool--;
+					signatureStateCool--;
 
-					if (meteorStateCool == 0) signature = false;
 				}
+				if (signatureStateCool == 0) signature = false;
 			}
 
-			else if (arcana[3].skillName == "skill_dragonArc")
+			else if (arcana[3].skillName == "skill_dragonArc" /*&& !dragon->getCool()*/)
 			{
-				dragon->fire(posX, posY, attackAngle);
+				if (signatureStateCool == 0)
+				{
+					signatureStateCool = 30;
+					dragon->fire(posX, posY, attackAngle);
+
+				}
+				if (signatureStateCool > 0)
+				{
+					state = STATE::SIGNATURE;
+					signatureStateCool--;
+				}
+				if (signatureStateCool == 0) signature = false;
 			}
 		}
 		else
 		{
 			if (arcana[3].skillName == "skill_meteor")
 			{
-				if (meteorStateCool == 0)
+
+
+				if (signatureStateCool == 0)
 				{
-					meteorStateCool = 30;
+					signatureStateCool = 30;
 					Meteor->creatMeteor(mouseX, mouseY, 0);
 
 					//skillGauge 초기화
 					skillGauge = 0;
 				}
-				if (meteorStateCool > 0)
+				if (signatureStateCool >= 0)
 				{
 					state = STATE::SIGNATURE;
-					meteorStateCool--;
+					signatureStateCool--;
 
-					if (meteorStateCool == 0) signature = false;
+					if (signatureStateCool == 0) signature = false;
 				}
 			}
 			else if (arcana[3].skillName == "skill_dragonArc")
 			{
-				dragon->phoenixFire(posX, posY, attackAngle);
+
+				if (signatureStateCool == 0)
+				{
+					signatureStateCool = 30;
+					dragon->phoenixFire(posX, posY, attackAngle);
+
+					skillGauge = 0;
+
+				}
+				if (signatureStateCool >= 0)
+				{
+					state = STATE::SIGNATURE;
+					signatureStateCool--;
+					if (signatureStateCool == 0) signature = false;
+
+				}
 			}
 		}
 	}
-
-
-
 }
 
 void player::takeCoin()
@@ -911,28 +948,28 @@ void player::animation(int _index)
 				if (!isDamaged || !isGrabbed) move = MOVE::LEFT;
 
 			}
-					//각도별로 
+			//각도별로 
 
-			//if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
-			//{
-			//	frameAnimation(6, 0);
-			//	if (!isDamaged) move = MOVE::LEFT;
-			//}
-			//else if (damageAngleTenth <= 4 || damageAngleTenth > 32) //right
-			//{
-			//	frameAnimation(7, 0);
-			//	if (!isDamaged) move = MOVE::RIGHT;
-			//}
-			//else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //up
-			//{
-			//	frameAnimation(5, 0);
-			//	if (!isDamaged) move = MOVE::UP;
-			//}
-			//else if (damageAngleTenth > 23 && damageAngleTenth <= 32) //down
-			//{
-			//	frameAnimation(4, 0);
-			//	if (!isDamaged)	move = MOVE::DOWN;
-			//}
+	//if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
+	//{
+	//	frameAnimation(6, 0);
+	//	if (!isDamaged) move = MOVE::LEFT;
+	//}
+	//else if (damageAngleTenth <= 4 || damageAngleTenth > 32) //right
+	//{
+	//	frameAnimation(7, 0);
+	//	if (!isDamaged) move = MOVE::RIGHT;
+	//}
+	//else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //up
+	//{
+	//	frameAnimation(5, 0);
+	//	if (!isDamaged) move = MOVE::UP;
+	//}
+	//else if (damageAngleTenth > 23 && damageAngleTenth <= 32) //down
+	//{
+	//	frameAnimation(4, 0);
+	//	if (!isDamaged)	move = MOVE::DOWN;
+	//}
 			break;
 		case STATE::DIE:
 			if (index < 5 && count % 30 == 0)
@@ -951,11 +988,11 @@ void player::animation(int _index)
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
-					if (basicIndex > 6 || stateCool == 0) basicIndex = 0;
+					if (basicIndex > 6 || basicStateCool == 0) basicIndex = 0;
 				}
 				frameAnimation(basicIndex, 5);
 				//왼쪽 공격 끝나면 왼쪽 향하기
-				if (stateCool == 0)
+				if (basicStateCool == 0)
 					move = MOVE::LEFT;
 			}
 			else if (angleTenth <= 4 || angleTenth > 32) //right
@@ -963,7 +1000,7 @@ void player::animation(int _index)
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
-					if (basicIndex > 6 || stateCool == 0) basicIndex = 0;
+					if (basicIndex > 6 || basicStateCool == 0) basicIndex = 0;
 				}
 				frameAnimation(basicIndex, 6);
 
@@ -976,11 +1013,11 @@ void player::animation(int _index)
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
-					if (basicIndex > 6 || stateCool == 0)basicIndex = 0;
+					if (basicIndex > 6 || basicStateCool == 0)basicIndex = 0;
 				}
 				frameAnimation(basicIndex, 14);
 				//위쪽 공격 끝나면 위쪽 향하기
-				if (stateCool == 0)
+				if (basicStateCool == 0)
 					move = MOVE::UP;
 			}
 			else if (angleTenth > 23 && angleTenth <= 32) //down
@@ -988,11 +1025,11 @@ void player::animation(int _index)
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
-					if (basicIndex > 6 || stateCool == 0)basicIndex = 0;
+					if (basicIndex > 6 || basicStateCool == 0)basicIndex = 0;
 				}
 				frameAnimation(basicIndex, 6);
 				//아래쪽 공격 끝나면 아래쪽 향하기
-				if (stateCool == 0)
+				if (basicStateCool == 0)
 					move = MOVE::DOWN;
 			}
 			break;
@@ -1188,7 +1225,7 @@ void player::animation(int _index)
 			{
 				frameAnimation(6, 0, 1);
 				if (!isDamaged) move = MOVE::LEFT;
-				
+
 			}
 			if (grabbedTime > 0)
 			{
@@ -1235,11 +1272,11 @@ void player::animation(int _index)
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
-					if (basicIndex > 6 || stateCool == 0) basicIndex = 0;
+					if (basicIndex > 6 || basicStateCool == 0) basicIndex = 0;
 				}
 				frameAnimation(basicIndex, 5, 1);
 				//왼쪽 공격 끝나면 왼쪽 향하기
-				if (stateCool == 0)
+				if (basicStateCool == 0)
 					move = MOVE::LEFT;
 			}
 			else if (angleTenth <= 4 || angleTenth > 32) //right
@@ -1247,7 +1284,7 @@ void player::animation(int _index)
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
-					if (basicIndex > 6 || stateCool == 0) basicIndex = 0;
+					if (basicIndex > 6 || basicStateCool == 0) basicIndex = 0;
 				}
 				frameAnimation(basicIndex, 6, 1);
 
@@ -1260,11 +1297,11 @@ void player::animation(int _index)
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
-					if (basicIndex > 6 || stateCool == 0)basicIndex = 0;
+					if (basicIndex > 6 || basicStateCool == 0)basicIndex = 0;
 				}
 				frameAnimation(basicIndex, 14, 1);
 				//위쪽 공격 끝나면 위쪽 향하기
-				if (stateCool == 0)
+				if (basicStateCool == 0)
 					move = MOVE::UP;
 			}
 			else if (angleTenth > 23 && angleTenth <= 32) //down
@@ -1272,11 +1309,11 @@ void player::animation(int _index)
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
-					if (basicIndex > 6 || stateCool == 0)basicIndex = 0;
+					if (basicIndex > 6 || basicStateCool == 0)basicIndex = 0;
 				}
 				frameAnimation(basicIndex, 6, 1);
 				//아래쪽 공격 끝나면 아래쪽 향하기
-				if (stateCool == 0)
+				if (basicStateCool == 0)
 					move = MOVE::DOWN;
 			}
 			break;
@@ -1563,7 +1600,7 @@ void player::damage(int damage, float attackAngle, float knockBackSpeed)
 	DAMAGE->generator({ (long)posX, (long)posY }, "rNumbers", damage, checkAngle);
 
 
-	if (inferno->getGauging() && meteorStateCool != 0 && basic)return;
+	if (inferno->getGauging() && signatureStateCool != 0 && basic)return;
 
 }
 
@@ -1637,6 +1674,8 @@ void player::chargeSkillGauge(int atkPower, int skillNum)
 			skillGauge += (float)(atkPower / atkPower) * 1.5f;
 		break;
 	case 4:
+		if (count % 10 == 0)
+			skillGauge += (float)(atkPower / atkPower) * 1.5f;
 		break;
 	}
 

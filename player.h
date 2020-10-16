@@ -50,11 +50,11 @@ private:
 
 
 	//coolTile
-	int stateCool;
+	int basicStateCool;
 	int infernoStateCool;
-	int meteorStateCool;
+	int signatureStateCool;
 	int knockBackCool;
-	int blazeCount, meteorCount;
+	int blazeCount;
 
 	//skill upgrade
 	float skillGauge;
@@ -115,6 +115,7 @@ public:
 
 
 	void skillInit();
+	void setSkillUi(ARCANA_TYPE type, string keyName, int coolTime);
 	void basicSetUp();
 	void dashSetUp();
 	void standardSetUp();
@@ -170,6 +171,7 @@ public:
 	meteor* getMeteor() { return Meteor; }
 	dashFire* getDashFire() { return searingRush; }
 	RagingInferno* getInferno() { return inferno; }
+	dragonArc* getDragon() { return dragon; }
 
 	bool getDamaged() { return isDamaged; }
 

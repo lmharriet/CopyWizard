@@ -5,10 +5,11 @@ bossScene::bossScene() : _player(nullptr), _boss(nullptr) {}
 
 HRESULT bossScene::init()
 {
-
 	IMAGEMANAGER->addImage("bossRoom", "map/bossRoom.bmp", MAXWIDTH, MAXHEIGHT, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("frontFrame", "map/frontFrame.bmp", MAXWIDTH, MAXHEIGHT, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("backFrame", "map/backFrame.bmp", MAXWIDTH, MAXHEIGHT, true, RGB(255, 0, 255));
+	UI->init();
+
 	_player = new player;
 	_player->init();
 	_player->setX(752);
@@ -18,7 +19,7 @@ HRESULT bossScene::init()
 		-MAXWIDTH, -MAXHEIGHT, WINSIZEX / 2, WINSIZEY / 2);
 
 	EFFECT->init();
-	UI->init();
+
 
 	_boss = new boss;
 	_boss->init(752, 288);
@@ -147,6 +148,8 @@ void bossScene::render()
 	PARTICLE->render(getMemDC());
 	UI->render(getMemDC(), 50, 50);
 
+	_player->invenRender();
+	
 	DAMAGE->render(getMemDC());
 }
 

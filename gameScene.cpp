@@ -220,7 +220,7 @@ void gameScene::playerAttack()
 				break;
 			}
 		}
-	}
+	}//end of for
 
 	//meteor
 	for (int i = 0; i < _player->getMeteor()->getColSize(); i++)
@@ -248,7 +248,7 @@ void gameScene::playerAttack()
 				break;
 			}
 		}
-	}
+	}//end of for
 
 	//rush
 	for (int i = 0; i < _player->getDashFire()->getSize(); i++)
@@ -271,7 +271,7 @@ void gameScene::playerAttack()
 				enemy->getMinion()[j]->hit(damage, 70.f, 20.f, _player->getDashFire()->getSkillNum(), criCheck);
 			}
 		}
-	}
+	}//end of for
 
 
 	//inferno
@@ -317,7 +317,31 @@ void gameScene::playerAttack()
 				enemy->getMinion()[i]->hit(damage, 0, 0.f, 3, criCheck);
 			}
 		}
+	}//end of for
+
+	//dragonArc
+	for (int i = 0; i < _player->getDragon()->getSize(); i++)
+	{
+		for (int j = 0; j < enemy->getMinion().size(); j++)
+		{
+			if (colCheck(_player->getDragon()->getDragonRC(i), enemy->getMinion()[j]->getRC()))
+			{
+				bool criCheck = PLAYERDATA->criAppear();
+
+				int damage = PLAYERDATA->damageCul(_player->getDragon()->getAtkPower(i) +RANDOM->range(0, 3), criCheck);
+
+				//gauge
+				if (PLAYERDATA->getStat().ManaRejection == false)
+				{
+					_player->chargeSkillGauge(damage, 4);
+				}
+				enemy->getMinion()[j]->hit(damage, _player->getDragon()->getDragonAngle(i), 4, criCheck);
+			}
+		}
 	}
+
+
+
 }
 
 void gameScene::enemyAttack()
