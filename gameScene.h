@@ -15,7 +15,7 @@ public:
 
 
 private:
-	enemyManager* enemy;
+	shared_ptr<enemyManager> enemy;
 	
 	player* _player;			//플레이어 클래스
 	

@@ -32,7 +32,7 @@ HRESULT gameScene::init()
 	UI->setCoin(PLAYERDATA->getCoin());
 	UI->setHp(PLAYERDATA->getHp());
 
-	enemy = new enemyManager;
+	enemy = make_shared<enemyManager>();
 	enemy->init(_wall->getTile(), _wall->getSubTile(), _wall->getCulPt());
 
 	PLAYERDATA->setTile(_wall->getTile());
@@ -65,7 +65,7 @@ void gameScene::release()
 		SAFE_DELETE(_player);
 
 		enemy->release();
-		SAFE_DELETE(enemy);
+		//SAFE_DELETE(enemy);
 
 		//_wall->release();
 		//SAFE_DELETE(_wall);
