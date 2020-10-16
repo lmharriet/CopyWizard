@@ -15,10 +15,10 @@ void sceneManager::release()
 	{
 		//cout << scene.second << endl;
 		scene.second->release();
-		if (scene.first != "인게임")
+		/*if (scene.first != "인게임")
 		{
 			SAFE_DELETE(scene.second);
-		}
+		}*/
 	}
 	
 	
@@ -36,7 +36,7 @@ void sceneManager::render()
 	if (_currentScene) _currentScene->render();
 }
 
-gameNode * sceneManager::addScene(string sceneName, gameNode * scene)
+shared_ptr<gameNode> sceneManager::addScene(string sceneName, shared_ptr<gameNode> scene)
 {
 	//씬이 없으면 그냥 널 리턴
 	if (!scene) return NULL;

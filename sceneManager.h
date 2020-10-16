@@ -14,13 +14,13 @@ class gameNode;
 class sceneManager : public singletonBase <sceneManager>
 {
 private:
-	typedef map<string, gameNode*> mSceneList;
-	typedef map<string, gameNode*>::iterator miSceneList;
+	typedef map<string, shared_ptr<gameNode>> mSceneList;
+	typedef map<string, shared_ptr<gameNode>>::iterator miSceneList;
 
 private:	
 	//map<string, gameNode*> _mSceneList;			//°¢°¢ÀÇ ¾À(È­¸é)µéÀ» ´ã¾ÆµÑ ¸Ê
 	mSceneList _mSceneList;			//°¢°¢ÀÇ ¾À(È­¸é)µéÀ» ´ã¾ÆµÑ ¸Ê
-	gameNode* _currentScene;		//ÇöÀç¾À
+	shared_ptr<gameNode> _currentScene;		//ÇöÀç¾À
 
 public:
 	HRESULT init();
@@ -29,11 +29,11 @@ public:
 	void render();
 
 	//¾ÀÃß°¡
-	gameNode* addScene(string sceneName, gameNode* scene);
+	shared_ptr<gameNode> addScene(string sceneName, shared_ptr<gameNode> scene);
 	//¾Àº¯°æ
 	HRESULT loadScene(string sceneName);
 
-	sceneManager() : _currentScene(NULL) {}
+	sceneManager() : _currentScene(nullptr) {}
 	~sceneManager() {}
 };
 
