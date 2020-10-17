@@ -18,9 +18,9 @@ HRESULT effectManager::init()
 
 void effectManager::pRender(HDC hdc)
 {
-    if (vDashEft.empty())return;
-    
     time++;
+
+    if (vDashEft.empty())return;
 
     for (int i = 0; i < vDashEft.size();)
     {
@@ -69,11 +69,21 @@ void effectManager::render(HDC hdc)
 
         if (vEft[i].isFrame) // 프레임 이미지인지?
         {
+            if (vEft[i].isEraseSize)
+            {
+                CAMERAMANAGER->StretchFrameRender(hdc, img,
+                    vEft[i].pos.x - img->getFrameWidth() * vEft[i].currentSize / 2,
+                    vEft[i].pos.y - img->getFrameHeight() * vEft[i].currentSize / 2,
+                    vEft[i].imgCount, 0, vEft[i].currentSize);
+            }
 
-            CAMERAMANAGER->StretchFrameRender(hdc, img, 
-                vEft[i].pos.x - img->getFrameWidth() * vEft[i].currentSize / 2,
-                vEft[i].pos.y - img->getFrameHeight() * vEft[i].currentSize / 2,
-                vEft[i].imgCount, 0, vEft[i].currentSize);
+            else
+            {
+                CAMERAMANAGER->FrameRender(hdc, img,
+                    vEft[i].pos.x - img->getFrameWidth() / 2,
+                    vEft[i].pos.y - img->getFrameHeight() / 2,
+                    vEft[i].imgCount, 0);
+            }
 
             if (vEft[i].flipImg == false) // 애니메이션 정방향 출력
             {
@@ -584,6 +594,86 @@ void effectManager::emotionRender(HDC hdc)
 
         //삭제
         if (vEmotion[i].opacity == 0) vEmotion.erase(vEmotion.begin());
+        else i++;
+    }
+}
+
+void effectManager::setAlwaysPoint(string keyName, POINT pt)
+{
+    tagAlwaysPoint point;
+
+    image* img = IMAGEMANAGER->findImage(keyName);
+
+    //point.keyName = keyName;
+    //point.frame = { 0, RANDOM->range(0,img->getMaxFrameY()) };
+    //point.maxFrame = img->getMaxFrameX();
+    point.keyName = keyName;
+    point.curTime = 0;
+    point.createTime = 10;
+    point.pos = pt;
+
+    vAlwaysPoint.push_back(point);
+}
+
+void effectManager::alwaysActive()
+{
+    for (int i = 0; i < vAlwaysPoint.size();)
+    {
+        //생성
+        if (vAlwaysPoint[i].curTime == vAlwaysPoint[i].createTime)
+        {
+            vAlwaysPoint[i].curTime = 0;
+
+            POINT pt = vAlwaysPoint[i].pos;
+            pt.x += RANDOM->range(-19, 19);
+            pt.y += RANDOM->range(-40, 25);
+
+            createAlwaysEft(vAlwaysPoint[i].keyName, pt, 20);
+        }
+
+        vAlwaysPoint[i].curTime++;
+
+        //이 포인터는 '삭제'가 없음
+        i++;
+    }
+}
+
+void effectManager::createAlwaysEft(string keyName, POINT pt, int delay)
+{
+    image* img = IMAGEMANAGER->findImage(keyName);
+
+    tagAlwaysParticle particle;
+
+    particle.curTime = 0;
+    particle.delay = delay;
+    particle.frame = { 0,RANDOM->range(0,img->getMaxFrameY()) };
+    particle.keyName = keyName;
+    particle.maxFrame = img->getMaxFrameX();
+    particle.pos = pt;
+
+    vAlwaysEft.push_back(particle);
+}
+
+void effectManager::alwaysEftRender(HDC hdc)
+{
+    for (int i = 0; i < vAlwaysEft.size();)
+    {
+        image* img = IMAGEMANAGER->findImage(vAlwaysEft[i].keyName);
+
+        //렌더
+        CAMERAMANAGER->FrameRender(hdc, img,
+            vAlwaysEft[i].pos.x - img->getFrameWidth() / 2,
+            vAlwaysEft[i].pos.y - img->getFrameHeight() / 2,
+            vAlwaysEft[i].frame.x,
+            vAlwaysEft[i].frame.y);
+
+        //변환
+        if (vAlwaysEft[i].curTime % vAlwaysEft[i].delay == 0)vAlwaysEft[i].frame.x++;
+        
+        vAlwaysEft[i].curTime++;
+
+        //삭제
+        if (vAlwaysEft[i].frame.x == vAlwaysEft[i].maxFrame) vAlwaysEft.erase(vAlwaysEft.begin());
         else i++;
     }
 }

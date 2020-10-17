@@ -90,6 +90,25 @@ struct tagBuyEmotion
 	int curTime;
 };
 
+struct tagAlwaysPoint
+{
+	string keyName;
+
+	POINT pos;
+	int curTime;
+	int createTime;
+};
+
+struct tagAlwaysParticle
+{
+	string keyName;
+	POINT pos;
+	int curTime;
+	int delay;
+	POINT frame;
+	int maxFrame;
+};
+
 class effectManager : public singletonBase <effectManager>
 {
 private:
@@ -109,6 +128,10 @@ private:
 
 	//구매 이펙트
 	vector<tagBuyEmotion> vEmotion;
+
+	//게임이 끝날 때 까지 지속되는 이펙트 포인터
+	vector<tagAlwaysPoint> vAlwaysPoint;
+	vector<tagAlwaysParticle> vAlwaysEft;
 
 	int time;			// 프레임렌더를 하기 위해 필요, 'time++' 을 해주기 위함
 public:
@@ -143,4 +166,9 @@ public:
 
 	void setEmotionEffect(string keyName, POINT pt);
 	void emotionRender(HDC hdc);
+
+	void setAlwaysPoint(string keyName, POINT pt);
+	void alwaysActive();
+	void createAlwaysEft(string keyName, POINT pt, int delay);
+	void alwaysEftRender(HDC hdc);
 };

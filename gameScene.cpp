@@ -134,13 +134,16 @@ void gameScene::update()
 
 	if (INPUT->GetKeyDown(VK_BACK))
 	{
+		//POINT pt = { (long)_player->getX() ,(long)_player->getY() };
+
 		//DROP->getCoinEffect(1);
-		EFFECT->setEmotionEffect("buyEmote_Nox", { (long)_player->getX() ,(long)_player->getY() - 80 });
+		//EFFECT->setEmotionEffect("buyEmote_Nox", { (long)_player->getX() ,(long)_player->getY() - 80 });
+		//EFFECT->setAlwaysPoint("curseEffect", pt);
 	}
 
 	UNITRENDER->setPlayerRect(_player->getRect());
 
-
+	EFFECT->alwaysActive();
 }
 
 void gameScene::render()
@@ -153,6 +156,7 @@ void gameScene::render()
 	DROP->render(getMemDC());
 	EFFECT->pRender(getMemDC());
 
+	EFFECT->alwaysEftRender(getMemDC());
 	UNITRENDER->render(getMemDC());
 	
 	_player->render();

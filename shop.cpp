@@ -163,6 +163,8 @@ void shop::generate(POINT arr[3])
 
         if (npc[i].keyName == "Nox")
         {
+            EFFECT->setAlwaysPoint("curseEffect", npc[i].pt);
+
             EFFECT->SetCursePoint(
                 { npc[i].pt.x - 90, npc[i].pt.y + 120 },
                 { npc[i].pt.x +  0, npc[i].pt.y + 120 },
