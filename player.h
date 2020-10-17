@@ -41,7 +41,6 @@ private:
 	float posX, posY;
 	float attackAngle;
 	float saveAngle ;
-	float saveAngle2 ;
 
 
 	int angleTenth;
@@ -70,8 +69,6 @@ private:
 	
 	
 	//damage
-	float damageAngle;
-	int damageAngleTenth;
 	int frozenTime;
 	int grabbedTime;
 	bool isDamaged;
@@ -162,8 +159,6 @@ public:
 	//getter ,setter
 	float getX() { return posX; }
 	float getY() { return posY; }
-	float getDamageAngle() { return damageAngle; }
-	int getDamageAngleTenth() { return damageAngleTenth; }
 	RECT getRect() { return rc; }
 	bomb* getBlaze() { return blaze; }
 	meteor* getMeteor() { return Meteor; }
@@ -176,8 +171,6 @@ public:
 
 	void setX(float x) { posX = x; }
 	void setY(float y) { posY = y; }
-	void setDamagedAngle(float *attackAngle) { damageAngle = *attackAngle; }
-	void setDamagedAngleTenth(int angleTenth) { damageAngleTenth = angleTenth; }
 	void reposRect() { rc = RectMakeCenter(posX, posY, 100, 100); }
 	void setStateIDLE() { state = STATE::IDLE; }
 	void setDamaged(bool temp) { isDamaged = temp; }

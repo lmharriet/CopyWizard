@@ -66,12 +66,11 @@ HRESULT player::init()
 	inven->init();
 
 	//angle between mouse & player
-	attackAngle = saveAngle = saveAngle2 = 0;
+	attackAngle = saveAngle = 0;
 	angleTenth = 0;
 
 	//damage 
-	damageAngle = 0;
-	damageAngleTenth = frozenTime = grabbedTime = 0;
+	frozenTime = grabbedTime = 0;
 
 	isGrabbed = false;
 	isDamaged = false;
@@ -81,7 +80,6 @@ HRESULT player::init()
 	skillGauge = 0;
 	gaugeMaxCool = 120;
 	upgradeReady = false;
-
 
 
 	//sound
@@ -131,6 +129,7 @@ void player::update()
 	// angle(mouse-player), angleTenth
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
 	angleTenth = (int)(saveAngle * (18 / PI));
+
 
 	if (speed == 0 && basicStateCool == 0 && signatureStateCool == 0 && frozenTime == 0
 		&& !isDead && !inferno->getGauging())
@@ -183,7 +182,7 @@ void player::update()
 
 
 	skillGaugeSetUp();
-	
+
 	takeCoin();
 	takeHealball();
 
@@ -267,7 +266,7 @@ void player::other_update()
 	}
 
 	skillGaugeSetUp();
-	
+
 
 	takeCoin();
 	takeHealball();
@@ -528,7 +527,7 @@ void player::basicSetUp()
 
 			UI->addCoolTime("skill_blaze");
 
-		
+
 			if (basicStateCool > 0)
 			{
 				state = STATE::BASIC;
@@ -544,6 +543,7 @@ void player::dashSetUp()
 {
 	if (speed == 0) return;
 
+	//searing dash fire
 	if (arcana[1].skillName == "skill_searingDash")
 	{
 		if (!searingRush->getIsCoolTime() &&
@@ -562,6 +562,7 @@ void player::dashSetUp()
 
 	}
 
+	//moving
 	if (dashLeft)
 	{
 		if (dashUp)
@@ -588,8 +589,7 @@ void player::dashSetUp()
 		}
 		else // 그냥 순수 LEFT
 		{
-			if (!tileCheck[(int)DIRECTION::LEFT].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol
-				&& !tileCheck[(int)DIRECTION::LEFT_TOP].isCol)
+			if (!tileCheck[(int)DIRECTION::LEFT].isCol && !tileCheck[(int)DIRECTION::LEFT_DOWN].isCol)
 
 			{
 				posX -= speed;
@@ -669,7 +669,7 @@ void player::standardSetUp()
 		&& speed == 0 && signatureStateCool == 0 && !inferno->getCool())
 	{
 		standard = true;
-		saveAngle2 = attackAngle;
+		saveAngle = attackAngle;
 	}
 	else standard = false;
 
@@ -739,9 +739,9 @@ void player::signatureSetUp()
 				}
 				if (signatureStateCool == 0) signature = false;
 			}
-		//}
-		//else
-		//{
+		}
+		else
+		{
 			if (arcana[3].skillName == "skill_meteor")
 			{
 				if (signatureStateCool == 0)
@@ -813,9 +813,10 @@ void player::takeHealball()
 
 void player::animation(int _index)
 {
+	int damageAngleTenth = (int)(knockBack.angle * (18 / PI));
+	cout << damageAngleTenth << '\n';
 	if (_index == 0)
 	{
-		int tempAngle = saveAngle2 * (18 / PI);
 
 		switch (state)
 		{
@@ -904,34 +905,46 @@ void player::animation(int _index)
 			}
 			break;
 		case STATE::DAMAGED:
-			if (frozenTime > 0 || grabbedTime > 0)
-			{
-				frameAnimation(6, 0);
-				if (!isDamaged || !isGrabbed) move = MOVE::LEFT;
 
-			}
 			//각도별로 
 
-	//if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
-	//{
-	//	frameAnimation(6, 0);
-	//	if (!isDamaged) move = MOVE::LEFT;
-	//}
-	//else if (damageAngleTenth <= 4 || damageAngleTenth > 32) //right
-	//{
-	//	frameAnimation(7, 0);
-	//	if (!isDamaged) move = MOVE::RIGHT;
-	//}
-	//else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //up
-	//{
-	//	frameAnimation(5, 0);
-	//	if (!isDamaged) move = MOVE::UP;
-	//}
-	//else if (damageAngleTenth > 23 && damageAngleTenth <= 32) //down
-	//{
-	//	frameAnimation(4, 0);
-	//	if (!isDamaged)	move = MOVE::DOWN;
-	//}
+			if (damageAngleTenth > 14 && damageAngleTenth <= 23)// 공격방향 오른쪽에서 왼쪽이면
+			{
+				if (frozenTime > 0 || grabbedTime > 0)
+				{
+					frameAnimation(7, 0);
+					if (!isDamaged || !isGrabbed) move = MOVE::RIGHT;
+
+				}
+			}
+			else if (damageAngleTenth <= 4 && damageAngleTenth >= 0 || damageAngleTenth > 32) //공격방향 왼쪽에서 오른쪽이면
+			{
+				if (frozenTime > 0 || grabbedTime > 0)
+				{
+					frameAnimation(6, 0);
+					if (!isDamaged || !isGrabbed) move = MOVE::LEFT;
+
+				}
+			}
+
+			else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //공격방향 아래쪽에서 위쪽이면
+			{
+				if (frozenTime > 0 || grabbedTime > 0)
+				{
+					frameAnimation(4, 0);
+					if (!isDamaged || !isGrabbed) move = MOVE::UP;
+
+				}
+			}
+			else if (angleTenth > 23 && angleTenth <= 32)//공격방향 위쪽에서 아래쪽이면
+			{
+				if (frozenTime > 0 || grabbedTime > 0)
+				{
+					frameAnimation(5, 0);
+					if (!isDamaged || !isGrabbed) move = MOVE::DOWN;
+
+				}
+			}
 			break;
 		case STATE::DIE:
 			if (index < 5 && count % 30 == 0)
@@ -946,32 +959,37 @@ void player::animation(int _index)
 		case STATE::BASIC:
 
 			if (angleTenth > 14 && angleTenth <= 23)//left
-			{
+			{ //15 16 17 18 19 20 21 22 23
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
 					if (basicIndex > 6 || basicStateCool == 0) basicIndex = 0;
+
 				}
 				frameAnimation(basicIndex, 5);
 				//왼쪽 공격 끝나면 왼쪽 향하기
 				if (basicStateCool == 0)
 					move = MOVE::LEFT;
+
 			}
-			else if (angleTenth <= 4 || angleTenth > 32) //right
-			{
+			else if (angleTenth <= 4 && angleTenth >= 0 || angleTenth > 32) //right
+			{ // 0 1 2 3 4 , 33 34 35
+
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
+
 					if (basicIndex > 6 || basicStateCool == 0) basicIndex = 0;
 				}
 				frameAnimation(basicIndex, 6);
 
 				// 오른쪽 공격 끝나면 오른쪽 향하기
-				if (basicCount == 0)
+				if (basicStateCool == 0)
 					move = MOVE::RIGHT;
+				
 			}
 			else if (angleTenth > 4 && angleTenth <= 14) //up
-			{
+			{//5 6 7 8 9 10 11 12 13 14
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
@@ -983,7 +1001,7 @@ void player::animation(int _index)
 					move = MOVE::UP;
 			}
 			else if (angleTenth > 23 && angleTenth <= 32) //down
-			{
+			{ //24 25 26 27 28 29 30 31 32
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
@@ -997,7 +1015,7 @@ void player::animation(int _index)
 			break;
 		case STATE::STANDARD:
 
-			if (tempAngle > 14 && tempAngle <= 23)//left
+			if (angleTenth > 14 && angleTenth <= 23)
 			{
 				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
 				else
@@ -1011,7 +1029,7 @@ void player::animation(int _index)
 				//왼쪽 공격 끝나면 왼쪽 향하기
 				if (gaugeTime > 50) move = MOVE::LEFT;
 			}
-			else if (tempAngle <= 4 || tempAngle > 32) //right
+			else if (angleTenth <= 4 && angleTenth >= 0 || angleTenth > 32) //right
 			{
 				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
 				else
@@ -1024,7 +1042,7 @@ void player::animation(int _index)
 				// 오른쪽 공격 끝나면 오른쪽 향하기
 				if (gaugeTime > 50) move = MOVE::RIGHT;
 			}
-			else if (tempAngle > 4 && tempAngle <= 12) //up
+			else if (angleTenth > 4 && angleTenth <= 14) //up
 			{
 				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
 				else
@@ -1036,7 +1054,7 @@ void player::animation(int _index)
 				//위쪽 공격 끝나면 위쪽 향하기
 				if (gaugeTime > 50) move = MOVE::UP;
 			}
-			else if (tempAngle > 23 && tempAngle <= 32) //down
+			else if (angleTenth > 23 && angleTenth <= 32) //down
 			{
 				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
 				else
@@ -1094,7 +1112,6 @@ void player::animation(int _index)
 
 	else
 	{
-		int tempAngle = saveAngle2 * (18 / PI);
 
 		switch (state)
 		{
@@ -1183,39 +1200,45 @@ void player::animation(int _index)
 			}
 			break;
 		case STATE::DAMAGED:
-			if (frozenTime > 0)
-			{
-				frameAnimation(6, 0, 1);
-				if (!isDamaged) move = MOVE::LEFT;
-
-			}
-			if (grabbedTime > 0)
-			{
-				frameAnimation(6, 0, 1);
-				if (!isGrabbed) move = MOVE::LEFT;
-			}
 			//각도별로 
 
-			//if (damageAngleTenth > 14 && damageAngleTenth <= 23)//left
-			//{
-			//	frameAnimation(6, 0);
-			//	if (!isDamaged) move = MOVE::LEFT;
-			//}
-			//else if (damageAngleTenth <= 4 || damageAngleTenth > 32) //right
-			//{
-			//	frameAnimation(7, 0);
-			//	if (!isDamaged) move = MOVE::RIGHT;
-			//}
-			//else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //up
-			//{
-			//	frameAnimation(5, 0);
-			//	if (!isDamaged) move = MOVE::UP;
-			//}
-			//else if (damageAngleTenth > 23 && damageAngleTenth <= 32) //down
-			//{
-			//	frameAnimation(4, 0);
-			//	if (!isDamaged)	move = MOVE::DOWN;
-			//}
+			if (damageAngleTenth > 14 && damageAngleTenth <= 23)// 공격방향 오른쪽에서 왼쪽이면
+			{
+				if (frozenTime > 0 || grabbedTime > 0)
+				{
+					frameAnimation(7, 0);
+					if (!isDamaged || !isGrabbed) move = MOVE::RIGHT;
+
+				}
+			}
+			else if (damageAngleTenth <= 4 && damageAngleTenth >= 0 || damageAngleTenth > 32) //공격방향 왼쪽에서 오른쪽이면
+			{
+				if (frozenTime > 0 || grabbedTime > 0)
+				{
+					frameAnimation(6, 0);
+					if (!isDamaged || !isGrabbed) move = MOVE::LEFT;
+
+				}
+			}
+
+			else if (damageAngleTenth > 4 && damageAngleTenth <= 14) //공격방향 아래쪽에서 위쪽이면
+			{
+				if (frozenTime > 0 || grabbedTime > 0)
+				{
+					frameAnimation(4, 0);
+					if (!isDamaged || !isGrabbed) move = MOVE::UP;
+
+				}
+			}
+			else if (angleTenth > 23 && angleTenth <= 32)//공격방향 위쪽에서 아래쪽이면
+			{ 
+				if (frozenTime > 0 || grabbedTime > 0)
+				{
+					frameAnimation(5, 0);
+					if (!isDamaged || !isGrabbed) move = MOVE::DOWN;
+
+				}
+			}
 			break;
 		case STATE::DIE:
 			if (index < 5 && count % 30 == 0)
@@ -1230,50 +1253,56 @@ void player::animation(int _index)
 		case STATE::BASIC:
 
 			if (angleTenth > 14 && angleTenth <= 23)//left
-			{
+			{ //15 16 17 18 19 20 21 22 23
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
 					if (basicIndex > 6 || basicStateCool == 0) basicIndex = 0;
+
 				}
-				frameAnimation(basicIndex, 5, 1);
+				frameAnimation(basicIndex, 5);
 				//왼쪽 공격 끝나면 왼쪽 향하기
 				if (basicStateCool == 0)
+				
 					move = MOVE::LEFT;
+				
 			}
-			else if (angleTenth <= 4 || angleTenth > 32) //right
-			{
+			else if (angleTenth <= 4 && angleTenth >= 0 || angleTenth > 32) //right
+			{ // 0 1 2 3 4 , 33 34 35
+
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
 					if (basicIndex > 6 || basicStateCool == 0) basicIndex = 0;
 				}
-				frameAnimation(basicIndex, 6, 1);
+				frameAnimation(basicIndex, 6);
 
 				// 오른쪽 공격 끝나면 오른쪽 향하기
-				if (basicCount == 0)
+				if (basicStateCool == 0)
+				
 					move = MOVE::RIGHT;
+				
 			}
 			else if (angleTenth > 4 && angleTenth <= 14) //up
-			{
+			{//5 6 7 8 9 10 11 12 13 14
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
 					if (basicIndex > 6 || basicStateCool == 0)basicIndex = 0;
 				}
-				frameAnimation(basicIndex, 14, 1);
+				frameAnimation(basicIndex, 14);
 				//위쪽 공격 끝나면 위쪽 향하기
 				if (basicStateCool == 0)
 					move = MOVE::UP;
 			}
 			else if (angleTenth > 23 && angleTenth <= 32) //down
-			{
+			{ //24 25 26 27 28 29 30 31 32
 				if (basicCount % 5 == 0)
 				{
 					basicIndex++;
 					if (basicIndex > 6 || basicStateCool == 0)basicIndex = 0;
 				}
-				frameAnimation(basicIndex, 6, 1);
+				frameAnimation(basicIndex, 6);
 				//아래쪽 공격 끝나면 아래쪽 향하기
 				if (basicStateCool == 0)
 					move = MOVE::DOWN;
@@ -1281,7 +1310,7 @@ void player::animation(int _index)
 			break;
 		case STATE::STANDARD:
 
-			if (tempAngle > 14 && tempAngle <= 23)//left
+			if (angleTenth > 14 && angleTenth <= 23)
 			{
 				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
 				else
@@ -1289,13 +1318,13 @@ void player::animation(int _index)
 					atkIndex++;
 					if (atkIndex > 3) atkIndex = 3;
 				}
-				frameAnimation(atkIndex, 6, 1);
+				frameAnimation(atkIndex, 6);
 
 
 				//왼쪽 공격 끝나면 왼쪽 향하기
 				if (gaugeTime > 50) move = MOVE::LEFT;
 			}
-			else if (tempAngle <= 4 || tempAngle > 32) //right
+			else if (angleTenth <= 4 && angleTenth >= 0 || angleTenth > 32) //right
 			{
 				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
 				else
@@ -1304,11 +1333,11 @@ void player::animation(int _index)
 					if (atkIndex > 3) atkIndex = 3;
 				}
 
-				frameAnimation(atkIndex, 5, 1);
+				frameAnimation(atkIndex, 5);
 				// 오른쪽 공격 끝나면 오른쪽 향하기
 				if (gaugeTime > 50) move = MOVE::RIGHT;
 			}
-			else if (tempAngle > 4 && tempAngle <= 12) //up
+			else if (angleTenth > 4 && angleTenth <= 14) //up
 			{
 				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
 				else
@@ -1316,11 +1345,11 @@ void player::animation(int _index)
 					atkIndex++;
 					if (atkIndex > 3) atkIndex = 3;
 				}
-				frameAnimation(atkIndex, 14, 1);
+				frameAnimation(atkIndex, 14);
 				//위쪽 공격 끝나면 위쪽 향하기
 				if (gaugeTime > 50) move = MOVE::UP;
 			}
-			else if (tempAngle > 23 && tempAngle <= 32) //down
+			else if (angleTenth > 23 && angleTenth <= 32) //down
 			{
 				if (inferno->getGauging()/*gaugeTime < 45*/)atkIndex = 0;
 				else
@@ -1328,7 +1357,7 @@ void player::animation(int _index)
 					atkIndex++;
 					if (atkIndex > 3) atkIndex = 3;
 				}
-				frameAnimation(atkIndex, 6, 1);
+				frameAnimation(atkIndex, 6);
 				//아래쪽 공격 끝나면 아래쪽 향하기
 				if (gaugeTime > 50) move = MOVE::DOWN;
 			}
@@ -1670,7 +1699,7 @@ void player::skillGaugeSetUp()
 		skillGauge -= 0.7f;
 	}
 	PLAYERDATA->setSkillGauge(skillGauge);
-	
+
 }
 
 void player::buttonDown()
