@@ -5,46 +5,18 @@ HRESULT unit::init()
 {
     tile = PLAYERDATA->_getTile();
 
-    for (int i = 0; i < 500; i++)
-    {
-        tempObject.push_back(new zObject);
-    }
-
     return S_OK;
-}
-
-zObject* unit::getObject()
-{
-    zObject* object;
-
-    if (tempObject.empty())
-    {
-        object = new zObject;
-    }
-
-    else
-    {
-        object = tempObject[0];
-        tempObject.erase(tempObject.begin());
-    }
-
-    return object;
-}
-
-void unit::rtnObject(zObject* _object)
-{
-    tempObject.push_back(_object);
 }
 
 void unit::addUnit(int _index, string _keyName, string type, POINT frame, float _x, float _y)
 {
-    zObject* zo = getObject();
+    zObject* zo = new zObject;
 
     zo->init(_index, _keyName, type, frame, _x, _y);
 
     if (type == "player")player = zo;
 
-    if (type == "npc") npc[_index] = *zo;
+    if (type == "npc") npc[_index] = zo;
 
     vUnit.push_back(zo);
 }
@@ -73,19 +45,17 @@ void unit::update()
 
     for (int i = 0; i < vUnit.size(); i++)
     {
-        rtnObject(vUnit[i]);
-
         vector<zObject*> tempObj;
         tempObj.swap(vUnit);
     }
 
     vUnit.push_back(player);
 
-    for(int i = 0; i < 3; i++) vUnit.push_back(&npc[i]);
+    for(int i = 0; i < 3; i++) vUnit.push_back(npc[i]);
 
     for (int i = 0; i < wall.size(); i++)
     {
-        zObject* zo = getObject();
+        zObject* zo = new zObject;
 
         zo->init(wall[i], tile[wall[i]].keyName, "wall", tile[wall[i]].frame, 0, 0);
         vUnit.push_back(zo);
@@ -93,7 +63,7 @@ void unit::update()
 
     for (int i = 0; i < vEnemy.size(); i++)
     {
-        zObject* zo = getObject();
+        zObject* zo = new zObject;
        
         switch (vEnemy[i].kind)
         {
@@ -120,9 +90,6 @@ void unit::update()
         }
        
     }
-    //for(int i=0; i<)
-
-    //카메라에 충돌된 적만 init, push_back 해주면 된다.
 }
 
 void unit::render(HDC hdc)

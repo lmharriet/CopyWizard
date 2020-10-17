@@ -12,6 +12,7 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
     frame = _frame;
 
     tagTile* tile = PLAYERDATA->_getTile();
+    image* img = IMAGEMANAGER->findImage(keyName);
 
     if (type == "wall")
     {
@@ -22,7 +23,6 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
 
     else if (type == "player")
     {
-        image* img = IMAGEMANAGER->findImage(keyName);
         rc = RectMakeCenter(WINSIZEX / 2 - 50, WINSIZEY / 2 - 50, img->getFrameWidth(), img->getFrameHeight());
 
         tile = nullptr;
@@ -30,12 +30,11 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
 
     else if (type == "monster")
     {
-        image* img = IMAGEMANAGER->findImage(keyName);
         if(keyName == "summoner")
             rc = RectMakeCenter(x - img->getFrameWidth()/2, y + 100, img->getFrameWidth(), img->getFrameHeight());
         else if(keyName == "knight")
             rc = RectMakeCenter(x - img->getFrameWidth()/2, y + 170, img->getFrameWidth(), img->getFrameHeight());
-        else if(keyName == "golem" || keyName=="golemHit")
+        else if(keyName == "golem" || keyName == "golemHit")
             rc = RectMakeCenter(x - img->getFrameWidth()/2, y + 300, img->getFrameWidth(), img->getFrameHeight());
         else if(keyName == "ghoul")
             rc = RectMakeCenter(x - img->getFrameWidth() / 2, y + 170, img->getFrameWidth(), img->getFrameHeight());
@@ -44,7 +43,6 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
 
     else if (type == "npc")
     {
-        image* img = IMAGEMANAGER->findImage(keyName);
         rc = RectMake(x - img->getWidth() + img->getWidth()/2, y + img->getHeight()/2 - 50, img->getWidth(), img->getHeight() / 2);
     }
 
