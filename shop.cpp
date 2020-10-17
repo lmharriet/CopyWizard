@@ -139,6 +139,7 @@ void shop::addImage()
     IMAGEMANAGER->addImage("oldFabricShadow", "Images/npc/oldFabricShadow.bmp", 360, 126, true, RGB(255, 0, 255));
 
     IMAGEMANAGER->addFrameImage("itemBackBoardFrame", "Images/npc/backBoardFrame.bmp", 1125, 136, 3, 1);
+    IMAGEMANAGER->addImage("ItemShadow", "Images/npc/shadow.bmp", 30, 11, true, RGB(255, 0, 255));
 }
 
 void shop::generate(POINT arr[3])
@@ -153,6 +154,8 @@ void shop::generate(POINT arr[3])
         ranStr[ran] = temp;
     }
 
+    image* img = IMAGEMANAGER->findImage("itemFrame");
+
     for (int i = 0; i < 3; i++)
     {
         npc[i].keyName = ranStr[i];
@@ -164,20 +167,29 @@ void shop::generate(POINT arr[3])
                 { npc[i].pt.x - 90, npc[i].pt.y + 120 },
                 { npc[i].pt.x +  0, npc[i].pt.y + 120 },
                 { npc[i].pt.x + 90, npc[i].pt.y + 120 });
+
+            for (int j = 0; j < 3; j++)
+            {
+                NoxShop[j].pt = {
+                    npc[i].pt.x - 90 + (j * 90) - img->getFrameWidth() / 2,
+                    npc[i].pt.y + 130 - img->getFrameHeight() / 2 };
+            }
+        }
+
+        else if (npc[i].keyName == "Andres")
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                AndresShop[j].pt = {
+                    npc[i].pt.x - 154 + (j * 77) - img->getFrameWidth() / 2,
+                    npc[i].pt.y + 85 - img->getFrameHeight() / 2 };
+            }
         }
 
         UNITRENDER->addUnit(i, npc[i].keyName, "npc", { 0,0 }, npc[i].pt.x, npc[i].pt.y);
 
         cout << npc[i].keyName << " " << npc[i].pt.x << ", " << npc[i].pt.y << '\n';
     }
-}
-
-void shop::zRender(HDC hdc,int index)
-{
-    image* img = IMAGEMANAGER->findImage(npc[index].keyName);
-    CAMERAMANAGER->Render(hdc, img,
-        npc[index].pt.x - img->getWidth() / 2,
-        npc[index].pt.y - img->getHeight() / 2);
 }
 
 void shop::render()
@@ -213,10 +225,6 @@ void shop::render()
                 {
                     image* img = IMAGEMANAGER->findImage("itemFrame");
 
-                    NoxShop[j].pt = {
-                        npc[i].pt.x - 90 + (j * 90) - img->getFrameWidth() / 2,
-                        npc[i].pt.y + 130 - img->getFrameHeight() / 2 };
-
                     CAMERAMANAGER->FrameRender(getMemDC(),
                         img,
                         NoxShop[j].pt.x,
@@ -242,29 +250,9 @@ void shop::render()
             //아이템 출력
             for (int j = 0; j < 5; j++) // ITEM
             {
-                image* img = IMAGEMANAGER->findImage("itemFrame");
-
-                AndresShop[j].pt = {
-                    npc[i].pt.x - 154 + (j * 77) - img->getFrameWidth() / 2,
-                    npc[i].pt.y + 85 - img->getFrameHeight() / 2 };
-
-                CAMERAMANAGER->FrameRender(getMemDC(),
-                    img,
-                    AndresShop[j].pt.x,
-                    AndresShop[j].pt.y,
-                    AndresShop[j].frame.x, 
-                    AndresShop[j].frame.y);
-
-                AndresShop[j].rc = RectMake(AndresShop[j].pt.x - img->getFrameWidth()/2,
-                    AndresShop[j].pt.y - img->getFrameHeight()/2,
-                    70, 70);
-
-                //CAMERAMANAGER->Rectangle(getMemDC(), AndresShop[j].rc);
-
                 image* numImg = IMAGEMANAGER->findImage("shopNumbers");
 
                 //가격표 출력
-                
                 if (AndresShop[j].isSell == false)
                 {
                     if (AndresShop[j].price < 100)
@@ -302,14 +290,36 @@ void shop::render()
                             one, 0);
                     }
                 }
-                
+
                 else // 아이템이 팔렸으면?
                 {
                     image* soldOutImg = IMAGEMANAGER->findImage("soldOut");
-                    CAMERAMANAGER->Render(getMemDC(), soldOutImg, 
+                    CAMERAMANAGER->Render(getMemDC(), soldOutImg,
                         npc[i].pt.x - 158 + (j * 78) + 4,
                         AndresShop[j].pt.y + 73);
+
+                    continue;
                 }
+
+                //그림자 출력
+                image* shadow = IMAGEMANAGER->findImage("ItemShadow");
+                CAMERAMANAGER->Render(getMemDC(), shadow,
+                    AndresShop[j].pt.x + 4,
+                    AndresShop[j].pt.y + 40);
+
+                image* img = IMAGEMANAGER->findImage("itemFrame");
+
+                //아이템 출력
+                CAMERAMANAGER->FrameRender(getMemDC(),
+                    img,
+                    AndresShop[j].pt.x,
+                    AndresShop[j].pt.y,
+                    AndresShop[j].frame.x, 
+                    AndresShop[j].frame.y);
+
+                AndresShop[j].rc = RectMake(AndresShop[j].pt.x - img->getFrameWidth()/2,
+                    AndresShop[j].pt.y - img->getFrameHeight()/2,
+                    70, 70);
             }
         }
     }
