@@ -813,8 +813,9 @@ void player::takeHealball()
 
 void player::animation(int _index)
 {
+
 	int damageAngleTenth = (int)(knockBack.angle * (18 / PI));
-	cout << damageAngleTenth << '\n';
+
 	if (_index == 0)
 	{
 
@@ -867,6 +868,7 @@ void player::animation(int _index)
 			}
 			break;
 		case STATE::DASH:
+
 			if (dashLeft)
 			{
 				if (dashCount % 3 == 0)
@@ -896,7 +898,7 @@ void player::animation(int _index)
 			}
 			else if (dashDown)
 			{
-				if (dashCount % 5 == 0)
+				if (dashCount % 3 == 0)
 				{
 					dashIndex++;
 					if (dashIndex > 9 || speed == 0)dashIndex = 0;
@@ -986,7 +988,7 @@ void player::animation(int _index)
 				// 오른쪽 공격 끝나면 오른쪽 향하기
 				if (basicStateCool == 0)
 					move = MOVE::RIGHT;
-				
+
 			}
 			else if (angleTenth > 4 && angleTenth <= 14) //up
 			{//5 6 7 8 9 10 11 12 13 14
@@ -1231,7 +1233,7 @@ void player::animation(int _index)
 				}
 			}
 			else if (angleTenth > 23 && angleTenth <= 32)//공격방향 위쪽에서 아래쪽이면
-			{ 
+			{
 				if (frozenTime > 0 || grabbedTime > 0)
 				{
 					frameAnimation(5, 0);
@@ -1263,9 +1265,9 @@ void player::animation(int _index)
 				frameAnimation(basicIndex, 5);
 				//왼쪽 공격 끝나면 왼쪽 향하기
 				if (basicStateCool == 0)
-				
+
 					move = MOVE::LEFT;
-				
+
 			}
 			else if (angleTenth <= 4 && angleTenth >= 0 || angleTenth > 32) //right
 			{ // 0 1 2 3 4 , 33 34 35
@@ -1279,9 +1281,9 @@ void player::animation(int _index)
 
 				// 오른쪽 공격 끝나면 오른쪽 향하기
 				if (basicStateCool == 0)
-				
+
 					move = MOVE::RIGHT;
-				
+
 			}
 			else if (angleTenth > 4 && angleTenth <= 14) //up
 			{//5 6 7 8 9 10 11 12 13 14

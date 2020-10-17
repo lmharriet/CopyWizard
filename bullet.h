@@ -379,7 +379,7 @@ struct tagDragonCol
 	RECT rc;
 	float x, y;
 	float angle;
-	
+
 };
 class dragonArc : public gameNode
 {
@@ -393,6 +393,8 @@ private:
 private:
 
 	vector<tagDragonCol> vColRound;
+
+	int pattern;
 
 	int coolTime;
 	int currentCoolTime;
@@ -428,7 +430,7 @@ public:
 	int getSize() { return vDragon.size(); }
 
 	//upgrade
-	RECT getColRc(int index) {return vColRound[index].rc;}
+	RECT getColRc(int index) { return vColRound[index].rc; }
 	float getHeadAngle(int index) { return vColRound[index].angle; }
 	int getcolSize() { return vColRound.size(); }
 	int getUpgradeAtkPower(int index) { return vWings[index].atkPower; }
@@ -439,3 +441,5 @@ public:
 	void setUpgrade(bool temp) { upgrade = temp; }
 
 };
+
+
