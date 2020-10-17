@@ -62,9 +62,9 @@ void bossScene::update()
 {
 	
 	_player->getBlaze()->setBossScene(true);
+
+
 	PLAYERDATA->update();
-
-
 	//sound 
 	if (isBossBGM)
 	{
@@ -82,8 +82,8 @@ void bossScene::update()
 		UI->update();
 		_player->other_update();
 	}
-
 	else _player->setStateIDLE();
+	
 
 	//pixel collision
 	_player->colorCheck(IMAGEMANAGER->findImage("bossRoom"));
@@ -308,4 +308,40 @@ void bossScene::attackBoss()
 		}
 	}
 
+	//dragonArc
+	if (!_player->getDragon()->getUpgrade())
+	{
+		for (int i = 0; i < _player->getDragon()->getSize(); i++)
+		{
+			if (colCheck(_player->getDragon()->getDragonRC(i), _boss->getBossRect()))
+			{
+				bool isCri = PLAYERDATA->criAppear();
+				int damage = PLAYERDATA->damageCul(_player->getDragon()->getAtkPower(i) + RANDOM->range(0, 3),isCri);
+
+				if (PLAYERDATA->getStat().ManaRejection == false)
+				{
+					_player->chargeSkillGauge(damage, 4);
+				}
+
+				_boss->damage(damage, _player->getDragon()->getDragonAngle(i), 10.f, 4, isCri);
+
+			}
+		}
+
+	}
+	
+	for (int i = 0; i < _player->getDragon()->getcolSize(); i++)
+	{
+		if (colCheck(_player->getDragon()->getColRc(i), _boss->getBossRect()))
+		{
+			bool isCri = PLAYERDATA->criAppear();
+			int damage = PLAYERDATA->damageCul(_player->getDragon()->getUpgradeAtkPower(i) + RANDOM->range(0, 3),isCri);
+
+			if (PLAYERDATA->getStat().ManaRejection == false)
+			{
+				_player->chargeSkillGauge(damage, 4);
+			}
+			_boss->damage(damage, _player->getDragon()->getHeadAngle(i), 10.f, 4, isCri);
+		}
+	}
 }

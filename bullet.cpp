@@ -912,7 +912,6 @@ void dragonArc::render()
 	{
 		for (int i = 0; i < vDragon.size(); i++)
 		{
-			CAMERAMANAGER->Ellipse(getMemDC(), vDragon[i].rc);
 
 			if (count % 2 == 0)
 			{
@@ -923,14 +922,15 @@ void dragonArc::render()
 			CAMERAMANAGER->FrameRender(getMemDC(), vDragon[i].img,
 				vDragon[i].x - vDragon[i].img->getFrameWidth() / 2,
 				vDragon[i].y - vDragon[i].img->getFrameHeight() / 2, vDragon[i].index, vDragon[i].frameY);
+			CAMERAMANAGER->Ellipse(getMemDC(), vDragon[i].rc);
 		}
 	}
 
 	if (dragonHead.isFire)
 	{
 		image* img = IMAGEMANAGER->findImage("dragon");
-		for (int i = 0; i < vColRound.size(); i++)
-			CAMERAMANAGER->Ellipse(getMemDC(), vColRound[i].rc);
+		//for (int i = 0; i < vColRound.size(); i++)
+			//CAMERAMANAGER->Ellipse(getMemDC(), vColRound[i].rc);
 		if (count % 2 == 0) PARTICLE->explosionGenerate("frameParticle", dragonHead.x, dragonHead.y, 1, 0, 0.f, 2, true);
 		//CAMERAMANAGER->FrameRender(getMemDC(), img,
 		//	dragonHead.x - img->getFrameWidth() / 2,
@@ -960,7 +960,7 @@ void dragonArc::fire(float x, float y, float angle)
 		dragon.currentTime = 0;
 		dragon.lifeTime = 88;
 		dragon.speed = 15.f;
-		dragon.rc = RectMakeCenter(dragon.x, dragon.y, 20, 20);
+		dragon.rc = RectMakeCenter(dragon.x, dragon.y, 60, 60);
 
 		dragon.angle = .7f + angle;
 		dragon.saveAngle = -.7f + angle;
@@ -993,7 +993,7 @@ void dragonArc::move()
 		{
 			vDragon[i].x += cosf(vDragon[i].angle) * vDragon[i].speed;
 			vDragon[i].y -= sinf(vDragon[i].angle) * vDragon[i].speed;
-			vDragon[i].rc = RectMakeCenter(vDragon[i].x, vDragon[i].y, 20, 20);
+			vDragon[i].rc = RectMakeCenter(vDragon[i].x, vDragon[i].y, 60, 60);
 			if (i % 2 == 0)
 			{
 				vDragon[i].angle -= sinf(0.05f);

@@ -183,8 +183,7 @@ void player::update()
 
 
 	skillGaugeSetUp();
-
-
+	
 	takeCoin();
 	takeHealball();
 
@@ -268,6 +267,7 @@ void player::other_update()
 	}
 
 	skillGaugeSetUp();
+	
 
 	takeCoin();
 	takeHealball();
@@ -739,9 +739,9 @@ void player::signatureSetUp()
 				}
 				if (signatureStateCool == 0) signature = false;
 			}
-		}
-		else
-		{
+		//}
+		//else
+		//{
 			if (arcana[3].skillName == "skill_meteor")
 			{
 				if (signatureStateCool == 0)
@@ -1648,6 +1648,7 @@ void player::chargeSkillGauge(int atkPower, int skillNum)
 		upgradeReady = true;
 	}
 	else upgradeReady = false;
+
 }
 
 void player::skillGaugeSetUp()
@@ -1668,8 +1669,8 @@ void player::skillGaugeSetUp()
 		upgradeReady = false;
 		skillGauge -= 0.7f;
 	}
-
 	PLAYERDATA->setSkillGauge(skillGauge);
+	
 }
 
 void player::buttonDown()

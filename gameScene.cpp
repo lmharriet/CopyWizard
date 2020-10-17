@@ -153,12 +153,9 @@ void gameScene::render()
 	DROP->render(getMemDC());
 	EFFECT->pRender(getMemDC());
 
-
-
-
-	_player->render();
-
 	UNITRENDER->render(getMemDC());
+	
+	_player->render();
 
 	EFFECT->emotionRender(getMemDC());
 

@@ -77,6 +77,7 @@ public:
 	float getX() { return _x; }
 	float getY() { return _y; }
 	int getGaugeTime() { return _gaugeTime; }
+	float getSkillGauge() { return skillGauge; }
 	//inferno¿ë
 	bool getGauging() { return isGauging; }
 
