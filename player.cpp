@@ -478,8 +478,8 @@ void player::skillInit()
 	arcana[2].coolTime = 240;
 
 	arcana[3].type = ARCANA_TYPE::TYPE_SIGNATURE;
-	arcana[3].skillName = "skill_dragonArc";
-	//arcana[3].skillName = "skill_meteor";
+	//arcana[3].skillName = "skill_dragonArc";
+	arcana[3].skillName = "skill_meteor";
 	arcana[3].coolTime = 300;
 
 	for (int i = 0; i < 4; i++)
@@ -706,7 +706,7 @@ void player::signatureSetUp()
 	{
 		if (!upgradeReady)
 		{
-			if (arcana[3].skillName == "skill_meteor" && !Meteor->getCool())
+			if (arcana[3].skillName == "skill_meteor")
 			{
 
 				if (signatureStateCool == 0)
@@ -724,7 +724,7 @@ void player::signatureSetUp()
 				if (signatureStateCool == 0) signature = false;
 			}
 
-			else if (arcana[3].skillName == "skill_dragonArc" /*&& !dragon->getCool()*/)
+			else if (arcana[3].skillName == "skill_dragonArc")
 			{
 				if (signatureStateCool == 0)
 				{
@@ -818,7 +818,6 @@ void player::animation(int _index)
 
 	if (_index == 0)
 	{
-
 		switch (state)
 		{
 		case STATE::IDLE:
@@ -874,7 +873,7 @@ void player::animation(int _index)
 				if (dashCount % 3 == 0)
 				{
 					dashIndex++;
-					if (dashIndex > 9) dashIndex = 0;
+					if (dashIndex > 9 || speed == 0) dashIndex = 0;
 				}
 				frameAnimation(dashIndex, 8);
 			}
@@ -938,7 +937,7 @@ void player::animation(int _index)
 
 				}
 			}
-			else if (angleTenth > 23 && angleTenth <= 32)//공격방향 위쪽에서 아래쪽이면
+			else if (damageAngleTenth > 23 && damageAngleTenth <= 32)//공격방향 위쪽에서 아래쪽이면
 			{
 				if (frozenTime > 0 || grabbedTime > 0)
 				{
@@ -966,7 +965,6 @@ void player::animation(int _index)
 				{
 					basicIndex++;
 					if (basicIndex > 6 || basicStateCool == 0) basicIndex = 0;
-
 				}
 				frameAnimation(basicIndex, 5);
 				//왼쪽 공격 끝나면 왼쪽 향하기
@@ -1114,7 +1112,6 @@ void player::animation(int _index)
 
 	else
 	{
-
 		switch (state)
 		{
 		case STATE::IDLE:
@@ -1169,7 +1166,7 @@ void player::animation(int _index)
 				if (dashCount % 3 == 0)
 				{
 					dashIndex++;
-					if (dashIndex > 9) dashIndex = 0;
+					if (dashIndex > 9 || speed == 0) dashIndex = 0;
 				}
 				frameAnimation(dashIndex, 8, 1);
 			}
@@ -1193,7 +1190,7 @@ void player::animation(int _index)
 			}
 			else if (dashDown)
 			{
-				if (dashCount % 5 == 0)
+				if (dashCount % 3 == 0)
 				{
 					dashIndex++;
 					if (dashIndex > 9 || speed == 0)dashIndex = 0;
@@ -1208,7 +1205,7 @@ void player::animation(int _index)
 			{
 				if (frozenTime > 0 || grabbedTime > 0)
 				{
-					frameAnimation(7, 0);
+					frameAnimation(7, 0, 1);
 					if (!isDamaged || !isGrabbed) move = MOVE::RIGHT;
 
 				}
@@ -1217,7 +1214,7 @@ void player::animation(int _index)
 			{
 				if (frozenTime > 0 || grabbedTime > 0)
 				{
-					frameAnimation(6, 0);
+					frameAnimation(6, 0, 1);
 					if (!isDamaged || !isGrabbed) move = MOVE::LEFT;
 
 				}
@@ -1227,16 +1224,16 @@ void player::animation(int _index)
 			{
 				if (frozenTime > 0 || grabbedTime > 0)
 				{
-					frameAnimation(4, 0);
+					frameAnimation(4, 0, 1);
 					if (!isDamaged || !isGrabbed) move = MOVE::UP;
 
 				}
 			}
-			else if (angleTenth > 23 && angleTenth <= 32)//공격방향 위쪽에서 아래쪽이면
+			else if (damageAngleTenth > 23 && damageAngleTenth <= 32)//공격방향 위쪽에서 아래쪽이면
 			{
 				if (frozenTime > 0 || grabbedTime > 0)
 				{
-					frameAnimation(5, 0);
+					frameAnimation(5, 0, 1);
 					if (!isDamaged || !isGrabbed) move = MOVE::DOWN;
 
 				}
@@ -1262,7 +1259,7 @@ void player::animation(int _index)
 					if (basicIndex > 6 || basicStateCool == 0) basicIndex = 0;
 
 				}
-				frameAnimation(basicIndex, 5);
+				frameAnimation(basicIndex, 5, 1);
 				//왼쪽 공격 끝나면 왼쪽 향하기
 				if (basicStateCool == 0)
 
@@ -1277,7 +1274,7 @@ void player::animation(int _index)
 					basicIndex++;
 					if (basicIndex > 6 || basicStateCool == 0) basicIndex = 0;
 				}
-				frameAnimation(basicIndex, 6);
+				frameAnimation(basicIndex, 6, 1);
 
 				// 오른쪽 공격 끝나면 오른쪽 향하기
 				if (basicStateCool == 0)
@@ -1292,7 +1289,7 @@ void player::animation(int _index)
 					basicIndex++;
 					if (basicIndex > 6 || basicStateCool == 0)basicIndex = 0;
 				}
-				frameAnimation(basicIndex, 14);
+				frameAnimation(basicIndex, 14, 1);
 				//위쪽 공격 끝나면 위쪽 향하기
 				if (basicStateCool == 0)
 					move = MOVE::UP;
@@ -1304,7 +1301,7 @@ void player::animation(int _index)
 					basicIndex++;
 					if (basicIndex > 6 || basicStateCool == 0)basicIndex = 0;
 				}
-				frameAnimation(basicIndex, 6);
+				frameAnimation(basicIndex, 6, 1);
 				//아래쪽 공격 끝나면 아래쪽 향하기
 				if (basicStateCool == 0)
 					move = MOVE::DOWN;
@@ -1320,7 +1317,7 @@ void player::animation(int _index)
 					atkIndex++;
 					if (atkIndex > 3) atkIndex = 3;
 				}
-				frameAnimation(atkIndex, 6);
+				frameAnimation(atkIndex, 6, 1);
 
 
 				//왼쪽 공격 끝나면 왼쪽 향하기
@@ -1335,7 +1332,7 @@ void player::animation(int _index)
 					if (atkIndex > 3) atkIndex = 3;
 				}
 
-				frameAnimation(atkIndex, 5);
+				frameAnimation(atkIndex, 5, 1);
 				// 오른쪽 공격 끝나면 오른쪽 향하기
 				if (gaugeTime > 50) move = MOVE::RIGHT;
 			}
@@ -1347,7 +1344,7 @@ void player::animation(int _index)
 					atkIndex++;
 					if (atkIndex > 3) atkIndex = 3;
 				}
-				frameAnimation(atkIndex, 14);
+				frameAnimation(atkIndex, 14, 1);
 				//위쪽 공격 끝나면 위쪽 향하기
 				if (gaugeTime > 50) move = MOVE::UP;
 			}
@@ -1359,7 +1356,7 @@ void player::animation(int _index)
 					atkIndex++;
 					if (atkIndex > 3) atkIndex = 3;
 				}
-				frameAnimation(atkIndex, 6);
+				frameAnimation(atkIndex, 6, 1);
 				//아래쪽 공격 끝나면 아래쪽 향하기
 				if (gaugeTime > 50) move = MOVE::DOWN;
 			}
@@ -1560,7 +1557,6 @@ void player::changeState()
 		{
 			state = STATE::IDLE;
 		}
-
 	}
 }
 
