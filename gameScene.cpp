@@ -157,6 +157,7 @@ void gameScene::render()
 	EFFECT->pRender(getMemDC());
 
 	EFFECT->alwaysEftRender(getMemDC());
+	EFFECT->AfterimageRender(getMemDC());
 	UNITRENDER->render(getMemDC());
 	
 	_player->render();

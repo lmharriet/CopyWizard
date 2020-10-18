@@ -692,7 +692,7 @@ void effectManager::AfterimageEft(string keyName, POINT pt, POINT frame, int del
         eft.keyName = keyName;
         eft.frame = frame;
         eft.pos = pt;
-        eft.opacity = 80;
+        eft.opacity = 150;
 
         vAfterEft.push_back(eft);
     }
