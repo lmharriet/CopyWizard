@@ -43,6 +43,7 @@ private:
 	int hp;
 	int maxHp;	
 	float skillGauge;
+	bool upgradeReady;
 
 	tagStat stat;
 	////////
@@ -76,23 +77,28 @@ public:
 	int getCoin() { return coin; }
 	float getX() { return _x; }
 	float getY() { return _y; }
-	int getGaugeTime() { return _gaugeTime; }
-	float getSkillGauge() { return skillGauge; }
-	//inferno용
-	bool getGauging() { return isGauging; }
 
+	//skill gauge용
+	float getSkillGauge() { return skillGauge; }
+	bool getUpgradeReady() { return upgradeReady; }
+	//inferno용
+	int getGaugeTime() { return _gaugeTime; }
+	bool getGauging() { return isGauging; }
+	
 
 	void setHp(int _hp) { hp = _hp; }
 	void setCoin(int _coin) { coin = _coin; }
 	void setX(float x) { _x = x; }
 	void setY(float y) { _y = y; }
-	void setGaugeTime(int time) { _gaugeTime = time; }
+
+	//skill gauge용
 	void setSkillGauge(float gauge) { skillGauge = gauge; }
-	
+	void setUpgradeReady(bool ready) { upgradeReady = ready; }
 	//inferno용
 	void setGauging(bool temp) { isGauging = temp; }
+	void setGaugeTime(int time) { _gaugeTime = time; }
 
-	//
+	
 	tagStat getStat() { return stat; }
 	void setStat(string itemName);
 

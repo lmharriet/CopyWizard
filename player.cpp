@@ -1697,7 +1697,7 @@ void player::skillGaugeSetUp()
 		skillGauge -= 0.7f;
 	}
 	PLAYERDATA->setSkillGauge(skillGauge);
-
+	PLAYERDATA->setUpgradeReady(upgradeReady);
 }
 
 void player::buttonDown()

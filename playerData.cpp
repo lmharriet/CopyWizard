@@ -7,6 +7,7 @@ HRESULT playerData::init()
 	hp = 500;
 	coin = 0;
 	skillGauge = 0;
+	upgradeReady = false;
 
 	_gaugeTime = 0;
 	isGauging = false;
