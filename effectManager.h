@@ -109,6 +109,15 @@ struct tagAlwaysParticle
 	int maxFrame;
 };
 
+struct tagAfterimage
+{
+	string keyName;
+	POINT pos;
+	POINT frame;
+
+	int opacity;
+};
+
 class effectManager : public singletonBase <effectManager>
 {
 private:
@@ -133,7 +142,10 @@ private:
 	vector<tagAlwaysPoint> vAlwaysPoint;
 	vector<tagAlwaysParticle> vAlwaysEft;
 
+	vector<tagAfterimage> vAfterEft;
+
 	int time;			// 프레임렌더를 하기 위해 필요, 'time++' 을 해주기 위함
+	int aTime;
 public:
 	HRESULT init();
 	void pRender(HDC hdc);
@@ -171,4 +183,6 @@ public:
 	void alwaysActive();
 	void createAlwaysEft(string keyName, POINT pt, int delay);
 	void alwaysEftRender(HDC hdc);
+	void AfterimageEft(string keyName, POINT pt, POINT frame, int delay);
+	void AfterimageRender(HDC hdc);
 };
