@@ -1,5 +1,6 @@
 #pragma once
 #include "gameNode.h"
+
 struct tagInvenCol
 {
 	RECT rc;
@@ -14,16 +15,12 @@ private:
 	RECT rc;
 	bool isOpen;
 
-	RECT slot;
-	vector<RECT>_vSlot;
-	
+	vector<tagWizardArcana> vArcana;
+	tagInvenCol arcanaSlot[6];
+
 	vector<tagItem> vInven;	
 	tagInvenCol col[14];
 	RECT descriptBox;
-
-	//vector<string> vInven;
-
-
 
 
 public:

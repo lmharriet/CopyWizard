@@ -19,8 +19,7 @@ HRESULT player::init()
 	//enum 초기화
 	state = STATE::IDLE;
 	move = MOVE::DOWN;
-	//skill init
-	skillInit();
+	
 	memset(tileCheck, 0, sizeof(tileCheck));
 	memset(diagonalCheck, 0, sizeof(diagonalCheck));
 
@@ -60,6 +59,8 @@ HRESULT player::init()
 	//불렛 클래스
 	bulletClassInit();
 
+	//skill init
+	skillInit();
 
 	//인벤토리
 	inven = new inventory;
@@ -107,6 +108,9 @@ void player::release()
 
 void player::update()
 {
+
+	//cout << "aracana info size? : "<< PLAYERDATA->getAracaInfo().size() << '\n';
+
 
 	PLAYERDATA->update();
 
@@ -163,8 +167,12 @@ void player::update()
 	standardSetUp();
 	signatureSetUp();
 	/////////////////
-	
 
+	/*if (INPUT->GetKeyDown('F'))
+	{
+		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, "skill_dragonArc", 300);
+		UI->setSkillSlot("skill_dragonArc",300);
+	}*/
 	damagedCool();
 
 	// knockBack lerp
@@ -465,24 +473,33 @@ void player::controller()
 void player::skillInit()
 {
 	arcana[0].type = ARCANA_TYPE::TYPE_BASIC;
-	arcana[0].skillName = "skill_blaze";
+	arcana[0].skillName = blaze->getInfo().keyName/*"skill_blaze"*/;
+	arcana[0].explanation = blaze->getInfo().explanation;
 	arcana[0].coolTime = 40;
 
 	arcana[1].type = ARCANA_TYPE::TYPE_DASH;
-	arcana[1].skillName = "skill_searingDash";
+	arcana[1].skillName = searingRush->getInfo().keyName/*"skill_searingDash"*/;
+	arcana[1].explanation = searingRush->getInfo().explanation;
 	arcana[1].coolTime = 240;
 
 	arcana[2].type = ARCANA_TYPE::TYPE_STANDARD;
-	arcana[2].skillName = "skill_inferno";
+	arcana[2].skillName = inferno->getInfo().keyName/*"skill_inferno"*/;
+	arcana[2].explanation = inferno->getInfo().explanation;
 	arcana[2].coolTime = 240;
 
 	arcana[3].type = ARCANA_TYPE::TYPE_SIGNATURE;
-	//arcana[3].skillName = "skill_dragonArc";
-	arcana[3].skillName = "skill_meteor";
+	arcana[3].skillName = Meteor->getInfo().keyName/*"skill_meteor"*/;
+	arcana[3].explanation = Meteor->getInfo().explanation;
+	//arcana[3].skillName = dragon->getInfo().keyName/*"skill_dragonArc"*/;
+	//arcana[3].explanation = dragon->getInfo().explanation;
 	arcana[3].coolTime = 300;
 
 	for (int i = 0; i < 4; i++)
+	{
 		UI->setSkillSlot(arcana[i].skillName, arcana[i].coolTime);
+		PLAYERDATA->pushArcanaInfo(arcana[i]);
+	}
+
 }
 
 void player::setSkillUi(ARCANA_TYPE type, string keyName, int coolTime)
@@ -500,13 +517,14 @@ void player::setSkillUi(ARCANA_TYPE type, string keyName, int coolTime)
 			arcana[i].coolTime = coolTime;
 
 			UI->setSkillSlot(arcana[i].skillName, arcana[i].coolTime);
+		
 		}
 	}
 }
 
 void player::basicSetUp()
 {
-	if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool())
+	if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool() && !isDead)
 	{
 		saveAngle = attackAngle;
 		basic = true;
@@ -540,7 +558,7 @@ void player::basicSetUp()
 
 void player::dashSetUp()
 {
-	if (speed == 0) return;
+	if (speed == 0 || isDead) return;
 
 	//searing dash fire
 	if (arcana[1].skillName == "skill_searingDash")
@@ -741,8 +759,10 @@ void player::signatureSetUp()
 		}
 		else
 		{
+			TIME->setTest(12.f);
 			if (arcana[3].skillName == "skill_meteor")
 			{
+
 				if (signatureStateCool == 0)
 				{
 					signatureStateCool = 30;
@@ -1650,24 +1670,24 @@ void player::grabbedCool()
 void player::chargeSkillGauge(int atkPower, int skillNum)
 {
 	//basic 공격일 때 gauge charge가 빠름
-	if (!upgradeReady && skillGauge<=100)
+	if (!upgradeReady && skillGauge <= 100)
 	{
 		switch (skillNum)
 		{
 		case 0:
-			skillGauge += (float)(atkPower / atkPower) * 10.f;
+			skillGauge += (float)(atkPower / atkPower) * 12.0f;
 			break;
 		case 1:
 			if (count % 15 == 0)
-				skillGauge += (float)(atkPower / atkPower) * 0.7f;
+				skillGauge += (float)(atkPower / atkPower) * 1.5f;
 			break;
 		case 2:
 			if (count % 15 == 0)
-				skillGauge += (float)(atkPower / atkPower) * 0.7f;
+				skillGauge += (float)(atkPower / atkPower) * 1.5f;
 			break;
 		case 3:
 			if (count % 20 == 0)
-				skillGauge += (float)(atkPower / atkPower) * 0.7f;
+				skillGauge += (float)(atkPower / atkPower) * 1.5f;
 			break;
 		case 4:
 			if (count % 30 == 0)
@@ -1681,7 +1701,10 @@ void player::chargeSkillGauge(int atkPower, int skillNum)
 
 void player::skillGaugeSetUp()
 {
-	if (skillGauge > 0 && count % 10 == 0)
+
+	if (upgradeReady && count % 10 == 0 && skillGauge > 0)
+		skillGauge -= 1.f;
+	else if (skillGauge > 0 && count % 10 == 0)
 		skillGauge -= 0.5f;
 
 
@@ -1694,9 +1717,6 @@ void player::skillGaugeSetUp()
 	if (upgradeReady && skillGauge <= 0)
 		upgradeReady = false;
 
-	//cout << "upgreade? : " << upgradeReady << '\n';
-	//cout << "gauge : " << skillGauge << '\n';
-	//
 	PLAYERDATA->setSkillGauge(skillGauge);
 	PLAYERDATA->setUpgradeReady(upgradeReady);
 }

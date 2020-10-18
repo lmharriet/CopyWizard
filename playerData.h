@@ -1,6 +1,7 @@
 #pragma once
 #include "singletonBase.h"
 #include "tileNode.h"
+#include "unitNode.h"
 
 struct tagStat
 {
@@ -56,7 +57,7 @@ private:
 	tagGlass gShroud;
 
 	vector<tagItem> vInven;
-
+	vector<tagWizardArcana> vArcanaInfo;
 	/// //////////
 	tagTile* tile;
 	vector<int> vTile;
@@ -104,14 +105,16 @@ public:
 
 	int damageCul(int damage, bool isCritical);
 
-	//inven
+	//inven item
 	void pushInven(tagItem item) { vInven.push_back(item); }
 	vector<tagItem> getInven() { return vInven; }
-	//
+	//inven arcana
+	void pushArcanaInfo(tagWizardArcana info) { vArcanaInfo.push_back(info); }
+	vector<tagWizardArcana> getAracaInfo() { return vArcanaInfo; }
 
 	bool criAppear();
 
-
+		
 	void setTile(vector<int> tile) { vTile = tile; }
 	vector<int> getTile() { return vTile; }
 

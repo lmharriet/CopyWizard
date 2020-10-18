@@ -2,6 +2,12 @@
 #include "gameNode.h"
 #include "unitNode.h"
 #include "tileNode.h"
+
+struct tagInfo
+{
+	string keyName;
+	string explanation;
+};
 //총알 구조체
 struct tagBullet
 {
@@ -119,7 +125,7 @@ public:
 	vector<tagBullet> getBullet() { return _vBullet; }
 	//공용총알 렉트 가져오기
 	RECT getRect(int index) { return _vBullet[index].rc; }
-
+	
 };
 
 struct tagBomb
@@ -147,6 +153,8 @@ private:
 	//총알 구조체를 담을 벡터선언
 	vector<tagBomb> _vBullet;
 	tagBomb tmpBomb;
+
+	tagInfo info;
 
 	int bombCount;
 	int bTime;
@@ -181,6 +189,7 @@ public:
 
 	//총알벡터 가져오기
 	vector<tagBomb> getBullet() { return _vBullet; }
+	tagInfo getInfo() { return info; }
 
 	bool getCool() { return isCoolTime; }
 	bool getCol(int index) { return _vBullet[index].collision; }
@@ -214,6 +223,9 @@ private:
 	vector<tagCircle> vCircle;
 	vector<tagMeteor> vDamage;
 
+	tagInfo info;
+
+private:
 
 	bool isCoolTime;	// 스킬 쿨타임이 돌고있는지 아닌지
 
@@ -244,6 +256,10 @@ public:
 
 	void move();
 	void coolTimeReduction();
+
+
+	tagInfo getInfo() { return info; }
+
 	bool getCool() { return isCoolTime; }
 	int getSkillNum() { return 1; }
 	//생성된 메테오용
@@ -267,7 +283,7 @@ class dashFire :public gameNode
 {
 private:
 	vector<tagArcana> vDash;
-
+	tagInfo info;
 
 	int coolTime;
 	int currentCoolTime;
@@ -288,6 +304,7 @@ public:
 	void coolTimeReduction();
 
 	//getter, setter
+	tagInfo getInfo() { return info; }
 
 	RECT getRect(int index) { return vDash[index].rc; }
 	int getSize() { return vDash.size(); }
@@ -323,6 +340,8 @@ private:
 
 	vector<tagTail> vTail;
 
+	tagInfo info;
+
 	float distance;
 	int index, count;
 	bool isFire;
@@ -353,6 +372,9 @@ public:
 	bool CheckCollision(RECT enemy);
 
 	//getter , setter
+
+	tagInfo getInfo() { return info; }
+
 	bool getFire() { return isFire; }
 	bool getCol() { return inferno.Collision; }
 	bool getGauging() { return gauging; }
@@ -390,6 +412,8 @@ private:
 	vector<tagDragon> vWings;
 	tagDragon dragonHead;
 
+
+	tagInfo info;
 private:
 
 	vector<tagDragonCol> vColRound;
@@ -421,6 +445,8 @@ public:
 
 
 	//getter ,setter
+
+	tagInfo getInfo() { return info; }
 
 	//non-Upgrade
 	RECT getDragonRC(int index) { return vDragon[index].rc; }

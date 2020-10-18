@@ -123,7 +123,6 @@ void bullet::removeBullet(int index)
 {
 	_vBullet.erase(_vBullet.begin() + index);
 }
-
 //수정 중(player flame strike)
 //=============================================================
 //	## bomb ## (폭탄처럼 한발씩 발사하고 생성하고 자동삭제)
@@ -143,6 +142,8 @@ HRESULT bomb::init(int maxBullet)
 	coolTime = 40;
 	currentCoolTime = 0;
 
+	info.keyName = "skill_blaze";
+	info.explanation = "블레이즈[기초]";
 	return S_OK;
 }
 
@@ -234,7 +235,7 @@ void bomb::fire(float x, float y, float speed, float angle)
 	isCoolTime = true;
 
 	//sound
-	
+
 }
 
 void bomb::bombActive()
@@ -252,7 +253,7 @@ void bomb::bombActive()
 
 		//bTime 초기화
 		bTime = 0;
-		
+
 		SOUNDMANAGER->play("blazeFire", false);
 	}
 }
@@ -278,7 +279,7 @@ void bomb::move() // blaze tile충돌은 gameScene에서만 되도록 처리하기
 void bomb::removeBomb(int index)
 {
 	PARTICLE->explosionGenerate("explosionParticle", _vBullet[index].x + 20, _vBullet[index].y + 20, 5, 30, 2.f, 3, true);
-	SOUNDMANAGER->play("blazeExp", false,-0.15f);
+	SOUNDMANAGER->play("blazeExp", false, -0.15f);
 
 	_vBullet.erase(_vBullet.begin() + index);
 }
@@ -303,6 +304,9 @@ HRESULT meteor::init()
 	ranCount = 5;
 	save = { 0,0 };
 	meteorCount = 0;
+
+	info.keyName = "skill_meteor";
+	info.explanation = "메테오[시그니쳐]";
 
 	return S_OK;
 }
@@ -530,6 +534,9 @@ HRESULT dashFire::init()
 	coolTime = 240;
 	currentCoolTime = 0;
 
+
+	info.keyName = "skill_searingDash";
+	info.explanation = "대쉬[파이어]";
 	return S_OK;
 }
 
@@ -647,7 +654,13 @@ HRESULT RagingInferno::init()
 	isFire = gauging = isActive = false;
 	isCoolTime = false;
 
+
+	info.keyName = "skill_inferno";
+	info.explanation = "인페르노[스탠다드]";
+
+
 	index = count = 0;
+
 	return S_OK;
 }
 
@@ -872,6 +885,10 @@ HRESULT dragonArc::init()
 	currentCoolTime = 0;
 	isCoolTime = false;
 	upgrade = false;
+
+
+	info.keyName = "skill_dragonArc";
+	info.explanation = "불꽃 용[시그니쳐]";
 
 	pattern = 0;
 	return S_OK;

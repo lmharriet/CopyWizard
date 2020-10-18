@@ -3,16 +3,20 @@
 
 HRESULT inventory::init()
 {
-	_vSlot.clear();
 	IMAGEMANAGER->addImage("info", "resource/UI/playerinfoBoxSmall.bmp", 400, 588, true, RGB(255, 0, 255));
 	rc = RectMakeCenter(WINSIZEX / 2 - ((WINSIZEX / 2) / 2), WINSIZEY / 2, 400, 588);
 	isOpen = false;
+	
+	//arcana
 	for (int i = 0; i < 6; i++)
 	{
-		slot = RectMakeCenter(rc.left + 45 + (i * 60), rc.top + 100, 50, 50);
-		_vSlot.push_back(slot);
+		arcanaSlot[i].isCol = false;
+		arcanaSlot[i].pos.x = rc.left + 50 + (i * 61);
+		arcanaSlot[i].pos.y = rc.top + 115;
+		arcanaSlot[i].rc = RectMakeCenter(arcanaSlot[i].pos.x, arcanaSlot[i].pos.y, 34, 34);
 	}
 
+	//item
 	for (int i = 0; i < 14; i++)
 	{
 		col[i].isCol = false;
@@ -39,6 +43,7 @@ void inventory::update()
 
 	if (isOpen)
 	{
+		//item info
 		for (int i = 0; i < vInven.size(); i++)
 		{
 			if (PtInRect(&col[i].rc, _ptMouse))
@@ -57,10 +62,24 @@ void inventory::render()
 	if (isOpen) //Rectangle(getMemDC(), rc);
 	{
 		IMAGEMANAGER->findImage("info")->render(getMemDC(), rc.left, rc.top);
-		for (int i = 0; i < _vSlot.size(); i++)
+		
+		
+		for (int i = 0; i < 6; i++)
 		{
-			Rectangle(getMemDC(), _vSlot[i]);
+			Rectangle(getMemDC(), arcanaSlot[i].rc);
 		}
+		vArcana = PLAYERDATA->getAracaInfo();
+
+		for (int i = 0; i < vArcana.size(); i++)
+		{
+			IMAGEMANAGER->render(vArcana[i].skillName, getMemDC(),
+				arcanaSlot[i].rc.left, arcanaSlot[i].rc.top);
+		}
+
+
+		
+
+		//item
 		image* itemFrame = IMAGEMANAGER->findImage("itemFrame");
 		vInven = PLAYERDATA->getInven();
 
@@ -69,6 +88,9 @@ void inventory::render()
 			itemFrame->frameRender(getMemDC(), col[i].rc.left, col[i].rc.top, vInven[i].frame.x, vInven[i].frame.y);
 		}
 		//Rectangle(getMemDC(), descriptBox);
+
+
+	
 
 		itemExplanation();
 	}

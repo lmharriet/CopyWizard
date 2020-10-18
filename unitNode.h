@@ -48,5 +48,6 @@ struct tagWizardArcana
 {
 	ARCANA_TYPE type;
 	string skillName;
+	string explanation;
 	int coolTime;
 };
