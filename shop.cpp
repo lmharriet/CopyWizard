@@ -514,6 +514,9 @@ void shop::buyItem()
 
             //emotion play
             EFFECT->setEmotionEffect("buyEmote_Nox", { NoxShop[1].pt.x + 20 , NoxShop[1].pt.y - 200 });
+            
+            //sound
+            SOUNDMANAGER->play("npcNox", false);
         }
     }
 }

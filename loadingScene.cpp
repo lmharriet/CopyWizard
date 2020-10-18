@@ -68,6 +68,8 @@ void loadingScene::loadingImage()
 
 void loadingScene::loadingSound()
 {
+
+	//UI
 	SOUNDMANAGER->addSound("invenOpen", "Sound/UI/inventoryON.mp3");
 	SOUNDMANAGER->addSound("invenClose", "Sound/UI/inventoryOFF.mp3");
 	SOUNDMANAGER->addSound("npcBuyFirst", "Sound/UI/npcBuy.mp3");
@@ -75,4 +77,35 @@ void loadingScene::loadingSound()
 	SOUNDMANAGER->addSound("invenClose", "Sound/UI/inventoryOFF.mp3");
 	SOUNDMANAGER->addSound("shieldON", "Sound/UI/shieldON.mp3");
 	SOUNDMANAGER->addSound("shieldOFF", "Sound/UI/shieldOFF.mp3");
+	SOUNDMANAGER->addSound("npcNox", "Sound/UI/npc_nox.mp3");
+
+	//¸ó½ºÅÍ
+	SOUNDMANAGER->addSound("golemAtk", "Sound/golem_atk.mp3");
+	SOUNDMANAGER->addSound("golemWalkL", "Sound/golem_walkL.mp3");
+	SOUNDMANAGER->addSound("golemWalkR", "Sound/golem_walkR.mp3");
+	SOUNDMANAGER->addSound("golemDie", "Sound/golem_die.mp3");
+	SOUNDMANAGER->addSound("golemHit", "Sound/golem_hit.mp3");
+	
+	SOUNDMANAGER->addSound("knightAtk0", "Sound/knight_atk0.mp3");
+	SOUNDMANAGER->addSound("knightAtk1", "Sound/knight_atk1.mp3");
+	SOUNDMANAGER->addSound("knightAtk2", "Sound/knight_atk2.mp3");
+	SOUNDMANAGER->addSound("knightAtk3", "Sound/knight_atk3.mp3");
+	SOUNDMANAGER->addSound("knightWalkL", "Sound/knight_walkL.mp3");
+	SOUNDMANAGER->addSound("knightWalkR", "Sound/knignt_walkR.mp3");
+	SOUNDMANAGER->addSound("knightDie", "Sound/knight_die.mp3");
+	SOUNDMANAGER->addSound("knightHit0", "Sound/knight_hit0.mp3");
+	SOUNDMANAGER->addSound("knightHit1", "Sound/knight_hit1.mp3");
+
+	SOUNDMANAGER->addSound("summonerCasting", "Sound/summoner_casting.mp3");
+	SOUNDMANAGER->addSound("summonerFire", "Sound/summoner_fire.mp3");
+	SOUNDMANAGER->addSound("summonerAtk", "Sound/summoner_atk.mp3");
+	
+	SOUNDMANAGER->addSound("ghoulHit0", "Sound/ghoulHit0.mp3");
+	SOUNDMANAGER->addSound("ghoulHit1", "Sound/ghoulHit1.mp3");
+	SOUNDMANAGER->addSound("ghoulDie", "Sound/ghoulDie.mp3");
+	SOUNDMANAGER->addSound("ghoulATK", "Sound/ghoulATK.mp3");
+	SOUNDMANAGER->addSound("ghoulWalk", "Sound/ghoulWalk.mp3");
+
+
+
 }
