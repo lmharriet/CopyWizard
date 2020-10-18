@@ -184,16 +184,17 @@ void ghoul::stateIDLE()
 
 void ghoul::stateATK()
 {
-    char str[50];
-    sprintf(str, "knightAtk%d", RANDOM->range(4));
+    char str[50] = "ghoulATK";
+    float soundVolum = 0.0f;
+    //sprintf(str, "knightAtk%d", RANDOM->range(4));
 
 
     if (atkDirection[MONSTER_UP] && playerRC.left > rc.left && playerRC.right < rc.right + 40)
     {
-        if (delay == 0)
+        if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x ==2))
         {
             EFFECT->setEffect("knightSlashUp", { pos.x + 60 ,pos.y }, true);
-            SOUNDMANAGER->play(str, false, -0.25f); // 사운드수정예정
+            SOUNDMANAGER->play(str, false, soundVolum); // 사운드수정예정
             bulletDirection[MONSTER_DOWN] = false;
             bulletDirection[MONSTER_UP] = true;
             bulletDirection[MONSTER_LEFT] = false;
@@ -205,10 +206,10 @@ void ghoul::stateATK()
 
     if (atkDirection[MONSTER_DOWN] && playerRC.left > rc.left && playerRC.right < rc.right + 80)
     {
-        if (delay == 0)
+        if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x == 2))
         {
             EFFECT->setEffect("knightSlashDown", { pos.x + 70,pos.y + 130 }, true);
-            SOUNDMANAGER->play(str, false, -0.25f); //사운드 수정예정
+            SOUNDMANAGER->play(str, false, soundVolum); //사운드 수정예정
             bulletDirection[MONSTER_DOWN] = true;
             bulletDirection[MONSTER_UP] = false;
             bulletDirection[MONSTER_LEFT] = false;
@@ -228,10 +229,10 @@ void ghoul::stateATK()
             frameIndexL[STATEIMAGE::ATK].x--;
             if (frameIndexL[STATEIMAGE::ATK].x < 3)
             {
-                if (delay == 0)
+                if (delay == 0 )
                 {
                     EFFECT->setEffect("knightSlashL", { pos.x  ,pos.y + 80 }, true);
-                    SOUNDMANAGER->play(str, false, -0.25f); //사운드수정예정
+                    SOUNDMANAGER->play(str, false, soundVolum); //사운드수정예정
                     bulletDirection[MONSTER_DOWN] = false;
                     bulletDirection[MONSTER_UP] = false;
                     bulletDirection[MONSTER_LEFT] = true;
@@ -262,10 +263,10 @@ void ghoul::stateATK()
             frameIndexR[STATEIMAGE::ATK].x++;
             if (frameIndexR[STATEIMAGE::ATK].x > 2)
             {
-                if (delay == 0)
+                if (delay == 0 /*&& (frameIndexL[STATEIMAGE::ATK].x == 4 || frameIndexR[STATEIMAGE::ATK].x == 1)*/)
                 {
                     EFFECT->setEffect("knightSlashR", { pos.x + 110,pos.y + 80 }, true);
-                    SOUNDMANAGER->play(str, false, -0.25f); //사운드 수정 예정
+                    SOUNDMANAGER->play(str, false, soundVolum); //사운드 수정 예정
                     bulletDirection[MONSTER_DOWN] = false;
                     bulletDirection[MONSTER_UP] = false;
                     bulletDirection[MONSTER_LEFT] = false;

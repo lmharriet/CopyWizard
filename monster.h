@@ -35,6 +35,8 @@ private:
 
 	//int _count;							//시작노드, 종료노드를 한번씩만 선택하기 위한 변수
 	bool isFind;						//길 찾았냐?
+	bool isStart;
+	bool isEnd;
 	int monsterPosX;
 	int monsterPosY;
 

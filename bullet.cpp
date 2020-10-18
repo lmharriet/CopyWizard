@@ -30,13 +30,13 @@ void bullet::render()
 {
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
+		CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
 		if (_vBullet[i].bulletImage)
 			CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage,
 				_vBullet[i].x - _vBullet[i].bulletImage->getFrameWidth() / 2,
 				_vBullet[i].y - _vBullet[i].bulletImage->getFrameHeight() / 2,
 				_vBullet[i].FrameX, _vBullet[i].FrameY);
 
-		//CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
 
 	}
 }
@@ -109,9 +109,9 @@ void bullet::move()
 		}}
 		break;
 		case MONSTERKIND::GHOUL:
-			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 110, 150);
+			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 90, 130);
 			_vBullet[i].count++;
-			if (_vBullet[i].count >= 5)
+			if (_vBullet[i].count >= 40)
 				_vBullet.erase(_vBullet.begin() + i);
 			break;
 		}

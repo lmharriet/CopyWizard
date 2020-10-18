@@ -29,6 +29,8 @@ HRESULT astarManager::init(tagTile* _tile)
 
 	//길 찾았냐?
 	isFind = false;
+	isEnd = isStart = false;
+	
 
 	//벡터 초기화 (리스타트용)
 	openList.clear();
@@ -70,6 +72,7 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 	startNode = NULL;
 	endNode = NULL;
 	curNode = NULL;
+	isEnd = isStart = false;
 
 
 	//스타트랑 앤드 노드 정하는 용도.
@@ -90,6 +93,11 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 				playerMove.x = x;
 				playerMove.y = y;
 
+				if (isStart)
+					break;
+				else
+					isEnd = true;
+
 			}
 			if (colCheck(totalNode[x][y]->rc, monsterMove.rc)) // monster위치 설정
 			{
@@ -100,8 +108,16 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 				startNode = totalNode[x][y];
 				monsterMove.x = x;
 				monsterMove.y = y;
+
+				if (isEnd)
+					break;
+				else
+					isStart = true;
+
 			}
 		}
+			if (isEnd && isStart)
+				break;
 	}
 
 	this->pathFinding(); // 길찾기 시작.
@@ -478,7 +494,7 @@ void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, b
 		SOUNDMANAGER->play("golemHit", false, -0.28f);
 		break;
 	case MONSTERKIND::GHOUL:
-		SOUNDMANAGER->play(ghoul, false, -0.28f);
+		SOUNDMANAGER->play(ghoul, false );
 
 	}
 }
@@ -573,7 +589,7 @@ void monster::die()
 			SOUNDMANAGER->play("knightDie", false, -0.3f);
 			break;
 		case MONSTERKIND::GHOUL:
-			SOUNDMANAGER->play("ghoulDie", false, -0.3f); 
+			SOUNDMANAGER->play("ghoulDie", false); 
 
 
 		}
