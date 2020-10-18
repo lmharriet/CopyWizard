@@ -240,6 +240,9 @@
     <ClCompile Include="wall.cpp">
       <Filter>MainGame\인게임</Filter>
     </ClCompile>
+    <ClCompile Include="portalManager.cpp">
+      <Filter>GameFramework\매니져\포탈</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -385,6 +388,9 @@
     </ClInclude>
     <ClInclude Include="unitNode.h">
       <Filter>MainGame\인게임\player</Filter>
+    </ClInclude>
+    <ClInclude Include="portalManager.h">
+      <Filter>GameFramework\매니져\포탈</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

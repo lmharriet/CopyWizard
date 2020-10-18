@@ -175,6 +175,7 @@
     <ClInclude Include="mainGame.h" />
     <ClInclude Include="mapToolScene.h" />
     <ClInclude Include="knight.h" />
+    <ClInclude Include="portalManager.h" />
     <ClInclude Include="progressBar.h" />
     <ClInclude Include="shop.h" />
     <ClInclude Include="summoner.h" />
@@ -223,6 +224,7 @@
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="mapToolScene.cpp" />
     <ClCompile Include="knight.cpp" />
+    <ClCompile Include="portalManager.cpp" />
     <ClCompile Include="progressBar.cpp" />
     <ClCompile Include="shop.cpp" />
     <ClCompile Include="summoner.cpp" />
