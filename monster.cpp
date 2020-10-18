@@ -461,8 +461,10 @@ void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, b
 
 	isHit = true;
 
-	char str[50];
-	sprintf(str, "knightHit%d", RANDOM->range(2));
+	char knight[50];
+	char ghoul[50];
+	sprintf(knight, "knightHit%d", RANDOM->range(2));
+	sprintf(ghoul, "ghoulHit%d", RANDOM->range(2));
 	//hit sound
 	switch (kind)
 	{
@@ -470,13 +472,13 @@ void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, b
 		SOUNDMANAGER->play("golemHit", false, -0.28f);
 		break;
 	case MONSTERKIND::KNIGHT:
-		SOUNDMANAGER->play(str, false, -0.38f);
+		SOUNDMANAGER->play(knight, false, -0.28f);
 		break;
 	case MONSTERKIND::SUMMONER:
-		SOUNDMANAGER->play("golemHit", false, -0.3f);
+		SOUNDMANAGER->play("golemHit", false, -0.28f);
 		break;
 	case MONSTERKIND::GHOUL:
-		SOUNDMANAGER->play(str, false, -0.38f);
+		SOUNDMANAGER->play(ghoul, false, -0.28f);
 
 	}
 }
@@ -568,10 +570,10 @@ void monster::die()
 
 			break;
 		case MONSTERKIND::SUMMONER:
-			SOUNDMANAGER->play("knightDie", false, -0.3f); //hit sound change
+			SOUNDMANAGER->play("knightDie", false, -0.3f);
 			break;
 		case MONSTERKIND::GHOUL:
-			SOUNDMANAGER->play("knightDie", false, -0.3f); //hit sound change
+			SOUNDMANAGER->play("ghoulDie", false, -0.3f); 
 
 
 		}

@@ -120,7 +120,7 @@ void ghoul::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
             count = 0;
             frameIndexL[STATEIMAGE::WALK].x--;
             if (frameIndexL[STATEIMAGE::WALK].x == 3)
-                SOUNDMANAGER->play("knightWalkL", false, -0.25f); // 변경해야함
+                SOUNDMANAGER->play("ghoulWalk", false, -0.25f); // 변경해야함
 
             if (frameIndexL[STATEIMAGE::WALK].x < indexX_R)
                 frameIndexL[STATEIMAGE::WALK].x = indexX_L;
@@ -137,7 +137,7 @@ void ghoul::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
             count = 0;
             frameIndexR[STATEIMAGE::WALK].x++;
             if (frameIndexR[STATEIMAGE::WALK].x == 1)
-                SOUNDMANAGER->play("knightWalkR", false, -0.25f); //변경해야함
+                SOUNDMANAGER->play("ghoulWalk", false, -0.25f); //변경해야함
 
             if (frameIndexR[STATEIMAGE::WALK].x > indexX_L)
                 frameIndexR[STATEIMAGE::WALK].x = indexX_R;
