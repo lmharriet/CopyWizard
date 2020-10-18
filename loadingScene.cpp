@@ -68,4 +68,11 @@ void loadingScene::loadingImage()
 
 void loadingScene::loadingSound()
 {
+	SOUNDMANAGER->addSound("invenOpen", "Sound/UI/inventoryON.mp3");
+	SOUNDMANAGER->addSound("invenClose", "Sound/UI/inventoryOFF.mp3");
+	SOUNDMANAGER->addSound("npcBuyFirst", "Sound/UI/npcBuy.mp3");
+	SOUNDMANAGER->addSound("npcBuy", "Sound/UI/npcBuy02.mp3");
+	SOUNDMANAGER->addSound("invenClose", "Sound/UI/inventoryOFF.mp3");
+	SOUNDMANAGER->addSound("shieldON", "Sound/UI/shieldON.mp3");
+	SOUNDMANAGER->addSound("shieldOFF", "Sound/UI/shieldOFF.mp3");
 }

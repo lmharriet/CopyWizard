@@ -33,8 +33,9 @@ void inventory::update()
 	if (!isOpen && INPUT->GetKeyDown(VK_TAB))
 	{
 		isOpen = true;
+		SOUNDMANAGER->play("invenOpen", false);
 	}
-	if (isOpen && INPUT->GetKeyDown(VK_TAB)) isOpen = false;
+	if (isOpen && INPUT->GetKeyDown(VK_TAB)) { isOpen = false; SOUNDMANAGER->play("invenClose", false);	}
 
 	if (isOpen)
 	{
