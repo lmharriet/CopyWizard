@@ -29,7 +29,7 @@ void golem::update()
     {
         
         astar->update(camRC, rc, playerRC, &angle);  // 에이스타에서 앵글 받아옴
-        if (astar->getFirstTile() && !isATK && !isDie && !isHit) // 걸을 때
+        if (astar->getFirstTile() && !isATK && !isDie ) // 걸을 때
         {
             state = STATEIMAGE::WALK;
             pos.x += cos(angle) * speed;
@@ -59,7 +59,7 @@ void golem::update()
                 atkDirection[MONSTER_DOWN] = true;
             }
         }
-        else if(!isDie &&!isATK&&!isHit)
+        else if(!isDie &&!isATK)
         {
             state = STATEIMAGE::ATK;
             isATK = true;
@@ -69,7 +69,7 @@ void golem::update()
     }
     else//길찾기 off
     { 
-        if(!isHit)
+        //if(!isHit)
         state = STATEIMAGE::IDLE;
     }
 

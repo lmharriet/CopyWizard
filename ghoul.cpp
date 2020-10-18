@@ -26,28 +26,31 @@ void ghoul::update()
     {
         RECT astarRC = RectMake(pos.x+10 , pos.y-30 , img->getFrameWidth(), img->getFrameHeight());
         astar->update(camRC, astarRC, playerRC, &angle);
-        if (rc.left + img->getFrameWidth() / 2 < playerRC.left)
+        if (!isATK)
         {
-            atkDirection[MONSTER_LEFT] = false;
-            atkDirection[MONSTER_RIGHT] = true;
-        }
+            if (rc.left + img->getFrameWidth() / 2 < playerRC.left)
+            {
+                atkDirection[MONSTER_LEFT] = false;
+                atkDirection[MONSTER_RIGHT] = true;
+            }
 
-        else
-        {
-            atkDirection[MONSTER_LEFT] = true;
-            atkDirection[MONSTER_RIGHT] = false;
-        }
-        if (rc.top + img->getFrameHeight() / 2 > playerRC.top)
-        {
+            else
+            {
+                atkDirection[MONSTER_LEFT] = true;
+                atkDirection[MONSTER_RIGHT] = false;
+            }
+            if (rc.top + img->getFrameHeight() / 2 > playerRC.top)
+            {
 
-            atkDirection[MONSTER_UP] = true;
-            atkDirection[MONSTER_DOWN] = false;
-        }
-        else
-        {
+                atkDirection[MONSTER_UP] = true;
+                atkDirection[MONSTER_DOWN] = false;
+            }
+            else
+            {
 
-            atkDirection[MONSTER_UP] = false;
-            atkDirection[MONSTER_DOWN] = true;
+                atkDirection[MONSTER_UP] = false;
+                atkDirection[MONSTER_DOWN] = true;
+            }
         }
         if (astar->getFirstTile() && !isATK && !isDie && !isHit) // 걸을 때
         {
@@ -120,7 +123,7 @@ void ghoul::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
             count = 0;
             frameIndexL[STATEIMAGE::WALK].x--;
             if (frameIndexL[STATEIMAGE::WALK].x == 3)
-                SOUNDMANAGER->play("ghoulWalk", false, -0.25f); // 변경해야함
+                SOUNDMANAGER->play("ghoulWalk", false); // 변경해야함
 
             if (frameIndexL[STATEIMAGE::WALK].x < indexX_R)
                 frameIndexL[STATEIMAGE::WALK].x = indexX_L;
@@ -137,7 +140,7 @@ void ghoul::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
             count = 0;
             frameIndexR[STATEIMAGE::WALK].x++;
             if (frameIndexR[STATEIMAGE::WALK].x == 1)
-                SOUNDMANAGER->play("ghoulWalk", false, -0.25f); //변경해야함
+                SOUNDMANAGER->play("ghoulWalk", false); //변경해야함
 
             if (frameIndexR[STATEIMAGE::WALK].x > indexX_L)
                 frameIndexR[STATEIMAGE::WALK].x = indexX_R;
@@ -193,7 +196,7 @@ void ghoul::stateATK()
     {
         if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x ==2))
         {
-            EFFECT->setEffect("knightSlashUp", { pos.x + 60 ,pos.y }, true);
+            EFFECT->setEffect("knightSlashUp", { pos.x + 60 ,pos.y+20 }, true);
             SOUNDMANAGER->play(str, false, soundVolum); // 사운드수정예정
             bulletDirection[MONSTER_DOWN] = false;
             bulletDirection[MONSTER_UP] = true;
@@ -204,11 +207,11 @@ void ghoul::stateATK()
         }
     }
 
-    if (atkDirection[MONSTER_DOWN] && playerRC.left > rc.left && playerRC.right < rc.right + 80)
+    else if (atkDirection[MONSTER_DOWN] && playerRC.left > rc.left && playerRC.right < rc.right + 80)
     {
         if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x == 2))
         {
-            EFFECT->setEffect("knightSlashDown", { pos.x + 70,pos.y + 130 }, true);
+            EFFECT->setEffect("knightSlashDown", { pos.x + 70,pos.y + 150 }, true);
             SOUNDMANAGER->play(str, false, soundVolum); //사운드 수정예정
             bulletDirection[MONSTER_DOWN] = true;
             bulletDirection[MONSTER_UP] = false;
@@ -217,6 +220,28 @@ void ghoul::stateATK()
             isFxAppear = true;
             delay++;
         }
+    }
+    else if (delay == 0 && frameIndexL[STATEIMAGE::ATK].x == 3)
+    {
+        EFFECT->setEffect("knightSlashL", { pos.x  ,pos.y + 80 }, true);
+        SOUNDMANAGER->play(str, false, soundVolum); //사운드수정예정
+        bulletDirection[MONSTER_DOWN] = false;
+        bulletDirection[MONSTER_UP] = false;
+        bulletDirection[MONSTER_LEFT] = true;
+        bulletDirection[MONSTER_RIGHT] = false;
+        isFxAppear = true;
+        delay++;
+    }
+    else if (delay == 0 && frameIndexR[STATEIMAGE::ATK].x == 2)
+    {
+        EFFECT->setEffect("knightSlashR", { pos.x + 110,pos.y + 80 }, true);
+        SOUNDMANAGER->play(str, false, soundVolum); //사운드 수정 예정
+        bulletDirection[MONSTER_DOWN] = false;
+        bulletDirection[MONSTER_UP] = false;
+        bulletDirection[MONSTER_LEFT] = false;
+        bulletDirection[MONSTER_RIGHT] = true;
+        isFxAppear = true;
+        delay++;
     }
 
     if (atkDirection[MONSTER_LEFT])
@@ -227,18 +252,9 @@ void ghoul::stateATK()
         {
             count = 0;
             frameIndexL[STATEIMAGE::ATK].x--;
+            
             if (frameIndexL[STATEIMAGE::ATK].x < 3)
             {
-                if (delay == 0 )
-                {
-                    EFFECT->setEffect("knightSlashL", { pos.x  ,pos.y + 80 }, true);
-                    SOUNDMANAGER->play(str, false, soundVolum); //사운드수정예정
-                    bulletDirection[MONSTER_DOWN] = false;
-                    bulletDirection[MONSTER_UP] = false;
-                    bulletDirection[MONSTER_LEFT] = true;
-                    bulletDirection[MONSTER_RIGHT] = false;
-                    isFxAppear = true;
-                }
                 frameIndexL[STATEIMAGE::ATK].x = 3;
                 delay++;
                 if (delay > 5)
@@ -261,19 +277,10 @@ void ghoul::stateATK()
         {
             count = 0;
             frameIndexR[STATEIMAGE::ATK].x++;
+            
+
             if (frameIndexR[STATEIMAGE::ATK].x > 2)
             {
-                if (delay == 0 /*&& (frameIndexL[STATEIMAGE::ATK].x == 4 || frameIndexR[STATEIMAGE::ATK].x == 1)*/)
-                {
-                    EFFECT->setEffect("knightSlashR", { pos.x + 110,pos.y + 80 }, true);
-                    SOUNDMANAGER->play(str, false, soundVolum); //사운드 수정 예정
-                    bulletDirection[MONSTER_DOWN] = false;
-                    bulletDirection[MONSTER_UP] = false;
-                    bulletDirection[MONSTER_LEFT] = false;
-                    bulletDirection[MONSTER_RIGHT] = true;
-                    isFxAppear = true;
-                }
-
                 frameIndexR[STATEIMAGE::ATK].x = 2;
                 delay++;
                 if (delay > 5)
@@ -300,7 +307,7 @@ void ghoul::stateDIE()
         if (frameIndexL[STATEIMAGE::DIE].y != 4)
             frameIndexL[STATEIMAGE::DIE].y = 5;
         count++;
-        if (count % 7 == 0)
+        if (count % 5 == 0)
         {
             count = 0;
             frameIndexL[STATEIMAGE::DIE].x--;
@@ -311,7 +318,7 @@ void ghoul::stateDIE()
 
                 frameIndexL[STATEIMAGE::DIE].x = 3;
                 delay++;
-                if (delay > 2)
+                if (delay > 1)
                 {
                     isDelete = true;
                 }
@@ -331,7 +338,7 @@ void ghoul::stateDIE()
         if (frameIndexR[STATEIMAGE::DIE].y != 4)
             frameIndexR[STATEIMAGE::DIE].y = 3;
         count++;
-        if (count % 7 == 0)
+        if (count % 5 == 0)
         {
             count = 0;
 
@@ -342,7 +349,7 @@ void ghoul::stateDIE()
 
                 frameIndexR[STATEIMAGE::DIE].x = 2;
                 delay++;
-                if (delay > 2)
+                if (delay > 1)
                 {
                     isDelete = true;
                 }

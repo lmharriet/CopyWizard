@@ -111,7 +111,7 @@ void bullet::move()
 		case MONSTERKIND::GHOUL:
 			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 90, 130);
 			_vBullet[i].count++;
-			if (_vBullet[i].count >= 40)
+			if (_vBullet[i].count >= 5)
 				_vBullet.erase(_vBullet.begin() + i);
 			break;
 		}
