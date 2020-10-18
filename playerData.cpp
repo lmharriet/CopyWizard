@@ -55,6 +55,8 @@ void playerData::update()
 	if (hp > maxHp)hp = maxHp;
 	else if (hp < 0)hp = 0;
 
+	if (coin > 999)coin = 999;
+
 	UI->setHp(hp);
 	UI->setCoin(coin);
 	UI->setSkillGauge(skillGauge);
