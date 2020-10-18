@@ -163,7 +163,7 @@ void player::update()
 	standardSetUp();
 	signatureSetUp();
 	/////////////////
-
+	
 
 	damagedCool();
 
@@ -297,7 +297,6 @@ void player::render(int _index)
 			if (/*!isRender && */(searingRush->getY(i) > posY))
 			{
 				//isRender = true;
-				animation();
 				searingRush->singleRender(i);
 			}
 			else searingRush->singleRender(i);
@@ -759,6 +758,7 @@ void player::signatureSetUp()
 
 					if (signatureStateCool == 0) signature = false;
 				}
+
 			}
 			else if (arcana[3].skillName == "skill_dragonArc")
 			{
@@ -1416,6 +1416,10 @@ void player::frameAnimation(int frameX, int frameY, int _index)
 	{
 		CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, frameX, frameY);
 	}
+
+	//cout << "anim" << '\n';
+	EFFECT->AfterimageEft("playerFrame", { (long)posX,(long)posY }, { frameX ,frameY }, 5);
+
 }
 
 void player::tileCol()
@@ -1645,28 +1649,40 @@ void player::grabbedCool()
 
 void player::chargeSkillGauge(int atkPower, int skillNum)
 {
-	switch (skillNum)
+	//basic 공격일 때 gauge charge가 빠름
+	if (!upgradeReady && skillGauge<=100)
 	{
-	case 0:
-		skillGauge += (float)(atkPower / atkPower) * 1.5f;
-		break;
-	case 1:
-		if (count % 15 == 0)
-			skillGauge += (float)(atkPower / atkPower) * 1.5f;
-		break;
-	case 2:
-		if (count % 15 == 0)
-			skillGauge += (float)(atkPower / atkPower) * 1.5f;
-		break;
-	case 3:
-		if (count % 20 == 0)
-			skillGauge += (float)(atkPower / atkPower) * 1.5f;
-		break;
-	case 4:
-		if (count % 30 == 0)
-			skillGauge += (float)(atkPower / atkPower) * 1.5f;
-		break;
+		switch (skillNum)
+		{
+		case 0:
+			skillGauge += (float)(atkPower / atkPower) * 10.f;
+			break;
+		case 1:
+			if (count % 15 == 0)
+				skillGauge += (float)(atkPower / atkPower) * 0.7f;
+			break;
+		case 2:
+			if (count % 15 == 0)
+				skillGauge += (float)(atkPower / atkPower) * 0.7f;
+			break;
+		case 3:
+			if (count % 20 == 0)
+				skillGauge += (float)(atkPower / atkPower) * 0.7f;
+			break;
+		case 4:
+			if (count % 30 == 0)
+				skillGauge += (float)(atkPower / atkPower) * 0.7f;
+			break;
+		}
+
 	}
+
+}
+
+void player::skillGaugeSetUp()
+{
+	if (skillGauge > 0 && count % 10 == 0)
+		skillGauge -= 0.5f;
 
 
 	if (skillGauge >= 100)
@@ -1674,28 +1690,13 @@ void player::chargeSkillGauge(int atkPower, int skillNum)
 		skillGauge = 100;
 		upgradeReady = true;
 	}
-	else upgradeReady = false;
 
-}
-
-void player::skillGaugeSetUp()
-{
-
-	//gauge
-	if (skillGauge < 100 && skillGauge >= 0 && !upgradeReady && count % 10 == 0)
-		skillGauge -= 0.3f;
-
-	if (upgradeReady)
-	{
-		gaugeMaxCool--;
-	}
-	else gaugeMaxCool = 120;
-
-	if (gaugeMaxCool <= 0)
-	{
+	if (upgradeReady && skillGauge <= 0)
 		upgradeReady = false;
-		skillGauge -= 0.7f;
-	}
+
+	//cout << "upgreade? : " << upgradeReady << '\n';
+	//cout << "gauge : " << skillGauge << '\n';
+	//
 	PLAYERDATA->setSkillGauge(skillGauge);
 	PLAYERDATA->setUpgradeReady(upgradeReady);
 }
