@@ -613,9 +613,4 @@ void monster::stateHIT(POINT lPos, POINT rPos)
 		currentFrame = { frameIndexR[STATEIMAGE::HIT].x ,frameIndexR[STATEIMAGE::HIT].y };
 		//img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[STATEIMAGE::HIT].x, frameIndexR[STATEIMAGE::HIT].y);
 	}
-	if (kind == MONSTERKIND::GHOUL)
-	{
-		speed = 3.f;
-		atk = 5;
-	}
 }

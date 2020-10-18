@@ -69,7 +69,20 @@ void loadingScene::loadingImage()
 void loadingScene::loadingSound()
 {
 
+	//player
+	SOUNDMANAGER->addSound("playerHit", "Sound/player/hit.mp3");
+	SOUNDMANAGER->addSound("playerNomalDash", "Sound/player/nomalDash.mp3");
+	SOUNDMANAGER->addSound("playerfireDash", "Sound/player/fireDash.mp3");
+	SOUNDMANAGER->addSound("playerFoot", "Sound/player/footstep.mp3");
+	SOUNDMANAGER->addSound("blazeFire", "Sound/player/blaze_fire.mp3");
+	SOUNDMANAGER->addSound("blazeExp", "Sound/player/blaze_exp.mp3");
+	SOUNDMANAGER->addSound("RagingInfernoExp", "Sound/player/RagingInferno_exp.mp3");
+	SOUNDMANAGER->addSound("RagingInfernoFire", "Sound/player/RagingInferno_fire.mp3");
+
 	//UI
+	SOUNDMANAGER->addSound("healBall", "Sound/healBall.mp3");
+	SOUNDMANAGER->addSound("portalWarp", "Sound/portalWarp.mp3");
+	SOUNDMANAGER->addSound("coinGet", "Sound/coinGet.mp3");
 	SOUNDMANAGER->addSound("invenOpen", "Sound/UI/inventoryON.mp3");
 	SOUNDMANAGER->addSound("invenClose", "Sound/UI/inventoryOFF.mp3");
 	SOUNDMANAGER->addSound("npcBuyFirst", "Sound/UI/npcBuy.mp3");

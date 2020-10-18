@@ -16,7 +16,7 @@ void ghoul::addInit()
     speedUpCount = 0;
     isSpeedUp = false;
     isIdle = false;
-
+    isNoHit = true;
 }
 
 void ghoul::update()
@@ -107,6 +107,9 @@ void ghoul::stateImageRender()
         break;
     case STATEIMAGE::HIT:
         stateHIT({ 5,6 }, { 0,6 });
+        isNoHit = false;
+        speed = 3.f;
+        atk = 5;
         break;
 
     }
@@ -114,6 +117,7 @@ void ghoul::stateImageRender()
 
 void ghoul::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
 {
+    
     if (atkDirection[MONSTER_LEFT])
     {
         frameIndexL[STATEIMAGE::WALK].y = indexY_L;
@@ -123,12 +127,17 @@ void ghoul::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
             count = 0;
             frameIndexL[STATEIMAGE::WALK].x--;
             if (frameIndexL[STATEIMAGE::WALK].x == 3)
-                SOUNDMANAGER->play("ghoulWalk", false); // 변경해야함
+                SOUNDMANAGER->play("ghoulWalk", false); 
 
             if (frameIndexL[STATEIMAGE::WALK].x < indexX_R)
                 frameIndexL[STATEIMAGE::WALK].x = indexX_L;
         }
         currentFrame = { frameIndexL[STATEIMAGE::WALK].x, frameIndexL[STATEIMAGE::WALK].y };
+        if (isNoHit)
+        {
+            EFFECT->AfterimageEft("ghoul",{ this->getCenterX(), this->getCenterY()}, 
+                { frameIndexL[STATEIMAGE::WALK].x, frameIndexL[STATEIMAGE::WALK].y }, 5);
+        }
     }
     else
     {
@@ -140,13 +149,18 @@ void ghoul::stateImage(int indexX_L, int indexY_L, int indexX_R, int indexY_R)
             count = 0;
             frameIndexR[STATEIMAGE::WALK].x++;
             if (frameIndexR[STATEIMAGE::WALK].x == 1)
-                SOUNDMANAGER->play("ghoulWalk", false); //변경해야함
+                SOUNDMANAGER->play("ghoulWalk", false); 
 
             if (frameIndexR[STATEIMAGE::WALK].x > indexX_L)
                 frameIndexR[STATEIMAGE::WALK].x = indexX_R;
 
         }
         currentFrame = { frameIndexR[STATEIMAGE::WALK].x, frameIndexR[STATEIMAGE::WALK].y };
+        if (isNoHit)
+        {
+            EFFECT->AfterimageEft("ghoul", { this->getCenterX(), this->getCenterY()},  
+                {frameIndexR[STATEIMAGE::WALK].x, frameIndexR[STATEIMAGE::WALK].y }, 5);
+        }
     }
 }
 
@@ -183,6 +197,7 @@ void ghoul::stateIDLE()
     bulletDirection[MONSTER_LEFT] = false;
     bulletDirection[MONSTER_RIGHT] = false;
     isFxAppear = false;
+    
 }
 
 void ghoul::stateATK()
@@ -212,7 +227,7 @@ void ghoul::stateATK()
         if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x == 2))
         {
             EFFECT->setEffect("knightSlashDown", { pos.x + 70,pos.y + 150 }, true);
-            SOUNDMANAGER->play(str, false, soundVolum); //사운드 수정예정
+            SOUNDMANAGER->play(str, false, soundVolum); 
             bulletDirection[MONSTER_DOWN] = true;
             bulletDirection[MONSTER_UP] = false;
             bulletDirection[MONSTER_LEFT] = false;
@@ -221,10 +236,10 @@ void ghoul::stateATK()
             delay++;
         }
     }
-    else if (delay == 0 && frameIndexL[STATEIMAGE::ATK].x == 3)
+    if (delay == 0 && frameIndexL[STATEIMAGE::ATK].x == 3)
     {
         EFFECT->setEffect("knightSlashL", { pos.x  ,pos.y + 80 }, true);
-        SOUNDMANAGER->play(str, false, soundVolum); //사운드수정예정
+        SOUNDMANAGER->play(str, false, soundVolum);
         bulletDirection[MONSTER_DOWN] = false;
         bulletDirection[MONSTER_UP] = false;
         bulletDirection[MONSTER_LEFT] = true;
@@ -235,7 +250,7 @@ void ghoul::stateATK()
     else if (delay == 0 && frameIndexR[STATEIMAGE::ATK].x == 2)
     {
         EFFECT->setEffect("knightSlashR", { pos.x + 110,pos.y + 80 }, true);
-        SOUNDMANAGER->play(str, false, soundVolum); //사운드 수정 예정
+        SOUNDMANAGER->play(str, false, soundVolum); 
         bulletDirection[MONSTER_DOWN] = false;
         bulletDirection[MONSTER_UP] = false;
         bulletDirection[MONSTER_LEFT] = false;
