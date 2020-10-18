@@ -18,7 +18,7 @@ HRESULT gameNode::init()
 	EFFECT->init();
 	ITEM->init();
 	DAMAGE->init();
-	//PORTAL->init();
+	PORTAL->init();
 	//DROP->init();
 	myFont = CreateFont(25, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "font/MunroSmall.ttf");
 	oldFont = (HFONT)SelectObject(getMemDC(), myFont);

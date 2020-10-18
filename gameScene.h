@@ -49,5 +49,5 @@ public:
 	void viewText();
 	//sound
 	void soundInit();
-
+	void warp();
 };
