@@ -19,6 +19,7 @@ private:
 	float _FPSTimeElapsed;			//FPS 경과량
 	float _time;						//전체 경과시간
 
+	float test;
 public:
 	HRESULT init(void);
 	void release(void);
@@ -30,4 +31,10 @@ public:
 	//전체 경과시간 가져오기 (유니티엔진 Time.time)
 	float time(void) { return _time; }
 
+	float Lerp(float value1, float value2, float amount) { return float(value1 + ((float)(value2 - value1) * amount)); }
+
+	void addTest(float value) { test += value; }
+	void setTest(float value) { test = value; }
+
+	float getTest() { return test; }
 };

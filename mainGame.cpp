@@ -34,6 +34,7 @@ HRESULT mainGame::init()
 	//SCENEMANAGER->loadScene("보스방");
 
 	ShowCursor(false);
+	time = 0;
 	return S_OK;
 }
 
@@ -52,11 +53,13 @@ void mainGame::release()
 void mainGame::update()
 {
 	gameNode::update();
+	time++;
+	//if (INPUT->GetKeyDown(VK_SPACE))TIME->setTest(12.f);
 
 	//볼륨 컨트롤 
 	this->volumeControl();
 	//씬매니져 업데이트
-	SCENEMANAGER->update();
+	if(time % (int)TIME->getTest() == 0) SCENEMANAGER->update();
 
 	//사운드매니져 업데이트 (이게 없으면 사운드매니져 제대로 동작하지 않는다!!!)
 	SOUNDMANAGER->update();
@@ -69,6 +72,14 @@ void mainGame::update()
 		SCENEMANAGER->loadScene("인게임");
 	if(INPUT->GetKeyDown(0x34)) // 4
 		SCENEMANAGER->loadScene("보스방");
+
+
+	//if (INPUT->GetKey(VK_SPACE) && (INT)TIME->getTest() > 1)
+	//{
+	//	TIME->setTest(-TIME->Lerp(0, TIME->getTest(), TIME->deltaTime()));
+	//	cout << (INT)TIME->getTest() << '\n';
+	//	//TIME->Lerp()
+	//}
 }
 
 //=============================================================
