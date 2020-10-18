@@ -19,7 +19,7 @@ HRESULT player::init()
 	//enum ÃÊ±âÈ­
 	state = STATE::IDLE;
 	move = MOVE::DOWN;
-	
+
 	memset(tileCheck, 0, sizeof(tileCheck));
 	memset(diagonalCheck, 0, sizeof(diagonalCheck));
 
@@ -168,11 +168,19 @@ void player::update()
 	signatureSetUp();
 	/////////////////
 
-	/*if (INPUT->GetKeyDown('F'))
+	if (arcana[3].skillName == "skill_meteor" && INPUT->GetKeyDown('F'))
 	{
-		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, "skill_dragonArc", 300);
-		UI->setSkillSlot("skill_dragonArc",300);
-	}*/
+		arcana[3].skillName = dragon->getInfo().keyName;
+		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, arcana[3].skillName, 300);
+		UI->setSkillSlotIndex(3, arcana[3].skillName, 300);
+	}
+	if (arcana[3].skillName == "skill_dragonArc" && INPUT->GetKeyDown('F'))
+	{
+		arcana[3].skillName = Meteor->getInfo().keyName;
+		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, arcana[3].skillName, 300);
+		UI->setSkillSlotIndex(3, arcana[3].skillName, 300);
+	}
+
 	damagedCool();
 
 	// knockBack lerp
@@ -259,6 +267,19 @@ void player::other_update()
 	standardSetUp();
 	signatureSetUp();
 	/////////////////
+
+	if (arcana[3].skillName == "skill_meteor" && INPUT->GetKeyDown('F'))
+	{
+		arcana[3].skillName = dragon->getInfo().keyName;
+		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, arcana[3].skillName, 300);
+		UI->setSkillSlotIndex(3, arcana[3].skillName, 300);
+	}
+	if (arcana[3].skillName == "skill_dragonArc" && INPUT->GetKeyDown('F'))
+	{
+		arcana[3].skillName = Meteor->getInfo().keyName;
+		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, arcana[3].skillName, 300);
+		UI->setSkillSlotIndex(3, arcana[3].skillName, 300);
+	}
 
 	damagedCool();
 	grabbedCool();
@@ -499,7 +520,6 @@ void player::skillInit()
 		UI->setSkillSlot(arcana[i].skillName, arcana[i].coolTime);
 		PLAYERDATA->pushArcanaInfo(arcana[i]);
 	}
-
 }
 
 void player::setSkillUi(ARCANA_TYPE type, string keyName, int coolTime)
@@ -513,11 +533,13 @@ void player::setSkillUi(ARCANA_TYPE type, string keyName, int coolTime)
 			else if (type == ARCANA_TYPE::TYPE_STANDARD) i = 2;
 			else if (type == ARCANA_TYPE::TYPE_SIGNATURE) i = 3;
 
+
 			arcana[i].skillName = keyName;
 			arcana[i].coolTime = coolTime;
 
 			UI->setSkillSlot(arcana[i].skillName, arcana[i].coolTime);
-		
+
+
 		}
 	}
 }
@@ -1097,7 +1119,11 @@ void player::animation(int _index)
 					atkIndex++;
 					if (atkIndex > 9)atkIndex = 0;
 				}
-				frameAnimation(atkIndex, 10);
+				if (arcana[3].skillName == "skill_meteor")
+					frameAnimation(atkIndex, 10);
+				else if (arcana[3].skillName == "skill_dragonArc")
+					frameAnimation(atkIndex, 16);
+
 			}
 			else if (move == MOVE::RIGHT)
 			{
@@ -1106,7 +1132,10 @@ void player::animation(int _index)
 					atkIndex++;
 					if (atkIndex > 9)atkIndex = 0;
 				}
-				frameAnimation(atkIndex, 20);
+				if (arcana[3].skillName == "skill_meteor")
+					frameAnimation(atkIndex, 20);
+				else if (arcana[3].skillName == "skill_dragonArc")
+					frameAnimation(atkIndex, 15);
 			}
 			else if (move == MOVE::UP || move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
 			{
@@ -1115,7 +1144,10 @@ void player::animation(int _index)
 					atkIndex++;
 					if (atkIndex > 9)atkIndex = 0;
 				}
-				frameAnimation(atkIndex, 20);
+				if (arcana[3].skillName == "skill_meteor")
+					frameAnimation(atkIndex, 20);
+				else if (arcana[3].skillName == "skill_dragonArc")
+					frameAnimation(atkIndex, 14);
 			}
 			else if (move == MOVE::DOWN || move == MOVE::LEFT_DOWN || move == MOVE::RIGHT_DOWN)
 			{
@@ -1124,7 +1156,10 @@ void player::animation(int _index)
 					atkIndex++;
 					if (atkIndex > 9)atkIndex = 0;
 				}
-				frameAnimation(atkIndex, 10);
+				if (arcana[3].skillName == "skill_meteor")
+					frameAnimation(atkIndex, 10);
+				else if (arcana[3].skillName == "skill_dragonArc")
+					frameAnimation(atkIndex, 6);
 			}
 			break;
 		}
@@ -1391,7 +1426,10 @@ void player::animation(int _index)
 					atkIndex++;
 					if (atkIndex > 9)atkIndex = 0;
 				}
-				frameAnimation(atkIndex, 10, 1);
+				if (arcana[3].skillName == "skill_meteor")
+					frameAnimation(atkIndex, 10, 1);
+				else if (arcana[3].skillName == "skill_dragonArc")
+					frameAnimation(atkIndex, 16, 1);
 			}
 			else if (move == MOVE::RIGHT)
 			{
@@ -1400,7 +1438,10 @@ void player::animation(int _index)
 					atkIndex++;
 					if (atkIndex > 9)atkIndex = 0;
 				}
-				frameAnimation(atkIndex, 20, 1);
+				if (arcana[3].skillName == "skill_meteor")
+					frameAnimation(atkIndex, 20, 1);
+				else if (arcana[3].skillName == "skill_dragonArc")
+					frameAnimation(atkIndex, 15, 1);
 			}
 			else if (move == MOVE::UP || move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
 			{
@@ -1409,7 +1450,11 @@ void player::animation(int _index)
 					atkIndex++;
 					if (atkIndex > 9)atkIndex = 0;
 				}
-				frameAnimation(atkIndex, 20, 1);
+				if (arcana[3].skillName == "skill_meteor")
+					frameAnimation(atkIndex, 20, 1);
+				else if (arcana[3].skillName == "skill_dragonArc")
+					frameAnimation(atkIndex, 14, 1);
+
 			}
 			else if (move == MOVE::DOWN || move == MOVE::LEFT_DOWN || move == MOVE::RIGHT_DOWN)
 			{
@@ -1418,7 +1463,10 @@ void player::animation(int _index)
 					atkIndex++;
 					if (atkIndex > 9)atkIndex = 0;
 				}
-				frameAnimation(atkIndex, 10, 1);
+				if (arcana[3].skillName == "skill_meteor")
+					frameAnimation(atkIndex, 10, 1);
+				else if (arcana[3].skillName == "skill_dragonArc")
+					frameAnimation(atkIndex, 6, 1);
 			}
 			break;
 		}
@@ -1437,9 +1485,10 @@ void player::frameAnimation(int frameX, int frameY, int _index)
 		CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, frameX, frameY);
 	}
 
-	//cout << "anim" << '\n';
-	EFFECT->AfterimageEft("playerFrame", { (long)posX,(long)posY }, { frameX ,frameY }, 5);
-
+	if (upgradeReady)
+	{
+		EFFECT->AfterimageEft("playerFrame", { (long)posX,(long)posY }, { frameX ,frameY }, 5);
+	}
 }
 
 void player::tileCol()
