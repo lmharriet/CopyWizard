@@ -52,14 +52,18 @@ void mainGame::release()
 //=============================================================
 void mainGame::update()
 {
-	gameNode::update();
+	//gameNode::update();
 	time++;
 	//if (INPUT->GetKeyDown(VK_SPACE))TIME->setTest(12.f);
 
 	//볼륨 컨트롤 
 	this->volumeControl();
 	//씬매니져 업데이트
-	if(time % (int)TIME->getTest() == 0) SCENEMANAGER->update();
+	if (time % (int)TIME->getTest() == 0)
+	{
+		gameNode::update();
+		SCENEMANAGER->update();
+	}
 
 	//사운드매니져 업데이트 (이게 없으면 사운드매니져 제대로 동작하지 않는다!!!)
 	SOUNDMANAGER->update();

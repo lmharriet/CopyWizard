@@ -270,6 +270,9 @@ void effectManager::addImage()
     //emotion
     IMAGEMANAGER->addFrameImage("buyEmote_Andres", "Images/effect/npc/buyEmote1.bmp", 352, 56, 8, 1);
     IMAGEMANAGER->addFrameImage("buyEmote_Nox", "Images/effect/npc/buyEmote2.bmp", 440, 56, 10, 1);
+
+    //ult
+    IMAGEMANAGER->addFrameImage("ultLight", "Images/effect/player/ultLight.bmp", 6202, 721, 7, 1);
 }
 
 void effectManager::dashEffect(MOVE direction, POINT pos)
@@ -718,4 +721,10 @@ void effectManager::AfterimageRender(HDC hdc)
         if (vAfterEft[i].opacity == 0) vAfterEft.erase(vAfterEft.begin() + i);
         else i++;
     }
+}
+
+void effectManager::ultEftPlay(POINT pt, int delay)
+{
+    //setEffect("ultLight", pt, true, delay, false, 0, 0, 0);
+    setEffect("ultLight", pt, false, false, 0, delay);
 }

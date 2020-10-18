@@ -185,4 +185,5 @@ public:
 	void alwaysEftRender(HDC hdc);
 	void AfterimageEft(string keyName, POINT pt, POINT frame, int delay);
 	void AfterimageRender(HDC hdc);
+	void ultEftPlay(POINT pt, int delay);
 };
