@@ -440,6 +440,8 @@ void meteor::makeCircle(float x, float y)
 
 void meteor::creatMeteor(float x, float y, float angle)
 {
+	char meteo_sound[20];
+	sprintf(meteo_sound, "meteoFire%d", RANDOM->range(4));
 	if (upgrade != true)
 	{
 		tagMeteor meteor;
@@ -458,8 +460,7 @@ void meteor::creatMeteor(float x, float y, float angle)
 		isCoolTime = true;
 		UI->addCoolTime("skill_meteor");
 
-		char meteo_sound[10];
-		sprintf(meteo_sound, "meteo%d", RANDOM->range(4));
+		
 		SOUNDMANAGER->play(meteo_sound, false);
 	}
 
@@ -468,6 +469,7 @@ void meteor::creatMeteor(float x, float y, float angle)
 		save = { (long)x,(long)y };
 		meteorCount = 5;
 		ranCount = 5;
+		SOUNDMANAGER->play(meteo_sound, false);
 	}
 
 }
@@ -489,7 +491,7 @@ void meteor::move()
 		if (vMeteor[i].y > vMeteor[i].endY)
 		{
 			PARTICLE->explosionParticle2Play(vMeteor[i].x, vMeteor[i].y);
-
+			
 			//데미지 넣을 용도
 			tagMeteor damage;
 
@@ -507,6 +509,9 @@ void meteor::move()
 			index = 0;
 			vMeteor.erase(vMeteor.begin() + i);
 			vCircle.erase(vCircle.begin() + i);
+			char meteo_sound[20];
+			sprintf(meteo_sound, "meteoExp%d", RANDOM->range(4));
+			SOUNDMANAGER->play(meteo_sound, false);
 		}
 		else i++;
 	}
