@@ -78,6 +78,10 @@ void loadingScene::loadingSound()
 	SOUNDMANAGER->addSound("blazeExp", "Sound/player/blaze_exp.mp3");
 	SOUNDMANAGER->addSound("RagingInfernoExp", "Sound/player/RagingInferno_exp.mp3");
 	SOUNDMANAGER->addSound("RagingInfernoFire", "Sound/player/RagingInferno_fire.mp3");
+	SOUNDMANAGER->addSound("meteo0", "Sound/player/meteo0.mp3");
+	SOUNDMANAGER->addSound("meteo1", "Sound/player/meteo1.mp3");
+	SOUNDMANAGER->addSound("meteo2", "Sound/player/meteo2.mp3");
+	SOUNDMANAGER->addSound("meteo3", "Sound/player/meteo3.mp3");
 
 	//UI
 	SOUNDMANAGER->addSound("healBall", "Sound/healBall.mp3");

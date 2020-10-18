@@ -457,6 +457,10 @@ void meteor::creatMeteor(float x, float y, float angle)
 		makeCircle(x, y);
 		isCoolTime = true;
 		UI->addCoolTime("skill_meteor");
+
+		char meteo_sound[10];
+		sprintf(meteo_sound, "meteo%d", RANDOM->range(4));
+		SOUNDMANAGER->play(meteo_sound, false);
 	}
 
 	else
