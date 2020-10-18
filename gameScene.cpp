@@ -312,13 +312,16 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(damage, 3);
 				}
 
-				float angle = getAngle(enemyX + 40, enemyY + 40,
-					_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
+				if (enemy->getMinion()[i]->getMonsterKind() != MONSTERKIND::GOLEM)
+				{
+					float angle = getAngle(enemyX + 40, enemyY + 40,
+						_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
 
-				float x = enemyX + cosf(angle) * 4.5f;
-				float y = enemyY - sinf(angle) * 4.5f;
+					float x = enemyX + cosf(angle) * 4.5f;
+					float y = enemyY - sinf(angle) * 4.5f;
 
-				enemy->getMinion()[i]->setPt(x, y);
+					enemy->getMinion()[i]->setPt(x, y);
+				}
 				enemy->getMinion()[i]->hit(damage, 0, 0.f, 3, criCheck);
 			}
 		}
