@@ -14,6 +14,8 @@ private:
 	float volume;
 	float sfxVolume;
 	bool isMute;
+
+	int time;
 public:
 	HRESULT init();
 	void release();

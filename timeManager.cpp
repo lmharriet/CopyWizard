@@ -32,6 +32,8 @@ HRESULT timeManager::init(void)
 	_FPSTimeElapsed = 0.0f;
 	_time = 0;
 
+	//
+	test = 1;
 	return S_OK;
 }
 
@@ -41,6 +43,13 @@ void timeManager::release(void)
 
 void timeManager::update(float lockFPS)
 {
+	if ((int)test > 1)
+	{
+		TIME->addTest(-TIME->Lerp(0, TIME->getTest(), TIME->deltaTime()));
+		cout << (INT)TIME->getTest() << '\n';
+	}
+	//
+
 	if (_isHardware)
 	{
 		//현재시간 얻기
