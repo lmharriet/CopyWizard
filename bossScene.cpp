@@ -155,11 +155,7 @@ void bossScene::render()
 
 void bossScene::soundInit()
 {
-	SOUNDMANAGER->stop("ingameBGM");
-	SOUNDMANAGER->stop("mapToolBGM");
-	SOUNDMANAGER->stop("titleBGM");
-
-	SOUNDMANAGER->play("bossBGM", true);
+	
 
 	isBossBGM = true;
 	fadeIn = 0.f;
@@ -176,6 +172,11 @@ void bossScene::soundInit()
 	SOUNDMANAGER->addSound("CutSceneSFX", "Sound/CutSceneSFX.mp3");
 	SOUNDMANAGER->addSound("CutSceneVO", "Sound/CutSceneVO.mp3");
 
+	SOUNDMANAGER->stop("ingameBGM");
+	SOUNDMANAGER->stop("mapToolBGM");
+	SOUNDMANAGER->stop("titleBGM");
+
+	SOUNDMANAGER->play("bossBGM", true);
 	
 }
 

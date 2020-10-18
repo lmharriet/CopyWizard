@@ -129,6 +129,7 @@ void gameScene::update()
 
 	if (INPUT->GetKeyDown('J'))
 	{
+		SOUNDMANAGER->stop("ingameBGM");
 		SCENEMANAGER->loadScene("º¸½º¹æ");
 	}
 
