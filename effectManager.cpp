@@ -692,7 +692,7 @@ void effectManager::AfterimageEft(string keyName, POINT pt, POINT frame, int del
         eft.keyName = keyName;
         eft.frame = frame;
         eft.pos = pt;
-        eft.opacity = 100;
+        eft.opacity = 80;
 
         vAfterEft.push_back(eft);
     }
@@ -705,8 +705,8 @@ void effectManager::AfterimageRender(HDC hdc)
         //·»´õ
         image* img = IMAGEMANAGER->findImage(vAfterEft[i].keyName);
         CAMERAMANAGER->AlphaFrameRender(hdc, img,
-            vAfterEft[i].pos.x,
-            vAfterEft[i].pos.y,
+            vAfterEft[i].pos.x - img->getFrameWidth()/2,
+            vAfterEft[i].pos.y - img->getFrameHeight()/2,
             vAfterEft[i].frame.x,
             vAfterEft[i].frame.y,
             vAfterEft[i].opacity);
