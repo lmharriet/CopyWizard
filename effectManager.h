@@ -144,6 +144,8 @@ private:
 
 	vector<tagAfterimage> vAfterEft;
 
+	vector<tagEffect> vBackEft;
+
 	int time;			// 프레임렌더를 하기 위해 필요, 'time++' 을 해주기 위함
 	int aTime;
 public:
@@ -167,6 +169,10 @@ public:
 	void setPortalEffect(POINT pt);
 
 	void setEffect(string keyName, POINT pt, bool isFrameImg , int frameDelay ,bool flip, float increaseSize, float startSize, float endSize);
+
+	void setBackEffect(string keyName, POINT pt, int frameDelay);
+
+	void backEftRender(HDC hdc);
 
 	void damageEffect(POINT pt);
 	void lightEffect(POINT pt, int maxEffect);
