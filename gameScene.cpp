@@ -55,6 +55,16 @@ HRESULT gameScene::init()
 
 	UNITRENDER->init();
 
+	//tagPortal portal;
+	//portal.color = 0;
+	//portal.curPt = { 264,46 };
+	//portal.endPt = { (long)_player->getX(),(long)_player->getY() };
+	//portal.isActive = false;
+	//portal.isCol = false;
+	//portal.rc = RectMakeCenter(portal.curPt.x, portal.curPt.y, 70, 100);
+	//PORTAL->setCenterPortal(portal);
+
+
 	//sound
 	soundInit();
 	return S_OK;
@@ -76,6 +86,9 @@ void gameScene::release()
 
 void gameScene::update()
 {
+	//portal
+	warp();
+
 	_player->getBlaze()->setBossScene(false);
 
 	//»ç¿îµå
@@ -157,6 +170,7 @@ void gameScene::render()
 	_shop->render();
 
 	DROP->render(getMemDC());
+
 	EFFECT->pRender(getMemDC());
 
 	EFFECT->alwaysEftRender(getMemDC());
@@ -164,6 +178,8 @@ void gameScene::render()
 
 	EFFECT->backEftRender(getMemDC());
 	UNITRENDER->render(getMemDC());
+
+	PORTAL->render(getMemDC());
 	
 	_player->render();
 
@@ -470,4 +486,48 @@ void gameScene::soundInit()
 	SOUNDMANAGER->stop("titleBGM");
 	SOUNDMANAGER->stop("bossBGM");
 	SOUNDMANAGER->play("ingameBGM", true);
+}
+
+void gameScene::warp()
+{
+	//portal
+	PORTAL->update(_player->getRect());
+
+	if (PORTAL->getCenterCol())
+	{
+		PORTAL->setCenterCol(false);
+
+		POINT warp = PORTAL->getCenterPortalEndPt();
+
+		_player->setX(warp.x);
+		_player->setY(warp.y + 30);
+		_player->reposRect();
+
+		//EFFECT->setBackEffect("portal1", warp, 3);
+
+		cout << "warp" << '\n';
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (PORTAL->getPortalCol(i) == false)continue;
+
+		PORTAL->resetCol();
+		POINT warp = PORTAL->getPortalEndPt(i);
+
+		POINT fixPt = warp;
+		fixPt.y += 120;
+
+		_player->setX(warp.x);
+		_player->setY(fixPt.y);
+		_player->reposRect();
+
+		string name = "portal";
+		char buffer[65] = { 0 };
+		name += itoa(PORTAL->getPortalColor(i), buffer, 10);
+
+		EFFECT->setBackEffect(name, fixPt, 3);
+
+		cout << "warp" << '\n';
+	}
 }

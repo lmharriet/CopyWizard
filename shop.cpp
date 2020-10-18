@@ -157,6 +157,8 @@ void shop::generate(POINT arr[3])
 
     image* img = IMAGEMANAGER->findImage("itemFrame");
 
+    tagPortal portal[3];
+
     for (int i = 0; i < 3; i++)
     {
         npc[i].keyName = ranStr[i];
@@ -177,6 +179,25 @@ void shop::generate(POINT arr[3])
                     npc[i].pt.x - 90 + (j * 90) - img->getFrameWidth() / 2,
                     npc[i].pt.y + 130 - img->getFrameHeight() / 2 };
             }
+
+            //Æ÷Å»
+            switch (i)
+            {
+            case 0:
+                portal[i].curPt = { -1932,-1714 };
+                break;
+            case 1:
+                portal[i].curPt = { 2216,-220 };
+                break;
+            case 2:
+                portal[i].curPt = { 1377,1996 };
+                break;
+            }
+            portal[i].endPt = { WINSIZEX / 2, WINSIZEY / 2 - 100 };
+            portal[i].isActive = true;
+            portal[i].isCol = false;
+            portal[i].rc = RectMakeCenter(portal[i].curPt.x, portal[i].curPt.y, 70, 100);
+            portal[i].colorIndex = 2;
         }
 
         else if (npc[i].keyName == "Andres")
@@ -187,7 +208,50 @@ void shop::generate(POINT arr[3])
                     npc[i].pt.x - 154 + (j * 77) - img->getFrameWidth() / 2,
                     npc[i].pt.y + 85 - img->getFrameHeight() / 2 };
             }
+
+            //Æ÷Å»
+            switch (i)
+            {
+            case 0:
+                portal[i].curPt = { -1932,-1714 };
+                break;
+            case 1:
+                portal[i].curPt = { 2216,-220 };
+                break;
+            case 2:
+                portal[i].curPt = { 1377,1996 };
+                break;
+            }
+            portal[i].endPt = { WINSIZEX / 2, WINSIZEY / 2 - 100 };
+            portal[i].isActive = true;
+            portal[i].isCol = false;
+            portal[i].rc = RectMakeCenter(portal[i].curPt.x, portal[i].curPt.y, 70, 100);
+            portal[i].colorIndex = 1;
         }
+
+        else
+        {
+            //Æ÷Å»
+            switch (i)
+            {
+            case 0:
+                portal[i].curPt = { -1932,-1714 };
+                break;
+            case 1:
+                portal[i].curPt = { 2216,-220 };
+                break;
+            case 2:
+                portal[i].curPt = { 1377,1996 };
+                break;
+            }
+            portal[i].endPt = { WINSIZEX / 2, WINSIZEY / 2 - 100 };
+            portal[i].isActive = true;
+            portal[i].isCol = false;
+            portal[i].rc = RectMakeCenter(portal[i].curPt.x, portal[i].curPt.y, 50, 30);
+            portal[i].colorIndex = 0;
+        }
+        PORTAL->setPortal(portal[0], portal[1], portal[2]);
+
 
         UNITRENDER->addUnit(i, npc[i].keyName, "npc", { 0,0 }, npc[i].pt.x, npc[i].pt.y);
 

@@ -275,11 +275,11 @@ void effectManager::addImage()
     IMAGEMANAGER->addFrameImage("ultLight", "Images/effect/player/ultLight.bmp", 6202, 721, 7, 1);
 
     //portal
-    IMAGEMANAGER->addFrameImage("portal1", "Images/effect/purple_portal.bmp", 488, 110, 8, 1);
-    IMAGEMANAGER->addFrameImage("portal2", "Images/effect/green_portal.bmp", 488, 110, 8, 1);
-    IMAGEMANAGER->addFrameImage("portal3", "Images/effect/red_portal.bmp", 488, 110, 8, 1);
+    IMAGEMANAGER->addFrameImage("portal0", "Images/effect/purple_portal.bmp", 488, 110, 8, 1);
+    IMAGEMANAGER->addFrameImage("portal1", "Images/effect/green_portal.bmp", 488, 110, 8, 1);
+    IMAGEMANAGER->addFrameImage("portal2", "Images/effect/red_portal.bmp", 488, 110, 8, 1);
 
-    IMAGEMANAGER->addFrameImage("portalFrame", "Images/effect/portalFrame.bmp", 117, 108, 3, 1);
+    IMAGEMANAGER->addFrameImage("portalFrame", "Images/effect/portalFrame.bmp", 177, 108, 3, 1);
 }
 
 void effectManager::dashEffect(MOVE direction, POINT pos)
