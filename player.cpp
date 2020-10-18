@@ -108,10 +108,6 @@ void player::release()
 
 void player::update()
 {
-
-	//cout << "aracana info size? : "<< PLAYERDATA->getAracaInfo().size() << '\n';
-
-
 	PLAYERDATA->update();
 
 	blaze->update();
@@ -168,21 +164,26 @@ void player::update()
 	signatureSetUp();
 	/////////////////
 
-	if (arcana[3].skillName == "skill_meteor" && INPUT->GetKeyDown('F'))
+
+
+	if (arcana[3].skillName == "skill_meteor" && INPUT->GetKeyDown('P'))
 	{
 		arcana[3].skillName = dragon->getInfo().keyName;
+		arcana[3].explanation = dragon->getInfo().explanation;
 		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, arcana[3].skillName, 300);
 		UI->setSkillSlotIndex(3, arcana[3].skillName, 300);
+		
 	}
-	if (arcana[3].skillName == "skill_dragonArc" && INPUT->GetKeyDown('F'))
+	if (arcana[3].skillName == "skill_dragonArc" && INPUT->GetKeyDown('P'))
 	{
 		arcana[3].skillName = Meteor->getInfo().keyName;
+		arcana[3].explanation = Meteor->getInfo().explanation;
 		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, arcana[3].skillName, 300);
 		UI->setSkillSlotIndex(3, arcana[3].skillName, 300);
 	}
 
-	damagedCool();
 
+	damagedCool();
 	// knockBack lerp
 	if (isDamaged)
 	{
@@ -195,8 +196,7 @@ void player::update()
 		posY -= sinf(knockBack.angle) * (knockBack.speed + knockBack.percent);
 		rc = RectMakeCenter(posX, posY, 50, 50);
 	}
-
-
+	
 	skillGaugeSetUp();
 
 	takeCoin();
@@ -268,18 +268,20 @@ void player::other_update()
 	signatureSetUp();
 	/////////////////
 
-	if (arcana[3].skillName == "skill_meteor" && INPUT->GetKeyDown('F'))
+	if (arcana[3].skillName == "skill_meteor" && INPUT->GetKeyDown('P'))
 	{
 		arcana[3].skillName = dragon->getInfo().keyName;
 		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, arcana[3].skillName, 300);
 		UI->setSkillSlotIndex(3, arcana[3].skillName, 300);
+		
 	}
-	if (arcana[3].skillName == "skill_dragonArc" && INPUT->GetKeyDown('F'))
+	if (arcana[3].skillName == "skill_dragonArc" && INPUT->GetKeyDown('P'))
 	{
 		arcana[3].skillName = Meteor->getInfo().keyName;
 		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, arcana[3].skillName, 300);
 		UI->setSkillSlotIndex(3, arcana[3].skillName, 300);
 	}
+
 
 	damagedCool();
 	grabbedCool();
@@ -293,6 +295,8 @@ void player::other_update()
 		posY -= sinf(knockBack.angle) * (knockBack.speed + knockBack.percent);
 		rc = RectMakeCenter(posX, posY, 50, 50);
 	}
+
+
 
 	skillGaugeSetUp();
 
@@ -538,7 +542,7 @@ void player::setSkillUi(ARCANA_TYPE type, string keyName, int coolTime)
 			arcana[i].coolTime = coolTime;
 
 			UI->setSkillSlot(arcana[i].skillName, arcana[i].coolTime);
-
+			PLAYERDATA->setArcanaInfo(i, arcana[i].skillName, arcana[i].explanation, coolTime);
 
 		}
 	}
@@ -782,6 +786,7 @@ void player::signatureSetUp()
 		else
 		{
 			TIME->setTest(12.f);
+			EFFECT->ultEftPlay({(long)posX,(long)posY}, 10);
 			if (arcana[3].skillName == "skill_meteor")
 			{
 
@@ -1724,19 +1729,19 @@ void player::chargeSkillGauge(int atkPower, int skillNum)
 		switch (skillNum)
 		{
 		case 0:
-			skillGauge += (float)(atkPower / atkPower) * 12.0f;
+			skillGauge += (float)(atkPower / atkPower) * 1.7f;
 			break;
 		case 1:
 			if (count % 15 == 0)
-				skillGauge += (float)(atkPower / atkPower) * 1.5f;
+				skillGauge += (float)(atkPower / atkPower) * 1.2f;
 			break;
 		case 2:
 			if (count % 15 == 0)
-				skillGauge += (float)(atkPower / atkPower) * 1.5f;
+				skillGauge += (float)(atkPower / atkPower) * 1.2f;
 			break;
 		case 3:
 			if (count % 20 == 0)
-				skillGauge += (float)(atkPower / atkPower) * 1.5f;
+				skillGauge += (float)(atkPower / atkPower) * 1.2f;
 			break;
 		case 4:
 			if (count % 30 == 0)

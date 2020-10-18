@@ -203,6 +203,15 @@ int playerData::damageCul(int damage, bool isCritical)
 	return output;
 }
 
+void playerData::setArcanaInfo(int index, string keyName, string info, int coolTime)
+{
+	if (index > 3) return; // inventory E / R  사용하게 되면 변경 
+
+	vArcanaInfo[index].skillName = keyName;
+	vArcanaInfo[index].explanation = info;
+	vArcanaInfo[index].coolTime = coolTime;
+}
+
 bool playerData::criAppear()
 {
 	if (stat.criRejection)return false;

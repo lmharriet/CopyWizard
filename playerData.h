@@ -111,6 +111,7 @@ public:
 	//inven arcana
 	void pushArcanaInfo(tagWizardArcana info) { vArcanaInfo.push_back(info); }
 	vector<tagWizardArcana> getAracaInfo() { return vArcanaInfo; }
+	void setArcanaInfo(int index, string keyName, string info , int CoolTime);
 
 	bool criAppear();
 
