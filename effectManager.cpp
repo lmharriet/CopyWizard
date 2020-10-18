@@ -5,6 +5,7 @@ HRESULT effectManager::init()
 {
     addImage();
     time = 0;
+    aTime = 0;
 
     int arr[8] = { 255,255,255,204,153,102,51,25 };
     for (int i = 0; i < 8; i++)pEft.opacity[i] = arr[i];
@@ -674,6 +675,47 @@ void effectManager::alwaysEftRender(HDC hdc)
 
         //삭제
         if (vAlwaysEft[i].frame.x == vAlwaysEft[i].maxFrame) vAlwaysEft.erase(vAlwaysEft.begin());
+        else i++;
+    }
+}
+
+void effectManager::AfterimageEft(string keyName, POINT pt, POINT frame, int delay)
+{
+    aTime++;
+
+    if (aTime % delay == 0)
+    {
+        aTime = 0;
+
+        tagAfterimage eft;
+
+        eft.keyName = keyName;
+        eft.frame = frame;
+        eft.pos = pt;
+        eft.opacity = 100;
+
+        vAfterEft.push_back(eft);
+    }
+}
+
+void effectManager::AfterimageRender(HDC hdc)
+{
+    for (int i = 0; i < vAfterEft.size();)
+    {
+        //렌더
+        image* img = IMAGEMANAGER->findImage(vAfterEft[i].keyName);
+        CAMERAMANAGER->AlphaFrameRender(hdc, img,
+            vAfterEft[i].pos.x,
+            vAfterEft[i].pos.y,
+            vAfterEft[i].frame.x,
+            vAfterEft[i].frame.y,
+            vAfterEft[i].opacity);
+
+        //변환
+        vAfterEft[i].opacity -= 5;
+
+        //삭제
+        if (vAfterEft[i].opacity == 0) vAfterEft.erase(vAfterEft.begin() + i);
         else i++;
     }
 }

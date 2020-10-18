@@ -8,10 +8,21 @@ struct tagSkill
 	bool available;
 	int maxCoolTime;
 };
+
+struct tagSkillGaugeBlink
+{
+	int opacity;
+
+	bool isUp;
+	bool isActive;
+};
+
 class uiManager : public singletonBase<uiManager>
 {
 private:
 	tagSkill skillSlot[4];
+
+	tagSkillGaugeBlink gaugeBlink;
 
 	int coin;
 	int hp;

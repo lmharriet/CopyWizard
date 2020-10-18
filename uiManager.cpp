@@ -4,8 +4,9 @@
 HRESULT uiManager::init()
 {
 	IMAGEMANAGER->addImage("hpInfo", "Images/ui/leftTopInfo.bmp", 324, 90, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("hpBar", "Images/ui/hpBar.bmp", 242, 32, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("skillGaugeBar", "Images/ui/gaugeBar.bmp", 184, 20, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("hpBar", "Images/ui/hpBar.bmp", 242, 32);
+	IMAGEMANAGER->addImage("skillGaugeBar", "Images/ui/gaugeBar.bmp", 184, 20);
+	IMAGEMANAGER->addImage("skillGaugeBar_ult", "Images/ui/gaugeBar_ult.bmp", 184, 20);
 	IMAGEMANAGER->addImage("uiCoin", "Images/ui/coin.bmp", 21, 17, true, RGB(255, 0, 255));
 
 	IMAGEMANAGER->addFrameImage("pictureFrame", "Images/ui/pictureFrame.bmp", 96, 48, 2, 1);
@@ -65,6 +66,10 @@ HRESULT uiManager::init()
 	//skillSlot[3].keyName = "meteorIcon";
 	//skillSlot[3].maxCoolTime = 300; // 5ÃÊ
 
+	gaugeBlink.isActive = false;
+	gaugeBlink.isUp = true;
+	gaugeBlink.opacity = 0;
+
 	coin = 0;
 	hp = 0;
 	return S_OK;
@@ -90,6 +95,34 @@ void uiManager::update()
 	{
 		if(skillSlot[3].available) skillSlot[3].available = false;
 	}*/
+	if (!gaugeBlink.isActive && PLAYERDATA->getUpgradeReady())
+	{
+		gaugeBlink.isActive = true;
+		gaugeBlink.opacity = 0;
+		gaugeBlink.isUp = true;
+	}
+
+	else if (gaugeBlink.isActive && !PLAYERDATA->getUpgradeReady())
+	{
+		gaugeBlink.isActive = false;
+	}
+
+	if (gaugeBlink.isActive)
+	{
+		if (gaugeBlink.isUp)
+		{
+			gaugeBlink.opacity += 5;
+
+			if (gaugeBlink.opacity == 100)gaugeBlink.isUp = false;
+		}
+
+		else
+		{
+			gaugeBlink.opacity -= 5;
+
+			if (gaugeBlink.opacity == 0)gaugeBlink.isUp = true;
+		}
+	}
 }
 
 void uiManager::render(HDC hdc, int destX, int destY)
@@ -114,6 +147,11 @@ void uiManager::infoRender(HDC hdc, int destX, int destY)
 	int skillGaugeBar = (float)img->getWidth() * (skillGauge / 100.f);
 	img->render(hdc, destX + 78, destY + 60, 0, 0, skillGaugeBar, img->getHeight());
 
+	if (gaugeBlink.isActive)
+	{
+		img = IMAGEMANAGER->findImage("skillGaugeBar_ult");
+		img->alphaRender(hdc, destX + 78, destY + 60, 0, 0, skillGaugeBar, img->getHeight(), gaugeBlink.opacity);
+	}
 
 	img = IMAGEMANAGER->findImage("numbers");
 
