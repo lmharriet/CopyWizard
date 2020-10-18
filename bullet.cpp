@@ -30,7 +30,7 @@ void bullet::render()
 {
 	for (int i = 0; i < _vBullet.size(); i++)
 	{
-		CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
+		//CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
 		if (_vBullet[i].bulletImage)
 			CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage,
 				_vBullet[i].x - _vBullet[i].bulletImage->getFrameWidth() / 2,
