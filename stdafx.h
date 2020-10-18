@@ -50,6 +50,7 @@ using namespace MY_UTIL;
 #include "damageManager.h"
 //#include "astarManager.h"
 #include "unit.h"
+#include "portalManager.h"
 
 //=============================================================
 //	## 싱글톤을 추가한다 ##
@@ -71,6 +72,7 @@ using namespace MY_UTIL;
 #define BOSSMANAGER bossManager::getSingleton()
 //#define ASTAR astarManager::getSingleton()
 #define UNITRENDER unit::getSingleton()
+#define PORTAL portalManager::getSingleton()
 
 //=============================================================
 //	## 디파인문 ## (윈도우창 초기화)
