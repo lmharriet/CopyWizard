@@ -268,6 +268,14 @@ void uiManager::setSkillSlot(string keyName, int _time)
 	}
 }
 
+void uiManager::setSkillSlotIndex(int index, string keyName, int sec)
+{
+	if (index < 0 || index > 4) return;
+
+	skillSlot[index].keyName = keyName;
+	skillSlot[index].maxCoolTime = sec;
+}
+
 void uiManager::fixCoolTime(string keyName, int time)
 {
 	for (int i = 0; i < 4; i++)
