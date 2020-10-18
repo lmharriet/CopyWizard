@@ -124,5 +124,16 @@ void loadingScene::loadingSound()
 	SOUNDMANAGER->addSound("ghoulWalk", "Sound/ghoulWalk.mp3");
 
 
-
+	//boss
+	SOUNDMANAGER->addSound("bossDrillSFX", "Sound/bossDrillSFX.mp3");
+	SOUNDMANAGER->addSound("bossDrillVO", "Sound/bossDrillVO.mp3");
+	SOUNDMANAGER->addSound("bossJumpSFX", "Sound/bossJumpSFX.mp3");
+	SOUNDMANAGER->addSound("bossJumpVO", "Sound/bossJumpVO.mp3");
+	SOUNDMANAGER->addSound("bossNiddleSFX", "Sound/bossNiddleSFX.mp3");
+	SOUNDMANAGER->addSound("bossPunchSFX", "Sound/bossPunchSFX.mp3");
+	SOUNDMANAGER->addSound("bossPunchVO", "Sound/bossPunchVO.mp3");
+	SOUNDMANAGER->addSound("bossWallSFX", "Sound/bossWallSFX.mp3");
+	SOUNDMANAGER->addSound("bossWallVO", "Sound/bossWallVO.mp3");
+	SOUNDMANAGER->addSound("CutSceneSFX", "Sound/CutSceneSFX.mp3");
+	SOUNDMANAGER->addSound("CutSceneVO", "Sound/CutSceneVO.mp3");
 }

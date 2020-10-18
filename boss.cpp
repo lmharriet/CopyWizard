@@ -60,7 +60,6 @@ HRESULT boss::init(int _posX, int _posY)
 
 	niddleAngle = 0.0f;
 	//sound
-
 	isPlayDrillSFX = isPlayJumpSFX = isPlayWallSFX = isPlayNiddleSFX = isPlayPunchSFX = false;
 	return S_OK;
 }
@@ -162,8 +161,8 @@ void boss::animation()
 						count = 0;
 						if (!isPlayJumpSFX)
 						{
-							SOUNDMANAGER->play("bossJumpSFX", false);
-							SOUNDMANAGER->play("bossJumpVO", false);
+							SOUNDMANAGER->play("bossJumpSFX", false,-0.2f);
+							SOUNDMANAGER->play("bossJumpVO", false,-0.1f);
 							isPlayJumpSFX = true;
 						}
 					}
@@ -198,8 +197,8 @@ void boss::animation()
 	case DRILL:
 		if (!isPlayDrillSFX)
 		{
-			SOUNDMANAGER->play("bossDrillSFX", false);
-			SOUNDMANAGER->play("bossDrillVO", false);
+			SOUNDMANAGER->play("bossDrillSFX", false,-0.2f);
+			SOUNDMANAGER->play("bossDrillVO", false,-0.1f);
 			isPlayDrillSFX = true;
 		}
 		if (leftCheck) {
@@ -222,8 +221,8 @@ void boss::animation()
 	case PUNCH:
 		if (!isPlayPunchSFX)
 		{
-			SOUNDMANAGER->play("bossPunchSFX", false);
-			SOUNDMANAGER->play("bossPunchVO", false);
+			SOUNDMANAGER->play("bossPunchSFX", false,-0.2f);
+			SOUNDMANAGER->play("bossPunchVO", false,-0.1f);
 			isPlayPunchSFX = true;
 		}
 		if (punchCount == 0) {
@@ -473,8 +472,8 @@ void boss::animation()
 	case NIDDLE:
 		if (!isPlayNiddleSFX)
 		{
-			SOUNDMANAGER->play("bossNiddleSFX", false);
-			SOUNDMANAGER->play("bossNiddleVO", false);
+			SOUNDMANAGER->play("bossNiddleSFX", false, -0.2f);
+			SOUNDMANAGER->play("bossNiddleVO", false, -0.1f);
 			isPlayNiddleSFX = true;
 		}
 		if (!jumpMotion) {
@@ -509,8 +508,8 @@ void boss::animation()
 	case WALL:
 		if (!isPlayWallSFX)
 		{
-			SOUNDMANAGER->play("bossWallSFX", false);
-			SOUNDMANAGER->play("bossWallVO", false);
+			SOUNDMANAGER->play("bossWallSFX", false,-0.2f);
+			SOUNDMANAGER->play("bossWallVO", false,-0.1f);
 			isPlayWallSFX = true;
 		}
 		frameX = 3;
@@ -1054,6 +1053,8 @@ void boss::collCheck()
 							float _niddelAngle = getAngle(niddleBlock[j]->rc.left, niddleBlock[j]->rc.top, _player->getRect().left, _player->getRect().top);
 							niddleBlock[j]->isHit = true;
 							niddleBlock.erase(niddleBlock.begin() + j);
+							if (niddleBlock.empty())
+								SOUNDMANAGER->stop("bossNiddleSFX");
 							int damage = RANDOM->range(8, 13);
 							_player->damage(damage, _niddelAngle, 3);
 							break;
