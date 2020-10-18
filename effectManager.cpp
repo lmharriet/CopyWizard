@@ -273,6 +273,13 @@ void effectManager::addImage()
 
     //ult
     IMAGEMANAGER->addFrameImage("ultLight", "Images/effect/player/ultLight.bmp", 6202, 721, 7, 1);
+
+    //portal
+    IMAGEMANAGER->addFrameImage("portal1", "Images/effect/purple_portal.bmp", 488, 110, 8, 1);
+    IMAGEMANAGER->addFrameImage("portal2", "Images/effect/green_portal.bmp", 488, 110, 8, 1);
+    IMAGEMANAGER->addFrameImage("portal3", "Images/effect/red_portal.bmp", 488, 110, 8, 1);
+
+    IMAGEMANAGER->addFrameImage("portalFrame", "Images/effect/portalFrame.bmp", 117, 108, 3, 1);
 }
 
 void effectManager::dashEffect(MOVE direction, POINT pos)
@@ -401,6 +408,45 @@ void effectManager::setEffect(string keyName, POINT pt, bool isFrameImg, int fra
     }
 
     vEft.push_back(effect);
+}
+
+void effectManager::setBackEffect(string keyName, POINT pt, int frameDelay)
+{
+    tagEffect effect;
+    effect.keyName = keyName;
+    effect.pos = pt;
+
+    effect.imgCount = 0;
+    effect.maxFrame = IMAGEMANAGER->findImage(keyName)->getMaxFrameX();
+    effect.frameDelay = frameDelay;
+
+    vBackEft.push_back(effect);
+}
+
+void effectManager::backEftRender(HDC hdc)
+{
+    for (int i = 0; i < vBackEft.size();)
+    {
+        //렌더
+        image* img = IMAGEMANAGER->findImage(vBackEft[i].keyName);
+        CAMERAMANAGER->FrameRender(hdc, img,
+            vBackEft[i].pos.x - img->getFrameWidth()/2,
+            vBackEft[i].pos.y - img->getFrameHeight()/2,
+            vBackEft[i].imgCount,
+            0);
+
+        //증가
+        if (vBackEft[i].imgCount == 3 || vBackEft[i].imgCount == 4)
+        {
+            if (time % (vBackEft[i].frameDelay * 4) == 0)vBackEft[i].imgCount++;
+        }
+        
+        else if (time % vBackEft[i].frameDelay == 0)vBackEft[i].imgCount++;
+
+        //삭제
+        if (vBackEft[i].imgCount == vBackEft[i].maxFrame)vBackEft.erase(vBackEft.begin() + i);
+        else i++;
+    }
 }
 
 void effectManager::damageEffect(POINT pt)

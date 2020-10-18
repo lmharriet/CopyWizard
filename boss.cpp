@@ -1250,6 +1250,7 @@ void boss::damageCul()
 
 	}
 }
+
 void boss::bossFinalAttack(int patternType)
 {
 	RECT temp;
@@ -1283,7 +1284,7 @@ void boss::bossFinalAttack(int patternType)
 				shockBlock.push_back(_block);
 			}
 		}
-		if (count > 200) {
+		if (count > 150) {
 			count = 0;
 			patternCount++;
 			boss.bossState = BOSSIDLE;
@@ -1367,13 +1368,13 @@ void boss::bossFinalAttack(int patternType)
 					count++;
 					CAMERAMANAGER->Shake(30, 30, 2);
 					if (!isHit) {
-						int damage = RANDOM->range(15, 25);
+						int damage = RANDOM->range(4, 9);
 						_player->finalAttackDamaged(damage, 10);
 						isHit = true;
 					}
 					if (isHit) {
 						hitTimer++;
-						if (hitTimer > 10) {
+						if (hitTimer > 5) {
 							hitTimer = 0;
 							isHit = false;
 						}

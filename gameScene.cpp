@@ -135,11 +135,13 @@ void gameScene::update()
 
 	if (INPUT->GetKeyDown(VK_BACK))
 	{
-		//POINT pt = { (long)_player->getX() ,(long)_player->getY() };
+		POINT pt = { (long)_player->getX() ,(long)_player->getY() };
 
 		//DROP->getCoinEffect(1);
 		//EFFECT->setEmotionEffect("buyEmote_Nox", { (long)_player->getX() ,(long)_player->getY() - 80 });
 		//EFFECT->setAlwaysPoint("curseEffect", pt);
+		//EFFECT->setEffect("portal1", pt, false, false, 0, 3);
+		EFFECT->setBackEffect("portal1", pt, 3);
 	}
 
 	UNITRENDER->setPlayerRect(_player->getRect());
@@ -159,6 +161,8 @@ void gameScene::render()
 
 	EFFECT->alwaysEftRender(getMemDC());
 	EFFECT->AfterimageRender(getMemDC());
+
+	EFFECT->backEftRender(getMemDC());
 	UNITRENDER->render(getMemDC());
 	
 	_player->render();
