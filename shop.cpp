@@ -116,6 +116,7 @@ HRESULT shop::init()
     }
 
     colItem = -1;
+    itemBuyCount = 0;
 
     addImage();
 
@@ -461,7 +462,7 @@ void shop::buyItem()
             {
                 //buy item
                 cout << AndresShop[colItem].keyName << "을 구매!" << '\n';
-
+                //SOUNDMANAGER->play("")
                 AndresShop[colItem].isSell = true;
                 AndresShop[colItem].frame = { 0,0 };
 
@@ -477,6 +478,15 @@ void shop::buyItem()
                 EFFECT->setEmotionEffect("buyEmote_Andres", { AndresShop[2].pt.x + 20 , AndresShop[2].pt.y - 130 });
                 //3. 아이템의 가격만큼 코인을 잃음
                 PLAYERDATA->setCoin(PLAYERDATA->getCoin() - AndresShop[colItem].price);
+
+                if (!itemBuyCount)
+                {
+                    SOUNDMANAGER->play("npcBuyFirst", false);
+                    itemBuyCount++;
+                }
+                else
+                    SOUNDMANAGER->play("npcBuy", false);
+
             }
             else
             {

@@ -34,6 +34,7 @@ private:
 
 	//
 	int colItem;
+	int itemBuyCount;
 public:
 	HRESULT init();
 	void addImage();

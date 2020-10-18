@@ -278,7 +278,7 @@ void bomb::move() // blaze tile충돌은 gameScene에서만 되도록 처리하기
 void bomb::removeBomb(int index)
 {
 	PARTICLE->explosionGenerate("explosionParticle", _vBullet[index].x + 20, _vBullet[index].y + 20, 5, 30, 2.f, 3, true);
-	SOUNDMANAGER->play("blazeExp", false);
+	SOUNDMANAGER->play("blazeExp", false,-0.15f);
 
 	_vBullet.erase(_vBullet.begin() + index);
 }
