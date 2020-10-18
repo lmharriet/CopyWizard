@@ -234,7 +234,7 @@ void bomb::fire(float x, float y, float speed, float angle)
 	isCoolTime = true;
 
 	//sound
-	SOUNDMANAGER->play("blazeFire", false);
+	
 }
 
 void bomb::bombActive()
@@ -252,6 +252,8 @@ void bomb::bombActive()
 
 		//bTime ÃÊ±âÈ­
 		bTime = 0;
+		
+		SOUNDMANAGER->play("blazeFire", false);
 	}
 }
 
@@ -922,7 +924,7 @@ void dragonArc::render()
 				vDragon[i].x - vDragon[i].img->getFrameWidth() / 2,
 				vDragon[i].y - vDragon[i].img->getFrameHeight() / 2, vDragon[i].index, vDragon[i].frameY);
 
-//			CAMERAMANAGER->Ellipse(getMemDC(), vDragon[i].rc);
+			//CAMERAMANAGER->Ellipse(getMemDC(), vDragon[i].rc);
 		}
 	}
 
@@ -1026,7 +1028,6 @@ void dragonArc::move()
 	switch (pattern)
 	{
 	case 0:
-
 		for (int i = 0; i < vDragon.size();)
 		{
 			if (vDragon[i].currentTime < 21)
@@ -1424,7 +1425,6 @@ void dragonArc::phoenixMove()
 		}
 	}
 }
-
 
 void dragonArc::coolTimeReduction()
 {
