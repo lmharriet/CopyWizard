@@ -278,6 +278,8 @@ void effectManager::addImage()
     IMAGEMANAGER->addFrameImage("portal1", "Images/effect/purple_portal.bmp", 488, 110, 8, 1);
     IMAGEMANAGER->addFrameImage("portal2", "Images/effect/green_portal.bmp", 488, 110, 8, 1);
     IMAGEMANAGER->addFrameImage("portal3", "Images/effect/red_portal.bmp", 488, 110, 8, 1);
+
+    IMAGEMANAGER->addFrameImage("portalFrame", "Images/effect/portalFrame.bmp", 117, 108, 3, 1);
 }
 
 void effectManager::dashEffect(MOVE direction, POINT pos)
