@@ -62,7 +62,7 @@ enum class UNIT_KIND
 	MAGE,
 	GOLEM,
 	GHOUL,
-	SLIMEKING,
+	GHOULLARGE,
 	NONE
 };
 
