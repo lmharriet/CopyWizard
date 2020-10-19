@@ -42,7 +42,7 @@ public:
 	vector<monster*> getMinion() { return _vMinion; }
 
 	//충돌처리 (미니언들의 총알, 플레이어)
-	void collision(RECT player);
+	//void collision(RECT player);
 
 	//bullet 
 	bullet* getBullet() { return _bullet; }

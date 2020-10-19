@@ -333,7 +333,7 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(damage, 3);
 				}
 
-				if (enemy->getMinion()[i]->getMonsterKind() != MONSTERKIND::GOLEM)
+				if (enemy->getMinion()[i]->getMonsterKind() != MONSTERKIND::GOLEM && enemy->getMinion()[i]->getMonsterKind() != MONSTERKIND::GHOULLARGE)
 				{
 					float angle = getAngle(enemyX + 40, enemyY + 40,
 						_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
@@ -459,6 +459,13 @@ void gameScene::enemyUnitRenderInit()
 			break;
 		case MONSTERKIND::GHOUL:
 			UNITRENDER->enemyInit(3, currentFrame, monsterPos);
+			break;
+		case MONSTERKIND::GHOULLARGE:
+			if (enemy->getMinion()[i]->getHit() && !enemy->getMinion()[i]->getDie())
+				UNITRENDER->enemyInit(5, currentFrame, monsterPos); // ghoulLarge hit
+			else
+				UNITRENDER->enemyInit(6, currentFrame, monsterPos);
+			break;
 		}
 
 	}
