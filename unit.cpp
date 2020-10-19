@@ -87,6 +87,14 @@ void unit::update()
             zo->init(3, "ghoul","monster", vEnemy[i].currentFrame, vEnemy[i].posX, vEnemy[i].posY);
             vUnit.push_back(zo);
             break;
+        case 5: // 구울라지
+            zo->init(5, "ghoulLarge", "monster", vEnemy[i].currentFrame, vEnemy[i].posX, vEnemy[i].posY);
+            vUnit.push_back(zo);
+            break;
+        case 6: //구울라지 히트
+            zo->init(6, "ghoulLargeHit", "monster", vEnemy[i].currentFrame, vEnemy[i].posX, vEnemy[i].posY);
+            vUnit.push_back(zo);
+            break;
         }
        
     }
