@@ -3,6 +3,25 @@
 
 void ghoulLarge::addInit()
 {
+    kind = MONSTERKIND::GHOULLARGE;
+    atk = 30;
+    armour = 0.55f;
+    speed = 3.f;
+    hp = 200;
+    img = IMAGEMANAGER->findImage("ghoulLarge");
+    isKnockBack = false;
+    isRanger = false;
+
+    speedUpCount = 0;
+    isSpeedUp = false;
+    isIdle = false;
+    isNoHit = true;
+
+
+
+    //smallSlashIndex = { 0,0 };
+    //isAtkImgCount = false;
+    //fxCount = 0;
 }
 
 void ghoulLarge::update()
@@ -86,11 +105,11 @@ void ghoulLarge::stateIDLE()
         frameIndexL[STATEIMAGE::IDLE].x = 5;
         frameIndexL[STATEIMAGE::IDLE].y = 0;
         frameIndexL[STATEIMAGE::WALK].x = 5;
-        frameIndexL[STATEIMAGE::WALK].y = 2;
+        frameIndexL[STATEIMAGE::WALK].y = 1;
         frameIndexL[STATEIMAGE::ATK].x = 5;
-        frameIndexL[STATEIMAGE::ATK].y = 0;
+        frameIndexL[STATEIMAGE::ATK].y = 7;
         frameIndexL[STATEIMAGE::DIE].x = 5;
-        frameIndexL[STATEIMAGE::DIE].y = 4;
+        frameIndexL[STATEIMAGE::DIE].y = 9;
 
         currentFrame = { frameIndexL[STATEIMAGE::IDLE].x,frameIndexL[STATEIMAGE::IDLE].y };
     }
@@ -99,11 +118,11 @@ void ghoulLarge::stateIDLE()
         frameIndexR[STATEIMAGE::IDLE].x = 0;
         frameIndexR[STATEIMAGE::IDLE].y = 0;
         frameIndexR[STATEIMAGE::WALK].x = 0;
-        frameIndexR[STATEIMAGE::WALK].y = 1;
+        frameIndexR[STATEIMAGE::WALK].y = 0;
         frameIndexR[STATEIMAGE::ATK].x = 0;
-        frameIndexR[STATEIMAGE::ATK].y = 0;
+        frameIndexR[STATEIMAGE::ATK].y = 6;
         frameIndexR[STATEIMAGE::DIE].x = 0;
-        frameIndexR[STATEIMAGE::DIE].y = 3;
+        frameIndexR[STATEIMAGE::DIE].y = 8;
 
         currentFrame = { frameIndexR[STATEIMAGE::IDLE].x,frameIndexR[STATEIMAGE::IDLE].y };
     }
@@ -122,9 +141,9 @@ void ghoulLarge::stateATK()
 
     if (atkDirection[MONSTER_UP] && playerRC.left > rc.left && playerRC.right < rc.right + 40)
     {
-        if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x == 2))
+        if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 1 || frameIndexR[STATEIMAGE::ATK].x == 4))
         {
-            EFFECT->setEffect("knightSlashUp", { pos.x + 60 ,pos.y + 20 }, true);
+            //EFFECT->setEffect("knightSlashUp", { pos.x + 60 ,pos.y + 20 }, true);
             SOUNDMANAGER->play(str, false, soundVolum); // 사운드수정예정
             bulletDirection[MONSTER_DOWN] = false;
             bulletDirection[MONSTER_UP] = true;
@@ -137,9 +156,9 @@ void ghoulLarge::stateATK()
 
     else if (atkDirection[MONSTER_DOWN] && playerRC.left > rc.left && playerRC.right < rc.right + 80)
     {
-        if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x == 2))
+        if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 1 || frameIndexR[STATEIMAGE::ATK].x == 4))
         {
-            EFFECT->setEffect("knightSlashDown", { pos.x + 70,pos.y + 150 }, true);
+            //EFFECT->setEffect("knightSlashDown", { pos.x + 70,pos.y + 150 }, true);
             SOUNDMANAGER->play(str, false, soundVolum);
             bulletDirection[MONSTER_DOWN] = true;
             bulletDirection[MONSTER_UP] = false;
@@ -149,9 +168,9 @@ void ghoulLarge::stateATK()
             delay++;
         }
     }
-    if (delay == 0 && frameIndexL[STATEIMAGE::ATK].x == 3)
+    if (delay == 0 && frameIndexL[STATEIMAGE::ATK].x == 1)
     {
-        EFFECT->setEffect("knightSlashL", { pos.x  ,pos.y + 80 }, true);
+        //EFFECT->setEffect("knightSlashL", { pos.x  ,pos.y + 80 }, true);
         SOUNDMANAGER->play(str, false, soundVolum);
         bulletDirection[MONSTER_DOWN] = false;
         bulletDirection[MONSTER_UP] = false;
@@ -160,9 +179,9 @@ void ghoulLarge::stateATK()
         isFxAppear = true;
         delay++;
     }
-    else if (delay == 0 && frameIndexR[STATEIMAGE::ATK].x == 2)
+    else if (delay == 0 && frameIndexR[STATEIMAGE::ATK].x == 4)
     {
-        EFFECT->setEffect("knightSlashR", { pos.x + 110,pos.y + 80 }, true);
+        //EFFECT->setEffect("knightSlashR", { pos.x + 110,pos.y + 80 }, true);
         SOUNDMANAGER->play(str, false, soundVolum);
         bulletDirection[MONSTER_DOWN] = false;
         bulletDirection[MONSTER_UP] = false;
@@ -174,16 +193,16 @@ void ghoulLarge::stateATK()
 
     if (atkDirection[MONSTER_LEFT])
     {
-        frameIndexL[STATEIMAGE::ATK].y = 0;
+        frameIndexL[STATEIMAGE::ATK].y = 7;
         count++;
         if (count % 6 == 0)
         {
             count = 0;
             frameIndexL[STATEIMAGE::ATK].x--;
 
-            if (frameIndexL[STATEIMAGE::ATK].x < 3)
+            if (frameIndexL[STATEIMAGE::ATK].x < 0)
             {
-                frameIndexL[STATEIMAGE::ATK].x = 3;
+                frameIndexL[STATEIMAGE::ATK].x = 0;
                 delay++;
                 if (delay > 5)
                 {
@@ -198,16 +217,16 @@ void ghoulLarge::stateATK()
     }
     else
     {
-        frameIndexR[STATEIMAGE::ATK].y = 0;
+        frameIndexR[STATEIMAGE::ATK].y = 6;
         count++;
         if (count % 6 == 0)
         {
             count = 0;
             frameIndexR[STATEIMAGE::ATK].x++;
 
-            if (frameIndexR[STATEIMAGE::ATK].x > 2)
+            if (frameIndexR[STATEIMAGE::ATK].x > 5)
             {
-                frameIndexR[STATEIMAGE::ATK].x = 2;
+                frameIndexR[STATEIMAGE::ATK].x = 5;
                 delay++;
                 if (delay > 5)
                 {
@@ -227,7 +246,7 @@ void ghoulLarge::stateDIE()
 {
     if (atkDirection[MONSTER_LEFT])
     {
-        frameIndexL[STATEIMAGE::DIE].y = 4;
+        frameIndexL[STATEIMAGE::DIE].y = 9;
         count++;
         if (count % 10 == 0)
         {
@@ -248,7 +267,7 @@ void ghoulLarge::stateDIE()
     }
     else
     {
-        frameIndexR[STATEIMAGE::DIE].y = 3;
+        frameIndexR[STATEIMAGE::DIE].y = 8;
         count++;
         if (count % 10 == 0)
         {
@@ -275,10 +294,9 @@ void ghoulLarge::stateWalk()
     if (atkDirection[MONSTER_LEFT])
     {
         frameIndexL[STATEIMAGE::ATK].x = 5;
-        frameIndexL[STATEIMAGE::ATK].y = 0;
+        frameIndexL[STATEIMAGE::ATK].y = 7;
 
-
-        frameIndexL[WALK].y = 2;
+        frameIndexL[WALK].y = 1;
         count++;
         if (count % 10 == 0)
         {
@@ -291,16 +309,12 @@ void ghoulLarge::stateWalk()
             }
         }
         currentFrame = { frameIndexL[WALK].x ,frameIndexL[WALK].y };
-        /* if (isHit)
-             hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[WALK].x, frameIndexL[WALK].y);
-         else
-             img->frameRender(getMemDC(), cul.x, cul.y, frameIndexL[WALK].x, frameIndexL[WALK].y);*/
     }
     else
     {
         frameIndexL[STATEIMAGE::ATK].x = 0;
-        frameIndexL[STATEIMAGE::ATK].y = 0;
-        frameIndexR[WALK].y = 1;
+        frameIndexL[STATEIMAGE::ATK].y = 6;
+        frameIndexR[WALK].y = 0;
         count++;
         if (count % 10 == 0)
         {
@@ -313,10 +327,5 @@ void ghoulLarge::stateWalk()
             }
         }
         currentFrame = { frameIndexR[WALK].x ,frameIndexR[WALK].y };
-        /*if (isHit)
-            hitImg->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[WALK].x, frameIndexR[WALK].y);
-
-        else
-            img->frameRender(getMemDC(), cul.x, cul.y, frameIndexR[WALK].x, frameIndexR[WALK].y);*/
     }
 }
