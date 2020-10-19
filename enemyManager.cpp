@@ -107,8 +107,11 @@ void enemyManager::setMinion(tagTile* _subTile, POINT _monPt)
 		_ghoul->init(tile, pos);
 		_vMinion.push_back(_ghoul); }
 			break;
-		//case UNIT_KIND::SLIMEKING:
-		//	break;
+		case UNIT_KIND::GHOULLARGE:
+		{monster* _ghoulLarge = new ghoulLarge;
+		_ghoulLarge->init(tile, pos);
+		_vMinion.push_back(_ghoulLarge); }
+			break;
 		
 		}
 		
@@ -145,6 +148,9 @@ void enemyManager::minionBulletFire(float aimX, float aimY)
 		case MONSTERKIND::GHOUL:
 			angle = getAngle((float)(*_viMinion)->getCulCenterX(), (float)(*_viMinion)->getCulCenterY() + 50, (float)aimX, (float)aimY);
 			knightBullet(angle);
+			break;
+		case MONSTERKIND::GHOULLARGE:
+			golemBullet(angle);
 			break;
 		}
 		

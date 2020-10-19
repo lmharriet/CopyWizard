@@ -376,7 +376,7 @@ void monster::commonUpdate()
 	{
 		if (!isCardFxAppear)
 		{
-			if (kind == MONSTERKIND::GOLEM)
+			if (kind == MONSTERKIND::GOLEM && kind == MONSTERKIND::GHOULLARGE)
 				EFFECT->setEffect("flipCard_big", { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 }, false, true, 100);
 			else if (kind != MONSTERKIND::KNIGHT)
 				EFFECT->setEffect("flipCard_small", { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 }, false, true, 100); // false,false,0,
@@ -396,7 +396,7 @@ void monster::commonUpdate()
 
 		if (isHit && !isDie)
 		{
-			if (kind != MONSTERKIND::GOLEM)
+			if (kind != MONSTERKIND::GOLEM && kind!=MONSTERKIND::GHOULLARGE)
 				isATK = false;
 			hitTime++;
 
@@ -472,7 +472,7 @@ void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, b
 	knockBack = _knockBack;
 
 
-	if (kind != MONSTERKIND::GOLEM)
+	if (kind != MONSTERKIND::GOLEM && kind!= MONSTERKIND::GHOULLARGE)
 		state = STATEIMAGE::HIT;
 
 	isHit = true;
@@ -495,6 +495,9 @@ void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, b
 		break;
 	case MONSTERKIND::GHOUL:
 		SOUNDMANAGER->play(ghoul, false );
+	case MONSTERKIND::GHOULLARGE:
+		SOUNDMANAGER->play("golemHit", false, -0.28f);
+		break;
 
 	}
 }
@@ -583,14 +586,16 @@ void monster::die()
 			break;
 		case MONSTERKIND::KNIGHT:
 			SOUNDMANAGER->play("knightDie", false, -0.3f);
-
 			break;
 		case MONSTERKIND::SUMMONER:
 			SOUNDMANAGER->play("knightDie", false, -0.3f);
 			break;
 		case MONSTERKIND::GHOUL:
 			SOUNDMANAGER->play("ghoulDie", false); 
-
+			break;
+		case MONSTERKIND::GHOULLARGE:
+			SOUNDMANAGER->play("golemDie", false, -0.2f);
+			break;
 
 		}
 
