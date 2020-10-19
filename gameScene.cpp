@@ -55,15 +55,14 @@ HRESULT gameScene::init()
 
 	UNITRENDER->init();
 
-	//tagPortal portal;
-	//portal.color = 0;
-	//portal.curPt = { 264,46 };
-	//portal.endPt = { (long)_player->getX(),(long)_player->getY() };
-	//portal.isActive = false;
-	//portal.isCol = false;
-	//portal.rc = RectMakeCenter(portal.curPt.x, portal.curPt.y, 70, 100);
-	//PORTAL->setCenterPortal(portal);
-
+	tagPortal portal;
+	portal.colorIndex = 0;
+	portal.curPt = { (long)_player->getX(),(long)_player->getY() };
+	portal.endPt = { 0,0 };
+	portal.isActive = false;
+	portal.isCol = false;
+	portal.rc = RectMakeCenter(portal.curPt.x, portal.curPt.y, 30, 60);
+	PORTAL->setCenterPortal(portal);
 
 	//sound
 	soundInit();
@@ -148,13 +147,13 @@ void gameScene::update()
 
 	if (INPUT->GetKeyDown(VK_BACK))
 	{
-		POINT pt = { (long)_player->getX() ,(long)_player->getY() };
+		//POINT pt = { (long)_player->getX() ,(long)_player->getY() };
 
 		//DROP->getCoinEffect(1);
 		//EFFECT->setEmotionEffect("buyEmote_Nox", { (long)_player->getX() ,(long)_player->getY() - 80 });
 		//EFFECT->setAlwaysPoint("curseEffect", pt);
 		//EFFECT->setEffect("portal1", pt, false, false, 0, 3);
-		EFFECT->setBackEffect("portal1", pt, 3);
+		//EFFECT->setBackEffect("portal1", pt, 3);
 	}
 
 	UNITRENDER->setPlayerRect(_player->getRect());
@@ -505,14 +504,17 @@ void gameScene::warp()
 		PORTAL->setCenterCol(false);
 
 		POINT warp = PORTAL->getCenterPortalEndPt();
+		POINT fixPt = { warp.x,warp.y + 150 };
 
 		_player->setX(warp.x);
-		_player->setY(warp.y + 30);
+		_player->setY(fixPt.y);
 		_player->reposRect();
 
-		//EFFECT->setBackEffect("portal1", warp, 3);
+		string name = "portal";
+		name += to_string(PORTAL->getCenterColor());
+		EFFECT->setBackEffect(name, fixPt, 3);
 
-		//cout << "warp" << '\n';
+		//cout << "Áß¾Ó->N" << name << '\n';
 	}
 
 	for (int i = 0; i < 3; i++)
@@ -523,19 +525,21 @@ void gameScene::warp()
 		POINT warp = PORTAL->getPortalEndPt(i);
 
 		POINT fixPt = warp;
-		fixPt.y += 120;
+		fixPt.y += 200;
 
 		_player->setX(warp.x);
 		_player->setY(fixPt.y);
 		_player->reposRect();
 
 		string name = "portal";
-		//char buffer[65] = { 0 };
-		//name += itoa(PORTAL->getPortalColor(i), buffer, 10);
 		name += to_string(PORTAL->getPortalColor(i));
-
 		EFFECT->setBackEffect(name, fixPt, 3);
 
-		//cout << "warp" << '\n';
+		//cout << "N->Áß¾Ó" << name << '\n';
+
+		PORTAL->setCenterColor(PORTAL->getPortalColor(i));
+
+		PORTAL->setCenterEndPt(PORTAL->getPortalcurPt(i));
+		PORTAL->setCenterActive(true);
 	}
 }
