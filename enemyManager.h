@@ -5,6 +5,7 @@
 #include "bullet.h" //공용총알 클래스 사용하기 위해
 #include "knight.h"
 #include "ghoul.h"
+#include "ghoulLarge.h"
 
 class enemyManager : public gameNode
 {
@@ -41,7 +42,7 @@ public:
 	vector<monster*> getMinion() { return _vMinion; }
 
 	//충돌처리 (미니언들의 총알, 플레이어)
-	void collision(RECT player);
+	//void collision(RECT player);
 
 	//bullet 
 	bullet* getBullet() { return _bullet; }

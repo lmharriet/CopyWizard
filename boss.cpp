@@ -11,6 +11,10 @@ HRESULT boss::init(int _posX, int _posY)
 
 	IMAGEMANAGER->addImage("bossNpc", "resource/npc/warpNpc.bmp", 107, 164, true, RGB(255, 0, 255));
 
+	IMAGEMANAGER->addImage("bossframebar", "resource/boss/bossProgressBarFrame.bmp", 452, 64, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("bosshpbar", "resource/boss/bossHpBar.bmp", 356, 28, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("bosshpbackBar", "resource/boss/bossHpBackBar.bmp", 356, 28, true, RGB(255, 0, 255));
+
 	frameX = 0;
 	frameY = 5;
 
@@ -24,7 +28,7 @@ HRESULT boss::init(int _posX, int _posY)
 	boss.center.y = posY;
 	boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
 	boss.angle = 0;
-	boss.bossHp = 1000;
+	boss.bossHp = 2000;
 	boss.isHit = false;
 
 	posPlayer = 5;
@@ -998,7 +1002,7 @@ void boss::bossPattern()
 			}
 		}
 		samePattern = pattern;
-		if (boss.bossHp < 300 && !isFinalAttack) {
+		if (boss.bossHp < 600 && !isFinalAttack) {
 			isFinalAttack = true;
 			pattern = 6;
 		}
@@ -1176,6 +1180,17 @@ void boss::bossDie()
 	}
 }
 
+void boss::bossHpInfo(HDC hdc, int destX, int destY)
+{
+	image* img = IMAGEMANAGER->findImage("bossframebar");
+	img->render(hdc, destX, destY);
+
+	img = IMAGEMANAGER->findImage("bosshpbar");
+
+	int hpBar = (float)img->getWidth() * ((float)boss.bossHp / 2000);
+	img->render(hdc, destX + 48, destY + 20, 0, 0, hpBar, img->getHeight());
+}
+
 bool boss::damageCheck(int skillNum)
 {
 
@@ -1265,8 +1280,8 @@ void boss::bossFinalAttack(int patternType)
 			leftCheck = false;
 		}
 		boss.bossState = FINALATTACK;
-		boss.center.x += cosf(boss.angle) * 7;
-		boss.center.y += -sinf(boss.angle) * 7;
+		boss.center.x += cosf(boss.angle) * 8;
+		boss.center.y += -sinf(boss.angle) * 8;
 		boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
 		if (count % 5 == 0) {
 			BOSSMANAGER->init(boss.center.x - 20, boss.center.y, 20, 1);
@@ -1318,7 +1333,7 @@ void boss::bossFinalAttack(int patternType)
 				}
 				else {
 					if (!isHit) {
-						int damage = RANDOM->range(3, 6);
+						int damage = RANDOM->range(5, 8);
 						_player->finalAttackDamaged(damage, 100);
 						isHit = true;
 					}
@@ -1369,7 +1384,7 @@ void boss::bossFinalAttack(int patternType)
 					count++;
 					CAMERAMANAGER->Shake(30, 30, 2);
 					if (!isHit) {
-						int damage = RANDOM->range(4, 9);
+						int damage = RANDOM->range(7, 13);
 						_player->finalAttackDamaged(damage, 10);
 						isHit = true;
 					}

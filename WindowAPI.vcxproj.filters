@@ -243,6 +243,9 @@
     <ClCompile Include="portalManager.cpp">
       <Filter>GameFramework\매니져\포탈</Filter>
     </ClCompile>
+    <ClCompile Include="ghoulLarge.cpp">
+      <Filter>MainGame\인게임\monster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -391,6 +394,9 @@
     </ClInclude>
     <ClInclude Include="portalManager.h">
       <Filter>GameFramework\매니져\포탈</Filter>
+    </ClInclude>
+    <ClInclude Include="ghoulLarge.h">
+      <Filter>MainGame\인게임\monster</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

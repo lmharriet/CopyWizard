@@ -7,7 +7,7 @@ void ghoul::addInit()
     atk = 30;
     armour = 1.f;
     speed = 1.f;
-    hp = 300;
+    hp = 200;
     img = IMAGEMANAGER->findImage("ghoul");
     skillImg = NULL;
     isKnockBack = true;
