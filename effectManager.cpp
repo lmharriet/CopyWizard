@@ -470,8 +470,7 @@ void effectManager::lightEffect(POINT pt, int maxEffect)
 
         string str = "lightEffect";
         int ranStr = RANDOM->range(1, 3);
-        char ch[10];
-        str += itoa(ranStr, ch, 10);
+        str += to_string(ranStr);
 
         setEffect(str, { pt.x + ranX,pt.y + ranY }, 35, 75);
     }

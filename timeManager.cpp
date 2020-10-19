@@ -46,7 +46,7 @@ void timeManager::update(float lockFPS)
 	if ((int)test > 1)
 	{
 		TIME->addTest(-TIME->Lerp(0, TIME->getTest(), TIME->deltaTime()));
-		cout << (INT)TIME->getTest() << '\n';
+		//cout << (INT)TIME->getTest() << '\n';
 	}
 	//
 

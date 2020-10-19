@@ -44,7 +44,7 @@ HRESULT shop::init()
             AndresShop[count].price = item.price;
             AndresShop[count].frame = item.frame;
 
-            cout << AndresShop[count].keyName << '\n';
+            //cout << AndresShop[count].keyName << '\n';
 
             count++;
         }
@@ -68,7 +68,7 @@ HRESULT shop::init()
                 AndresShop[count].price = item.price;
                 AndresShop[count].frame = item.frame;
 
-                cout << AndresShop[count].keyName << '\n';
+                //cout << AndresShop[count].keyName << '\n';
 
                 count++;
             }
@@ -255,7 +255,7 @@ void shop::generate(POINT arr[3])
 
         UNITRENDER->addUnit(i, npc[i].keyName, "npc", { 0,0 }, npc[i].pt.x, npc[i].pt.y);
 
-        cout << npc[i].keyName << " " << npc[i].pt.x << ", " << npc[i].pt.y << '\n';
+        //cout << npc[i].keyName << " " << npc[i].pt.x << ", " << npc[i].pt.y << '\n';
     }
 }
 

@@ -466,9 +466,9 @@ void gameScene::enemyUnitRenderInit()
 
 void gameScene::viewText()
 {
-	char str[126];
-	sprintf(str, "%.f, %.f", _player->getX(), _player->getY());
-	TextOut(getMemDC(), _ptMouse.x, _ptMouse.y, str, strlen(str));
+	//char str[126];
+	//sprintf(str, "%.f, %.f", _player->getX(), _player->getY());
+	//TextOut(getMemDC(), _ptMouse.x, _ptMouse.y, str, strlen(str));
 }
 
 void gameScene::soundInit()
@@ -505,7 +505,7 @@ void gameScene::warp()
 
 		//EFFECT->setBackEffect("portal1", warp, 3);
 
-		cout << "warp" << '\n';
+		//cout << "warp" << '\n';
 	}
 
 	for (int i = 0; i < 3; i++)
@@ -523,11 +523,12 @@ void gameScene::warp()
 		_player->reposRect();
 
 		string name = "portal";
-		char buffer[65] = { 0 };
-		name += itoa(PORTAL->getPortalColor(i), buffer, 10);
+		//char buffer[65] = { 0 };
+		//name += itoa(PORTAL->getPortalColor(i), buffer, 10);
+		name += to_string(PORTAL->getPortalColor(i));
 
 		EFFECT->setBackEffect(name, fixPt, 3);
 
-		cout << "warp" << '\n';
+		//cout << "warp" << '\n';
 	}
 }
