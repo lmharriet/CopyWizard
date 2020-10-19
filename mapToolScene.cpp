@@ -1815,6 +1815,9 @@ void mapToolScene::controller()
 					case 3:
 						user.uKind = UNIT_KIND::GHOUL;
 						break;
+					case 4:
+						user.uKind = UNIT_KIND::GHOULLARGE;
+						break;
 					}
 
 					tool = TOOL::DRAW;
@@ -1834,6 +1837,8 @@ void mapToolScene::controller()
 						obTile[i].keyName = user.KeyName;
 						obTile[i].kind = user.kind;
 						obTile[i].uKind = user.uKind;
+
+						cout << user.KeyName << '\n';
 					}
 				}
 				break;
