@@ -123,7 +123,7 @@ public:
 	void bossDamaged();
 	void bossDie();
 	
-
+	void bossHpInfo(HDC hdc, int destX, int destY);
 
 	bool damageCheck(int skillNum);
 

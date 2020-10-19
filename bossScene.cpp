@@ -148,6 +148,15 @@ void bossScene::render()
 	PARTICLE->render(getMemDC());
 	UI->render(getMemDC(), 50, 50);
 
+	if (isBattle) {
+		char str[128];
+		wsprintf(str, "EARTH LOAD ATLAS");
+		_boss->bossHpInfo(getMemDC(), WINSIZEX / 2 - 226, 100);
+
+		TextOut(getMemDC(), WINSIZEX / 2 - 110, 90, str, strlen(str));
+		
+	}
+
 	_player->invenRender();
 	
 	DAMAGE->render(getMemDC());
