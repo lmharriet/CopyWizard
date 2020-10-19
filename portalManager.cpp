@@ -6,8 +6,9 @@ HRESULT portalManager::init()
 	centerPortal.curPt = { 0,0 };
 	centerPortal.endPt = { 0,0 };
 	centerPortal.isActive = false;
+	centerPortal.colorIndex = 0;
 	centerPortal.isCol = false;
-	centerPortal.rc = RectMakeCenter(centerPortal.curPt.x, centerPortal.curPt.y, 300, 300);
+	centerPortal.rc = RectMakeCenter(centerPortal.curPt.x, centerPortal.curPt.y, 30, 60);
 	return S_OK;
 }
 
@@ -20,12 +21,18 @@ void portalManager::setPortal(tagPortal one, tagPortal two, tagPortal three)
 
 void portalManager::render(HDC hdc)
 {
+	image* img = IMAGEMANAGER->findImage("portalFrame");
+	
 	if (centerPortal.isActive)
 	{
-		CAMERAMANAGER->Rectangle(hdc, centerPortal.rc);
+		//CAMERAMANAGER->Rectangle(hdc, centerPortal.rc);
+
+		CAMERAMANAGER->AlphaFrameRender(hdc, img,
+			centerPortal.curPt.x - img->getFrameWidth() / 2,
+			centerPortal.curPt.y - img->getFrameHeight() / 2,
+			centerPortal.colorIndex, 0, 70);
 	}
 
-	image* img = IMAGEMANAGER->findImage("portalFrame");
 	for (int i = 0; i < 3; i++)
 	{
 		//CAMERAMANAGER->Rectangle(hdc, portalPt[i].rc);

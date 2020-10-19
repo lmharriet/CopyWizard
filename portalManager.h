@@ -22,9 +22,16 @@ private:
 public:
 	HRESULT init();
 
-	void setCenterPortal(tagPortal center) { centerPortal = center; }
+	void setCenterPortal(tagPortal center) 
+	{ 
+		centerPortal = center; 
+		centerPortal.rc = RectMakeCenter(centerPortal.curPt.x, centerPortal.curPt.y, 30, 60);
+	}
 
 	POINT getCenterPortalEndPt() { return centerPortal.endPt; }
+	void setCenterColor(int colorIndex) { centerPortal.colorIndex = colorIndex; }
+	int getCenterColor() { return centerPortal.colorIndex; }
+	void setCenterEndPt(POINT endPt) { centerPortal.endPt = endPt; }
 	bool getCenterCol() { return centerPortal.isCol; }
 	void setCenterCol(bool check) { centerPortal.isCol = check; }
 
@@ -32,6 +39,7 @@ public:
 
 	void setPortal(tagPortal one, tagPortal two, tagPortal three);
 	bool getPortalCol(int index) { return portalPt[index].isCol; }
+	POINT getPortalcurPt(int index) { return portalPt[index].curPt; }
 	POINT getPortalEndPt(int index) { return portalPt[index].endPt; }
 	void resetCol() { for (int i = 0; i < 3; i++)portalPt[i].isCol = false; }
 	int getPortalColor(int index) { return portalPt[index].colorIndex; }
