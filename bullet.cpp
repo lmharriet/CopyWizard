@@ -1485,6 +1485,9 @@ HRESULT iceSpear::init()
 	currentCoolTime = 0;
 	gauge = 0;
 
+	spearCount = time = 0;
+
+	upgread = false;
 	return S_OK;
 }
 
@@ -1494,7 +1497,12 @@ void iceSpear::release()
 
 void iceSpear::update()
 {
-	move();
+	time++;
+//	move();
+	cout << vSpear.size() << '\n';
+	upgradeMove();
+	fireCount(); 
+
 }
 
 void iceSpear::render()
@@ -1562,9 +1570,13 @@ void iceSpear::fire(float x, float y, float angle)
 	spear.range = rangeCul(700, x, y, angle);
 	spear.rc = RectMakeCenter(spear.x, spear.y, 30, 30);
 
+
 	vSpear.push_back(spear);
 
 	gauge = 0.f;
+
+
+
 }
 
 void iceSpear::move()
@@ -1584,5 +1596,62 @@ void iceSpear::move()
 		//삭제
 		if (vSpear[i].distance > vSpear[i].range) vSpear.erase(vSpear.begin() + i);
 		else i++;
+	}
+}
+
+
+
+void iceSpear::upgradefire(float x, float y, float angle)
+{
+
+	tagSpear spear;
+
+	spear.x = spear.fireX = x;
+	spear.y = spear.fireY = y;
+	spear.angle = angle;
+	
+	spear.speed = 25.f;
+	spear.atkPower = 30.f;
+	spear.lifeTime = 60;
+
+	spear.range = rangeCul(500, x, y, angle);
+	spear.rc = RectMakeCenter(spear.x, spear.y, 30, 30);
+	spear.collision = false;
+
+	spearCount = 6;
+	saveSpear = spear;
+
+}
+
+void iceSpear::fireCount()
+{
+	if (spearCount == 0) return;
+
+	if (time % 3 == 0 )
+	{
+		vSpear.push_back(saveSpear);
+
+		spearCount--;
+
+		time = 0;
+	}
+}
+void iceSpear::upgradeMove()
+{
+	for (int i = 0; i < vSpear.size();i++)
+	{
+		if (vSpear[i].collision)continue;
+		vSpear[i].x += cosf(vSpear[i].angle) * vSpear[i].speed;
+		vSpear[i].y -= sinf(vSpear[i].angle) * vSpear[i].speed;
+
+		float fixX = vSpear[i].x + cosf(vSpear[i].angle) * imgRadius;
+		float fixY = vSpear[i].y - sinf(vSpear[i].angle) * imgRadius;
+
+		vSpear[i].rc = RectMakeCenter(fixX, fixY, 30, 30);
+
+		vSpear[i].distance = getDistance(vSpear[i].fireX, vSpear[i].fireY, vSpear[i].x, vSpear[i].y);
+
+		//삭제
+		if (vSpear[i].distance > vSpear[i].range) vSpear[i].collision = true;
 	}
 }

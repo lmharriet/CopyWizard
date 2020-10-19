@@ -483,7 +483,8 @@ struct tagSpear
 	float range;  // 최대 거리
 	float speed;
 	int atkPower;
-	
+	int lifeTime;
+
 	bool collision;
 };
 class iceSpear : public gameNode
@@ -491,16 +492,22 @@ class iceSpear : public gameNode
 private:
 	
 	tagInfo info;
-
+	tagSpear saveSpear;
 	vector<tagSpear> vSpear;
 
-	float gauge;
 
+	float gauge;
+	
+	int spearCount;
+	int time;
+	int pattern;
+	
 	int coolTime;
 	int currentCoolTime;
 	bool upgrade;
 	bool isCoolTime;
-
+	bool upgread;
+	
 	int imgRadius;
 
 public:
@@ -516,5 +523,10 @@ public:
 	void fire(float x, float y, float angle);
 	void move();
 
+	void upgradefire(float x, float y, float angle);
+
+	void fireCount();
+
+	void upgradeMove();
 
 };
