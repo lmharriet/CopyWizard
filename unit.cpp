@@ -10,7 +10,7 @@ HRESULT unit::init()
 
 void unit::addUnit(int _index, string _keyName, string type, POINT frame, float _x, float _y)
 {
-    zObject* zo = new zObject;
+    shared_ptr<zObject> zo = make_shared<zObject>();
 
     zo->init(_index, _keyName, type, frame, _x, _y);
 
@@ -45,7 +45,7 @@ void unit::update()
 
     for (int i = 0; i < vUnit.size(); i++)
     {
-        vector<zObject*> tempObj;
+        vector<shared_ptr<zObject>> tempObj;
         tempObj.swap(vUnit);
     }
 
@@ -55,7 +55,7 @@ void unit::update()
 
     for (int i = 0; i < wall.size(); i++)
     {
-        zObject* zo = new zObject;
+        shared_ptr<zObject> zo = make_shared<zObject>();
 
         zo->init(wall[i], tile[wall[i]].keyName, "wall", tile[wall[i]].frame, 0, 0);
         vUnit.push_back(zo);
@@ -63,7 +63,7 @@ void unit::update()
 
     for (int i = 0; i < vEnemy.size(); i++)
     {
-        zObject* zo = new zObject;
+        shared_ptr<zObject> zo = make_shared<zObject>();
        
         switch (vEnemy[i].kind)
         {
@@ -102,7 +102,7 @@ void unit::render(HDC hdc)
     }
 }
 
-bool compare0(zObject* i, zObject* j) {
+bool compare0(shared_ptr<zObject> i, shared_ptr<zObject> j) {
     return (*i).getRect().top < (*j).getRect().top;
 }
 

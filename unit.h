@@ -10,16 +10,16 @@ private:
 		POINT currentFrame;
 		float posX, posY;
 	};
-	vector<zObject*> vUnit;
+	vector<shared_ptr<zObject>> vUnit;
 	vector<tagEnemy> vEnemy;
 
 	vector<int> wall;
 
-	vector<zObject*> tempObject;
+	vector<shared_ptr<zObject>> tempObject;
 
-	zObject* player;
+	shared_ptr<zObject> player;
 
-	zObject* npc[3];
+	shared_ptr<zObject> npc[3];
 	//
 	tagTile* tile;
 public:
@@ -36,5 +36,5 @@ public:
 
 	void sorting();
 
-	vector<zObject*> getVector() { return vUnit; }
+	vector<shared_ptr<zObject>> getVector() { return vUnit; }
 };
