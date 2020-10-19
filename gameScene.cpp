@@ -461,9 +461,9 @@ void gameScene::enemyUnitRenderInit()
 			break;
 		case MONSTERKIND::GHOULLARGE:
 			if (enemy->getMinion()[i]->getHit() && !enemy->getMinion()[i]->getDie())
-				UNITRENDER->enemyInit(5, currentFrame, monsterPos); // ghoulLarge hit
+				UNITRENDER->enemyInit(6, currentFrame, monsterPos); // ghoulLarge hit
 			else
-				UNITRENDER->enemyInit(6, currentFrame, monsterPos);
+				UNITRENDER->enemyInit(5, currentFrame, monsterPos);
 			break;
 		}
 

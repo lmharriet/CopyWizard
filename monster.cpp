@@ -240,14 +240,17 @@ void astarManager::pathFinding()
 			return;
 		}
 
-		addOpenList(curNode->idx + 1, curNode->idy + 1);	//¿ìÇÏ
-		addOpenList(curNode->idx - 1, curNode->idy + 1);	//ÁÂÇÏ
-		addOpenList(curNode->idx - 1, curNode->idy - 1);	//ÁÂ»ó
-		addOpenList(curNode->idx + 1, curNode->idy - 1);	//¿ì»ó
-		addOpenList(curNode->idx, curNode->idy - 1);		//»ó
-		addOpenList(curNode->idx, curNode->idy + 1);		//ÇÏ
-		addOpenList(curNode->idx - 1, curNode->idy);		//ÁÂ
-		addOpenList(curNode->idx + 1, curNode->idy);		//¿ì
+		if(curNode != nullptr)
+		{
+			addOpenList(curNode->idx + 1, curNode->idy + 1);	//¿ìÇÏ
+			addOpenList(curNode->idx - 1, curNode->idy + 1);	//ÁÂÇÏ
+			addOpenList(curNode->idx - 1, curNode->idy - 1);	//ÁÂ»ó
+			addOpenList(curNode->idx + 1, curNode->idy - 1);	//¿ì»ó
+			addOpenList(curNode->idx, curNode->idy - 1);		//»ó
+			addOpenList(curNode->idx, curNode->idy + 1);		//ÇÏ
+			addOpenList(curNode->idx - 1, curNode->idy);		//ÁÂ
+			addOpenList(curNode->idx + 1, curNode->idy);		//¿ì
+		}
 	}
 
 }
