@@ -101,6 +101,8 @@ void player::release()
 	SAFE_DELETE(searingRush);
 	inferno->release();
 	SAFE_DELETE(inferno);
+	spear->release();
+	SAFE_DELETE(spear);
 
 	inven->release();
 	SAFE_DELETE(inven);
@@ -114,8 +116,9 @@ void player::update()
 	dragon->update();
 	Meteor->update();
 	searingRush->update();
-
+	
 	inferno->update();
+	spear->update();
 
 	inven->update();
 
@@ -163,7 +166,14 @@ void player::update()
 	standardSetUp();
 	signatureSetUp();
 	/////////////////
+	//test
 
+	if (INPUT->GetKey('R'))
+	{
+		spear->chargeSpear();
+	}
+
+	if (INPUT->GetKeyUp('R'))spear->fire(posX, posY, attackAngle);
 
 
 	if (arcana[3].skillName == "skill_meteor" && INPUT->GetKeyDown('P'))
@@ -220,7 +230,7 @@ void player::other_update()
 	searingRush->update();
 
 	inferno->update();
-
+	spear->update();
 
 	animation(1);
 
@@ -357,6 +367,7 @@ void player::render(int _index)
 	dragon->render();
 	Meteor->render();
 	inferno->render();
+	spear->render();
 
 	if (INPUT->GetToggleKey('L'))
 	{
@@ -392,6 +403,9 @@ void player::bulletClassInit()
 
 	inferno = new RagingInferno;
 	inferno->init();
+
+	spear = new iceSpear;
+	spear->init();
 }
 
 void player::controller()

@@ -469,3 +469,52 @@ public:
 };
 
 
+
+//ICE SPEAR 
+struct tagSpear
+{
+	RECT rc;
+	float x, y;
+	float fireX, fireY;
+	float angle;
+
+	float distance; // firePos 부터 curPos 까지 거리
+
+	float range;  // 최대 거리
+	float speed;
+	int atkPower;
+	
+	bool collision;
+};
+class iceSpear : public gameNode
+{
+private:
+	
+	tagInfo info;
+
+	vector<tagSpear> vSpear;
+
+	float gauge;
+
+	int coolTime;
+	int currentCoolTime;
+	bool upgrade;
+	bool isCoolTime;
+
+	int imgRadius;
+
+public:
+	HRESULT init();
+	void release();
+	void update();
+	void render();
+
+	void chargeSpear();
+
+	float rangeCul(float maxRange, float x, float y, float angle);
+
+	void fire(float x, float y, float angle);
+	void move();
+
+
+};

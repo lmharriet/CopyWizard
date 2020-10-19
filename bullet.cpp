@@ -460,7 +460,7 @@ void meteor::creatMeteor(float x, float y, float angle)
 		isCoolTime = true;
 		UI->addCoolTime("skill_meteor");
 
-		
+
 		SOUNDMANAGER->play(meteo_sound, false);
 	}
 
@@ -491,7 +491,7 @@ void meteor::move()
 		if (vMeteor[i].y > vMeteor[i].endY)
 		{
 			PARTICLE->explosionParticle2Play(vMeteor[i].x, vMeteor[i].y);
-			
+
 			//데미지 넣을 용도
 			tagMeteor damage;
 
@@ -1463,5 +1463,126 @@ void dragonArc::coolTimeReduction()
 	{
 		coolTime = 240;
 		UI->fixCoolTime("skill_dragonArc", coolTime);
+	}
+}
+
+
+
+
+//test
+// ICE SPEAR
+
+
+HRESULT iceSpear::init()
+{
+	IMAGEMANAGER->addImage("skill_spear", "resource/player/iceSpear.bmp", 96, 96, true, RGB(255, 0, 255));
+	imgRadius = IMAGEMANAGER->findImage("skill_spear")->getWidth() / 2;
+	info.keyName = "skill_spear";
+	info.explanation = "";
+
+
+	coolTime = 360;
+	currentCoolTime = 0;
+	gauge = 0;
+
+	return S_OK;
+}
+
+void iceSpear::release()
+{
+}
+
+void iceSpear::update()
+{
+	move();
+}
+
+void iceSpear::render()
+{
+	image* img = IMAGEMANAGER->findImage("skill_spear");
+
+	//float angle = getAngle(WINSIZEX / 2, WINSIZEY / 2, _ptMouse.x, _ptMouse.y);
+	//img->rotateRender(getMemDC(), WINSIZEX / 2, WINSIZEY / 2, angle);
+
+	for (int i = 0; i < vSpear.size(); i++)
+	{
+		CAMERAMANAGER->RotateRender(getMemDC(), img, vSpear[i].x, vSpear[i].y, vSpear[i].angle);
+		CAMERAMANAGER->Ellipse(getMemDC(), vSpear[i].rc);
+	}
+}
+
+void iceSpear::chargeSpear()
+{
+	if (gauge < 0.99f) gauge += 0.02f;
+}
+
+float iceSpear::rangeCul(float maxRange, float x, float y, float angle)
+{
+	tagTile* tile = PLAYERDATA->_getTile();
+	vector<int> iWall = PLAYERDATA->getWall();
+
+	for (int i = 32; i < maxRange; i += 32)
+	{
+		int destX = x + cosf(angle) * imgRadius;
+		int destY = y - sinf(angle) * imgRadius;
+
+		float culX = destX + cosf(angle) * i;
+		float culY = destY - sinf(angle) * i;
+
+		POINT pt = { (LONG)culX,(LONG)culY };
+
+		for (int j = 0; j < iWall.size(); j++)
+		{
+			int num = PLAYERDATA->getWall()[j];
+
+			if (PtInRect(&tile[num].rc, pt) == false) continue;
+
+			return i;
+		}
+	}
+
+	return maxRange;
+}
+
+void iceSpear::fire(float x, float y, float angle)
+{
+	if (vSpear.size() > 0)return;
+
+	if (gauge < 0.2f) gauge = 0.2f;
+
+	tagSpear spear;
+
+	spear.x = spear.fireX = x;
+	spear.y = spear.fireY = y;
+	spear.angle = angle;
+
+	spear.speed = 25.f * gauge;
+	spear.atkPower = (30.f * gauge) + 1;
+
+	spear.range = rangeCul(700, x, y, angle);
+	spear.rc = RectMakeCenter(spear.x, spear.y, 30, 30);
+
+	vSpear.push_back(spear);
+
+	gauge = 0.f;
+}
+
+void iceSpear::move()
+{
+	for (int i = 0; i < vSpear.size();)
+	{
+		vSpear[i].x += cosf(vSpear[i].angle) * vSpear[i].speed;
+		vSpear[i].y -= sinf(vSpear[i].angle) * vSpear[i].speed;
+
+		float fixX = vSpear[i].x + cosf(vSpear[i].angle) * imgRadius;
+		float fixY = vSpear[i].y - sinf(vSpear[i].angle) * imgRadius;
+
+		vSpear[i].rc = RectMakeCenter(fixX, fixY, 30, 30);
+
+		vSpear[i].distance = getDistance(vSpear[i].fireX, vSpear[i].fireY, vSpear[i].x, vSpear[i].y);
+
+		//삭제
+		if (vSpear[i].distance > vSpear[i].range) vSpear.erase(vSpear.begin() + i);
+		else i++;
 	}
 }

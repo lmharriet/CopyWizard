@@ -20,6 +20,8 @@ private:
 	meteor* Meteor;
 	dashFire* searingRush;
 	RagingInferno* inferno;
+	iceSpear* spear;
+
 
 	//inventory
 	inventory* inven;

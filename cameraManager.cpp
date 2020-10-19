@@ -216,6 +216,16 @@ void cameraManager::StretchRender(HDC hdc, image* ig, int destX, int destY, floa
 	ig->stretchRender(hdc, GetRelativeX(destX), GetRelativeY(destY), scale);
 }
 
+void cameraManager::RotateRender(HDC hdc, image* ig, int destX, int destY, float angle)
+{
+	ig->rotateRender(hdc, GetRelativeX(destX), GetRelativeY(destY), angle);
+}
+
+void cameraManager::RotateFrameRender(HDC hdc, image* ig, int destX, int destY, int frameX, int frameY, float angle)
+{
+	ig->rotateFrameRender(hdc, GetRelativeX(destX), GetRelativeY(destY), frameX, frameY, angle);
+}
+
 void cameraManager::AlphaRender(HDC hdc, image* ig, int destX, int destY, BYTE alpha)
 {
 	ig->alphaRender(hdc, GetRelativeX(destX), GetRelativeY(destY), alpha);

@@ -8,8 +8,10 @@ class image
 public:
 	enum IMAGE_LOAD_KIND
 	{
-		LOAD_EMPTY,		//빈비트맵 로딩
-		LOAD_FILE		//파일로 로딩
+		LOAD_RESOURCE = 0,  //리소스로 로딩(사용안함)
+		LOAD_FILE,			//파일로 로딩
+		LOAD_EMPTY,			//빈비트맵 로딩
+		LOAD_END
 	};
 
 	typedef struct tagImage
@@ -57,6 +59,10 @@ private:
 	BLENDFUNCTION	_blendFunc;		//알파블렌드 기능
 	LPIMAGE_INFO    _stretchImage;    //스트레치 이미지
 
+
+	LPIMAGE_INFO	_scaleImage;	//스케일이미지
+	LPIMAGE_INFO	_rotateImage;	//로테이트이미지
+
 public:
 	image();
 	~image();
@@ -72,7 +78,12 @@ public:
 	
 	//알파블렌드 초기화
 	HRESULT initForAlphaBlend();
+	//스트레치렌더 초기화
+	HRESULT initForStretchBlt();
 	HRESULT initForStretchBlend();
+	//로테이트렌더 초기화
+	HRESULT initForRotateImage(bool isFrameImage);
+
 
 	//해제
 	void release();
@@ -108,6 +119,18 @@ public:
 	void loopAlphaRender(HDC hdc, const LPRECT drawArea, int offsetX, int offsetY, BYTE alpha);
 
 	void frameStretchAlphaRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float scaleX, float scaleY, BYTE alpha);
+
+
+
+	//스케일렌더 (이미지 크기)
+	void scaleRender(HDC hdc, int destX, int destY, float scale = 1.0f);
+	void scaleFrameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float scale = 1.0f);
+
+	//로테이트렌더 (이미지 회전)
+	void rotateRender(HDC hdc, float destX, float destY, float angle);
+	void rotateFrameRender(HDC hdc, float destX, float destY, int currentFrameX, int currentFrameY, float angle);
+
+
 
 	//DC 얻기
 	inline HDC getMemDC() { return _imageInfo->hMemDC; }

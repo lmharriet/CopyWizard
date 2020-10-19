@@ -87,6 +87,9 @@ public:
 	void StretchFrameRender(HDC hdc, image* ig, int destX, int destY, int frameX, int frameY, float scale);
 
 	void StretchRender(HDC hdc, image* ig, int destX, int destY, float scale);
+	void RotateRender(HDC hdc, image* ig, int destX, int destY, float angle);
+
+	void RotateFrameRender(HDC hdc, image* ig, int destX, int destY, int frameX, int frameY, float angle);
 
 	void TextDraw(HDC hdc, int destX, int destY, LPCSTR lpstring, int c);
 	void AlphaRender(HDC hdc, image* ig, int destX, int destY, BYTE alpha);
