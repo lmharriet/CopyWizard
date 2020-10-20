@@ -166,36 +166,37 @@ public:
 	
 
 
-	inline POINT getPos() { return pos; }
-	inline POINT getCulPos() { return cul; }
-	inline POINT getCurrentFrame() { return currentFrame; }
-	inline RECT getRC() { return rc; }
-	inline MONSTERKIND getMonsterKind() { return kind; }
-	inline bool getDelete() { return isDelete; }
-	inline bool getATKCHECK() { return isATK; }
-	inline bool getRange() { return isRanger; }
-	inline bool getFx() { return isFxAppear; }
-	inline bool getBulletFire() { return isBulletFire; }
-	inline bool getDie() { return isDie; }
-	inline bool getHit() { return isHit; }
-	inline int getBulletDirection() { for (int i = 0; i < MONSTER_MAX; i++) if (bulletDirection[i])return i; }
-	inline int getHp() { return hp; }
-	inline int getAttack() { return atk; }
-	inline int getArmour() { return armour; }
-	inline int getCenterY() { return pos.y + img->getFrameHeight() / 2; }
-	inline int getCenterX() { return pos.x + img->getFrameWidth() / 2; }
-	inline int getCulCenterX() { return cul.x + img->getFrameWidth() / 2; }
-	inline int getCulCenterY() { return cul.y + img->getFrameHeight() / 2; }
+	POINT getPos() { return pos; }
+	POINT getCulPos() { return cul; }
+	POINT getCurrentFrame() { return currentFrame; }
+	RECT getRC() { return rc; }
+	MONSTERKIND getMonsterKind() { return kind; }
+	bool getDelete() { return isDelete; }
+	bool getATKCHECK() { return isATK; }
+	bool getRange() { return isRanger; }
+	float getAngle() { return angle; }
+	bool getFx() { return isFxAppear; }
+	bool getBulletFire() { return isBulletFire; }
+	bool getDie() { return isDie; }
+	bool getHit() { return isHit; }
+	int getBulletDirection() { for (int i = 0; i < MONSTER_MAX; i++) if (bulletDirection[i])return i; }
+	int getHp() { return hp; }
+	int getAttack() { return atk; }
+	int getArmour() { return armour; }
+	int getCenterY() { return pos.y + img->getFrameHeight() / 2; }
+	int getCenterX() { return pos.x + img->getFrameWidth() / 2; }
+	int getCulCenterX() { return cul.x + img->getFrameWidth() / 2; }
+	int getCulCenterY() { return cul.y + img->getFrameHeight() / 2; }
 
 	void setPt(float x, float y);
-	inline void setX(int X) { pos.x = X; }
-	inline void setY(int Y) { pos.y = Y; }
-	inline void setPlayerRC(RECT rc) { playerRC = rc; }
-	inline void setCamRC(RECT rc) { camRC = rc; }
-	inline void setHp(float _atk) { hp = (int)_atk; }
-	inline void setATK(bool atk) { isATK = atk; }
-	inline void setFx(bool Fx) {  isFxAppear = Fx; }
-	inline void setBulletFire(bool isFire) { isBulletFire = isFire; }
+	void setX(int X) { pos.x = X; }
+	void setY(int Y) { pos.y = Y; }
+	void setPlayerRC(RECT rc) { playerRC = rc; }
+	void setCamRC(RECT rc) { camRC = rc; }
+	void setHp(float _atk) { hp = (int)_atk; }
+	void setATK(bool atk) { isATK = atk; }
+	void setFx(bool Fx) {  isFxAppear = Fx; }
+	void setBulletFire(bool isFire) { isBulletFire = isFire; }
 	
 	void hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical = false);
 	bool hitCheck(int skillNum);

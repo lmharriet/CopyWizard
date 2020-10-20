@@ -16,6 +16,7 @@ void ghoulLarge::addInit()
     isSpeedUp = false;
     isIdle = false;
     isNoHit = true;
+    isDash = false;
 
 
 
@@ -28,43 +29,46 @@ void ghoulLarge::update()
 {
     if (isFindWayOn) //길찾기 on
     {
-
-        astar->update(camRC, rc, playerRC, &angle);  // 에이스타에서 앵글 받아옴
-        if (astar->getFirstTile() && !isATK && !isDie) // 걸을 때
+        if (!isATK)
         {
-            state = STATEIMAGE::WALK;
-            pos.x += cos(angle) * speed;
-            pos.y += -sin(angle) * speed;
-            if (rc.left + img->getFrameWidth() / 2 < playerRC.left)
+            RECT astarRC = RectMake(pos.x + 10, pos.y - img->getFrameHeight()/2, img->getFrameWidth(), img->getFrameHeight());
+            astar->update(camRC, astarRC, playerRC, &angle);  // 에이스타에서 앵글 받아옴
+            if (astar->getFirstTile() && !isDie) // 걸을 때
             {
-                atkDirection[MONSTER_LEFT] = false;
-                atkDirection[MONSTER_RIGHT] = true;
-                isLeft = false;
-            }
-            else
-            {
-                isLeft = true;
-                atkDirection[MONSTER_LEFT] = true;
-                atkDirection[MONSTER_RIGHT] = false;
-            }
-            if (rc.top + img->getFrameHeight() / 2 > playerRC.top)
-            {
+                state = STATEIMAGE::WALK;
+                pos.x += cos(angle) * speed;
+                pos.y += -sin(angle) * speed;
+                if (rc.left + img->getFrameWidth() / 2 < playerRC.left)
+                {
+                    atkDirection[MONSTER_LEFT] = false;
+                    atkDirection[MONSTER_RIGHT] = true;
+                    isLeft = false;
+                }
+                else
+                {
+                    isLeft = true;
+                    atkDirection[MONSTER_LEFT] = true;
+                    atkDirection[MONSTER_RIGHT] = false;
+                }
+                if (rc.top + img->getFrameHeight() / 2 > playerRC.top)
+                {
 
-                atkDirection[MONSTER_UP] = true;
-                atkDirection[MONSTER_DOWN] = false;
-            }
-            else
-            {
+                    atkDirection[MONSTER_UP] = true;
+                    atkDirection[MONSTER_DOWN] = false;
+                }
+                else
+                {
 
-                atkDirection[MONSTER_UP] = false;
-                atkDirection[MONSTER_DOWN] = true;
+                    atkDirection[MONSTER_UP] = false;
+                    atkDirection[MONSTER_DOWN] = true;
+                }
             }
-        }
-        else if (!isDie && !isATK)
-        {
-            state = STATEIMAGE::ATK;
-            isATK = true;
-            SOUNDMANAGER->play("golemAtk", false);
+            else if (!isDie )
+            {
+                state = STATEIMAGE::ATK;
+                isATK = true;
+                SOUNDMANAGER->play("golemAtk", false);
+            }
         }
 
     }
@@ -72,6 +76,12 @@ void ghoulLarge::update()
     {
         //if(!isHit)
         state = STATEIMAGE::IDLE;
+    }
+
+    if (isATK && isDash)
+    {
+        pos.x += cos(angle) * speed*3.0f;
+        pos.y += -sin(angle) * speed*3.0f;
     }
 
 
@@ -150,6 +160,7 @@ void ghoulLarge::stateATK()
             bulletDirection[MONSTER_LEFT] = false;
             bulletDirection[MONSTER_RIGHT] = false;
             isFxAppear = true;
+            isDash = true;
             delay++;
         }
     }
@@ -165,6 +176,7 @@ void ghoulLarge::stateATK()
             bulletDirection[MONSTER_LEFT] = false;
             bulletDirection[MONSTER_RIGHT] = false;
             isFxAppear = true;
+            isDash = true;
             delay++;
         }
     }
@@ -177,6 +189,7 @@ void ghoulLarge::stateATK()
         bulletDirection[MONSTER_LEFT] = true;
         bulletDirection[MONSTER_RIGHT] = false;
         isFxAppear = true;
+        isDash = true;
         delay++;
     }
     else if (delay == 0 && frameIndexR[STATEIMAGE::ATK].x == 4)
@@ -188,6 +201,7 @@ void ghoulLarge::stateATK()
         bulletDirection[MONSTER_LEFT] = false;
         bulletDirection[MONSTER_RIGHT] = true;
         isFxAppear = true;
+        isDash = true;
         delay++;
     }
 
@@ -204,6 +218,7 @@ void ghoulLarge::stateATK()
             {
                 frameIndexL[STATEIMAGE::ATK].x = 0;
                 delay++;
+                    isDash = false;
                 if (delay > 5)
                 {
                     isATK = false;
@@ -228,6 +243,7 @@ void ghoulLarge::stateATK()
             {
                 frameIndexR[STATEIMAGE::ATK].x = 5;
                 delay++;
+                    isDash = false;
                 if (delay > 5)
                 {
                     isATK = false;

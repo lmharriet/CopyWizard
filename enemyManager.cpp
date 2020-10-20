@@ -16,7 +16,7 @@ HRESULT enemyManager::init(tagTile* _tile, tagTile* _subTile, POINT _monPt)
 	//공용총알 클래스 초기화
 	if(_bullet==nullptr)
 		_bullet = new bullet;
-	_bullet->init("stoneFly", 15, 500);
+	_bullet->init("stoneFly", 15, 500,110);
 
 	return S_OK;
 }
@@ -150,7 +150,7 @@ void enemyManager::minionBulletFire(float aimX, float aimY)
 			knightBullet(angle);
 			break;
 		case MONSTERKIND::GHOULLARGE:
-			golemBullet(angle);
+			ghoulLargeBullet((*_viMinion)->getAngle());
 			break;
 		}
 		
@@ -225,6 +225,33 @@ void enemyManager::summonerBullet(float angle)
 	_bullet->fire((float)(*_viMinion)->getPos().x + 50, (float)(*_viMinion)->getPos().y - 52,
 		angle - PI / 4, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
 	(*_viMinion)->setFx(false);
+}
+
+void enemyManager::ghoulLargeBullet(float angle)
+{
+	switch ((*_viMinion)->getBulletDirection())
+	{
+	case MONSTER_UP:
+		_bullet->fire((float)(*_viMinion)->getCenterX(), (float)(*_viMinion)->getCenterY(),
+			angle, 9.f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
+		(*_viMinion)->setFx(false);
+		break;
+	case MONSTER_DOWN:
+		_bullet->fire((float)(*_viMinion)->getCenterX(), (float)(*_viMinion)->getCenterY(),
+			angle, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
+		(*_viMinion)->setFx(false);
+		break;
+	case MONSTER_LEFT:
+		_bullet->fire((float)(*_viMinion)->getCenterX(), (float)(*_viMinion)->getCenterY(),
+			angle, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
+		(*_viMinion)->setFx(false);
+		break;
+	case MONSTER_RIGHT:
+		_bullet->fire((float)(*_viMinion)->getCenterX(), (float)(*_viMinion)->getCenterY(),
+			angle, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
+		(*_viMinion)->setFx(false);
+		break;
+	}
 }
 
 

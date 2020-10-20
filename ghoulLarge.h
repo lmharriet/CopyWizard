@@ -7,6 +7,7 @@ private:
 	bool isSpeedUp;
 	bool isIdle;
 	bool isNoHit;
+	bool isDash;
 public:
 	void addInit()override;
 	void update() override;

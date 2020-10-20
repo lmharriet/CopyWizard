@@ -49,6 +49,7 @@ public:
 	void golemBullet(float angle);
 	void knightBullet(float angle);
 	void summonerBullet(float angle);
+	void ghoulLargeBullet(float angle);
 
 	
 	enemyManager();

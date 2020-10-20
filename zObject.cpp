@@ -39,7 +39,7 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
         else if(keyName == "ghoul")
             rc = RectMakeCenter(x - img->getFrameWidth() / 2, y + 170, img->getFrameWidth(), img->getFrameHeight());
         else if (keyName == "ghoulLarge" || keyName == "ghoulLargeHit")
-            rc = RectMakeCenter(x - img->getFrameWidth() / 2, y + 300, img->getFrameWidth(), img->getFrameHeight());
+            rc = RectMakeCenter(x - img->getFrameWidth() / 2, y + 170, img->getFrameWidth(), img->getFrameHeight());
         tile = nullptr;
     }
 
