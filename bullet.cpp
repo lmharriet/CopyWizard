@@ -1490,6 +1490,7 @@ void dragonArc::coolTimeReduction()
 HRESULT iceSpear::init()
 {
 	IMAGEMANAGER->addImage("skill_spear", "resource/player/iceSpear.bmp", 96, 96, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("skill_spearX2", "resource/player/iceSpear.bmp", 96*2, 96*2, true, RGB(255, 0, 255));
 	imgRadius = IMAGEMANAGER->findImage("skill_spear")->getWidth() / 2;
 	info.keyName = "skill_spear";
 	info.explanation = "";
@@ -1503,6 +1504,8 @@ HRESULT iceSpear::init()
 	eTime = sTime = delay = 0;
 	upgread = false;
 	active = false;
+
+	saveRange = 0;
 	return S_OK;
 }
 
@@ -1513,7 +1516,7 @@ void iceSpear::release()
 void iceSpear::update()
 {
 	time++;
-	//move();
+	move();
 
 	if (active)fireCount();
 	upgradeMove();
@@ -1523,20 +1526,32 @@ void iceSpear::update()
 void iceSpear::render()
 {
 	image* img = IMAGEMANAGER->findImage("skill_spear");
-
-	//float angle = getAngle(WINSIZEX / 2, WINSIZEY / 2, _ptMouse.x, _ptMouse.y);
-	//img->rotateRender(getMemDC(), WINSIZEX / 2, WINSIZEY / 2, angle);
+	image* big = IMAGEMANAGER->findImage("skill_spearX2");
 
 	for (int i = 0; i < vSpear.size(); i++)
 	{
 		CAMERAMANAGER->RotateRender(getMemDC(), img, vSpear[i].x, vSpear[i].y, vSpear[i].angle);
 		CAMERAMANAGER->Ellipse(getMemDC(), vSpear[i].rc);
 	}
+	
+	for (int i = 0; i < vStay.size(); i++)
+	{
+		CAMERAMANAGER->RotateRender(getMemDC(), img, vStay[i].x, vStay[i].y, vStay[i].angle);
+	}
 
 	for (int i = 0; i < vUltSpear.size(); i++)
 	{
 		CAMERAMANAGER->Ellipse(getMemDC(), vUltSpear[i].rc);
-		CAMERAMANAGER->RotateRender(getMemDC(), img, vUltSpear[i].x, vUltSpear[i].y, vUltSpear[i].angle);
+
+		if (vUltSpear[i].isBig)
+		{
+			CAMERAMANAGER->RotateRender(getMemDC(), big, vUltSpear[i].x, vUltSpear[i].y, vUltSpear[i].angle);
+		}
+
+		else
+		{
+			CAMERAMANAGER->RotateRender(getMemDC(), img, vUltSpear[i].x, vUltSpear[i].y, vUltSpear[i].angle);
+		}
 	}
 
 }
@@ -1548,6 +1563,8 @@ void iceSpear::chargeSpear()
 
 float iceSpear::rangeCul(float maxRange, float x, float y, float angle)
 {
+	if (saveRange > 0)return saveRange;
+
 	tagTile* tile = PLAYERDATA->_getTile();
 	vector<int> iWall = PLAYERDATA->getWall();
 
@@ -1567,10 +1584,12 @@ float iceSpear::rangeCul(float maxRange, float x, float y, float angle)
 
 			if (PtInRect(&tile[num].rc, pt) == false) continue;
 
+			saveRange = i;
 			return i;
 		}
 	}
 
+	saveRange = maxRange;
 	return maxRange;
 }
 
@@ -1616,7 +1635,11 @@ void iceSpear::move()
 		vSpear[i].distance = getDistance(vSpear[i].fireX, vSpear[i].fireY, vSpear[i].x, vSpear[i].y);
 
 		//삭제
-		if (vSpear[i].distance > vSpear[i].range) vSpear.erase(vSpear.begin() + i);
+		if (vSpear[i].distance > vSpear[i].range)
+		{
+			saveRange = 0;
+			vSpear.erase(vSpear.begin() + i);
+		}
 		else i++;
 	}
 }
@@ -1633,39 +1656,42 @@ void iceSpear::upgradefire(float x, float y, float angle)
 	posX = spear.fireX = x;
 	posY = spear.fireY = y;
 
-	spear.x = x + 50;
-	spear.y = y;
-
-	spear.strY = spear.y;
+	spear.x = x + cosf(angle) * 50;
+	spear.y = y - sinf(angle) * 50;
 
 	vStay.push_back(spear);
 
-	spear.x = spear.x - 100;
-	spear.y = spear.y - 40;
+	float tempAngle = angle + (140 * (PI / 180));
 
-	spear.strY = spear.y;
+	spear.x = x + cosf(tempAngle) * 50;
+	spear.y = y - sinf(tempAngle) * 50;
+
 	vStay.push_back(spear);
 
-	spear.x = posX - 100;
-	spear.y = posY + 40;
+	tempAngle = angle + (220 * (PI / 180));
+
+	spear.x = x + cosf(tempAngle) * 50;
+	spear.y = y - sinf(tempAngle) * 50;
+
 	vStay.push_back(spear);
 
-	spear.x = posX - 100;
-	spear.y = posY + 80;
+	tempAngle = angle + (240 * (PI / 180));
 
-	spear.strY = spear.y;
+	spear.x = x + cosf(tempAngle) * 50;
+	spear.y = y - sinf(tempAngle) * 50;
+
 	vStay.push_back(spear);
 
-	spear.x = posX - 100;
-	spear.y = posY - 80;
+	tempAngle = angle + (120 * (PI / 180));
 
-	spear.strY = spear.y;
+	spear.x = x + cosf(tempAngle) * 50;
+	spear.y = y - sinf(tempAngle) * 50;
+
 	vStay.push_back(spear);
 
 	spear.x = posX;
 	spear.y = posY;
 
-	spear.strY = spear.y;
 	vStay.push_back(spear);
 
 }
@@ -1674,6 +1700,7 @@ void iceSpear::fireCount()
 {
 	if (vStay.empty()) return;
 
+	vStay[0].x = lerp(vStay[0].x, posX, 0.2f);
 	vStay[0].y = lerp(vStay[0].y, posY, 0.2f);
 
 	if (sTime % 10 == 0)
@@ -1707,7 +1734,7 @@ void iceSpear::upgradeMove()
 	{
 		float distance = getDistance(vUltSpear[i].fireX, vUltSpear[i].fireY, vUltSpear[i].x, vUltSpear[i].y);
 
-		cout << i << ", " << distance << '\n';
+		//cout << i << ", " << distance << '\n';
 
 		if (distance < 500)
 		{
@@ -1730,28 +1757,23 @@ void iceSpear::upgradeMove()
 
 		if (vUltSpear[i].isBig)
 		{
-			//cout << i << '\n';
-			//cout << distance << '\n';
 			//삭제
 			if (distance > 500)
 			{
 				eTime++;
-				//cout << eTime << '\n';
-				if (eTime > 1000)
+
+				if (eTime > 35)
 				{
 					vUltSpear.clear();
 					active = false;
 					eTime = 0;
-
+					saveRange = 0;
+					break;
 				}
 
 			}
 		}
-		else i++;
 
-
-
+		i++;
 	}
-
-
 }
