@@ -153,8 +153,8 @@ void loading::render()
 	//_loadingBar->render();
 	
 	
-	_enemy->frameRender(getMemDC(),_loadingBar->getPosX()+_loadingBar->getWidth()-120,_loadingBar->getPosY()-_enemy->getFrameHeight()+40, _currentEnemyFrameX,0);
-	_char->frameRender(getMemDC(),_loadingBar->getPosX()+ _playerCurrentX,_loadingBar->getPosY()-_char->getFrameHeight()/2, _currentFrameX,3);
+	_enemy->frameRender(getMemDC(),_loadingBar->getPosX()+_loadingBar->getWidth()-120,_loadingBar->getPosY()-_enemy->getFrameHeight()+140, _currentEnemyFrameX,0);
+	_char->frameRender(getMemDC(),_loadingBar->getPosX()+ _playerCurrentX,_loadingBar->getPosY()-_char->getFrameHeight()/2+100, _currentFrameX,3);
 	//_enemy->frameRender(getMemDC(),_loadingBar->getPosX()+_loadingBar->getWidth(),_loadingBar->getPosY()-_enemy->getFrameHeight()/2);
 	
 	if(_currentGauge < _vLoadItem.size())
