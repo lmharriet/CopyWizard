@@ -1515,7 +1515,7 @@ void iceSpear::update()
 	time++;
 	//move();
 
-	if(active)fireCount();
+	if (active)fireCount();
 	upgradeMove();
 
 }
@@ -1689,7 +1689,7 @@ void iceSpear::fireCount()
 		ultSpear.y = vStay[0].y;
 		ultSpear.fireX = vStay[0].fireX;
 		ultSpear.fireY = vStay[0].fireY;
-		ultSpear.range = rangeCul(500, ultSpear.fireX, ultSpear.fireY, ultSpear.angle);
+		//ultSpear.range = rangeCul(500, ultSpear.fireX, ultSpear.fireY, ultSpear.angle);
 
 		ultSpear.rc = RectMakeCenter(ultSpear.x, ultSpear.y, 30, 30);
 
@@ -1705,8 +1705,11 @@ void iceSpear::upgradeMove()
 {
 	for (int i = 0; i < vUltSpear.size();)
 	{
-		float distance = getDistance(vUltSpear[i].fireX, vUltSpear[i].fireY, posX, posY);
-		if (abs(distance) < vUltSpear[i].range)
+		float distance = getDistance(vUltSpear[i].fireX, vUltSpear[i].fireY, vUltSpear[i].x, vUltSpear[i].y);
+
+		cout << i << ", " << distance << '\n';
+
+		if (distance < 500)
 		{
 			//이동
 			vUltSpear[i].x += cosf(vUltSpear[i].angle) * vUltSpear[i].speed;
@@ -1716,6 +1719,7 @@ void iceSpear::upgradeMove()
 			if (vUltSpear[i].isBig)
 			{
 				vUltSpear[i].rc = RectMakeCenter(vUltSpear[i].x, vUltSpear[i].y, 50, 50);
+
 			}
 			else
 			{
@@ -1723,25 +1727,31 @@ void iceSpear::upgradeMove()
 			}
 		}
 
-		//삭제
-		if (distance >= vUltSpear[i].range)
+
+		if (vUltSpear[i].isBig)
 		{
-			eTime++;
-			cout << "vUltSpear[i].range : " << vUltSpear[i].range << '\n';
-			if (eTime > 500)
+			//cout << i << '\n';
+			//cout << distance << '\n';
+			//삭제
+			if (distance > 500)
 			{
-				vUltSpear.clear();
-				active = false;
-				eTime = 0;
+				eTime++;
+				//cout << eTime << '\n';
+				if (eTime > 1000)
+				{
+					vUltSpear.clear();
+					active = false;
+					eTime = 0;
+
+				}
 
 			}
-		
 		}
-
 		else i++;
 
 
-		
+
 	}
+
 
 }
