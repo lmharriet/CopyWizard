@@ -40,7 +40,7 @@ void portalManager::render(HDC hdc)
 		CAMERAMANAGER->AlphaFrameRender(hdc, img,
 			centerPortal.curPt.x - img->getFrameWidth() / 2,
 			centerPortal.curPt.y - img->getFrameHeight() / 2,
-			centerPortal.colorIndex, 0, 70);
+			centerPortal.colorIndex, 0, 120);
 	}
 
 	for (int i = 0; i < 3; i++)
@@ -48,7 +48,7 @@ void portalManager::render(HDC hdc)
 		CAMERAMANAGER->AlphaFrameRender(hdc, img,
 			portalPt[i].curPt.x - img->getFrameWidth()/2,
 			portalPt[i].curPt.y - img->getFrameHeight()/2,
-			portalPt[i].colorIndex, 0, 70);
+			portalPt[i].colorIndex, 0, 120);
 	}
 }
 

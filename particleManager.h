@@ -66,9 +66,6 @@ private:
 	vector<tagParticlePoint*> vExplosion;	  // 폭팔 파티클 생성자
 	vector<tagParticle*> vParticle;			  // 파티클
 
-	vector<tagParticlePoint*> alwaysPoint;
-	vector<tagParticle*> alwaysParticle;
-
 	int pTime;
 public:
 	HRESULT init();
@@ -103,8 +100,4 @@ public:
 	void bossJumpParticlePlay(float x, float y);
 	void crashRockParticlePlay(float x, float y);
 	void smokeParticlePlay(float x, float y);
-
-	void generateColorPoint(string colorName, float x, float y);
-	void colorPointActive();
-	void colorParticleRender(HDC hdc);
 };
