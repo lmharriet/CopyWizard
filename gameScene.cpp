@@ -147,6 +147,7 @@ void gameScene::update()
 
 	if (INPUT->GetKeyDown(VK_BACK))
 	{
+		cout << "vk_back" << '\n';
 		//POINT pt = { (long)_player->getX() ,(long)_player->getY() };
 
 		//DROP->getCoinEffect(1);
@@ -154,7 +155,9 @@ void gameScene::update()
 		//EFFECT->setAlwaysPoint("curseEffect", pt);
 		//EFFECT->setEffect("portal1", pt, false, false, 0, 3);
 		//EFFECT->setBackEffect("portal1", pt, 3);
+		PARTICLE->generateColorPoint("purple", _player->getX(), _player->getY());
 	}
+	PARTICLE->colorPointActive();
 
 	UNITRENDER->setPlayerRect(_player->getRect());
 
@@ -190,6 +193,7 @@ void gameScene::render()
 
 	PLAYERDATA->shroudRender(getMemDC());
 
+	PARTICLE->colorParticleRender(getMemDC());
 	PARTICLE->render(getMemDC());
 	EFFECT->render(getMemDC());
 	EFFECT->dRender(getMemDC());

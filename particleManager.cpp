@@ -26,6 +26,13 @@ HRESULT particleManager::init()
 	IMAGEMANAGER->addFrameImage("smokeX2", "Images/particle/smokeParticle.bmp", 480, 320, 6, 4);
 	IMAGEMANAGER->addFrameImage("smokeX4", "Images/particle/smokeParticle.bmp", 480/2, 320/2, 6, 4);
 
+	//portal particle
+	IMAGEMANAGER->addImage("purpleParticle", "Images/particle/purpleParticle.bmp", 20, 20);
+	IMAGEMANAGER->addImage("greenParticle", "Images/particle/greenParticle.bmp", 20, 20);
+	IMAGEMANAGER->addImage("redParticle", "Images/particle/redParticle.bmp", 20, 20);
+
+	pTime = 0;
+
 	return S_OK;
 }
 
@@ -493,5 +500,106 @@ void particleManager::smokeParticlePlay(float x, float y)
 		int ranX = RANDOM->range(-10, 20) * 3;
 		int ranY = RANDOM->range(-10, 20) * 2;
 		generate("smokeX2", x - 45 + ranX, y - 55 + ranY, 0.f, 6, 0.f, true);
+	}
+}
+
+//"red", "green", "purple"
+void particleManager::generateColorPoint(string colorName, float x, float y)
+{
+	POINT createPt[4] = { {-20,50}, {20,50}, {-20,-50}, {20,-50} };
+
+	if (colorName == "red")
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			tagParticlePoint* point = getTempPoint();
+			point->keyName = "redParticle";
+			point->x = x + createPt[i].x;
+			point->y = y + createPt[i].y;
+
+			alwaysPoint.push_back(point);
+		}
+	}
+
+	else if (colorName == "green")
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			tagParticlePoint* point = getTempPoint();
+			point->keyName = "greenParticle";
+			point->x = x + createPt[i].x;
+			point->y = y + createPt[i].y;
+
+			alwaysPoint.push_back(point);
+		}
+	}
+
+	else if (colorName == "purple")
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			tagParticlePoint* point = getTempPoint();
+			point->keyName = "purpleParticle";
+			point->x = x + createPt[i].x;
+			point->y = y + createPt[i].y;
+
+			alwaysPoint.push_back(point);
+		}
+	}
+	/*
+	* 	//portal particle
+	IMAGEMANAGER->addImage("purpleParticle", "Images/particle/purpleParticle.bmp", 20, 20);
+	IMAGEMANAGER->addImage("greenParticle", "Images/particle/greenParticle.bmp", 20, 20);
+	IMAGEMANAGER->addImage("redParticle", "Images/particle/redParticle.bmp", 20, 20);
+	*/
+}
+
+void particleManager::colorPointActive()
+{
+	if (alwaysPoint.empty())return;
+
+	pTime++;
+
+	if (pTime % 5 == 0)
+	{
+		for (int i = 0; i < alwaysPoint.size(); i++)
+		{
+			tagParticle* particle = getTempParticle();
+			particle->keyName = alwaysPoint[i]->keyName;
+			particle->curSize = 1.f;
+			particle->x = alwaysPoint[i]->x + RANDOM->range(-5, 5);
+			particle->y = alwaysPoint[i]->y + RANDOM->range(-5, 5);
+			particle->speed = 3.f;
+			particle->delay = 3;
+
+			alwaysParticle.push_back(particle);
+		}
+	}
+}
+
+void particleManager::colorParticleRender(HDC hdc)
+{
+	for (int i = 0; i < alwaysParticle.size();)
+	{
+		image* img = IMAGEMANAGER->findImage(alwaysParticle[i]->keyName);
+
+		//렌더
+		CAMERAMANAGER->StretchRender(hdc, img, 
+			alwaysParticle[i]->x - (img->getWidth() * alwaysParticle[i]->curSize)/2,
+			alwaysParticle[i]->y - (img->getHeight() * alwaysParticle[i]->curSize)/2,
+			alwaysParticle[i]->curSize);
+		//CAMERAMANAGER->Render(hdc, img, alwaysParticle[i]->x, alwaysParticle[i]->y);
+
+		//변환
+		alwaysParticle[i]->curSize -= 0.05f;
+
+		//삭제
+		if (alwaysParticle[i]->curSize < 0.05f)
+		{
+			returnParticle(alwaysParticle[i]);
+
+			alwaysParticle.erase(alwaysParticle.begin() + i);
+		}
+		else i++;
 	}
 }
