@@ -145,7 +145,7 @@ void loading::render()
 	_loadingBar->render();
 	
 	if(_currentGauge < _vLoadItem.size())
-	textOut(getMemDC(), WINSIZEX / 2 - 100, WINSIZEY/2+100, _vLoadItem[_currentGauge]->getImageResource().keyName.c_str());
+	TextOut(getMemDC(),WINSIZEX / 2 - 80, WINSIZEY/2+100, _vLoadItem[_currentGauge]->getImageResource().keyName.c_str(),strlen(_vLoadItem[_currentGauge]->getImageResource().keyName.c_str()));
 }
 
 void loading::loadImage(string strKey, int width, int height)
