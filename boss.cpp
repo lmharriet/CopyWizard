@@ -1220,7 +1220,7 @@ bool boss::damageCheck(int skillNum)
 		damage.endTime = 7;
 		break;
 	case 5:
-		damage.endTime = 10;
+		damage.endTime = 20;
 		break;
 	}
 	vDamage.push_back(damage);

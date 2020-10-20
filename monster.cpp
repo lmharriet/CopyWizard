@@ -528,7 +528,7 @@ bool monster::hitCheck(int skillNum)
 		hit.endTime = 7;
 		break;
 	case 5:
-		hit.endTime = 10;
+		hit.endTime = 20;
 		break;
 	}
 	vHit.push_back(hit);

@@ -556,4 +556,6 @@ public:
 
 	void upgradeMove();
 
+	int getSkillNum() { return 5; }
+
 };

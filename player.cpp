@@ -116,7 +116,7 @@ void player::update()
 	dragon->update();
 	Meteor->update();
 	searingRush->update();
-	
+
 	inferno->update();
 	spear->update();
 
@@ -172,14 +172,14 @@ void player::update()
 	//test
 
 
-	if (INPUT->GetKeyDown('E'))	spear->upgradefire(posX,posY,attackAngle);
+	if (INPUT->GetKeyDown('E'))	spear->upgradefire(posX, posY, attackAngle);
 	if (INPUT->GetKey('R'))
 	{
 		spear->chargeSpear();
 	}
 
 	if (INPUT->GetKeyUp('R'))spear->fire(posX, posY, attackAngle);
-	
+
 
 	if (arcana[3].skillName == "skill_meteor" && INPUT->GetKeyDown('P'))
 	{
@@ -187,7 +187,7 @@ void player::update()
 		arcana[3].explanation = dragon->getInfo().explanation;
 		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, arcana[3].skillName, 300);
 		UI->setSkillSlotIndex(3, arcana[3].skillName, 300);
-		
+
 	}
 	if (arcana[3].skillName == "skill_dragonArc" && INPUT->GetKeyDown('P'))
 	{
@@ -211,7 +211,7 @@ void player::update()
 		posY -= sinf(knockBack.angle) * (knockBack.speed + knockBack.percent);
 		rc = RectMakeCenter(posX, posY, 50, 50);
 	}
-	
+
 	skillGaugeSetUp();
 
 	takeCoin();
@@ -288,7 +288,7 @@ void player::other_update()
 		arcana[3].skillName = dragon->getInfo().keyName;
 		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, arcana[3].skillName, 300);
 		UI->setSkillSlotIndex(3, arcana[3].skillName, 300);
-		
+
 	}
 	if (arcana[3].skillName == "skill_dragonArc" && INPUT->GetKeyDown('P'))
 	{
@@ -547,6 +547,7 @@ void player::skillInit()
 
 void player::setSkillUi(ARCANA_TYPE type, string keyName, int coolTime)
 {
+
 	if (keyName != "")
 	{
 		for (int i = 0; i < 4; i++)
@@ -569,7 +570,17 @@ void player::setSkillUi(ARCANA_TYPE type, string keyName, int coolTime)
 
 void player::basicSetUp()
 {
-	if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool() && !isDead)
+	/*for (int i = 0; i < 4; i++)
+	{
+		if (INPUT->GetKeyDown(VK_LBUTTON) || INPUT->GetKeyDown(VK_RBUTTON) || INPUT->GetKeyDown(VK_SPACE) || INPUT->GetKeyDown('Q'))
+		{
+
+		}
+
+	}*/
+
+
+	if(INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool() && !isDead)
 	{
 		saveAngle = attackAngle;
 		basic = true;
@@ -805,7 +816,7 @@ void player::signatureSetUp()
 		else
 		{
 			TIME->setTest(12.f);
-			EFFECT->ultEftPlay({(long)posX,(long)posY}, 10);
+			EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
 			if (arcana[3].skillName == "skill_meteor")
 			{
 
