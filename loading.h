@@ -72,9 +72,14 @@ private:
 	//이부분은 로딩화면에서 사용할 이미지와 로딩바
 	image* _background;
 	image* _char;
+	image* _enemy;
 	progressBar* _loadingBar;
 	int _currentGauge;
 	int _currentFrameX;
+	int _currentEnemyFrameX;
+
+	float _playerMaxX;
+	float _playerCurrentX;
 
 public:
 	HRESULT init();
