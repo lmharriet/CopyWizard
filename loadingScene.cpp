@@ -4,7 +4,7 @@
 HRESULT loadingScene::init()
 {
 	//로딩클래스 초기화
-	_loading = new loading;
+	_loading = make_unique<loading>();
 	_loading->init();
 
 	//로딩 이미지 및 사운드 초기화
@@ -20,7 +20,6 @@ void loadingScene::release()
 	if (_loading != nullptr)
 	{
 		_loading->release();
-		SAFE_DELETE(_loading);
 	}
 }
 
@@ -46,6 +45,15 @@ void loadingScene::render()
 
 void loadingScene::loadingImage()
 {
+	//플레이어 이미지
+	//_loading->loadFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);  loading.cpp -> init에 있습니다. 모르겠으면 재윤한테 이야기하기하세요 
+	_loading->loadFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
+	_loading->loadFrameImage("meteor", "resource/player/meteor.bmp", 1200, 250, 6, 1);
+	_loading->loadFrameImage("flame", "resource/player/flame1.bmp", 4096, 128, 32, 1);
+	_loading->loadFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
+
+
+	//몬스터 이미지
 	_loading->loadFrameImage("summoner", "resource/enemy/SummonerSource.bmp", 500, 800, 5, 8);
 	_loading->loadFrameImage("golem", "resource/enemy/Golem.bmp", 1080, 1050, 6, 5);
 	_loading->loadFrameImage("knight", "resource/enemy/knight.bmp", 650, 1123, 6, 8);
@@ -53,14 +61,7 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("ghoul", "resource/enemy/ghoul.bmp", 800, 933, 6, 7);
 	_loading->loadFrameImage("ghoulLarge", "resource/enemy/ghoulKing.bmp", 1050, 1500, 7, 10);
 	_loading->loadFrameImage("ghoulLargeHit", "resource/enemy/ghoulKingHit.bmp", 1050, 1500, 7, 10);
-	//몬스터 이미지
-	/*IMAGEMANAGER->addFrameImage("summoner", "resource/enemy/SummonerSource.bmp", 500, 800, 5, 8);
-	IMAGEMANAGER->addFrameImage("golem", "resource/enemy/Golem.bmp", 1080, 1050, 6, 5);
-	IMAGEMANAGER->addFrameImage("knight", "resource/enemy/knight.bmp", 650, 1123, 6, 8);
-	IMAGEMANAGER->addFrameImage("golemHit", "resource/enemy/golemHit.bmp", 1080, 630, 6, 3);
-	IMAGEMANAGER->addFrameImage("ghoul", "resource/enemy/ghoul.bmp", 800, 933, 6, 7);
-	IMAGEMANAGER->addFrameImage("ghoulLarge", "resource/enemy/ghoulKing.bmp", 1050, 1500, 7, 10);
-	IMAGEMANAGER->addFrameImage("ghoulLargeHit", "resource/enemy/ghoulKingHit.bmp", 1050, 1500, 7, 10);*/
+	
 
 	//스킬 이펙트 이미지
 	_loading->loadFrameImage("smallSlash", "resource/enemyEffect/smallSlash.bmp", 600, 1200, 3, 6);
@@ -70,20 +71,13 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("knightSlashDown", "resource/enemyEffect/knightSlashDown.bmp", 246, 82, 3, 1);
 	_loading->loadFrameImage("stoneFly", "resource/enemyEffect/stoneFrame.bmp", 144, 72, 2, 1);
 
-	/*IMAGEMANAGER->addFrameImage("smallSlash", "resource/enemyEffect/smallSlash.bmp", 600, 1200, 3, 6);
-	IMAGEMANAGER->addFrameImage("knightSlashL", "resource/enemyEffect/knightSlashL.bmp", 246, 82, 3, 1);
-	IMAGEMANAGER->addFrameImage("knightSlashR", "resource/enemyEffect/knightSlashR.bmp", 246, 82, 3, 1);
-	IMAGEMANAGER->addFrameImage("knightSlashUp", "resource/enemyEffect/knightSlashUp.bmp", 246, 82, 3, 1);
-	IMAGEMANAGER->addFrameImage("knightSlashDown", "resource/enemyEffect/knightSlashDown.bmp", 246, 82, 3, 1);
-	IMAGEMANAGER->addFrameImage("stoneFly", "resource/enemyEffect/stoneFrame.bmp", 144, 72, 2, 1);*/
-
 
 
 }
 
 void loadingScene::loadingSound()
 {
-
+	//플레이어 사운드
 	_loading->loadSound("playerHit", "Sound/player/hit.mp3");
 	_loading->loadSound("playerNomalDash", "Sound/player/nomalDash.mp3");
 	_loading->loadSound("playerfireDash", "Sound/player/fireDash.mp3");
@@ -101,6 +95,7 @@ void loadingScene::loadingSound()
 	_loading->loadSound("meteoExp2", "Sound/player/meteo_full2.mp3");
 	_loading->loadSound("meteoExp3", "Sound/player/meteo_full3.mp3");
 
+	//UI 사운드
 	_loading->loadSound("healBall", "Sound/healBall.mp3");
 	_loading->loadSound("portalWarp", "Sound/portalWarp.mp3");
 	_loading->loadSound("coinGet", "Sound/coinGet.mp3");
@@ -113,6 +108,7 @@ void loadingScene::loadingSound()
 	_loading->loadSound("shieldOFF", "Sound/UI/shieldOFF.mp3");
 	_loading->loadSound("npcNox", "Sound/UI/npc_nox.mp3");
 
+	//몬스터 사운드
 	_loading->loadSound("golemAtk", "Sound/golem_atk.mp3");
 	_loading->loadSound("golemWalkL", "Sound/golem_walkL.mp3");
 	_loading->loadSound("golemWalkR", "Sound/golem_walkR.mp3");
@@ -139,6 +135,7 @@ void loadingScene::loadingSound()
 	_loading->loadSound("ghoulATK", "Sound/ghoulATK.mp3");
 	_loading->loadSound("ghoulWalk", "Sound/ghoulWalk.mp3");
 
+	//보스
 	_loading->loadSound("bossDrillSFX", "Sound/bossDrillSFX.mp3");
 	_loading->loadSound("bossDrillVO", "Sound/bossDrillVO.mp3");
 	_loading->loadSound("bossJumpSFX", "Sound/bossJumpSFX.mp3");

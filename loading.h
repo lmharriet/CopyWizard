@@ -71,8 +71,10 @@ private:
 
 	//이부분은 로딩화면에서 사용할 이미지와 로딩바
 	image* _background;
+	image* _char;
 	progressBar* _loadingBar;
 	int _currentGauge;
+	int _currentFrameX;
 
 public:
 	HRESULT init();

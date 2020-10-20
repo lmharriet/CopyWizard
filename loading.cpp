@@ -112,15 +112,18 @@ HRESULT loading::init()
 	//로딩바 이미지 초기화
 	IMAGEMANAGER->addImage("loadingBarFront", "Images/loadingBarFront.bmp", 600, 20);
 	IMAGEMANAGER->addImage("loadingBarBack", "Images/loadingBarBack.bmp", 600, 20);
+	//플레이어 이미지 초기화
+	_char = IMAGEMANAGER->addFrameImage("playerRun", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
 
 	//로딩바 클래스 초기화
 	_loadingBar = new progressBar;
 	_loadingBar->init("loadingBarFront", "loadingBarBack");
 	//로딩바 위치 초기화
 	_loadingBar->setPos(WINSIZEX/2-300, 500);
-
+	
 	//현재 게이지
 	_currentGauge = 0;
+	_currentFrameX = 0;
 
 	return S_OK;
 }
@@ -143,6 +146,9 @@ void loading::render()
 	_background->render(getMemDC());
 	//로딩바 클래스 렌더
 	_loadingBar->render();
+	
+	
+	_char->frameRender(getMemDC(),_loadingBar->getPosX()+_loadingBar->getWidth(),_loadingBar->getPosY()-_char->getFrameHeight()/2, _currentFrameX,3);
 	
 	if(_currentGauge < _vLoadItem.size())
 	TextOut(getMemDC(),WINSIZEX / 2 - 80, WINSIZEY/2+100, _vLoadItem[_currentGauge]->getImageResource().keyName.c_str(),strlen(_vLoadItem[_currentGauge]->getImageResource().keyName.c_str()));
@@ -247,6 +253,9 @@ bool loading::loadingDone()
 	
 	//현재 게이지 증가
 	_currentGauge++;
+	_currentFrameX++;
+	if (_currentFrameX > 9)
+		_currentFrameX = 0;
 
 	//로딩바 이미지 변경
 	_loadingBar->setGauge(_vLoadItem.size(), _currentGauge);

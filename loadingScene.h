@@ -5,7 +5,7 @@
 class loadingScene : public gameNode
 {
 private:
-	loading* _loading = nullptr;
+	unique_ptr<loading> _loading = nullptr;
 
 public:
 	HRESULT init();

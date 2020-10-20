@@ -25,5 +25,8 @@ public:
 	//체력바 게이지 세팅하기
 	void setGauge(float maxHp, float currentHp);
 
+	float getPosX() { return _x; }
+	float getPosY() { return _y; }
+	float getWidth() { return _width; }
 };
 
