@@ -23,14 +23,14 @@
     <ProjectGuid>{5CFDEF9B-DA94-4BF5-A033-6A6386FC4E29}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>WindowAPI</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <ProjectName>GameFramework2D</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -160,6 +160,8 @@
     <ClInclude Include="dropManager.h" />
     <ClInclude Include="effectManager.h" />
     <ClInclude Include="enemyManager.h" />
+    <ClInclude Include="finalBoss.h" />
+    <ClInclude Include="finalBossScene.h" />
     <ClInclude Include="gameNode.h" />
     <ClInclude Include="gameScene.h" />
     <ClInclude Include="ghoul.h" />
@@ -210,6 +212,8 @@
     <ClCompile Include="dropManager.cpp" />
     <ClCompile Include="effectManager.cpp" />
     <ClCompile Include="enemyManager.cpp" />
+    <ClCompile Include="finalBoss.cpp" />
+    <ClCompile Include="finalBossScene.cpp" />
     <ClCompile Include="gameNode.cpp" />
     <ClCompile Include="gameScene.cpp" />
     <ClCompile Include="ghoul.cpp" />

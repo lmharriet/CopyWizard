@@ -7,6 +7,7 @@
 #include "mapToolScene.h"
 #include "bossScene.h"
 #include "loadingScene.h"
+#include "finalBossScene.h"
 
 class mainGame : public gameNode
 {

@@ -246,6 +246,12 @@
     <ClCompile Include="ghoulLarge.cpp">
       <Filter>MainGame\인게임\monster</Filter>
     </ClCompile>
+    <ClCompile Include="finalBoss.cpp">
+      <Filter>MainGame\씬 모음\보스</Filter>
+    </ClCompile>
+    <ClCompile Include="finalBossScene.cpp">
+      <Filter>MainGame\씬 모음\보스</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -397,6 +403,12 @@
     </ClInclude>
     <ClInclude Include="ghoulLarge.h">
       <Filter>MainGame\인게임\monster</Filter>
+    </ClInclude>
+    <ClInclude Include="finalBoss.h">
+      <Filter>MainGame\씬 모음\보스</Filter>
+    </ClInclude>
+    <ClInclude Include="finalBossScene.h">
+      <Filter>MainGame\씬 모음\보스</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
