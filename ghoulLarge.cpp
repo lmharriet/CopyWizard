@@ -80,8 +80,12 @@ void ghoulLarge::update()
 
     if (isATK && isDash)
     {
-        pos.x += cos(angle) * speed*3.0f;
-        pos.y += -sin(angle) * speed*3.0f;
+        
+        if (!wallCol())
+        {
+            pos.x += cos(angle) * speed * 3.0f;
+            pos.y += -sin(angle) * speed * 3.0f;
+        }
     }
 
 

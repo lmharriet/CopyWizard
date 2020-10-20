@@ -202,7 +202,7 @@ public:
 	bool hitCheck(int skillNum);
 
 	void hitCul();
-	void wallCol();
+	bool wallCol();
 	void coinDrop(int min, int max);
 	void die();
 };

@@ -405,13 +405,12 @@ void monster::commonUpdate()
 
 			if (isKnockBack) // ¹Ð·Á³².
 			{
-				wallCol();
-				if (!isWallcol)
+				
+				if (!wallCol())
 				{
 					pos.x += cos(hitAngle) * knockBack * 0.25;
 					pos.y += -sin(hitAngle) * knockBack * 0.25;
 				}
-				isWallcol = false;
 			}
 
 			if (hitTime % 6 == 0)
@@ -447,11 +446,8 @@ void monster::render()
 
 void monster::setPt(float x, float y)
 {
-	wallCol();
-	if (!isWallcol)
+	if (!wallCol())
 		pos = { (long)x, (long)y };
-
-	isWallcol = false;
 }
 
 void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical)
@@ -555,16 +551,27 @@ void monster::hitCul()
 	}
 }
 
-void monster::wallCol()
+bool monster::wallCol()
 {
 	for (int i = 0; i < PLAYERDATA->getWall().size(); i++)
 	{
-		if (colCheck(rc, wall[PLAYERDATA->getWall()[i]].rc))
+		if (kind == MONSTERKIND::GHOULLARGE)
 		{
-			isWallcol = true;
-			return;
+			RECT ghoulDashRC = RectMakeCenter(this->getCenterX(), this->getCenterY(), 50, 50);
+			if (colCheck(ghoulDashRC, wall[PLAYERDATA->getWall()[i]].rc))
+			{
+				return true;
+			}
+		}
+		else
+		{
+			if (colCheck(rc, wall[PLAYERDATA->getWall()[i]].rc))
+			{
+				return true;
+			}
 		}
 	}
+	return false;
 }
 
 void monster::coinDrop(int min, int max)
