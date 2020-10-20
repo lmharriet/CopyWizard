@@ -141,6 +141,8 @@ void shop::addImage()
 
     IMAGEMANAGER->addFrameImage("itemBackBoardFrame", "Images/npc/backBoardFrame.bmp", 1125, 136, 3, 1);
     IMAGEMANAGER->addImage("ItemShadow", "Images/npc/shadow.bmp", 30, 11, true, RGB(255, 0, 255));
+
+    IMAGEMANAGER->addImage("warpStone", "Images/npc/portalStone.bmp", 88, 58, true, RGB(255, 0, 255));
 }
 
 void shop::generate(POINT arr[3])

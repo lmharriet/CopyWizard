@@ -21,6 +21,7 @@ HRESULT mainGame::init()
 	SCENEMANAGER->addScene("시작화면", make_shared <startScene>());
 	SCENEMANAGER->addScene("인게임", make_shared<gameScene>());
 	SCENEMANAGER->addScene("보스방", make_shared<bossScene>());
+	SCENEMANAGER->addScene("최종보스방", make_shared<finalBossScene>());
 
 	shared_ptr<mapToolScene> maptool = make_shared <mapToolScene>();
 	SCENEMANAGER->addScene("맵툴제작", maptool);
@@ -32,6 +33,7 @@ HRESULT mainGame::init()
 	SCENEMANAGER->loadScene("시작화면");
 	//SCENEMANAGER->loadScene("맵툴제작");
 	//SCENEMANAGER->loadScene("보스방");
+	//SCENEMANAGER->loadScene("최종보스방");
 
 	ShowCursor(false);
 	time = 0;

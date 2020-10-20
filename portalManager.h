@@ -38,6 +38,7 @@ public:
 	void setCenterActive(bool check) { centerPortal.isActive = check; }
 
 	void setPortal(tagPortal one, tagPortal two, tagPortal three);
+	void backRender(HDC hdc);
 	bool getPortalCol(int index) { return portalPt[index].isCol; }
 	POINT getPortalcurPt(int index) { return portalPt[index].curPt; }
 	POINT getPortalEndPt(int index) { return portalPt[index].endPt; }

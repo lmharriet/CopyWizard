@@ -19,14 +19,24 @@ void portalManager::setPortal(tagPortal one, tagPortal two, tagPortal three)
 	for (int i = 0; i < 3; i++)portalPt[i] = arr[i];
 }
 
+void portalManager::backRender(HDC hdc)
+{
+	image* stone = IMAGEMANAGER->findImage("warpStone");
+
+	for (int i = 0; i < 3; i++)
+	{
+		CAMERAMANAGER->Render(hdc, stone,
+			portalPt[i].curPt.x - stone->getWidth() / 2,
+			portalPt[i].curPt.y - stone->getHeight() / 2 + 70);
+	}
+}
+
 void portalManager::render(HDC hdc)
 {
 	image* img = IMAGEMANAGER->findImage("portalFrame");
 	
 	if (centerPortal.isActive)
 	{
-		//CAMERAMANAGER->Rectangle(hdc, centerPortal.rc);
-
 		CAMERAMANAGER->AlphaFrameRender(hdc, img,
 			centerPortal.curPt.x - img->getFrameWidth() / 2,
 			centerPortal.curPt.y - img->getFrameHeight() / 2,
@@ -35,8 +45,6 @@ void portalManager::render(HDC hdc)
 
 	for (int i = 0; i < 3; i++)
 	{
-		//CAMERAMANAGER->Rectangle(hdc, portalPt[i].rc);
-
 		CAMERAMANAGER->AlphaFrameRender(hdc, img,
 			portalPt[i].curPt.x - img->getFrameWidth()/2,
 			portalPt[i].curPt.y - img->getFrameHeight()/2,
