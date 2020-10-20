@@ -305,7 +305,7 @@ void bomb::removeBomb(int index)
 HRESULT meteor::init()
 {
 	IMAGEMANAGER->addFrameImage("circle", "resource/player/castingCircle1.bmp", 3072, 128, 24, 1, true, RGB(255, 0, 0));
-
+	IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 1200, 250, 6, 1);
 	currentCoolTime = 0;
 	coolTime = 300 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
 	isCoolTime = false;
@@ -1615,9 +1615,6 @@ void iceSpear::fire(float x, float y, float angle)
 	vSpear.push_back(spear);
 
 	gauge = 0.f;
-
-
-
 }
 
 void iceSpear::move()
