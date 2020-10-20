@@ -6,6 +6,7 @@
 #include "enemyManager.h"
 #include "shop.h"
 #include "wall.h"
+#include "chest.h"
 
 class gameScene : public gameNode
 {
@@ -26,6 +27,8 @@ private:
 	shop* _shop;
 
 	wall* _wall;
+
+	chest* _chest;
 
 	RECT cam;
 	RECT checkArea;

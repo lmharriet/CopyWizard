@@ -18,6 +18,8 @@ void unit::addUnit(int _index, string _keyName, string type, POINT frame, float 
 
     if (type == "npc") npc[_index] = zo;
 
+    if (type == "chest") chest = zo;
+
     vUnit.push_back(zo);
 }
 
@@ -52,6 +54,8 @@ void unit::update()
     vUnit.push_back(player);
 
     for(int i = 0; i < 3; i++) vUnit.push_back(npc[i]);
+
+    vUnit.push_back(chest);
 
     for (int i = 0; i < wall.size(); i++)
     {

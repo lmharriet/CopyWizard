@@ -21,6 +21,8 @@ private:
 
 	shared_ptr<zObject> npc[3];
 	//
+	shared_ptr<zObject> chest;
+
 	tagTile* tile;
 public:
 	HRESULT init();

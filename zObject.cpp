@@ -48,6 +48,11 @@ HRESULT zObject::init(int _index, string _keyName, string _type, POINT _frame, f
         rc = RectMake(x - img->getWidth() + img->getWidth()/2, y + img->getHeight()/2 - 50, img->getWidth(), img->getHeight() / 2);
     }
 
+    else if (type == "chest")
+    {
+        rc = RectMake(x - img->getFrameWidth() + img->getFrameWidth() / 2, y + img->getFrameHeight() / 2 - 50, img->getFrameWidth(), img->getFrameHeight() / 2);
+    }
+
     return S_OK;
 }
 
@@ -98,5 +103,13 @@ void zObject::render(HDC hdc)
     {
         //CAMERAMANAGER->Rectangle(hdc, rc);
         CAMERAMANAGER->Render(hdc, img, x - img->getWidth()/2, rc.top - img->getHeight()/2);
+    }
+
+    else if (type == "chest")
+    {
+        CAMERAMANAGER->FrameRender(hdc, img,
+            x - img->getFrameWidth() / 2,
+            y - img->getFrameHeight() / 2,
+            frame.x, 0);
     }
 }
