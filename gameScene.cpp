@@ -176,6 +176,9 @@ void gameScene::render()
 	EFFECT->AfterimageRender(getMemDC());
 
 	EFFECT->backEftRender(getMemDC());
+
+	PORTAL->backRender(getMemDC());
+
 	UNITRENDER->render(getMemDC());
 
 	PORTAL->render(getMemDC());
