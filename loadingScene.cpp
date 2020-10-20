@@ -55,7 +55,7 @@ void loadingScene::loadingImage()
 
 	//몬스터 이미지
 	_loading->loadFrameImage("summoner", "resource/enemy/SummonerSource.bmp", 500, 800, 5, 8);
-	_loading->loadFrameImage("golem", "resource/enemy/Golem.bmp", 1080, 1050, 6, 5);
+	_loading->loadFrameImage("golem", "resource/enemy/Golem.bmp", 1080, 1050, 6, 5);  
 	_loading->loadFrameImage("knight", "resource/enemy/knight.bmp", 650, 1123, 6, 8);
 	_loading->loadFrameImage("golemHit", "resource/enemy/golemHit.bmp", 1080, 630, 6, 3);
 	_loading->loadFrameImage("ghoul", "resource/enemy/ghoul.bmp", 800, 933, 6, 7);

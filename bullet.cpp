@@ -549,7 +549,6 @@ void meteor::coolTimeReduction()
 }
 
 
-
 //DASH
 HRESULT dashFire::init()
 {
@@ -777,7 +776,7 @@ void RagingInferno::fire(float x, float y, float angle)
 	inferno.speed = -30.f;
 	inferno.x = inferno.fireX = x + cosf(angle) * inferno.speed;
 	inferno.y = inferno.fireY = y - sinf(angle) * inferno.speed;
-	inferno.rc = RectMakeCenter(inferno.x, inferno.y, 20, 20);
+	inferno.rc = RectMakeCenter(inferno.x, inferno.y, 30, 30);
 	inferno.lifeTime = 100;
 	inferno.atkPower = 15;
 	PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 60, 3, 3.f, 0.8f, 10);
@@ -801,7 +800,7 @@ void RagingInferno::move()
 
 			inferno.x = inferno.x + cosf(inferno.angle) * 20.0f;
 			inferno.y = inferno.y - sinf(inferno.angle) * 20.0f;
-			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 50, 50);
+			inferno.rc = RectMakeCenter(inferno.x, inferno.y, 70, 70);
 			gauging = false;
 			PLAYERDATA->setGauging(gauging);
 			if (gaugeTime % 3 == 0) PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 1, 6, 6, 20.f, 0.4f, 10);
@@ -826,26 +825,26 @@ void RagingInferno::move()
 			{
 				tagTail tail;
 				tail.currentTime = 0;
-				tail.minAngle = 0.1f;
-				tail.lifeTime = 100;
+				tail.minAngle = 0.05f;
+				tail.lifeTime = 150;
 				tail.speed = 8.f;
 				float angle = 0;
 
-				tail.x = inferno.x - 17;
-				tail.y = inferno.y - 75;
+				tail.x = inferno.x - 37;
+				tail.y = inferno.y - 120;
 				tail.angle = angle;
 
 				vTail.push_back(tail);
 
 				angle = 120 * (PI / 180);
-				tail.x = inferno.x - 57;
-				tail.y = inferno.y + 50;
+				tail.x = inferno.x - 82;
+				tail.y = inferno.y + 85;
 				tail.angle = angle;
 
 				vTail.push_back(tail);
 
 				angle = 240 * (PI / 180);
-				tail.x = inferno.x + 73;
+				tail.x = inferno.x + 113;
 				tail.y = inferno.y + 20;
 				tail.angle = angle;
 

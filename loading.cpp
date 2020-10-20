@@ -112,9 +112,10 @@ HRESULT loading::init()
 	//로딩바 이미지 초기화
 	IMAGEMANAGER->addImage("loadingBarFront", "Images/loadingBarFront.bmp", 600, 20);
 	IMAGEMANAGER->addImage("loadingBarBack", "Images/loadingBarBack.bmp", 600, 20);
-	//플레이어 이미지 초기화
-	_char = IMAGEMANAGER->addFrameImage("playerRun", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
 
+	//플레이어 이미지 초기화
+	_char = IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
+	_enemy = IMAGEMANAGER->addFrameImage("enemyFrame", "resource/enemy/loading.bmp",  1233, 202,5, 1 );
 	//로딩바 클래스 초기화
 	_loadingBar = new progressBar;
 	_loadingBar->init("loadingBarFront", "loadingBarBack");
@@ -124,6 +125,10 @@ HRESULT loading::init()
 	//현재 게이지
 	_currentGauge = 0;
 	_currentFrameX = 0;
+	_currentEnemyFrameX = 0;
+
+	_playerMaxX = 700.f;
+	_playerCurrentX = 0.f;
 
 	return S_OK;
 }
@@ -145,13 +150,15 @@ void loading::render()
 	//백그라운드 이미지 렌더
 	_background->render(getMemDC());
 	//로딩바 클래스 렌더
-	_loadingBar->render();
+	//_loadingBar->render();
 	
 	
-	_char->frameRender(getMemDC(),_loadingBar->getPosX()+_loadingBar->getWidth(),_loadingBar->getPosY()-_char->getFrameHeight()/2, _currentFrameX,3);
+	_enemy->frameRender(getMemDC(),_loadingBar->getPosX()+_loadingBar->getWidth()-120,_loadingBar->getPosY()-_enemy->getFrameHeight()+40, _currentEnemyFrameX,0);
+	_char->frameRender(getMemDC(),_loadingBar->getPosX()+ _playerCurrentX,_loadingBar->getPosY()-_char->getFrameHeight()/2, _currentFrameX,3);
+	//_enemy->frameRender(getMemDC(),_loadingBar->getPosX()+_loadingBar->getWidth(),_loadingBar->getPosY()-_enemy->getFrameHeight()/2);
 	
 	if(_currentGauge < _vLoadItem.size())
-	TextOut(getMemDC(),WINSIZEX / 2 - 80, WINSIZEY/2+100, _vLoadItem[_currentGauge]->getImageResource().keyName.c_str(),strlen(_vLoadItem[_currentGauge]->getImageResource().keyName.c_str()));
+	TextOut(getMemDC(), _loadingBar->getPosX() + _loadingBar->getWidth()-100, WINSIZEY/2+200, _vLoadItem[_currentGauge]->getImageResource().keyName.c_str(),strlen(_vLoadItem[_currentGauge]->getImageResource().keyName.c_str()));
 }
 
 void loading::loadImage(string strKey, int width, int height)
@@ -253,9 +260,28 @@ bool loading::loadingDone()
 	
 	//현재 게이지 증가
 	_currentGauge++;
-	_currentFrameX++;
-	if (_currentFrameX > 9)
-		_currentFrameX = 0;
+	
+
+		
+
+
+	if (_currentGauge % 2 == 0)// 플레이어 이미지
+	{
+		_currentFrameX++;
+		if(_currentGauge%4 ==0)
+			_currentEnemyFrameX++;
+		if (_currentFrameX > 9)
+			_currentFrameX = 0;
+			
+		if(_currentEnemyFrameX >4)
+			_currentEnemyFrameX = 0;
+
+		if (_playerMaxX >= _playerCurrentX)// 플레이어 위치
+			_playerCurrentX += 50.f;
+		/*else
+			_currentFrameY = */
+	}
+	
 
 	//로딩바 이미지 변경
 	_loadingBar->setGauge(_vLoadItem.size(), _currentGauge);
