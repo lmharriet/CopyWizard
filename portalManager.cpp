@@ -3,12 +3,23 @@
 
 HRESULT portalManager::init()
 {
+	IMAGEMANAGER->addImage("sceneWarpStone", "Images/object/sceneWarpStone.bmp", 136, 130, true, RGB(255, 0, 255));
+
 	centerPortal.curPt = { 0,0 };
 	centerPortal.endPt = { 0,0 };
 	centerPortal.isActive = false;
 	centerPortal.colorIndex = 0;
 	centerPortal.isCol = false;
 	centerPortal.rc = RectMakeCenter(centerPortal.curPt.x, centerPortal.curPt.y, 30, 60);
+	return S_OK;
+}
+
+HRESULT portalManager::initWarp(float x, float y)
+{
+	warpScene.keyName = "sceneWarpStone";
+	warpScene.x = x;
+	warpScene.y = y;
+	warpScene.rc = RectMakeCenter(x, y, 136, 130);
 	return S_OK;
 }
 
@@ -22,6 +33,11 @@ void portalManager::setPortal(tagPortal one, tagPortal two, tagPortal three)
 void portalManager::backRender(HDC hdc)
 {
 	image* stone = IMAGEMANAGER->findImage("warpStone");
+	image* sceneStone = IMAGEMANAGER->findImage("sceneWarpStone");
+
+	CAMERAMANAGER->Render(hdc, sceneStone,
+		warpScene.x - sceneStone->getWidth()/2,
+		warpScene.y - sceneStone->getHeight()/2);
 
 	for (int i = 0; i < 3; i++)
 	{

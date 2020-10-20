@@ -14,13 +14,26 @@ struct tagPortal
 	bool isCol;
 };
 
+struct tagWarpScene
+{
+	string keyName;
+	
+	float x, y;
+	RECT rc;
+};
+
 class portalManager : public singletonBase <portalManager>
 {
 private:
 	tagPortal centerPortal;
 	tagPortal portalPt[3];
+	
+	tagWarpScene warpScene;
 public:
 	HRESULT init();
+	HRESULT initWarp(float x, float y);
+
+	RECT getWarpScene() { return warpScene.rc; }
 
 	void setCenterPortal(tagPortal center) 
 	{ 
@@ -44,6 +57,8 @@ public:
 	POINT getPortalEndPt(int index) { return portalPt[index].endPt; }
 	void resetCol() { for (int i = 0; i < 3; i++)portalPt[i].isCol = false; }
 	int getPortalColor(int index) { return portalPt[index].colorIndex; }
+
+
 
 	void render(HDC hdc);
 	void update(RECT rc);
