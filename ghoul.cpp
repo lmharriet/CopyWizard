@@ -382,5 +382,5 @@ void ghoul::stateDIE()
     }
 
 
-    coinDrop(10, 20);
+    coinDrop(1, 20);
 }
