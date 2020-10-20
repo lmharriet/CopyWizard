@@ -28,6 +28,7 @@ private:
 	int hp;
 	float skillGauge;
 
+	int blackOpacity;
 public:
 	HRESULT init();
 
@@ -51,8 +52,9 @@ public:
 	void addCoolTime(int index) { skillSlot[index].available = false; }
 	void addCoolTime(string keyName);
 
-	//del
-
 	tagSkill getSkillSlot(int index) { return skillSlot[index]; }
 
+
+	//warp screen
+	void fadeIn();
 };
