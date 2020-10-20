@@ -108,6 +108,8 @@ void loadingScene::loadingSound()
 	_loading->loadSound("shieldOFF", "Sound/UI/shieldOFF.mp3");
 	_loading->loadSound("npcNox", "Sound/UI/npc_nox.mp3");
 	_loading->loadSound("BOX_appear", "Sound/UI/BOX_appear.mp3");
+	_loading->loadSound("portalIN", "Sound/UI/portalIN.mp3");
+	_loading->loadSound("portalOUT", "Sound/UI/portalOUT.mp3");
 
 	//몬스터 사운드
 	_loading->loadSound("golemAtk", "Sound/golem_atk.mp3");

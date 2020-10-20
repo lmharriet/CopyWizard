@@ -563,7 +563,7 @@ void gameScene::warp()
 		string name = "portal";
 		name += to_string(PORTAL->getCenterColor());
 		EFFECT->setBackEffect(name, fixPt, 3);
-
+		SOUNDMANAGER->play("portalIN", false);
 		_player->setIdleDelay(50);
 
 
@@ -587,7 +587,7 @@ void gameScene::warp()
 		string name = "portal";
 		name += to_string(PORTAL->getPortalColor(i));
 		EFFECT->setBackEffect(name, fixPt, 3);
-
+		SOUNDMANAGER->play("portalIN", false);
 		//cout << "N->Áß¾Ó" << name << '\n';
 
 		PORTAL->setCenterColor(PORTAL->getPortalColor(i));
