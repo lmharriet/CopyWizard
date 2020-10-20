@@ -66,6 +66,8 @@ HRESULT gameScene::init()
 
 	_chest = new chest;
 	_chest->init("silverChest", { -1149,2047 }, 10);
+	
+	PORTAL->initWarp(-1149, 2247);
 
 	//sound
 	soundInit();
@@ -575,5 +577,11 @@ void gameScene::warp()
 		PORTAL->setCenterActive(true);
 		_player->setIdleDelay(50);
 
+	}
+
+	if (colCheck(_player->getRect(), PORTAL->getWarpScene()))
+	{
+		SOUNDMANAGER->stop("ingameBGM");
+		SCENEMANAGER->loadScene("º¸½º¹æ");
 	}
 }
