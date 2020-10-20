@@ -173,13 +173,13 @@ void player::update()
 
 
 	if (INPUT->GetKeyDown('E'))	spear->upgradefire(posX,posY,attackAngle);
-	//if (INPUT->GetKey('R'))
-	//{
-	//	spear->chargeSpear();
-	//}
+	if (INPUT->GetKey('R'))
+	{
+		spear->chargeSpear();
+	}
 
-	//if (INPUT->GetKeyUp('R'))spear->fire(posX, posY, attackAngle);
-	//
+	if (INPUT->GetKeyUp('R'))spear->fire(posX, posY, attackAngle);
+	
 
 	if (arcana[3].skillName == "skill_meteor" && INPUT->GetKeyDown('P'))
 	{

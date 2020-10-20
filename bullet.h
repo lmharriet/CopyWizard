@@ -505,6 +505,9 @@ private:
 	
 	tagInfo info;
 	tagSpear saveSpear;
+
+	float saveRange;
+
 	vector<tagSpear> vSpear;
 	
 	vector<tagSpear> vUltSpear;
