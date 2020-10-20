@@ -420,6 +420,8 @@ void effectManager::setBackEffect(string keyName, POINT pt, int frameDelay)
     effect.maxFrame = IMAGEMANAGER->findImage(keyName)->getMaxFrameX();
     effect.frameDelay = frameDelay;
 
+    effect.currentTime = 25;
+
     vBackEft.push_back(effect);
 }
 
@@ -427,6 +429,11 @@ void effectManager::backEftRender(HDC hdc)
 {
     for (int i = 0; i < vBackEft.size();)
     {
+        if (vBackEft[i].currentTime > 0)
+        {
+            vBackEft[i].currentTime--;
+            break;
+        }
         //·»´õ
         image* img = IMAGEMANAGER->findImage(vBackEft[i].keyName);
         CAMERAMANAGER->FrameRender(hdc, img,

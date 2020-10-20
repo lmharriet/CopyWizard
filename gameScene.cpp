@@ -183,7 +183,7 @@ void gameScene::render()
 	UNITRENDER->render(getMemDC());
 
 	PORTAL->render(getMemDC());
-	
+
 	_player->render();
 
 	EFFECT->emotionRender(getMemDC());
@@ -391,13 +391,34 @@ void gameScene::playerAttack()
 				{
 					_player->chargeSkillGauge(damage, 4);
 				}
-				enemy->getMinion()[j]->hit(damage, _player->getDragon()->getHeadAngle(i), 10.f,4, criCheck);
+				enemy->getMinion()[j]->hit(damage, _player->getDragon()->getHeadAngle(i), 10.f, 4, criCheck);
 			}
 
 		}
 	}
 
+	//ice Spear
+	for (int i = 0; i < _player->getSpear()->getSize(); i++)
+	{
+		for (int j = 0; j < enemy->getMinion().size(); j++)
+		{
+			if (colCheck(_player->getSpear()->getSpearRc(i), enemy->getMinion()[j]->getRC()))
+			{
 
+				enemy->getMinion()[j]->setPt(_player->getSpear()->getSpearRc(i).left, _player->getSpear()->getSpearRc(i).top);
+
+				bool criCheck = PLAYERDATA->criAppear();
+
+				int damage = PLAYERDATA->damageCul(_player->getSpear()->getAtkPower(i) + RANDOM->range(0, 3), criCheck);
+				//gauge
+				if (PLAYERDATA->getStat().ManaRejection == false)
+				{
+					_player->chargeSkillGauge(damage, 5);
+				}
+				//enemy->getMinion()[j]->hit(damage, _player->getSpear()->ge(i), 10.f,, criCheck);
+			}
+		}
+	}
 
 }
 
@@ -490,7 +511,7 @@ void gameScene::soundInit()
 	isIngameBGM = true;
 	fadeIn = 0.f;
 
-	
+
 
 	SOUNDMANAGER->stop("mapToolBGM");
 	SOUNDMANAGER->stop("titleBGM");
@@ -505,6 +526,8 @@ void gameScene::warp()
 
 	if (PORTAL->getCenterCol())
 	{
+		UI->fadeIn();
+
 		PORTAL->setCenterCol(false);
 
 		POINT warp = PORTAL->getCenterPortalEndPt();
@@ -518,13 +541,16 @@ void gameScene::warp()
 		name += to_string(PORTAL->getCenterColor());
 		EFFECT->setBackEffect(name, fixPt, 3);
 
+		_player->setIdleDelay(50);
+
+
 		//cout << "Áß¾Ó->N" << name << '\n';
 	}
 
 	for (int i = 0; i < 3; i++)
 	{
 		if (PORTAL->getPortalCol(i) == false)continue;
-
+		UI->fadeIn();
 		PORTAL->resetCol();
 		POINT warp = PORTAL->getPortalEndPt(i);
 
@@ -545,5 +571,7 @@ void gameScene::warp()
 
 		PORTAL->setCenterEndPt(PORTAL->getPortalcurPt(i));
 		PORTAL->setCenterActive(true);
+		_player->setIdleDelay(50);
+
 	}
 }

@@ -49,7 +49,7 @@ HRESULT player::init()
 	//animation count ,index
 	atkCount = atkIndex = index = dashIndex = count = dashCount = basicCount = basicIndex = 0;
 	basicStateCool = infernoStateCool = signatureStateCool = 0;
-
+	idleDelay = 0;
 
 	//blaze 3번 발사 용도
 	blazeCount = 0;
@@ -125,7 +125,7 @@ void player::update()
 	dashCount++;
 	atkCount++;
 	basicCount++;
-
+	idleDelayCount();
 
 	// angle(mouse-player), angleTenth
 	attackAngle = getAngle(posX, posY, CAMERAMANAGER->GetAbsoluteX(_ptMouse.x), CAMERAMANAGER->GetAbsoluteY(_ptMouse.y));
@@ -134,7 +134,7 @@ void player::update()
 
 	//플레이어 컨트롤 조건
 	if (speed == 0 && basicStateCool == 0 && signatureStateCool == 0 && frozenTime == 0
-		&& !isDead && !inferno->getGauging())
+		&& !isDead && !inferno->getGauging() && idleDelay ==0)
 	{
 		controller();
 	}
@@ -235,7 +235,7 @@ void player::other_update()
 
 	inferno->update();
 	spear->update();
-
+	idleDelayCount();
 	animation(1);
 
 	inven->update();
@@ -252,7 +252,7 @@ void player::other_update()
 
 
 	if (speed == 0 && basicStateCool == 0 && signatureStateCool == 0 && frozenTime == 0
-		&& !isDead && !inferno->getGauging() && !isGrabbed)
+		&& !isDead && !inferno->getGauging() && !isGrabbed && idleDelay == 0)
 	{
 		controller();
 	}
@@ -1509,6 +1509,17 @@ void player::animation(int _index)
 
 void player::frameAnimation(int frameX, int frameY, int _index)
 {
+	if (idleDelay > 0)
+	{
+		if (idleDelay > 20)
+		{
+			UNITRENDER->setFramePlayer({ 8,0 });
+			return;
+		}
+		
+		if (idleDelay == 1)UNITRENDER->setFramePlayer({ 0,0 });
+	}
+
 	if (_index == 0)
 	{
 		UNITRENDER->setFramePlayer({ frameX,frameY });
@@ -1524,7 +1535,16 @@ void player::frameAnimation(int frameX, int frameY, int _index)
 		EFFECT->AfterimageEft("playerFrame", { (long)posX,(long)posY }, { frameX ,frameY }, 5);
 	}
 }
-
+void player::idleDelayCount()
+{
+	//포탈 워프시 이미지 렌더 딜레이
+	if (idleDelay > 0)
+	{
+		idleDelay--;
+		move = MOVE::DOWN;
+		state = STATE::IDLE;
+	}
+}
 void player::tileCol()
 {
 	for (int i = 0; i < 8; i++)
@@ -1665,6 +1685,7 @@ void player::changeState()
 			state = STATE::IDLE;
 		}
 	}
+	
 }
 
 

@@ -1554,7 +1554,6 @@ void iceSpear::render()
 			CAMERAMANAGER->RotateRender(getMemDC(), img, vUltSpear[i].x, vUltSpear[i].y, vUltSpear[i].angle);
 		}
 	}
-
 }
 
 //non-upgrade
@@ -1715,7 +1714,7 @@ void iceSpear::fireCount()
 		ultSpear.y = vStay[0].y;
 		ultSpear.fireX = vStay[0].fireX;
 		ultSpear.fireY = vStay[0].fireY;
-		//ultSpear.range = rangeCul(500, ultSpear.fireX, ultSpear.fireY, ultSpear.angle);
+		ultSpear.range = rangeCul(500, ultSpear.fireX, ultSpear.fireY, ultSpear.angle);
 
 		ultSpear.rc = RectMakeCenter(ultSpear.x, ultSpear.y, 30, 30);
 
@@ -1733,31 +1732,29 @@ void iceSpear::upgradeMove()
 	{
 		float distance = getDistance(vUltSpear[i].fireX, vUltSpear[i].fireY, vUltSpear[i].x, vUltSpear[i].y);
 
-		//cout << i << ", " << distance << '\n';
-
-		if (distance < 500)
+		if (distance < vUltSpear[i].range)
 		{
 			//이동
 			vUltSpear[i].x += cosf(vUltSpear[i].angle) * vUltSpear[i].speed;
 			vUltSpear[i].y -= sinf(vUltSpear[i].angle) * vUltSpear[i].speed;
 
+			float x = vUltSpear[i].x + cosf(vUltSpear[i].angle) * imgRadius;
+			float y = vUltSpear[i].y - sinf(vUltSpear[i].angle) * imgRadius;
 
 			if (vUltSpear[i].isBig)
-			{
-				vUltSpear[i].rc = RectMakeCenter(vUltSpear[i].x, vUltSpear[i].y, 50, 50);
-
+			{	
+				vUltSpear[i].rc = RectMakeCenter(x, y, 50, 50);
 			}
 			else
 			{
-				vUltSpear[i].rc = RectMakeCenter(vUltSpear[i].x, vUltSpear[i].y, 30, 30);
+				vUltSpear[i].rc = RectMakeCenter(x, y, 30, 30);
 			}
 		}
-
 
 		if (vUltSpear[i].isBig)
 		{
 			//삭제
-			if (distance > 500)
+			if (distance > vUltSpear[i].range)
 			{
 				eTime++;
 
@@ -1769,10 +1766,8 @@ void iceSpear::upgradeMove()
 					saveRange = 0;
 					break;
 				}
-
 			}
 		}
-
 		i++;
 	}
 }

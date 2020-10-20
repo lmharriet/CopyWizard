@@ -506,13 +506,13 @@ private:
 	tagInfo info;
 	tagSpear saveSpear;
 
-	float saveRange;
 
 	vector<tagSpear> vSpear;
 	
 	vector<tagSpear> vUltSpear;
 	vector<tagStaySpear> vStay;
 
+	float saveRange;
 	
 	float gauge;
 	
@@ -544,18 +544,25 @@ public:
 	void render();
 
 	void chargeSpear();
-
 	float rangeCul(float maxRange, float x, float y, float angle);
-
 	void fire(float x, float y, float angle);
 	void move();
 
 	void upgradefire(float x, float y, float angle);
-
 	void fireCount();
-
 	void upgradeMove();
 
+
+	//getter , setter
+
+	vector<tagSpear> getSpear() { return vSpear; }
+	int getSize() { return vSpear.size(); }
+	RECT getSpearRc(int index) { return vSpear[index].rc; }
+	int getAtkPower(int index) { return vSpear[index].atkPower; }
+	float getSpearAngle(int index) { return vSpear[index].angle; }
 	int getSkillNum() { return 5; }
+
+	int getUpgradeSize() { return vUltSpear.size(); }
+	bool getIsBig(int index) { return vUltSpear[index].isBig; }
 
 };

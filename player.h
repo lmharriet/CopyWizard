@@ -68,6 +68,9 @@ private:
 	int atkCount, atkIndex;
 	int count, index;
 	int basicCount, basicIndex;
+
+	//animation delay
+	int idleDelay;
 	
 	
 	//damage
@@ -135,6 +138,7 @@ public:
 	//animation
 	void animation(int _index = 0);
 	void frameAnimation(int frameX, int frameY, int _index = 0);
+	void idleDelayCount();
 	void changeState();
 
 
@@ -167,16 +171,20 @@ public:
 	dashFire* getDashFire() { return searingRush; }
 	RagingInferno* getInferno() { return inferno; }
 	dragonArc* getDragon() { return dragon; }
+	iceSpear* getSpear() { return spear; }
 
 	bool getDamaged() { return isDamaged; }
 
-
+	
 	void setX(float x) { posX = x; }
 	void setY(float y) { posY = y; }
 	void reposRect() { rc = RectMakeCenter(posX, posY, 100, 100); }
 	void setStateIDLE() { state = STATE::IDLE; }
+	
 	void setDamaged(bool temp) { isDamaged = temp; }
 	
+	void setIdleDelay(int value) { idleDelay = value;}
+
 	void setTileAd(tagTile* _tile) { tile = _tile; }
 	void setTileAd0(vector<int> _vTile) { vTile = _vTile; }
 	void setTileAd1(vector<int> _vWall) { vWall = _vWall; }
