@@ -4,13 +4,14 @@
 //	## bullet ## (공용총알)
 //=============================================================
 
-HRESULT bullet::init(const char* imageName, int bulletMax, float range, bool isFrameImg)
+HRESULT bullet::init(const char* imageName, int bulletMax, float range, float ghoulLargeRange, bool isFrameImg)
 {
 	//총알 이미지 초기화
 	_imageName = imageName;
 	//총알갯수 및 사거리 초기화
 	_bulletMax = bulletMax;
 	_range = range;
+	_ghoulLargeRange = ghoulLargeRange;
 	//총알 이미지가 프레임 이미지냐?
 	_isFrameImg = isFrameImg;
 
@@ -100,13 +101,15 @@ void bullet::move()
 				_vBullet.erase(_vBullet.begin() + i);
 			break;
 		case MONSTERKIND::SUMMONER:
-		{_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
-		float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
-			_vBullet[i].x, _vBullet[i].y);
-		if (_range < distance)//총알이 사거리 보다 커졌을때
 		{
-			_vBullet.erase(_vBullet.begin() + i);
-		}}
+			_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
+			float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
+				_vBullet[i].x, _vBullet[i].y);
+			if (_range < distance)//총알이 사거리 보다 커졌을때
+			{
+				_vBullet.erase(_vBullet.begin() + i);
+			}
+		}
 		break;
 		case MONSTERKIND::GHOUL:
 			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 90, 130);
@@ -114,7 +117,18 @@ void bullet::move()
 			if (_vBullet[i].count >= 5)
 				_vBullet.erase(_vBullet.begin() + i);
 			break;
+		case MONSTERKIND::GHOULLARGE:
+			_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 120, 140);
+			_vBullet[i].count++;
+			float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
+				_vBullet[i].x, _vBullet[i].y);
+			if (_ghoulLargeRange < distance)//총알이 사거리 보다 커졌을때
+			{
+				_vBullet.erase(_vBullet.begin() + i);
+			}
+			break;
 		}
+
 	}
 }
 
@@ -1486,8 +1500,9 @@ HRESULT iceSpear::init()
 	gauge = 0;
 
 	spearCount = time = 0;
-
+	eTime = sTime = delay = 0;
 	upgread = false;
+	active = false;
 	return S_OK;
 }
 
@@ -1498,10 +1513,10 @@ void iceSpear::release()
 void iceSpear::update()
 {
 	time++;
-//	move();
-	cout << vSpear.size() << '\n';
+	//move();
+
+	if(active)fireCount();
 	upgradeMove();
-	fireCount(); 
 
 }
 
@@ -1517,6 +1532,13 @@ void iceSpear::render()
 		CAMERAMANAGER->RotateRender(getMemDC(), img, vSpear[i].x, vSpear[i].y, vSpear[i].angle);
 		CAMERAMANAGER->Ellipse(getMemDC(), vSpear[i].rc);
 	}
+
+	for (int i = 0; i < vUltSpear.size(); i++)
+	{
+		CAMERAMANAGER->Ellipse(getMemDC(), vUltSpear[i].rc);
+		CAMERAMANAGER->RotateRender(getMemDC(), img, vUltSpear[i].x, vUltSpear[i].y, vUltSpear[i].angle);
+	}
+
 }
 
 void iceSpear::chargeSpear()
@@ -1600,58 +1622,126 @@ void iceSpear::move()
 }
 
 
-
+//upgrade
 void iceSpear::upgradefire(float x, float y, float angle)
 {
-
-	tagSpear spear;
-
-	spear.x = spear.fireX = x;
-	spear.y = spear.fireY = y;
+	active = true;
+	tagStaySpear spear;
 	spear.angle = angle;
-	
-	spear.speed = 25.f;
-	spear.atkPower = 30.f;
-	spear.lifeTime = 60;
+	spear.speed = 23.f;
 
-	spear.range = rangeCul(500, x, y, angle);
-	spear.rc = RectMakeCenter(spear.x, spear.y, 30, 30);
-	spear.collision = false;
+	posX = spear.fireX = x;
+	posY = spear.fireY = y;
 
-	spearCount = 6;
-	saveSpear = spear;
+	spear.x = x + 50;
+	spear.y = y;
+
+	spear.strY = spear.y;
+
+	vStay.push_back(spear);
+
+	spear.x = spear.x - 100;
+	spear.y = spear.y - 40;
+
+	spear.strY = spear.y;
+	vStay.push_back(spear);
+
+	spear.x = posX - 100;
+	spear.y = posY + 40;
+	vStay.push_back(spear);
+
+	spear.x = posX - 100;
+	spear.y = posY + 80;
+
+	spear.strY = spear.y;
+	vStay.push_back(spear);
+
+	spear.x = posX - 100;
+	spear.y = posY - 80;
+
+	spear.strY = spear.y;
+	vStay.push_back(spear);
+
+	spear.x = posX;
+	spear.y = posY;
+
+	spear.strY = spear.y;
+	vStay.push_back(spear);
 
 }
 
 void iceSpear::fireCount()
 {
-	if (spearCount == 0) return;
+	if (vStay.empty()) return;
 
-	if (time % 3 == 0 )
+	vStay[0].y = lerp(vStay[0].y, posY, 0.2f);
+
+	if (sTime % 10 == 0)
 	{
-		vSpear.push_back(saveSpear);
+		tagSpear ultSpear;
 
-		spearCount--;
+		if (vStay.size() == 1) ultSpear.isBig = true;
+		else ultSpear.isBig = false;
 
-		time = 0;
+		ultSpear.angle = vStay[0].angle;
+		ultSpear.speed = vStay[0].speed;
+		ultSpear.x = vStay[0].x;
+		ultSpear.y = vStay[0].y;
+		ultSpear.fireX = vStay[0].fireX;
+		ultSpear.fireY = vStay[0].fireY;
+		ultSpear.range = rangeCul(500, ultSpear.fireX, ultSpear.fireY, ultSpear.angle);
+
+		ultSpear.rc = RectMakeCenter(ultSpear.x, ultSpear.y, 30, 30);
+
+		vUltSpear.push_back(ultSpear);
+		vStay.erase(vStay.begin());
+
+		sTime = 0;
 	}
+
+	sTime++;
 }
 void iceSpear::upgradeMove()
 {
-	for (int i = 0; i < vSpear.size();i++)
+	for (int i = 0; i < vUltSpear.size();)
 	{
-		if (vSpear[i].collision)continue;
-		vSpear[i].x += cosf(vSpear[i].angle) * vSpear[i].speed;
-		vSpear[i].y -= sinf(vSpear[i].angle) * vSpear[i].speed;
+		float distance = getDistance(vUltSpear[i].fireX, vUltSpear[i].fireY, posX, posY);
+		if (abs(distance) < vUltSpear[i].range)
+		{
+			//이동
+			vUltSpear[i].x += cosf(vUltSpear[i].angle) * vUltSpear[i].speed;
+			vUltSpear[i].y -= sinf(vUltSpear[i].angle) * vUltSpear[i].speed;
 
-		float fixX = vSpear[i].x + cosf(vSpear[i].angle) * imgRadius;
-		float fixY = vSpear[i].y - sinf(vSpear[i].angle) * imgRadius;
 
-		vSpear[i].rc = RectMakeCenter(fixX, fixY, 30, 30);
-
-		vSpear[i].distance = getDistance(vSpear[i].fireX, vSpear[i].fireY, vSpear[i].x, vSpear[i].y);
+			if (vUltSpear[i].isBig)
+			{
+				vUltSpear[i].rc = RectMakeCenter(vUltSpear[i].x, vUltSpear[i].y, 50, 50);
+			}
+			else
+			{
+				vUltSpear[i].rc = RectMakeCenter(vUltSpear[i].x, vUltSpear[i].y, 30, 30);
+			}
+		}
 
 		//삭제
-		if (vSpear[i].distance > vSpear[i].range) vSpear[i].collision = true;
+		if (distance >= vUltSpear[i].range)
+		{
+			eTime++;
+			cout << "vUltSpear[i].range : " << vUltSpear[i].range << '\n';
+			if (eTime > 500)
+			{
+				vUltSpear.clear();
+				active = false;
+				eTime = 0;
+
+			}
+		
+		}
+
+		else i++;
+
+
+		
 	}
+
 }

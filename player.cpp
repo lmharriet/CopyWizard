@@ -140,6 +140,8 @@ void player::update()
 		controller();
 	}
 
+	////////////////////////////
+	//  collision dectection  //
 	tileCol();
 
 	makeCol((int)DIRECTION::TOP, 0, -30);
@@ -156,7 +158,7 @@ void player::update()
 	makeCol2(1, 45, -55);
 	makeCol2(2, -45, 60);
 	makeCol2(3, 45, 60);
-
+	////////////////////////////
 
 	changeState();
 
@@ -166,6 +168,7 @@ void player::update()
 	standardSetUp();
 	signatureSetUp();
 	/////////////////
+
 	//test
 
 

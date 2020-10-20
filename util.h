@@ -18,6 +18,10 @@ namespace MY_UTIL
 	
 	//두점 사이의 각도
 	float getAngle(float startX, float startY, float endX, float endY);
+
+	
+	float lerp(float v0, float v1, float t);
+
 };
 
 enum class MONSTERKIND {

@@ -88,9 +88,8 @@ struct tagDragon
 	bool isFire;
 };
 
-
 //=============================================================
-//	## bullet ## (공용총알)
+//    ## bullet ## (공용총알)
 //=============================================================
 class bullet : public gameNode
 {
@@ -99,14 +98,15 @@ private:
 	vector<tagBullet> _vBullet;
 	vector<tagBullet>::iterator _viBullet;
 private:
-	const char* _imageName;	//총알 이미지 이름
-	float _range;			//총알 사거리
-	int _bulletMax;			//총알 최대갯수
-	bool _isFrameImg;		//프레임 이미지냐?
+	const char* _imageName;    //총알 이미지 이름
+	float _range;            //총알 사거리
+	float _ghoulLargeRange;
+	int _bulletMax;            //총알 최대갯수
+	bool _isFrameImg;        //프레임 이미지냐?
 
 
 public:
-	HRESULT init(const char* imageName, int bulletMax, float range, bool isFrameImg = false);
+	HRESULT init(const char* imageName, int bulletMax, float range, float ghoulLargeRange, bool isFrameImg = false);
 	void release();
 	void update();
 	void render();
@@ -125,7 +125,7 @@ public:
 	vector<tagBullet> getBullet() { return _vBullet; }
 	//공용총알 렉트 가져오기
 	RECT getRect(int index) { return _vBullet[index].rc; }
-	
+
 };
 
 struct tagBomb
@@ -486,6 +486,18 @@ struct tagSpear
 	int lifeTime;
 
 	bool collision;
+	bool isBig;
+};
+struct tagStaySpear
+{
+	float x, y;
+	float strY;
+	float endY;
+	float angle;
+	float speed;
+	float range;
+
+	float fireX, fireY;
 };
 class iceSpear : public gameNode
 {
@@ -494,8 +506,11 @@ private:
 	tagInfo info;
 	tagSpear saveSpear;
 	vector<tagSpear> vSpear;
+	
+	vector<tagSpear> vUltSpear;
+	vector<tagStaySpear> vStay;
 
-
+	
 	float gauge;
 	
 	int spearCount;
@@ -508,7 +523,16 @@ private:
 	bool isCoolTime;
 	bool upgread;
 	
+	bool active;
 	int imgRadius;
+
+	//upgrade
+	float posX, posY;
+
+	int delay;
+	int sTime;
+	int eTime;
+
 
 public:
 	HRESULT init();

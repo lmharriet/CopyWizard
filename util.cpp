@@ -21,3 +21,8 @@ float MY_UTIL::getAngle(float startX, float startY, float endX, float endY)
 	}
 	return angle;
 }
+
+float MY_UTIL::lerp(float v0, float v1, float t) 
+{
+	return (1 - t) * v0 + t * v1;
+}
