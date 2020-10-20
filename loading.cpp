@@ -110,8 +110,8 @@ HRESULT loading::init()
 	//로딩화면 백그라운드 이미지 초기화
 	_background = IMAGEMANAGER->addImage("LoadingBackground", "resource/UI/loadingBackground.bmp", WINSIZEX, WINSIZEY);
 	//로딩바 이미지 초기화
-	IMAGEMANAGER->addImage("loadingBarFront", "Images/loadingBarFront.bmp", 1100, 20);
-	IMAGEMANAGER->addImage("loadingBarBack", "Images/loadingBarBack.bmp", 1100, 20);
+	IMAGEMANAGER->addImage("loadingBarFront", "Images/loadingBarFront.bmp", 1190, 20);
+	IMAGEMANAGER->addImage("loadingBarBack", "Images/loadingBarBack.bmp", 1190, 20);
 
 	//플레이어 이미지 초기화
 	_char = IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
@@ -127,7 +127,7 @@ HRESULT loading::init()
 	_currentFrameX = 0;
 	_currentEnemyFrameX = 0;
 
-	_playerMaxX = 1150.f;
+	_playerMaxX = 1300.f;
 	_playerCurrentX = 0.f;
 
 	return S_OK;
