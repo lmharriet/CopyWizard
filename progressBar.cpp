@@ -35,10 +35,10 @@ void progressBar::update()
 void progressBar::render()
 {
 	//렌더링 되는 순서에 의해서 렌더가 되니까 피통부터 렌더 시킨다
-	//_progressBarBack->render(getMemDC(), _x, _y);
+	_progressBarBack->render(getMemDC(), _x, _y);
 	////앞에 보여지는 체력바 이미지
-	//_progressBarFront->render(getMemDC(), _x, _y,
-	//	0, 0, _width, _height);
+	_progressBarFront->render(getMemDC(), _x, _y,
+		0, 0, _width, _height);
 }
 
 //체력바 게이지 세팅하기

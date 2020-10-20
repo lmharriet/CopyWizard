@@ -86,6 +86,22 @@ HRESULT loadItem::init(string strKey, const char * fileName, float x, float y, i
 	return S_OK;
 }
 
+HRESULT loadItem::init(string strKey, const char* fileName, bool isBGM )
+{
+	//로딩종류 초기화
+	_kind = LOAD_KIND_SOUND;
+
+	//sound 구조체 초기화
+	_imageResource.keyName = strKey;
+	_imageResource.fileName = fileName;
+	_imageResource.width = NULL;
+	_imageResource.height = NULL;
+	_imageResource.isTrans = isBGM;
+	_imageResource.transColor = NULL;
+
+	return S_OK;
+}
+
 //=============================================================
 //	## loading ## (로딩클래스 - 로딩화면 구현하기, 로딩바, 백그라운드)
 //=============================================================
@@ -94,14 +110,14 @@ HRESULT loading::init()
 	//로딩화면 백그라운드 이미지 초기화
 	_background = IMAGEMANAGER->addImage("LoadingBackground", "resource/UI/loadingBackground.bmp", WINSIZEX, WINSIZEY);
 	//로딩바 이미지 초기화
-	//IMAGEMANAGER->addImage("loadingBarFront", "loadingBarFront.bmp", 600, 20);
-	//IMAGEMANAGER->addImage("loadingBarBack", "loadingBarBack.bmp", 600, 20);
+	IMAGEMANAGER->addImage("loadingBarFront", "Images/loadingBarFront.bmp", 600, 20);
+	IMAGEMANAGER->addImage("loadingBarBack", "Images/loadingBarBack.bmp", 600, 20);
 
 	//로딩바 클래스 초기화
 	_loadingBar = new progressBar;
-	//_loadingBar->init("loadingBarFront", "loadingBarBack");
+	_loadingBar->init("loadingBarFront", "loadingBarBack");
 	//로딩바 위치 초기화
-	_loadingBar->setPos(100, 500);
+	_loadingBar->setPos(WINSIZEX/2-300, 500);
 
 	//현재 게이지
 	_currentGauge = 0;
@@ -127,6 +143,9 @@ void loading::render()
 	_background->render(getMemDC());
 	//로딩바 클래스 렌더
 	_loadingBar->render();
+	
+	if(_currentGauge < _vLoadItem.size())
+	textOut(getMemDC(), WINSIZEX / 2 - 100, WINSIZEY/2+100, _vLoadItem[_currentGauge]->getImageResource().keyName.c_str());
 }
 
 void loading::loadImage(string strKey, int width, int height)
@@ -161,6 +180,13 @@ void loading::loadFrameImage(string strKey, const char * fileName, float x, floa
 {
 	loadItem* item = new loadItem;
 	item->init(strKey, fileName, width, x, y, height, frameX, frameY, isTrans, transColor);
+	_vLoadItem.push_back(item);
+}
+
+void loading::loadSound(string strKey, const char* fileName, bool isBGM)
+{
+	loadItem* item = new loadItem;
+	item->init(strKey, fileName, isBGM);
 	_vLoadItem.push_back(item);
 }
 
@@ -213,6 +239,8 @@ bool loading::loadingDone()
 		//여러분들이 한번 만들어 보기
 		case LOAD_KIND_SOUND:
 		{
+			tagImageResource img = item->getImageResource();
+			SOUNDMANAGER->addSound(img.keyName, img.fileName,img.isTrans,img.isTrans); //loop랑 bgm이랑 같은걸로 되어있음. 
 		}
 		break;
 	}
