@@ -34,6 +34,8 @@ HRESULT uiManager::init()
 	//inferno gauging bar
 	IMAGEMANAGER->addImage("infernoGauging", "Images/ui/gaugingBar.bmp", 50, 10);
 
+	IMAGEMANAGER->addImage("blackWindow", "Images/ui/blackWindow.bmp", WINSIZEX, WINSIZEY);
+
 	for (int i = 0; i < 4; i++)
 	{
 		skillSlot[i].keyName = "nonSkill";
@@ -72,6 +74,8 @@ HRESULT uiManager::init()
 
 	coin = 0;
 	hp = 0;
+
+	blackOpacity = 0;
 	return S_OK;
 }
 
@@ -130,6 +134,15 @@ void uiManager::render(HDC hdc, int destX, int destY)
 	infoRender(hdc, destX, destY);
 	coinRender(hdc);
 	skillRender(hdc);
+
+	if (blackOpacity > 0)
+	{
+		image* img = IMAGEMANAGER->findImage("blackWindow");
+
+		img->alphaRender(hdc, blackOpacity);
+
+		blackOpacity -= 5;
+	}
 }
 
 void uiManager::infoRender(HDC hdc, int destX, int destY)
@@ -298,4 +311,9 @@ void uiManager::addCoolTime(string keyName)
 	}
 
 	cout << keyName << "이라는 스킬은 없습니다." << '\n';
+}
+
+void uiManager::fadeIn()
+{
+	blackOpacity = 255;
 }
