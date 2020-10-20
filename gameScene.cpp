@@ -455,7 +455,6 @@ void gameScene::enemyAttack()
 				SOUNDMANAGER->play("summonerAtk", false, -0.18f);
 			}
 			enemy->getBullet()->removeBullet(i);
-			SOUNDMANAGER->play("playerHit", false, -0.18f);
 		}
 		else
 		{

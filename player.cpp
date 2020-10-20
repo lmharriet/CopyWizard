@@ -1715,7 +1715,7 @@ void player::damage(int damage, float attackAngle, float knockBackSpeed)
 	bool checkAngle = angle > 90 && angle < 270;
 
 	DAMAGE->generator({ (long)posX, (long)posY }, "rNumbers", damage, checkAngle);
-
+	SOUNDMANAGER->play("playerHit", false, -0.18f);
 
 	if (inferno->getGauging() && signatureStateCool != 0 && basic)return;
 
