@@ -102,6 +102,9 @@ private:
 	bool isPlayWallSFX;
 	bool isPlayNiddleSFX;
 	bool isPlayPunchSFX;
+	bool isPlayFinalATK_UP;
+	bool isPlayDie;
+	bool isNPCAppear;
 public:
 	HRESULT init(int _posX, int _posY);
 	void release();

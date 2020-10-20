@@ -107,6 +107,7 @@ void loadingScene::loadingSound()
 	_loading->loadSound("shieldON", "Sound/UI/shieldON.mp3");
 	_loading->loadSound("shieldOFF", "Sound/UI/shieldOFF.mp3");
 	_loading->loadSound("npcNox", "Sound/UI/npc_nox.mp3");
+	_loading->loadSound("BOX_appear", "Sound/UI/BOX_appear.mp3");
 
 	//몬스터 사운드
 	_loading->loadSound("golemAtk", "Sound/golem_atk.mp3");
@@ -143,10 +144,15 @@ void loadingScene::loadingSound()
 	_loading->loadSound("bossNiddleSFX", "Sound/bossNiddleSFX.mp3");
 	_loading->loadSound("bossNiddleSFX_END", "Sound/bossNiddleSFX_END.mp3");
 	_loading->loadSound("bossPunchSFX", "Sound/bossPunchSFX.mp3");
+	_loading->loadSound("bossPunchSFX02", "Sound/bossPunchSFX02.mp3");
 	_loading->loadSound("bossPunchVO", "Sound/bossPunchVO.mp3");
 	_loading->loadSound("bossPunchEXP", "Sound/bossPunchEXP.mp3");
 	_loading->loadSound("bossWallSFX", "Sound/bossWallSFX.mp3");
 	_loading->loadSound("bossWallVO", "Sound/bossWallVO.mp3");
+	_loading->loadSound("bossFinalATK_start", "Sound/bossFinalATK_start.mp3");
+	_loading->loadSound("bossFinalATK_end", "Sound/bossFinalATK_end.mp3");
+	_loading->loadSound("bossFinalATK_up", "Sound/bossFinalATK_up.mp3");
+	_loading->loadSound("bossDie", "Sound/bossDie.mp3");
 	_loading->loadSound("CutSceneSFX", "Sound/CutSceneSFX.mp3");
 	_loading->loadSound("CutSceneVO", "Sound/CutSceneVO.mp3");
 	

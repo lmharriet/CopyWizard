@@ -64,7 +64,9 @@ HRESULT boss::init(int _posX, int _posY)
 
 	niddleAngle = 0.0f;
 	//sound
-	isPlayDrillSFX = isPlayJumpSFX = isPlayWallSFX = isPlayNiddleSFX = isPlayPunchSFX = false;
+	isPlayFinalATK_UP = isPlayDrillSFX = isPlayJumpSFX = isPlayWallSFX = isPlayNiddleSFX = isPlayPunchSFX = false;
+	isNPCAppear = isPlayDie = false;
+	
 	return S_OK;
 }
 
@@ -97,6 +99,12 @@ void boss::render()
 	}
 	else {
 		CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("bossNpc"), 730, 240);
+		if (!isNPCAppear)
+		{
+			
+			SOUNDMANAGER->play("BOX_appear",false,0.3f);
+			isNPCAppear = true;
+		}
 	}
 
 	if (boss.bossState == DRILL) {
@@ -139,6 +147,12 @@ void boss::animation()
 			timer = 0;
 			if (boss.bossHp <= 0) {
 				boss.bossState = BOSSDIE;
+				if (!isPlayDie && frameX == 0)
+				{
+					SOUNDMANAGER->play("bossDie", false,0.4f);
+					SOUNDMANAGER->stop("bossBGM");
+					isPlayDie = true;
+				}
 			}
 			else {
 				boss.bossState = BOSSIDLE;
@@ -1002,8 +1016,9 @@ void boss::bossPattern()
 			}
 		}
 		samePattern = pattern;
-		if (boss.bossHp < 600 && !isFinalAttack) {
+		if (!isFinalAttack && boss.bossHp < 600) {
 			isFinalAttack = true;
+			SOUNDMANAGER->play("bossFinalATK_start", false,-0.3f);
 			pattern = 6;
 		}
 		patternStart = true;
@@ -1047,6 +1062,7 @@ void boss::collCheck()
 					int damage = RANDOM->range(75, 91);
 					_player->damage(damage, _jumpAngle, 10);
 					isHit = true;
+					boss.bossHp = 0;
 				}
 			}
 				  break;
@@ -1173,6 +1189,7 @@ void boss::bossDie()
 
 	if (bossDied && boss.bossState != BOSSDIE) {
 		boss.bossState = RESPONE;
+		
 	}
 	if (boss.bossState == BOSSDIE) {
 		if (frameX >= 5) {
@@ -1224,7 +1241,7 @@ bool boss::damageCheck(int skillNum)
 		damage.endTime = 7;
 		break;
 	case 5:
-		damage.endTime = 20;
+		damage.endTime = 15;
 		break;
 	}
 	vDamage.push_back(damage);
@@ -1322,6 +1339,7 @@ void boss::bossFinalAttack(int patternType)
 					if (!isHit) {
 						int damage = RANDOM->range(8, 12);
 						_player->finalAttackDamaged(damage, 40);
+						SOUNDMANAGER->play("bossPunchSFX02", false, -0.25f);
 						isHit = true;
 					}
 					if (isHit) {
@@ -1342,6 +1360,7 @@ void boss::bossFinalAttack(int patternType)
 					if (!isHit) {
 						int damage = RANDOM->range(5, 8);
 						_player->finalAttackDamaged(damage, 100);
+						SOUNDMANAGER->play("bossPunchSFX02", false, -0.25f);
 						isHit = true;
 					}
 					if (isHit) {
@@ -1361,8 +1380,13 @@ void boss::bossFinalAttack(int patternType)
 				}
 			}
 			else {
+				if (!isPlayFinalATK_UP)
+				{
+					SOUNDMANAGER->play("bossFinalATK_up", false,-0.3f);
+				}
 				if (_player->getY() > -600) {
 					_player->setY(_player->getY() - 30);
+					isPlayFinalATK_UP = true;
 				}
 				else {
 					if (boss.center.y > _player->getY() - 70) {
@@ -1370,12 +1394,14 @@ void boss::bossFinalAttack(int patternType)
 						boss.center.y -= 20;
 					}
 					else {
+						SOUNDMANAGER->play("bossFinalATK_end", false,-0.3f);
 						tempDown = true;
 						count = 0;
 						boss.center.x = WINSIZEX / 2 + 100;
 						_player->setX(WINSIZEX / 2 + 100);
 					}
 				}
+				
 			}
 			boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
 		}
@@ -1391,6 +1417,7 @@ void boss::bossFinalAttack(int patternType)
 					count++;
 					CAMERAMANAGER->Shake(30, 30, 2);
 					if (!isHit) {
+						
 						int damage = RANDOM->range(7, 13);
 						_player->finalAttackDamaged(damage, 10);
 						isHit = true;
