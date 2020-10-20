@@ -10,8 +10,11 @@ HRESULT finalBossScene::init()
 
 void finalBossScene::release()
 {
-	_finalBoss->release();
-	SAFE_DELETE(_finalBoss);
+	if (_finalBoss != nullptr)
+	{
+		_finalBoss->release();
+		SAFE_DELETE(_finalBoss);
+	}
 }
 
 void finalBossScene::update()
