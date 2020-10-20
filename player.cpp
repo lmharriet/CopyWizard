@@ -4,9 +4,7 @@
 
 HRESULT player::init()
 {
-	//IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
 	IMAGEMANAGER->addFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
-	IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 1200, 250, 6, 1);
 	IMAGEMANAGER->addFrameImage("flame", "resource/player/flame1.bmp", 4096, 128, 32, 1);
 	IMAGEMANAGER->addFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
 
@@ -134,6 +132,7 @@ void player::update()
 	angleTenth = (int)(saveAngle * (18 / PI));
 
 
+	//플레이어 컨트롤 조건
 	if (speed == 0 && basicStateCool == 0 && signatureStateCool == 0 && frozenTime == 0
 		&& !isDead && !inferno->getGauging())
 	{

@@ -744,7 +744,7 @@ void RagingInferno::render()
 
 				if (10.f > vTail[i].minAngle)
 				{
-					vTail[i].minAngle += 0.002f;
+					vTail[i].minAngle += 0.0012f;
 				}
 				vTail[i].angle -= sinf(vTail[i].minAngle);
 
@@ -851,6 +851,8 @@ void RagingInferno::move()
 				vTail.push_back(tail);
 			}
 			time++;
+		
+		
 		}
 
 		if (inferno.lifeTime == 0)
@@ -1555,6 +1557,7 @@ void iceSpear::render()
 
 }
 
+//non-upgrade
 void iceSpear::chargeSpear()
 {
 	if (gauge < 0.99f) gauge += 0.02f;
