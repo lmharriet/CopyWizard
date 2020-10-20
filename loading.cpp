@@ -158,7 +158,7 @@ void loading::render()
 	//_enemy->frameRender(getMemDC(),_loadingBar->getPosX()+_loadingBar->getWidth(),_loadingBar->getPosY()-_enemy->getFrameHeight()/2);
 	
 	if(_currentGauge < _vLoadItem.size())
-	TextOut(getMemDC(), _loadingBar->getPosX() + _loadingBar->getWidth()-100, WINSIZEY/2+200, _vLoadItem[_currentGauge]->getImageResource().keyName.c_str(),strlen(_vLoadItem[_currentGauge]->getImageResource().keyName.c_str()));
+	TextOut(getMemDC(), _loadingBar->getPosX() + _loadingBar->getWidth()-100, WINSIZEY/2+280, _vLoadItem[_currentGauge]->getImageResource().keyName.c_str(),strlen(_vLoadItem[_currentGauge]->getImageResource().keyName.c_str()));
 }
 
 void loading::loadImage(string strKey, int width, int height)
