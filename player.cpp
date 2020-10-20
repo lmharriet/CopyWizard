@@ -42,7 +42,7 @@ HRESULT player::init()
 	dashLeft = dashRight = dashUp = dashDown = false;
 	isLeft = isRight = isUp = isDown = false;
 	//attack type
-	basic = standard = signature = false;
+	basic = standard = signature = signatureE = signatureR = false;
 
 	speed = 0;
 
@@ -134,7 +134,7 @@ void player::update()
 
 	//플레이어 컨트롤 조건
 	if (speed == 0 && basicStateCool == 0 && signatureStateCool == 0 && frozenTime == 0
-		&& !isDead && !inferno->getGauging() && idleDelay ==0)
+		&& !isDead && !inferno->getGauging() && idleDelay == 0)
 	{
 		controller();
 	}
@@ -166,35 +166,9 @@ void player::update()
 	dashSetUp();
 	standardSetUp();
 	signatureSetUp();
+	signatureSetUpE();
+	signatureSetUpR();
 	/////////////////
-
-	//test
-
-
-	if (INPUT->GetKeyDown('E'))	spear->upgradefire(posX, posY, attackAngle);
-	if (INPUT->GetKey('R'))
-	{
-		spear->chargeSpear();
-	}
-
-	if (INPUT->GetKeyUp('R'))spear->fire(posX, posY, attackAngle);
-
-
-	if (arcana[3].skillName == "skill_meteor" && INPUT->GetKeyDown('P'))
-	{
-		arcana[3].skillName = dragon->getInfo().keyName;
-		arcana[3].explanation = dragon->getInfo().explanation;
-		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, arcana[3].skillName, 300);
-		UI->setSkillSlotIndex(3, arcana[3].skillName, 300);
-
-	}
-	if (arcana[3].skillName == "skill_dragonArc" && INPUT->GetKeyDown('P'))
-	{
-		arcana[3].skillName = Meteor->getInfo().keyName;
-		arcana[3].explanation = Meteor->getInfo().explanation;
-		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, arcana[3].skillName, 300);
-		UI->setSkillSlotIndex(3, arcana[3].skillName, 300);
-	}
 
 
 	damagedCool();
@@ -280,21 +254,10 @@ void player::other_update()
 	dashSetUp();
 	standardSetUp();
 	signatureSetUp();
+	signatureSetUpE();
+	signatureSetUpR();
 	/////////////////
 
-	if (arcana[3].skillName == "skill_meteor" && INPUT->GetKeyDown('P'))
-	{
-		arcana[3].skillName = dragon->getInfo().keyName;
-		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, arcana[3].skillName, 300);
-		UI->setSkillSlotIndex(3, arcana[3].skillName, 300);
-
-	}
-	if (arcana[3].skillName == "skill_dragonArc" && INPUT->GetKeyDown('P'))
-	{
-		arcana[3].skillName = Meteor->getInfo().keyName;
-		setSkillUi(ARCANA_TYPE::TYPE_SIGNATURE, arcana[3].skillName, 300);
-		UI->setSkillSlotIndex(3, arcana[3].skillName, 300);
-	}
 
 
 	damagedCool();
@@ -516,28 +479,38 @@ void player::controller()
 void player::skillInit()
 {
 	arcana[0].type = ARCANA_TYPE::TYPE_BASIC;
-	arcana[0].skillName = blaze->getInfo().keyName/*"skill_blaze"*/;
+	arcana[0].skillName = blaze->getInfo().keyName;
 	arcana[0].explanation = blaze->getInfo().explanation;
-	arcana[0].coolTime = 40;
+	arcana[0].coolTime = blaze->getInfo().coolTime;
 
 	arcana[1].type = ARCANA_TYPE::TYPE_DASH;
-	arcana[1].skillName = searingRush->getInfo().keyName/*"skill_searingDash"*/;
+	arcana[1].skillName = searingRush->getInfo().keyName;
 	arcana[1].explanation = searingRush->getInfo().explanation;
-	arcana[1].coolTime = 240;
+	arcana[1].coolTime = searingRush->getInfo().coolTime;
 
 	arcana[2].type = ARCANA_TYPE::TYPE_STANDARD;
-	arcana[2].skillName = inferno->getInfo().keyName/*"skill_inferno"*/;
+	arcana[2].skillName = inferno->getInfo().keyName;
 	arcana[2].explanation = inferno->getInfo().explanation;
-	arcana[2].coolTime = 240;
+	arcana[2].coolTime = inferno->getInfo().coolTime;
+
+	//arcana[3].type = ARCANA_TYPE::TYPE_SIGNATURE;
+	//arcana[3].skillName = Meteor->getInfo().keyName;
+	//arcana[3].explanation = Meteor->getInfo().explanation;
+	//arcana[3].coolTime = Meteor->getInfo().coolTime;
+
+	/*arcana[3].type = ARCANA_TYPE::TYPE_SIGNATURE;
+	arcana[3].skillName = dragon->getInfo().keyName;
+	arcana[3].explanation = dragon->getInfo().explanation;
+	arcana[3].coolTime = dragon->getInfo().coolTime;*/
+
 
 	arcana[3].type = ARCANA_TYPE::TYPE_SIGNATURE;
-	arcana[3].skillName = Meteor->getInfo().keyName/*"skill_meteor"*/;
-	arcana[3].explanation = Meteor->getInfo().explanation;
-	//arcana[3].skillName = dragon->getInfo().keyName/*"skill_dragonArc"*/;
-	//arcana[3].explanation = dragon->getInfo().explanation;
-	arcana[3].coolTime = 300;
+	arcana[3].skillName = spear->getInfo().keyName;
+	arcana[3].explanation = spear->getInfo().explanation;
+	arcana[3].coolTime = spear->getInfo().coolTime;
 
-	for (int i = 0; i < 4; i++)
+
+	for (int i = 0; i < ARCANA_SLOT; i++)
 	{
 		UI->setSkillSlot(arcana[i].skillName, arcana[i].coolTime);
 		PLAYERDATA->pushArcanaInfo(arcana[i]);
@@ -549,7 +522,7 @@ void player::setSkillUi(ARCANA_TYPE type, string keyName, int coolTime)
 
 	if (keyName != "")
 	{
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < ARCANA_SLOT; i++)
 		{
 			if (type == ARCANA_TYPE::TYPE_BASIC) i = 0;
 			else if (type == ARCANA_TYPE::TYPE_DASH) i = 1;
@@ -569,24 +542,16 @@ void player::setSkillUi(ARCANA_TYPE type, string keyName, int coolTime)
 
 void player::basicSetUp()
 {
-	/*for (int i = 0; i < 4; i++)
+	if (arcana[0].skillName == blaze->getInfo().keyName)
 	{
-		if (INPUT->GetKeyDown(VK_LBUTTON) || INPUT->GetKeyDown(VK_RBUTTON) || INPUT->GetKeyDown(VK_SPACE) || INPUT->GetKeyDown('Q'))
+		if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool() && !isDead && speed == 0 && !inferno->getGauging()
+			&& frozenTime == 0)
 		{
-
+			saveAngle = attackAngle;
+			basic = true;
 		}
 
-	}*/
-
-
-	if(INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool() && !isDead)
-	{
-		saveAngle = attackAngle;
-		basic = true;
-	}
-	if (basic)
-	{
-		if (arcana[0].skillName == "skill_blaze")
+		if (basic)
 		{
 			float x = cosf(saveAngle) * 50.f + posX;
 			float y = -sinf(saveAngle) * 50 + posY;
@@ -597,7 +562,7 @@ void player::basicSetUp()
 				blaze->fire(x, y, 10, saveAngle);
 			}
 
-			UI->addCoolTime("skill_blaze");
+			//UI->addCoolTime(blaze->getInfo().keyName);
 
 
 			if (basicStateCool > 0)
@@ -607,8 +572,8 @@ void player::basicSetUp()
 			}
 			if (basicStateCool == 0) basic = false;
 		}
-	}
 
+	}
 }
 
 void player::dashSetUp()
@@ -628,7 +593,7 @@ void player::dashSetUp()
 
 		if (speed == 7)
 		{
-			UI->addCoolTime("skill_searingDash");
+			//UI->addCoolTime("skill_searingDash");
 			searingRush->setIsCoolTime(true);
 		}
 
@@ -737,26 +702,23 @@ void player::dashSetUp()
 
 void player::standardSetUp()
 {
-	if (INPUT->GetKeyDown(VK_RBUTTON) && frozenTime == 0 && !inferno->getGauging() && !isDead
-		&& speed == 0 && signatureStateCool == 0 && !inferno->getCool())
+	if (arcana[2].skillName == inferno->getInfo().keyName)
 	{
-		standard = true;
-		saveAngle = attackAngle;
-	}
-	else standard = false;
-
-	if (standard)
-	{
-		if (arcana[2].skillName == "skill_inferno")
+		if (INPUT->GetKeyDown(VK_RBUTTON) && frozenTime == 0 && !inferno->getGauging() && !isDead
+			&& speed == 0 && signatureStateCool == 0 && !inferno->getCool())
 		{
+			standard = true;
+			saveAngle = attackAngle;
 			inferno->fire(posX, posY, attackAngle);
-		}
-	}
 
-	//state Change
-	if (inferno->getGauging())
-	{
-		state = STATE::STANDARD;
+		}
+		if (INPUT->GetKeyUp(VK_RBUTTON)) standard = false;
+
+
+		if (inferno->getGauging())
+		{
+			state = STATE::STANDARD;
+		}
 	}
 }
 
@@ -778,7 +740,7 @@ void player::signatureSetUp()
 	{
 		if (!upgradeReady)
 		{
-			if (arcana[3].skillName == "skill_meteor")
+			if (arcana[3].skillName == Meteor->getInfo().keyName)
 			{
 
 				if (signatureStateCool == 0)
@@ -796,7 +758,7 @@ void player::signatureSetUp()
 				if (signatureStateCool == 0) signature = false;
 			}
 
-			else if (arcana[3].skillName == "skill_dragonArc")
+			else if (arcana[3].skillName == dragon->getInfo().keyName)
 			{
 				if (signatureStateCool == 0)
 				{
@@ -814,8 +776,8 @@ void player::signatureSetUp()
 		}
 		else
 		{
-			TIME->setTest(12.f);
-			EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
+			//TIME->setTest(12.f);
+			//EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
 			if (arcana[3].skillName == "skill_meteor")
 			{
 
@@ -857,6 +819,45 @@ void player::signatureSetUp()
 	}
 }
 
+void player::signatureSetUpE()
+{
+	// arcana[4] , key -> E
+	if (arcana[3].skillName == spear->getInfo().keyName)
+	{
+
+		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool())
+		{
+			if (!upgradeReady)
+			{
+				if (INPUT->GetKey('E'))
+				{
+					spear->chargeSpear();
+				}
+				if (INPUT->GetKeyUp('E'))
+				{
+					spear->fire(posX, posY, attackAngle);
+				}
+			}
+			else
+			{
+				//vector out of range...수정하기 -> 
+				if (INPUT->GetKeyDown('E') )
+				{
+					spear->upgradefire(posX, posY, attackAngle);
+					skillGauge = 0;
+				}
+
+			}
+		}
+	}
+
+}
+
+void player::signatureSetUpR()
+{
+	// arcana[5], key->R
+
+}
 void player::takeCoin()
 {
 	for (int i = 0; i < DROP->getCoinVec().size(); i++)
@@ -1516,7 +1517,7 @@ void player::frameAnimation(int frameX, int frameY, int _index)
 			UNITRENDER->setFramePlayer({ 8,0 });
 			return;
 		}
-		
+
 		if (idleDelay == 1)UNITRENDER->setFramePlayer({ 0,0 });
 	}
 
@@ -1685,7 +1686,7 @@ void player::changeState()
 			state = STATE::IDLE;
 		}
 	}
-	
+
 }
 
 

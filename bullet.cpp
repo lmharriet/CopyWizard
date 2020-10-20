@@ -153,7 +153,7 @@ HRESULT bomb::init(int maxBullet)
 
 	bossScene = false;
 	isCoolTime = false;
-	coolTime = 40;
+	info.coolTime = 40;
 	currentCoolTime = 0;
 
 	info.keyName = "skill_blaze";
@@ -181,7 +181,7 @@ void bomb::update()
 	if (isCoolTime)
 	{
 		currentCoolTime++;
-		if (currentCoolTime == coolTime)
+		if (currentCoolTime == info.coolTime )
 		{
 			isCoolTime = false;
 			currentCoolTime = 0;
@@ -247,7 +247,7 @@ void bomb::fire(float x, float y, float speed, float angle)
 	bombCount = 3;
 
 	isCoolTime = true;
-
+	UI->addCoolTime(info.keyName);
 	//sound
 
 }
@@ -307,7 +307,7 @@ HRESULT meteor::init()
 	IMAGEMANAGER->addFrameImage("circle", "resource/player/castingCircle1.bmp", 3072, 128, 24, 1, true, RGB(255, 0, 0));
 	IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 1200, 250, 6, 1);
 	currentCoolTime = 0;
-	coolTime = 300 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
+	
 	isCoolTime = false;
 
 	count = index = 0;
@@ -321,7 +321,7 @@ HRESULT meteor::init()
 
 	info.keyName = "skill_meteor";
 	info.explanation = "메테오[시그니쳐]";
-
+	info.coolTime = 300;
 	return S_OK;
 }
 
@@ -341,7 +341,7 @@ void meteor::update()
 	{
 		currentCoolTime++;
 
-		if (currentCoolTime == coolTime)
+		if (currentCoolTime == info.coolTime)
 		{
 			isCoolTime = false;
 			currentCoolTime = 0;
@@ -388,7 +388,7 @@ void meteor::update()
 			makeCircle(save.x + ranX, save.y + ranY);
 
 			isCoolTime = true;
-			UI->addCoolTime("skill_meteor");
+			UI->addCoolTime(info.keyName);
 			meteorCount--;
 		}
 
@@ -472,7 +472,7 @@ void meteor::creatMeteor(float x, float y, float angle)
 		vMeteor.push_back(meteor);
 		makeCircle(x, y);
 		isCoolTime = true;
-		UI->addCoolTime("skill_meteor");
+		UI->addCoolTime(info.keyName);
 
 
 		SOUNDMANAGER->play(meteo_sound, false);
@@ -536,14 +536,14 @@ void meteor::coolTimeReduction()
 
 	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
 	{
-		coolTime = 300 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
-		UI->fixCoolTime("skill_meteor", coolTime);
+		info.coolTime = 300 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
+		UI->fixCoolTime(info.keyName, info.coolTime);
 
 	}
 	else
 	{
-		coolTime = 300;
-		UI->fixCoolTime("skill_meteor", coolTime);
+		info.coolTime = 300;
+		UI->fixCoolTime(info.keyName, info.coolTime);
 	}
 
 }
@@ -553,12 +553,13 @@ void meteor::coolTimeReduction()
 HRESULT dashFire::init()
 {
 	isCoolTime = false;
-	coolTime = 240;
 	currentCoolTime = 0;
 
 
 	info.keyName = "skill_searingDash";
 	info.explanation = "대쉬[파이어]";
+	info.coolTime = 240;
+
 	return S_OK;
 }
 
@@ -573,7 +574,7 @@ void dashFire::update()
 	if (isCoolTime)
 	{
 		currentCoolTime++;
-		if (currentCoolTime == coolTime)
+		if (currentCoolTime == info.coolTime)
 		{
 			isCoolTime = false;
 			currentCoolTime = 0;
@@ -648,13 +649,13 @@ void dashFire::coolTimeReduction()
 {
 	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
 	{
-		coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
-		UI->fixCoolTime("skill_searingDash", coolTime);
+		info.coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
+		UI->fixCoolTime(info.keyName, info.coolTime);
 	}
 	else
 	{
-		coolTime = 240;
-		UI->fixCoolTime("skill_searingDash", coolTime);
+		info.coolTime = 240;
+		UI->fixCoolTime(info.keyName, info.coolTime);
 	}
 
 }
@@ -671,7 +672,6 @@ HRESULT RagingInferno::init()
 	gaugeTime = 0;
 	distance = 0;
 	currentCoolTime = 0;
-	coolTime = 300;
 
 	isFire = gauging = isActive = false;
 	isCoolTime = false;
@@ -679,7 +679,7 @@ HRESULT RagingInferno::init()
 
 	info.keyName = "skill_inferno";
 	info.explanation = "인페르노[스탠다드]";
-
+	info.coolTime = 300;
 
 	index = count = 0;
 
@@ -717,7 +717,7 @@ void RagingInferno::update()
 	{
 		currentCoolTime++;
 
-		if (currentCoolTime == coolTime)
+		if (currentCoolTime == info.coolTime)
 		{
 			isCoolTime = false;
 			currentCoolTime = 0;
@@ -788,7 +788,7 @@ void RagingInferno::fire(float x, float y, float angle)
 	gauging = true;
 	PLAYERDATA->setGauging(gauging);
 	isCoolTime = true;
-	UI->addCoolTime("skill_inferno");
+	UI->addCoolTime(info.keyName);
 }
 
 void RagingInferno::move()
@@ -871,13 +871,13 @@ void RagingInferno::coolTimeReduction()
 {
 	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
 	{
-		coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
-		UI->fixCoolTime("skill_inferno", coolTime);
+		info.coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
+		UI->fixCoolTime(info.keyName, info.coolTime);
 	}
 	else
 	{
-		coolTime = 240;
-		UI->fixCoolTime("skill_inferno", coolTime);
+		info.coolTime = 240;
+		UI->fixCoolTime(info.keyName, info.coolTime);
 	}
 }
 
@@ -905,7 +905,6 @@ HRESULT dragonArc::init()
 
 	//memset(&dragonHead, 0, sizeof(dragonHead));
 
-	coolTime = 300;
 	currentCoolTime = 0;
 	isCoolTime = false;
 	upgrade = false;
@@ -913,7 +912,7 @@ HRESULT dragonArc::init()
 
 	info.keyName = "skill_dragonArc";
 	info.explanation = "불꽃 용[시그니쳐]";
-
+	info.coolTime = 300;
 	pattern = 0;
 	return S_OK;
 }
@@ -933,7 +932,7 @@ void dragonArc::update()
 	if (isCoolTime)
 	{
 		currentCoolTime++;
-		if (currentCoolTime == coolTime)
+		if (currentCoolTime == info.coolTime)
 		{
 			isCoolTime = false;
 			currentCoolTime = 0;
@@ -1024,7 +1023,7 @@ void dragonArc::fire(float x, float y, float angle)
 		dragon.index = 36 - (angle * 18 / PI);//0-35
 
 		vDragon.push_back(dragon);
-		UI->addCoolTime("skill_dragonArc");
+		UI->addCoolTime(info.keyName);
 		break;
 	case 1:
 		if (vDragon.size() < 2)
@@ -1055,7 +1054,7 @@ void dragonArc::fire(float x, float y, float angle)
 			dragon.index = 36 - (angle * 18 / PI);//0-35
 
 			vDragon.push_back(dragon);
-			UI->addCoolTime("skill_dragonArc");
+			UI->addCoolTime(info.keyName);
 
 		}
 		break;
@@ -1243,7 +1242,7 @@ void dragonArc::phoenixFire(float x, float y, float angle)
 		vWings.push_back(wings);
 
 		isCoolTime = true;
-		UI->addCoolTime("skill_dragonArc");
+		UI->addCoolTime(info.keyName);
 	}
 
 }
@@ -1471,20 +1470,17 @@ void dragonArc::coolTimeReduction()
 {
 	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
 	{
-		coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
-		UI->fixCoolTime("skill_dragonArc", coolTime);
+		info.coolTime = 240 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
+		UI->fixCoolTime(info.keyName, info.coolTime);
 	}
 	else
 	{
-		coolTime = 240;
-		UI->fixCoolTime("skill_dragonArc", coolTime);
+		info.coolTime = 240;
+		UI->fixCoolTime(info.keyName, info.coolTime);
 	}
 }
 
 
-
-
-//test
 // ICE SPEAR
 
 
@@ -1493,11 +1489,12 @@ HRESULT iceSpear::init()
 	IMAGEMANAGER->addImage("skill_spear", "resource/player/iceSpear.bmp", 96, 96, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("skill_spearX2", "resource/player/iceSpear.bmp", 96*2, 96*2, true, RGB(255, 0, 255));
 	imgRadius = IMAGEMANAGER->findImage("skill_spear")->getWidth() / 2;
-	info.keyName = "skill_spear";
+	
+	info.keyName = "skill_iceSpear";
 	info.explanation = "";
-
-
-	coolTime = 360;
+	info.coolTime = 360;
+	
+	isCoolTime = false;
 	currentCoolTime = 0;
 	gauge = 0;
 
@@ -1517,10 +1514,26 @@ void iceSpear::release()
 void iceSpear::update()
 {
 	time++;
+
+	coolTimeReduction();
 	move();
 
 	if (active)fireCount();
 	upgradeMove();
+
+
+
+	//쿨타임
+
+	if (isCoolTime)
+	{
+		currentCoolTime++;
+		if (currentCoolTime == info.coolTime)
+		{
+			isCoolTime = false;
+			currentCoolTime = 0;
+		}
+	}
 
 }
 
@@ -1569,7 +1582,7 @@ float iceSpear::rangeCul(float maxRange, float x, float y, float angle)
 	tagTile* tile = PLAYERDATA->_getTile();
 	vector<int> iWall = PLAYERDATA->getWall();
 
-	for (int i = 32; i < maxRange; i += 32)
+	for (int i = 32; i < maxRange; i += 60)
 	{
 		int destX = x + cosf(angle) * imgRadius;
 		int destY = y - sinf(angle) * imgRadius;
@@ -1609,13 +1622,14 @@ void iceSpear::fire(float x, float y, float angle)
 	spear.speed = 25.f * gauge;
 	spear.atkPower = (30.f * gauge) + 1;
 
-	spear.range = rangeCul(700, x, y, angle);
+	spear.range = rangeCul(500, x, y, angle);
 	spear.rc = RectMakeCenter(spear.x, spear.y, 30, 30);
 
 
 	vSpear.push_back(spear);
-
+	isCoolTime = true;
 	gauge = 0.f;
+	UI->addCoolTime(info.keyName);
 }
 
 void iceSpear::move()
@@ -1691,7 +1705,8 @@ void iceSpear::upgradefire(float x, float y, float angle)
 	spear.y = posY;
 
 	vStay.push_back(spear);
-
+	isCoolTime = true;
+	UI->addCoolTime(info.keyName);
 }
 
 void iceSpear::fireCount()
@@ -1722,6 +1737,7 @@ void iceSpear::fireCount()
 		vStay.erase(vStay.begin());
 
 		sTime = 0;
+		
 	}
 
 	sTime++;
@@ -1769,5 +1785,18 @@ void iceSpear::upgradeMove()
 			}
 		}
 		i++;
+	}
+}
+void iceSpear::coolTimeReduction()
+{
+	if (PLAYERDATA->getStat().CoolTimeReduction != 0)
+	{
+		info.coolTime = 360 - (PLAYERDATA->getStat().CoolTimeReduction * 60);
+		UI->fixCoolTime(info.keyName, info.coolTime);
+	}
+	else
+	{
+		info.coolTime = 360;
+		UI->fixCoolTime(info.keyName, info.coolTime);
 	}
 }

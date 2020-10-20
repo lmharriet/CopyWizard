@@ -7,6 +7,7 @@ struct tagInfo
 {
 	string keyName;
 	string explanation;
+	int coolTime;
 };
 //총알 구조체
 struct tagBullet
@@ -163,8 +164,7 @@ private:
 	int count, index;
 
 	bool isCoolTime;	// 스킬 쿨타임이 돌고있는지 아닌지
-
-	int coolTime;		// 몇초간 스킬 사용을 금할지
+						// 몇초간 스킬 사용을 금할지 -> info cooltime
 	int currentCoolTime;	// 쿨타임이 다 돌면 isCoolTime을 false
 
 	bool bossScene;
@@ -228,8 +228,7 @@ private:
 private:
 
 	bool isCoolTime;	// 스킬 쿨타임이 돌고있는지 아닌지
-
-	int coolTime;		// 몇초간 스킬 사용을 금할지
+						// 몇초간 스킬 사용을 금할지 -> infoCoolTime	
 	int currentCoolTime;	// 쿨타임이 다 돌면 isCoolTime을 false
 
 
@@ -285,7 +284,7 @@ private:
 	vector<tagArcana> vDash;
 	tagInfo info;
 
-	int coolTime;
+
 	int currentCoolTime;
 
 	bool isCoolTime;
@@ -356,8 +355,7 @@ private:
 
 	//cool Time
 	bool isCoolTime;	// 스킬 쿨타임이 돌고있는지 아닌지
-
-	int coolTime;		// 몇초간 스킬 사용을 금할지
+						// 몇초간 스킬 사용을 금할지->info cooltime
 	int currentCoolTime;	// 쿨타임이 다 돌면 isCoolTime을 false
 
 public:
@@ -420,7 +418,6 @@ private:
 
 	int pattern;
 
-	int coolTime;
 	int currentCoolTime;
 	bool isCoolTime;
 	bool upgrade;
@@ -506,7 +503,6 @@ private:
 	tagInfo info;
 	tagSpear saveSpear;
 
-
 	vector<tagSpear> vSpear;
 	
 	vector<tagSpear> vUltSpear;
@@ -519,8 +515,7 @@ private:
 	int spearCount;
 	int time;
 	int pattern;
-	
-	int coolTime;
+
 	int currentCoolTime;
 	bool upgrade;
 	bool isCoolTime;
@@ -552,9 +547,12 @@ public:
 	void fireCount();
 	void upgradeMove();
 
+	void coolTimeReduction();
+
 
 	//getter , setter
 
+	tagInfo getInfo() { return info; }
 	vector<tagSpear> getSpear() { return vSpear; }
 	int getSize() { return vSpear.size(); }
 	RECT getSpearRc(int index) { return vSpear[index].rc; }
@@ -562,7 +560,11 @@ public:
 	float getSpearAngle(int index) { return vSpear[index].angle; }
 	int getSkillNum() { return 5; }
 
+	//upgrade
+	RECT getUpgradeRC(int index) { return vUltSpear[index].rc; }
 	int getUpgradeSize() { return vUltSpear.size(); }
+	float getUpgradeAngle(int index) { return vUltSpear[index].angle; }
 	bool getIsBig(int index) { return vUltSpear[index].isBig; }
+	bool getCool() { return isCoolTime; }
 
 };

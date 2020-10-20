@@ -6,6 +6,8 @@
 #include "unitNode.h"
 #include "inventory.h";
 
+#define ARCANA_SLOT 4
+
 class player : public gameNode
 {
 private:
@@ -28,7 +30,7 @@ private:
 
 private:
 
-	tagWizardArcana arcana[4];
+	tagWizardArcana arcana[ARCANA_SLOT];
 
 	MOVE move;
 	STATE state;
@@ -85,7 +87,10 @@ private:
 	bool dashLeft, dashRight, dashUp, dashDown;
 	
 	//skill kind
-	bool basic, standard, signature;
+	bool basic, standard, signature, signatureE,signatureR;
+
+
+
 	
 	// 신호 중복 방지
 	bool isLeft, isRight, isUp, isDown;
@@ -120,9 +125,12 @@ public:
 	void dashSetUp();
 	void standardSetUp();
 	void signatureSetUp();
+	void signatureSetUpE();
+	void signatureSetUpR();
 
 	void setSkillUi(ARCANA_TYPE type, string keyName, int coolTime);
 	///////////////////////
+
 
 
 	void takeCoin();

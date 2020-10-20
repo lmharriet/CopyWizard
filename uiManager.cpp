@@ -28,6 +28,8 @@ HRESULT uiManager::init()
 	IMAGEMANAGER->addImage("skill_inferno", "Images/ui/skill/inferno.bmp", 34, 34);
 	IMAGEMANAGER->addImage("skill_meteor", "Images/ui/skill/meteor.bmp", 34, 34);
 
+	// ice
+	IMAGEMANAGER->addImage("skill_iceSpear", "Images/ui/skill/iceSpear.bmp", 34, 34);
 
 	IMAGEMANAGER->addImage("coolTime", "Images/ui/coolTime.bmp", 34, 34);
 
@@ -36,37 +38,18 @@ HRESULT uiManager::init()
 
 	IMAGEMANAGER->addImage("blackWindow", "Images/ui/blackWindow.bmp", WINSIZEX, WINSIZEY);
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < SKILLSLOT_MAX; i++)
 	{
 		skillSlot[i].keyName = "nonSkill";
 		skillSlot[i].coolTime = skillSlot[i].maxCoolTime = 0;
 		skillSlot[i].available = true;
 	}
 
-
-	skillSlot[0].keyName = "nonSkill";
-	skillSlot[0].maxCoolTime = 0;
-
-	skillSlot[1].keyName = "nonSkill";
-	skillSlot[1].maxCoolTime = 0;	// 4초
-
-	skillSlot[2].keyName = "nonSkill";
-	skillSlot[2].maxCoolTime = 0; // 4초
-
-	skillSlot[3].keyName = "nonSkill";
-	skillSlot[3].maxCoolTime = 0; // 5초
-
-	//skillSlot[0].keyName = "blazeIcon";
-	//skillSlot[0].maxCoolTime = 0;
-
-	//skillSlot[1].keyName = "searingDash";
-	//skillSlot[1].maxCoolTime = 240;	// 4초
-
-	//skillSlot[2].keyName = "infernoIcon";
-	//skillSlot[2].maxCoolTime = 240; // 4초
-
-	//skillSlot[3].keyName = "meteorIcon";
-	//skillSlot[3].maxCoolTime = 300; // 5초
+	for (int i = 0; i < SKILLSLOT_MAX; i++)
+	{
+		skillSlot[i].keyName = "nonSkill";
+		skillSlot[i].maxCoolTime = 0;
+	}
 
 	gaugeBlink.isActive = false;
 	gaugeBlink.isUp = true;
@@ -81,7 +64,7 @@ HRESULT uiManager::init()
 
 void uiManager::update()
 {
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < SKILLSLOT_MAX; i++)
 	{
 		//스킬이 없거나, 스킬이 사용 가능 상태 일 때는 쿨타임이 생기지않는다. 
 		if (skillSlot[i].keyName == "nonSkill" || skillSlot[i].available)continue;
@@ -236,17 +219,17 @@ void uiManager::skillRender(HDC hdc)
 {
 	image* img = IMAGEMANAGER->findImage("buttons");
 
-	for (int i = 0; i < 4; i++) img->frameRender(hdc, 27 + (i * 52), WINSIZEY - 110, i, 0);
+	for (int i = 0; i < SKILLSLOT_MAX; i++) img->frameRender(hdc, 27 + (i * 52), WINSIZEY - 110, i, 0);
 
 	img = IMAGEMANAGER->findImage("pictureFrame");
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < SKILLSLOT_MAX; i++)
 	{
 		img->frameRender(hdc, 20 + (i * 52), WINSIZEY - 70, i / 3, 0);
 	}
 
 	//skill
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < SKILLSLOT_MAX; i++)
 	{
 		img = IMAGEMANAGER->findImage(skillSlot[i].keyName);
 		img->render(hdc, 27 + (i * 52), WINSIZEY - 63);
@@ -255,7 +238,7 @@ void uiManager::skillRender(HDC hdc)
 	//coolTime
 	img = IMAGEMANAGER->findImage("coolTime");
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < SKILLSLOT_MAX; i++)
 	{
 		if (skillSlot[i].keyName == "nonSkill" || skillSlot[i].coolTime == 0)continue;
 
@@ -270,7 +253,7 @@ void uiManager::setSkillSlot(string keyName, int _time)
 {
 	int time = _time;
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < SKILLSLOT_MAX; i++)
 	{
 		if (skillSlot[i].keyName != "nonSkill") continue;
 
@@ -283,7 +266,7 @@ void uiManager::setSkillSlot(string keyName, int _time)
 
 void uiManager::setSkillSlotIndex(int index, string keyName, int sec)
 {
-	if (index < 0 || index > 4) return;
+	if (index < 0 || index > SKILLSLOT_MAX) return;
 
 	skillSlot[index].keyName = keyName;
 	skillSlot[index].maxCoolTime = sec;
@@ -291,7 +274,7 @@ void uiManager::setSkillSlotIndex(int index, string keyName, int sec)
 
 void uiManager::fixCoolTime(string keyName, int time)
 {
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < SKILLSLOT_MAX; i++)
 	{
 		if (keyName != skillSlot[i].keyName) continue;
 
@@ -301,7 +284,7 @@ void uiManager::fixCoolTime(string keyName, int time)
 
 void uiManager::addCoolTime(string keyName)
 {
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < SKILLSLOT_MAX; i++)
 	{
 		if (keyName == skillSlot[i].keyName)
 		{

@@ -66,7 +66,7 @@ HRESULT gameScene::init()
 
 	_chest = new chest;
 	_chest->init("silverChest", { -1149,2047 }, 10);
-	
+
 	PORTAL->initWarp(-1149, 2247);
 
 	//sound
@@ -409,8 +409,7 @@ void gameScene::playerAttack()
 		{
 			if (colCheck(_player->getSpear()->getSpearRc(i), enemy->getMinion()[j]->getRC()))
 			{
-
-				enemy->getMinion()[j]->setPt(_player->getSpear()->getSpearRc(i).left, _player->getSpear()->getSpearRc(i).top);
+				//enemy->getMinion()[j]->setPt(_player->getSpear()->getSpearRc(i).left, _player->getSpear()->getSpearRc(i).top);
 
 				bool criCheck = PLAYERDATA->criAppear();
 
@@ -420,7 +419,27 @@ void gameScene::playerAttack()
 				{
 					_player->chargeSkillGauge(damage, 5);
 				}
-				//enemy->getMinion()[j]->hit(damage, _player->getSpear()->ge(i), 10.f,, criCheck);
+				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getSpearAngle(i), 10.f, 5, criCheck);
+			}
+		}
+	}
+
+	//upgrade
+	for (int i = 0; i < _player->getSpear()->getUpgradeSize(); i++)
+	{
+		for (int j = 0; j < enemy->getMinion().size(); j++)
+		{
+			if (colCheck(_player->getSpear()->getUpgradeRC(i), enemy->getMinion()[j]->getRC()))
+			{
+				bool criCheck = PLAYERDATA->criAppear();
+
+				int damage = PLAYERDATA->damageCul(_player->getSpear()->getAtkPower(i) + RANDOM->range(0, 3), criCheck);
+				//gauge
+				if (PLAYERDATA->getStat().ManaRejection == false)
+				{
+					_player->chargeSkillGauge(damage, 5);
+				}
+				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 10.f, 5, criCheck);
 			}
 		}
 	}

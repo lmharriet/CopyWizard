@@ -528,11 +528,11 @@ bool monster::hitCheck(int skillNum)
 		hit.endTime = 7;
 		break;
 	case 5:
-		hit.endTime = 20;
+		hit.endTime = 15;
 		break;
 	}
 	vHit.push_back(hit);
-
+	
 	return true;
 }
 

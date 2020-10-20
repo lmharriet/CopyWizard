@@ -1,5 +1,6 @@
 #pragma once
 #include "singletonBase.h"
+#define SKILLSLOT_MAX 4
 struct tagSkill
 {
 	string keyName;
@@ -20,7 +21,7 @@ struct tagSkillGaugeBlink
 class uiManager : public singletonBase<uiManager>
 {
 private:
-	tagSkill skillSlot[4];
+	tagSkill skillSlot[SKILLSLOT_MAX];
 
 	tagSkillGaugeBlink gaugeBlink;
 
