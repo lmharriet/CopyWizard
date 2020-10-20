@@ -165,8 +165,8 @@ void boss::animation()
 						count = 0;
 						if (!isPlayJumpSFX)
 						{
-							SOUNDMANAGER->play("bossJumpSFX", false,-0.2f);
-							SOUNDMANAGER->play("bossJumpVO", false,-0.1f);
+							SOUNDMANAGER->play("bossJumpSFX", false,-0.35f);
+							SOUNDMANAGER->play("bossJumpVO", false,-0.25f);
 							isPlayJumpSFX = true;
 						}
 					}
@@ -202,7 +202,7 @@ void boss::animation()
 		if (!isPlayDrillSFX)
 		{
 			SOUNDMANAGER->play("bossDrillSFX", false,-0.2f);
-			SOUNDMANAGER->play("bossDrillVO", false,-0.1f);
+			SOUNDMANAGER->play("bossDrillVO", false,-0.2f);
 			isPlayDrillSFX = true;
 		}
 		if (leftCheck) {
@@ -476,8 +476,8 @@ void boss::animation()
 	case NIDDLE:
 		if (!isPlayNiddleSFX)
 		{
-			SOUNDMANAGER->play("bossNiddleSFX", false, -0.2f);
-			SOUNDMANAGER->play("bossNiddleVO", false, -0.1f);
+			SOUNDMANAGER->play("bossNiddleSFX", false, -0.35f);
+			SOUNDMANAGER->play("bossNiddleVO", false, -0.2f);
 			isPlayNiddleSFX = true;
 		}
 		if (!jumpMotion) {
@@ -512,8 +512,8 @@ void boss::animation()
 	case WALL:
 		if (!isPlayWallSFX)
 		{
-			SOUNDMANAGER->play("bossWallSFX", false,-0.2f);
-			SOUNDMANAGER->play("bossWallVO", false,-0.1f);
+			SOUNDMANAGER->play("bossWallSFX", false,-0.3f);
+			SOUNDMANAGER->play("bossWallVO", false,-0.2f);
 			isPlayWallSFX = true;
 		}
 		frameX = 3;
@@ -1058,7 +1058,10 @@ void boss::collCheck()
 							niddleBlock[j]->isHit = true;
 							niddleBlock.erase(niddleBlock.begin() + j);
 							if (niddleBlock.empty())
+							{
 								SOUNDMANAGER->stop("bossNiddleSFX");
+								SOUNDMANAGER->play("bossNiddleSFX_END",false,-0.35f);
+							}
 							int damage = RANDOM->range(8, 13);
 							_player->damage(damage, _niddelAngle, 3);
 							break;
@@ -1083,6 +1086,7 @@ void boss::collCheck()
 	if (pattern == 3) {
 		for (int i = 0; i < punchBlock.size(); i++) {
 			if (IntersectRect(&temp, &_player->getRect(), &punchBlock[i]->rc)) {
+				SOUNDMANAGER->play("bossPunchEXP", false,-0.3f);
 				float _punchAngle = getAngle(punchBlock[i]->rc.left, punchBlock[i]->rc.top, _player->getRect().left, _player->getRect().top);
 				int damage = RANDOM->range(10, 20);
 				_player->damage(damage, _punchAngle, 6);

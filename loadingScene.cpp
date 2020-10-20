@@ -144,6 +144,7 @@ void loadingScene::loadingSound()
 	_loading->loadSound("bossNiddleSFX_END", "Sound/bossNiddleSFX_END.mp3");
 	_loading->loadSound("bossPunchSFX", "Sound/bossPunchSFX.mp3");
 	_loading->loadSound("bossPunchVO", "Sound/bossPunchVO.mp3");
+	_loading->loadSound("bossPunchEXP", "Sound/bossPunchEXP.mp3");
 	_loading->loadSound("bossWallSFX", "Sound/bossWallSFX.mp3");
 	_loading->loadSound("bossWallVO", "Sound/bossWallVO.mp3");
 	_loading->loadSound("CutSceneSFX", "Sound/CutSceneSFX.mp3");

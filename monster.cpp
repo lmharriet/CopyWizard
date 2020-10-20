@@ -495,7 +495,7 @@ void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, b
 	case MONSTERKIND::GHOUL:
 		SOUNDMANAGER->play(ghoul, false,-0.28f );
 	case MONSTERKIND::GHOULLARGE:
-		SOUNDMANAGER->play("golemHit", false, -0.28f);
+		SOUNDMANAGER->play(ghoul, false, -0.28f);
 		break;
 
 	}

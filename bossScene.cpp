@@ -111,8 +111,8 @@ void bossScene::bossCutScene()
 {
 	if (!isBattle && colCheck(_player->getRect(), area))
 	{
-		SOUNDMANAGER->play("CutSceneSFX", false,-0.2f);
-		SOUNDMANAGER->play("CutSceneVO", false,-0.1f);
+		SOUNDMANAGER->play("CutSceneSFX", false,-0.3f);
+		SOUNDMANAGER->play("CutSceneVO", false,-0.2f);
 		isBattle = true; // 한번만 실행하기 위함
 		CAMERAMANAGER->setCutScene
 		(
