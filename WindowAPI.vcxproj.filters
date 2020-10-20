@@ -252,6 +252,7 @@
     <ClCompile Include="finalBossScene.cpp">
       <Filter>MainGame\씬 모음\보스</Filter>
     </ClCompile>
+    <ClCompile Include="chest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -410,5 +411,6 @@
     <ClInclude Include="finalBossScene.h">
       <Filter>MainGame\씬 모음\보스</Filter>
     </ClInclude>
+    <ClInclude Include="chest.h" />
   </ItemGroup>
 </Project>

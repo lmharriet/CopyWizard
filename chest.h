@@ -18,7 +18,7 @@ public:
 	HRESULT init(string keyName , POINT _pos, int _hp);
 
 	void update();
-	void render();
+	//void render();
 
 
 	RECT getRc() { return rc; }

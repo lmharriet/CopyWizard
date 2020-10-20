@@ -64,6 +64,9 @@ HRESULT gameScene::init()
 	portal.rc = RectMakeCenter(portal.curPt.x, portal.curPt.y, 30, 60);
 	PORTAL->setCenterPortal(portal);
 
+	_chest = new chest;
+	_chest->init("silverChest", { -1149,2047 }, 10);
+
 	//sound
 	soundInit();
 	return S_OK;

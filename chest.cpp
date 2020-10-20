@@ -36,12 +36,3 @@ void chest::update()
         }
     }
 }
-
-void chest::render()
-{
-    image* img = IMAGEMANAGER->findImage(keyName);
-    CAMERAMANAGER->FrameRender(getMemDC(), img,
-        pos.x - img->getFrameWidth()/2,
-        pos.y - img->getFrameHeight()/2,
-        frameX, 0);
-}
