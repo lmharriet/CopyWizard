@@ -65,7 +65,8 @@ void enemyManager::render()
 {
 	//°ø¿ëÃÑ¾Ë ·»´õ
 	_bullet->render();
-	for (int i = 0; i < _vMinion.size(); i++)
+	int sizeRange = _vMinion.size();
+	for (int i = 0; i < sizeRange; i++)
 	{
 		_vMinion[i]->render();
 	}
@@ -75,7 +76,8 @@ void enemyManager::render()
 
 void enemyManager::setMinion(tagTile* _subTile, POINT _monPt)
 {
-	for (int i = 0; i < _vMinion.size(); i++)
+	int sizeRange = _vMinion.size();
+	for (int i = 0; i < sizeRange; i++)
 	{
 		_vMinion[i]->release();
 	}
@@ -194,7 +196,7 @@ void enemyManager::knightBullet(float angle)
 	switch ((*_viMinion)->getBulletDirection())
 	{
 	case MONSTER_UP:
-		_bullet->fire((float)(*_viMinion)->getPos().x , (float)(*_viMinion)->getPos().y - 72,
+		_bullet->fire((float)(*_viMinion)->getPos().x , (float)(*_viMinion)->getPos().y - 40,
 			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
 		(*_viMinion)->setFx(false);
 		break;

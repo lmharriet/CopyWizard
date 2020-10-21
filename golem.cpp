@@ -34,7 +34,7 @@ void golem::update()
             state = STATEIMAGE::WALK;
             pos.x += cos(angle) * speed;
             pos.y += -sin(angle) * speed;
-            if (rc.left + img->getFrameWidth() / 2 < playerRC.left)
+            if (rc.left + (img->getFrameWidth() >>1) < playerRC.left)
             {
                 atkDirection[MONSTER_LEFT] = false;
                 atkDirection[MONSTER_RIGHT] = true;
@@ -46,7 +46,7 @@ void golem::update()
                 atkDirection[MONSTER_LEFT] = true;
                 atkDirection[MONSTER_RIGHT] = false;
             }
-            if (rc.top + img->getFrameHeight() / 2 > playerRC.top)
+            if (rc.top + (img->getFrameHeight() >> 1) > playerRC.top)
             {
                
                 atkDirection[MONSTER_UP] = true;
@@ -59,7 +59,7 @@ void golem::update()
                 atkDirection[MONSTER_DOWN] = true;
             }
         }
-        else if(!isDie &&!isATK)
+        else if(!isATK && !isDie)
         {
             state = STATEIMAGE::ATK;
             isATK = true;

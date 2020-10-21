@@ -92,20 +92,20 @@ protected:
 		ATK,
 		HIT,
 		DIE,
-		
+
 
 		STATEMAX
 	};
 	image* img = nullptr;
 	image* skillImg = nullptr;
-	tagTile* wall= nullptr;
+	tagTile* wall = nullptr;
 	POINT frameIndexL[STATEIMAGE::STATEMAX];
 	POINT frameIndexR[STATEIMAGE::STATEMAX];
 	POINT currentFrame;
 	POINT pos;
 	POINT cul;
 	STATEIMAGE state = IDLE;
-	
+
 	float speed;
 	float angle;
 	float hitAngle;
@@ -121,7 +121,6 @@ protected:
 	int hitTime;
 	int colCount = 0;
 	int monsterAppearCount = 0;
-	const int iceBreakTime = 100;
 	int iceBreakCount = 0;
 	bool isWallcol = false;
 	bool isFindWayOn = false;
@@ -137,38 +136,39 @@ protected:
 	bool isCardAppear = false;
 	bool isCardFxAppear = false;
 	bool isIceState = false;
-	
+
 	//bool isBulletEmpty = true;
 	bool isAstar;
-	bool isKnockBack ;
+	bool isKnockBack;
 	bool atkDirection[MONSTER_MAX];
 	bool bulletDirection[MONSTER_MAX];
 
+	const int iceBreakTime = 400;
 	const float distanceMax = 500.f;
-	
+
 	unique_ptr<astarManager> astar;
 	//astarManager* astar;
-	
+
 	RECT rc;
 	RECT playerRC;
 	RECT camRC;
 
 	vector<tagHit1> vHit;
 public:
-	HRESULT init(tagTile* tile, POINT _pos); 
+	HRESULT init(tagTile* tile, POINT _pos);
 	void release();
 	void commonUpdate();
 	void render();
-	virtual void update()=0;
-	virtual void addRender()=0;
+	virtual void update() = 0;
+	virtual void addRender() = 0;
 	virtual void stateImageRender() = 0;
-	virtual void addInit()=0;
+	virtual void addInit() = 0;
 
 	virtual void stateIDLE() = 0;
 	virtual void stateATK() = 0;
 	virtual void stateDIE() = 0;
-	virtual void stateHIT(POINT lPos,POINT rPos);
-	
+	virtual void stateHIT(POINT lPos, POINT rPos);
+
 
 
 	POINT getPos() { return pos; }
@@ -189,10 +189,10 @@ public:
 	int getHp() { return hp; }
 	int getAttack() { return atk; }
 	int getArmour() { return armour; }
-	int getCenterY() { return pos.y + img->getFrameHeight() / 2; }
-	int getCenterX() { return pos.x + img->getFrameWidth() / 2; }
-	int getCulCenterX() { return cul.x + img->getFrameWidth() / 2; }
-	int getCulCenterY() { return cul.y + img->getFrameHeight() / 2; }
+	int getCenterY() { return pos.y + (img->getFrameHeight() >> 1); }
+	int getCenterX() { return pos.x + (img->getFrameWidth() >> 1); }
+	int getCulCenterX() { return cul.x + (img->getFrameWidth() >> 1); }
+	int getCulCenterY() { return cul.y + (img->getFrameHeight() >> 1); }
 
 	void setPt(float x, float y);
 	void setX(int X) { pos.x = X; }
@@ -201,10 +201,10 @@ public:
 	void setCamRC(RECT rc) { camRC = rc; }
 	void setHp(float _atk) { hp = (int)_atk; }
 	void setATK(bool atk) { isATK = atk; }
-	void setFx(bool Fx) {  isFxAppear = Fx; }
+	void setFx(bool Fx) { isFxAppear = Fx; }
 	void setBulletFire(bool isFire) { isBulletFire = isFire; }
-	
-	void hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical = false, bool isIceSTATE =false);
+
+	void hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical = false, bool isIceSTATE = false);
 	bool hitCheck(int skillNum);
 
 	void hitCul();

@@ -58,7 +58,7 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 {
 	//정보 가져오기
 	cam = _camRC;
-	monsterPosX = _monsterRC.left + (_monsterRC.right - _monsterRC.left) / 2;
+	monsterPosX = _monsterRC.left +( (_monsterRC.right - _monsterRC.left) >> 1);
 	monsterPosY = _monsterRC.bottom;
 	monsterMove.rc = RectMakeCenter(monsterPosX, monsterPosY, 32, 32);
 	playerMove.rc = RectMake(_playerRC.left, _playerRC.top, 32, 32);
@@ -364,10 +364,12 @@ void monster::release()
 
 void monster::commonUpdate()
 {
-
+	
+	
 	rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
-	if (distanceMax > getDistance(pos.x + img->getFrameWidth() * 0.5, pos.y + img->getFrameHeight() * 0.5, playerRC.left, playerRC.top))
+	POINT position = { getCenterX(), getCenterY() };
+	if (distanceMax > getDistance(position.x, position.y, playerRC.left, playerRC.top))
 	{
 		isFindWayOn = true;
 		isCardAppear = true;
@@ -379,12 +381,25 @@ void monster::commonUpdate()
 	{
 		if (!isCardFxAppear)
 		{
-			if (kind == MONSTERKIND::GOLEM && kind == MONSTERKIND::GHOULLARGE)
-				EFFECT->setEffect("flipCard_big", { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 }, false, true, 100);
-			else if (kind != MONSTERKIND::KNIGHT)
-				EFFECT->setEffect("flipCard_small", { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 }, false, true, 100); // false,false,0,
-			else
-				EFFECT->setEffect("flipCard_small", { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 + 70 }, false, true, 100); // false,false,0,
+			switch (kind)
+			{
+			case MONSTERKIND::GOLEM:
+				EFFECT->setEffect("flipCard_big", position, false, true, 100);
+				break;
+			case MONSTERKIND::KNIGHT:
+				EFFECT->setEffect("flipCard_small", { position.x, position.y + 70 }, false, true, 100);
+				break;
+			case MONSTERKIND::SUMMONER:
+				EFFECT->setEffect("flipCard_small", position, false, true, 100);
+				break;
+			case MONSTERKIND::GHOUL:
+				EFFECT->setEffect("flipCard_small", position, false, true, 100);
+				break;
+			case MONSTERKIND::GHOULLARGE:
+				EFFECT->setEffect("flipCard_big", position, false, true, 100);
+				break;
+			}
+			
 			isCardFxAppear = true;
 		}
 		monsterAppearCount++;
@@ -395,6 +410,7 @@ void monster::commonUpdate()
 	}
 	if (isMonsterApeear)
 	{
+
 		if (isIceState)
 			iceBreakCount++;
 		
@@ -422,6 +438,7 @@ void monster::commonUpdate()
 				isHit = false;
 				hitTime = 0;
 			}
+			
 		}
 
 		hitCul();
@@ -441,7 +458,7 @@ void monster::commonUpdate()
 		{
 			isIceState = false;
 			iceBreakCount = 0;
-			EFFECT->iceBreakPlay({ pos.x+img->getFrameWidth()/2, getCenterY()  }, 10);
+			EFFECT->iceBreakPlay(position, 10);
 		}
 	}
 }
@@ -467,7 +484,7 @@ void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, b
 {
 	if (hitCheck(skillNum) == false)return;
 
-	POINT pt = { pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() / 2 };
+	POINT pt = { getCenterX(), getCenterY() };
 
 	EFFECT->damageEffect(pt);
 
@@ -519,7 +536,8 @@ void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, b
 
 bool monster::hitCheck(int skillNum)
 {
-	for (int i = 0; i < vHit.size(); i++)
+	int rangeSize = vHit.size();
+	for (int i = 0; i < rangeSize; i++)
 	{
 		if (vHit[i].skillNum == skillNum)return false;
 	}
@@ -572,7 +590,8 @@ void monster::hitCul()
 
 bool monster::wallCol()
 {
-	for (int i = 0; i < PLAYERDATA->getWall().size(); i++)
+	int rangeSize = PLAYERDATA->getWall().size();
+	for (int i = 0; i < rangeSize; i++)
 	{
 		if (kind == MONSTERKIND::GHOULLARGE)
 		{
@@ -597,7 +616,7 @@ void monster::coinDrop(int min, int max)
 {
 	if (isDelete)
 	{
-		DROP->dropPoint({ pos.x + img->getFrameWidth() / 2,pos.y + img->getFrameHeight() }, min, max);
+		DROP->dropPoint({ getCenterX(),getCenterY() }, min, max);
 	}
 }
 

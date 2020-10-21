@@ -31,14 +31,14 @@ void ghoulLarge::update()
     {
         if (!isATK)
         {
-            RECT astarRC = RectMake(pos.x + 10, pos.y - img->getFrameHeight()/2, img->getFrameWidth(), img->getFrameHeight());
+            RECT astarRC = RectMake(pos.x + 10, pos.y - (img->getFrameHeight()>>1), img->getFrameWidth(), img->getFrameHeight());
             astar->update(camRC, astarRC, playerRC, &angle);  // 에이스타에서 앵글 받아옴
             if (astar->getFirstTile() && !isDie) // 걸을 때
             {
                 state = STATEIMAGE::WALK;
                 pos.x += cos(angle) * speed;
                 pos.y += -sin(angle) * speed;
-                if (rc.left + img->getFrameWidth() / 2 < playerRC.left)
+                if (rc.left + (img->getFrameWidth() >> 1) < playerRC.left)
                 {
                     atkDirection[MONSTER_LEFT] = false;
                     atkDirection[MONSTER_RIGHT] = true;
@@ -50,7 +50,7 @@ void ghoulLarge::update()
                     atkDirection[MONSTER_LEFT] = true;
                     atkDirection[MONSTER_RIGHT] = false;
                 }
-                if (rc.top + img->getFrameHeight() / 2 > playerRC.top)
+                if (rc.top + (img->getFrameHeight() >> 1) > playerRC.top)
                 {
 
                     atkDirection[MONSTER_UP] = true;

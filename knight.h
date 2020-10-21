@@ -3,7 +3,7 @@
 class knight	:    public monster
 {
 private:
-
+	RECT savePlayerRC;
 public:
 	void addInit()override;
 	void update() override;

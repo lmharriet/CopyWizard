@@ -16,33 +16,39 @@ void knight::addInit()
 
 void knight::update()
 {
+    if (!isATK)
+        savePlayerRC = playerRC;
+
     rc = RectMake(pos.x-10, pos.y+50, img->getFrameWidth(), img->getFrameHeight());
     if (isFindWayOn && !isIceState) //길찾기 on
     {
        RECT astarRC = RectMake(pos.x+10, pos.y+30, img->getFrameWidth(), img->getFrameHeight());
         astar->update(camRC, astarRC, playerRC, &angle);
-        if (rc.left + img->getFrameWidth()/2 < playerRC.left)
+        if (!isATK)
         {
-            atkDirection[MONSTER_LEFT] = false;
-            atkDirection[MONSTER_RIGHT] = true;
-        }
+            if (rc.left + (img->getFrameWidth() >> 1) < playerRC.left)
+            {
+                atkDirection[MONSTER_LEFT] = false;
+                atkDirection[MONSTER_RIGHT] = true;
+            }
 
-        else
-        {
-            atkDirection[MONSTER_LEFT] = true;
-            atkDirection[MONSTER_RIGHT] = false;
-        }
-        if (rc.top+img->getFrameHeight()/2 > playerRC.top)
-        {
+            else
+            {
+                atkDirection[MONSTER_LEFT] = true;
+                atkDirection[MONSTER_RIGHT] = false;
+            }
+            if (rc.top + (img->getFrameHeight() >> 1) > playerRC.top)
+            {
 
-            atkDirection[MONSTER_UP] = true;
-            atkDirection[MONSTER_DOWN] = false;
-        }
-        else
-        {
+                atkDirection[MONSTER_UP] = true;
+                atkDirection[MONSTER_DOWN] = false;
+            }
+            else
+            {
 
-            atkDirection[MONSTER_UP] = false;
-            atkDirection[MONSTER_DOWN] = true;
+                atkDirection[MONSTER_UP] = false;
+                atkDirection[MONSTER_DOWN] = true;
+            }
         }
         if (astar->getFirstTile() && !isATK && !isDie && !isHit) // 걸을 때
         {
@@ -76,6 +82,8 @@ void knight::addRender()
 {
     if (isIceState)
         CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x, pos.y+30, 180);
+    //CAMERAMANAGER->Rectangle(getMemDC(), rc);
+    //CAMERAMANAGER->Rectangle(getMemDC(), playerRC);
 }
 
 
@@ -190,9 +198,9 @@ void knight::stateATK()
     sprintf(str, "knightAtk%d", RANDOM->range(4));
 
 
-    if (atkDirection[MONSTER_UP] && playerRC.left > rc.left && playerRC.right < rc.right + 40)
+    if (atkDirection[MONSTER_UP] && savePlayerRC.left > rc.left && savePlayerRC.right < rc.right + 80)
     {
-        if (delay == 0)
+        if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x == 2))
         {
             EFFECT->setEffect("knightSlashUp", { pos.x + 60 ,pos.y + 80 }, true);
             SOUNDMANAGER->play(str, false, -0.25f);
@@ -205,9 +213,9 @@ void knight::stateATK()
         }
     }
     
-    if (atkDirection[MONSTER_DOWN] && playerRC.left > rc.left && playerRC.right < rc.right + 80)
+    if (atkDirection[MONSTER_DOWN] && savePlayerRC.left > rc.left && savePlayerRC.right < rc.right + 80)
     {
-        if (delay == 0)
+        if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x ==3 || frameIndexR[STATEIMAGE::ATK].x == 2))
         {
             EFFECT->setEffect("knightSlashDown", { pos.x + 60,pos.y + 180 }, true);
             SOUNDMANAGER->play(str, false, -0.25f);
