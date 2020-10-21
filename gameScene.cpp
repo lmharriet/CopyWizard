@@ -517,7 +517,7 @@ void gameScene::enemyAttack()
 					_player->damage(damage, enemy->getBullet()->getBullet()[i].angle, 4.f);
 				}
 			}
-			else PLAYERDATA->setShroud(false);
+			else { PLAYERDATA->setShroud(false); SOUNDMANAGER->play("shieldOFF", false, 1.0f); }
 
 			if (enemy->getBullet()->getBullet()[i].kind == MONSTERKIND::SUMMONER)
 			{

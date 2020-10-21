@@ -23,7 +23,7 @@ HRESULT playerData::init()
 
 	stat.goldPig = false;
 	stat.CoolTimeReduction = 0;
-	stat.glassMirror = false;
+	stat.glassMirror = true;
 
 	//curse
 	stat.vampireBlood = false;
@@ -39,7 +39,7 @@ HRESULT playerData::init()
 	gShroud.curSize = 0;
 	gShroud.endSize = 1.f;
 	gShroud.endTime = 200;
-	gShroud.isActives = false;
+	gShroud.isActives = true;
 	//add image
 	IMAGEMANAGER->addImage("glassShroud", "Images/item/glassShroud_high.bmp", 120, 120, true, RGB(255, 0, 255));
 
@@ -72,6 +72,7 @@ void playerData::update()
 			{
 				gShroud.isActives = true;
 				gShroud.currentTime = 0;
+				SOUNDMANAGER->play("shieldON", false);
 			}
 		}
 	}
@@ -90,11 +91,11 @@ void playerData::shroudRender(HDC hdc)
 			gShroud.curSize += 0.025f;
 
 
-
 			img->stretchRender(hdc,
 				WINSIZEX / 2 + 4 - (img->getWidth() * gShroud.curSize / 2) ,
 				WINSIZEY / 2 - (img->getHeight() * gShroud.curSize / 2) ,
 				gShroud.curSize);
+				
 		}
 
 		else
