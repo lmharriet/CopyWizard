@@ -55,7 +55,6 @@ HRESULT finalBoss::init(int _posX, int _posY)
 
 void finalBoss::release()
 {
-	
 }
 
 void finalBoss::update()
@@ -71,7 +70,6 @@ void finalBoss::update()
 void finalBoss::render()
 {
 	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("finalboss"), boss.rc.left, boss.rc.top, frameX, frameY);
-	//IMAGEMANAGER->frameRender("finalboss", getMemDC(), boss.rc.left, boss.rc.top, frameX, frameY);
 
 	BOSSMANAGER->render(getMemDC());
 	EFFECT->AfterimageRender(getMemDC());
@@ -410,7 +408,7 @@ void finalBoss::useSkill()
 {
 	if (patternStart) {
 		skillNum = RANDOM->range(5);
-		//skillNum = 4;
+		//skillNum = 1;
 		switch (skillNum)
 		{
 		case 0:
@@ -509,10 +507,11 @@ void finalBoss::blaze()
 		frameX = 0;
 		frameY = 6;
 		blazeBlock.clear();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 18; i++) {
 			skillBlock* _blaze = new skillBlock;
-			_blaze->angle = (i * 36) * PI / 180;
+			_blaze->angle = (i * 20) * PI / 180;
 			_blaze->blockCount = 0;
+			_blaze->isHit = false;
 			_blaze->rc = RectMakeCenter(boss.center.x, boss.center.y, 44, 44);
 			_blaze->center.x = cosf(_blaze->angle) * 100 + boss.center.x - 50;
 			_blaze->center.y = -sinf(_blaze->angle) * 100 + boss.center.y - 100;
@@ -526,11 +525,11 @@ void finalBoss::blaze()
 		for (int i = 0; i < blazeBlock.size(); i++) {
 			if (blazeBlock[i]->rc.left > 0 && blazeBlock[i]->rc.right < 2048 && blazeBlock[i]->rc.top > 0 && blazeBlock[i]->rc.bottom < 2048) {
 				blazeBlock[i]->blockCount++;
-				if (blazeBlock[i]->blockCount % 3 == 0) {
-					BOSSMANAGER->init(blazeBlock[i]->center.x, blazeBlock[i]->center.y, 4, 4);
+				if (blazeBlock[i]->blockCount % 2 == 0) {
+					BOSSMANAGER->init(blazeBlock[i]->center.x, blazeBlock[i]->center.y, 10, 4);
 				}
-				blazeBlock[i]->center.x += cosf(blazeBlock[i]->angle + 3.0f) * 10;
-				blazeBlock[i]->center.y += -sinf(blazeBlock[i]->angle + 3.0f) * 10;
+				blazeBlock[i]->center.x += cosf(blazeBlock[i]->angle) * 10;
+				blazeBlock[i]->center.y += -sinf(blazeBlock[i]->angle) * 10;
 				blazeBlock[i]->rc = RectMakeCenter(blazeBlock[i]->center.x, blazeBlock[i]->center.y, 48, 44);
 			}
 		}
@@ -658,21 +657,6 @@ void finalBoss::colCheck()
 					}
 				}
 				break;
-			case 1:
-				if (!isHit) {
-					float _blazeAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 48, BOSSMANAGER->getVector()[i]->getRect().top + 48, _player->getX(), _player->getY());
-					int damage = RANDOM->range(34, 48);
-					_player->damage(damage, _blazeAngle, 10);
-					isHit = true;
-				}
-				if (isHit) {
-					hitTimer++;
-					if (hitTimer > 50) {
-						hitTimer = 0;
-						isHit = false;
-					}
-				}
-				break;
 			case 2:
 				if (!isHit) {
 					float _thunderAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 350, BOSSMANAGER->getVector()[i]->getRect().top + 350, _player->getX(), _player->getY());
@@ -706,7 +690,18 @@ void finalBoss::colCheck()
 			}
 		}
 	}
-
+	if (skillNum == 1) {
+		for (int i = 0; i < blazeBlock.size(); i++) {
+			if (IntersectRect(&temp, &_player->getRect(), &blazeBlock[i]->rc)) {
+				if (!blazeBlock[i]->isHit) {
+					float _blazeAngle = getAngle(blazeBlock[i]->center.x, blazeBlock[i]->center.y, _player->getX(), _player->getY());
+					int damage = RANDOM->range(11, 18);
+					_player->damage(damage, _blazeAngle, 20);
+					blazeBlock[i]->isHit = true;
+				}
+			}
+		}
+	}
 	if (skillNum == 4) {
 		for (int i = 0; i < iceBlock.size(); i++) {
 			if (IntersectRect(&temp, &_player->getRect(), &iceBlock[i]->rc)) {
