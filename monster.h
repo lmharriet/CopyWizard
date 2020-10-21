@@ -154,8 +154,9 @@ public:
 	HRESULT init(tagTile* tile, POINT _pos); 
 	void release();
 	void commonUpdate();
+	void render();
 	virtual void update()=0;
-	virtual void render();
+	virtual void addRender();
 	virtual void stateImageRender() = 0;
 	virtual void addInit()=0;
 

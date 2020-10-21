@@ -439,9 +439,14 @@ void monster::commonUpdate()
 void monster::render()
 {
 
+	addRender();
 	// astar->render(getMemDC());
 	 //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
 	 //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
+}
+
+void monster::addRender()
+{
 }
 
 void monster::setPt(float x, float y)

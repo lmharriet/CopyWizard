@@ -14,7 +14,7 @@ private:
 public:
 	void addInit()override;
 	void update() override;
-	void render() override;
+	void addRender() override;
 	
 
 	void stateImageRender() override;

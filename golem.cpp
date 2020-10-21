@@ -78,7 +78,7 @@ void golem::update()
    
 }
 
-void golem::render()
+void golem::addRender()
 {
 
     if (!isFxAppear && !isAtkImgCount) // 스킬이미지

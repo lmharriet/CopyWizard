@@ -80,7 +80,7 @@ void summoner::update()
     }
 }
 
-void summoner::render()
+void summoner::addRender()
 {
     if (isATK)
     {

@@ -12,7 +12,7 @@ private:
 public:
 	void addInit()override;
 	void update() override;
-	void render();
+	void addRender() override;
 	void stateImageRender() override;
 
 	void stateIDLE() override;
