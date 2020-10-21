@@ -115,7 +115,7 @@ HRESULT loading::init()
 
 	//플레이어 이미지 초기화
 	_char = IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
-	_enemy = IMAGEMANAGER->addFrameImage("enemyFrame", "resource/enemy/loading.bmp",  1233, 202,5, 1 );
+	_enemy = IMAGEMANAGER->addFrameImage("enemyFrame", "resource/UI/loading.bmp",  1233, 202,5, 1 );
 	//로딩바 클래스 초기화
 	_loadingBar = make_unique<progressBar>();
 	_loadingBar->init("loadingBarFront", "loadingBarBack");
