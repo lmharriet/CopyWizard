@@ -6,7 +6,7 @@
 #include "unitNode.h"
 #include "inventory.h";
 
-#define ARCANA_SLOT 4
+#define ARCANA_SLOT 6
 
 class player : public gameNode
 {
@@ -52,7 +52,7 @@ private:
 	int gaugeTime;
 
 
-	//coolTile
+	//coolTime
 	int basicStateCool;
 	int infernoStateCool;
 	int signatureStateCool;
@@ -70,6 +70,7 @@ private:
 	int atkCount, atkIndex;
 	int count, index;
 	int basicCount, basicIndex;
+	int spearIndex;
 
 	//animation delay
 	int idleDelay;

@@ -524,6 +524,8 @@ private:
 	bool active;
 	int imgRadius;
 
+	bool gauging;
+
 	//upgrade
 	float posX, posY;
 
@@ -559,8 +561,9 @@ public:
 	int getAtkPower(int index) { return vSpear[index].atkPower; }
 	float getSpearAngle(int index) { return vSpear[index].angle; }
 	int getSkillNum() { return 5; }
+	bool getGauging() { return gauging; }
 	
-	
+	void setGauging(bool _gauging) { gauging = _gauging; }
 	void setCol(int index, bool col) { vSpear[index].collision = col; }
 
 
@@ -572,7 +575,6 @@ public:
 	float getUpgradeAngle(int index) { return vUltSpear[index].angle; }
 	bool getIsBig(int index) { return vUltSpear[index].isBig; }
 	bool getCool() { return isCoolTime; }
-
 	void setUpgradeCol(int index, bool col) { vUltSpear[index].collision = col; }
 
 };

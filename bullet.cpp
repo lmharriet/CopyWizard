@@ -364,8 +364,7 @@ void meteor::update()
 	}
 
 	//데미지 넣을 용도
-	int size = vDamage.size();
-	for (int i = 0; i < size;)
+	for (int i = 0; i < vDamage.size();)
 	{
 		vDamage[i].lifeTime--;
 
@@ -1534,6 +1533,7 @@ HRESULT iceSpear::init()
 	upgread = false;
 	active = false;
 
+	gauging = false;
 	saveRange = 0;
 	return S_OK;
 }
@@ -1551,7 +1551,6 @@ void iceSpear::update()
 
 	if (active)fireCount();
 	upgradeMove();
-
 
 
 	//쿨타임
@@ -1606,7 +1605,11 @@ void iceSpear::render()
 //non-upgrade
 void iceSpear::chargeSpear()
 {
-	if (gauge < 0.99f) gauge += 0.02f;
+	if (gauge < 0.99f)
+	{
+		gauge += 0.02f;
+		gauging = true;
+	}
 }
 
 float iceSpear::rangeCul(float maxRange, float x, float y, float angle)

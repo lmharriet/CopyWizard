@@ -6,6 +6,7 @@ HRESULT player::init()
 {
 
 	IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
+	IMAGEMANAGER->addFrameImage("playerSpearFrame", "resource/player/playerSpearFrame.bmp", 400, 400, 4, 4);
 	IMAGEMANAGER->addFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
 	IMAGEMANAGER->addFrameImage("flame", "resource/player/flame1.bmp", 4096, 128, 32, 1);
 	IMAGEMANAGER->addFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
@@ -51,7 +52,10 @@ HRESULT player::init()
 	//animation count ,index
 	atkCount = atkIndex = index = dashIndex = count = dashCount = basicCount = basicIndex = 0;
 	basicStateCool = infernoStateCool = signatureStateCool = 0;
+	spearIndex = 0;
 	idleDelay = 0;
+
+
 
 	//blaze 3번 발사 용도
 	blazeCount = 0;
@@ -212,7 +216,7 @@ void player::other_update()
 	inferno->update();
 	spear->update();
 	idleDelayCount();
-	
+
 	inven->update();
 
 	//animation count
@@ -495,21 +499,21 @@ void player::skillInit()
 	arcana[2].explanation = inferno->getInfo().explanation;
 	arcana[2].coolTime = inferno->getInfo().coolTime;
 
-	//arcana[3].type = ARCANA_TYPE::TYPE_SIGNATURE;
-	//arcana[3].skillName = Meteor->getInfo().keyName;
-	//arcana[3].explanation = Meteor->getInfo().explanation;
-	//arcana[3].coolTime = Meteor->getInfo().coolTime;
-
-	/*arcana[3].type = ARCANA_TYPE::TYPE_SIGNATURE;
-	arcana[3].skillName = dragon->getInfo().keyName;
-	arcana[3].explanation = dragon->getInfo().explanation;
-	arcana[3].coolTime = dragon->getInfo().coolTime;*/
-
-
 	arcana[3].type = ARCANA_TYPE::TYPE_SIGNATURE;
-	arcana[3].skillName = spear->getInfo().keyName;
-	arcana[3].explanation = spear->getInfo().explanation;
-	arcana[3].coolTime = spear->getInfo().coolTime;
+	arcana[3].skillName = Meteor->getInfo().keyName;
+	arcana[3].explanation = Meteor->getInfo().explanation;
+	arcana[3].coolTime = Meteor->getInfo().coolTime;
+
+	arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
+	arcana[4].skillName = dragon->getInfo().keyName;
+	arcana[4].explanation = dragon->getInfo().explanation;
+	arcana[4].coolTime = dragon->getInfo().coolTime;
+
+
+	arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
+	arcana[5].skillName = spear->getInfo().keyName;
+	arcana[5].explanation = spear->getInfo().explanation;
+	arcana[5].coolTime = spear->getInfo().coolTime;
 
 
 	for (int i = 0; i < ARCANA_SLOT; i++)
@@ -563,9 +567,6 @@ void player::basicSetUp()
 				basicStateCool = 30;
 				blaze->fire(x, y, 10, saveAngle);
 			}
-
-			//UI->addCoolTime(blaze->getInfo().keyName);
-
 
 			if (basicStateCool > 0)
 			{
@@ -707,7 +708,7 @@ void player::standardSetUp()
 	if (arcana[2].skillName == inferno->getInfo().keyName)
 	{
 		if (INPUT->GetKeyDown(VK_RBUTTON) && frozenTime == 0 && !inferno->getGauging() && !isDead
-			&& speed == 0 && signatureStateCool == 0 && !inferno->getCool())
+			&& speed == 0 && signatureStateCool == 0 && !inferno->getCool() && !isGrabbed)
 		{
 			standard = true;
 			saveAngle = attackAngle;
@@ -732,7 +733,7 @@ void player::signatureSetUp()
 	float mouseX = CAMERAMANAGER->GetAbsoluteX(_ptMouse.x);
 	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
 
-	if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead && !inferno->getGauging() && speed == 0
+	if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
 		&& !Meteor->getCool() && !dragon->getCool() && signatureStateCool == 0)
 	{
 		signature = true;
@@ -778,8 +779,8 @@ void player::signatureSetUp()
 		}
 		else
 		{
-			//TIME->setTest(12.f);
-			//EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
+			TIME->setTest(12.f);
+			EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
 			if (arcana[3].skillName == "skill_meteor")
 			{
 
@@ -802,7 +803,8 @@ void player::signatureSetUp()
 			}
 			else if (arcana[3].skillName == "skill_dragonArc")
 			{
-
+				TIME->setTest(12.f);
+				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
 				if (signatureStateCool == 0)
 				{
 					signatureStateCool = 30;
@@ -824,17 +826,18 @@ void player::signatureSetUp()
 void player::signatureSetUpE()
 {
 	// arcana[4] , key -> E
-	if (arcana[3].skillName == spear->getInfo().keyName)
+	if (arcana[4].skillName == spear->getInfo().keyName)
 	{
-
-		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool())
+		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !isGrabbed && !spear->getCool())
 		{
 			if (!upgradeReady)
 			{
 				if (INPUT->GetKey('E'))
 				{
 					spear->chargeSpear();
+					spear->setGauging(true);
 				}
+
 				if (INPUT->GetKeyUp('E'))
 				{
 					spear->fire(posX, posY, attackAngle);
@@ -842,7 +845,8 @@ void player::signatureSetUpE()
 			}
 			else
 			{
-
+				TIME->setTest(12.f);
+				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
 				if (INPUT->GetKeyDown('E'))
 				{
 					spear->upgradefire(posX, posY, attackAngle);
@@ -852,12 +856,58 @@ void player::signatureSetUpE()
 			}
 		}
 	}
+	else if (arcana[4].skillName == dragon->getInfo().keyName)
+	{
+		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool())
+		{
+			if (!upgradeReady)
+			{
+			}
+			else
+			{
+				TIME->setTest(12.f);
+				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
+			}
+		}
+	}
 
 }
 
 void player::signatureSetUpR()
 {
 	// arcana[5], key->R
+	if (arcana[5].skillName == spear->getInfo().keyName)
+	{
+		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool())
+		{
+
+			if (!upgradeReady)
+			{
+				if (INPUT->GetKey('R'))
+				{
+					spear->chargeSpear();
+				}
+				if (INPUT->GetKeyUp('R'))
+				{
+					spear->fire(posX, posY, attackAngle);
+				}
+			}
+			else
+			{
+
+				if (INPUT->GetKeyDown('R'))
+				{
+					spear->upgradefire(posX, posY, attackAngle);
+					skillGauge = 0;
+				}
+
+			}
+		}
+	}
+	else if (arcana[5].skillName == dragon->getInfo().keyName)
+	{
+
+	}
 
 }
 void player::takeCoin()
@@ -892,7 +942,6 @@ void player::takeHealball()
 
 void player::animation(int _index)
 {
-
 	int damageAngleTenth = (int)(knockBack.angle * (18 / PI));
 
 	if (_index == 0)
@@ -1173,6 +1222,7 @@ void player::animation(int _index)
 					frameAnimation(atkIndex, 20);
 				else if (arcana[3].skillName == "skill_dragonArc")
 					frameAnimation(atkIndex, 15);
+
 			}
 			else if (move == MOVE::UP || move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
 			{
@@ -1185,6 +1235,7 @@ void player::animation(int _index)
 					frameAnimation(atkIndex, 20);
 				else if (arcana[3].skillName == "skill_dragonArc")
 					frameAnimation(atkIndex, 14);
+				
 			}
 			else if (move == MOVE::DOWN || move == MOVE::LEFT_DOWN || move == MOVE::RIGHT_DOWN)
 			{
@@ -1197,11 +1248,11 @@ void player::animation(int _index)
 					frameAnimation(atkIndex, 10);
 				else if (arcana[3].skillName == "skill_dragonArc")
 					frameAnimation(atkIndex, 6);
+				
+				break;
 			}
-			break;
 		}
 	}
-
 	else
 	{
 		switch (state)
@@ -1506,357 +1557,378 @@ void player::animation(int _index)
 					frameAnimation(atkIndex, 6, 1);
 			}
 			break;
-		}
+		} //end of switch
 	}
-}
 
-void player::frameAnimation(int frameX, int frameY, int _index)
-{
-	if (idleDelay > 0)
+	//if (arcana[3].skillName == spear->getInfo().keyName)
+	//{
+	//	if (spear->getGauging())
+	//		spearIndex = 0;
+	//	else if (!spear->getGauging() && count % 5 == 0 && spearIndex < 4)
+	//		spearIndex++;
+
+
+
+	//	//CAMERAMANAGER->FrameRender(getMemDC(),IMAGEMANAGER->findImage("playerSpearFrame"),posX-50,posY-50,spearIndex
+	//}
+
+
+
+	}
+
+	void player::frameAnimation(int frameX, int frameY, int _index)
 	{
-		if (idleDelay > 20)
+		if (idleDelay > 0)
 		{
-
-			UNITRENDER->setFramePlayer({ 8,0 });
-			return;
-		}
-		else if (idleDelay == 16)	SOUNDMANAGER->play("portalOUT", false,0.2f);
-
-
-		if (idleDelay == 1)
-		{
-
-			UNITRENDER->setFramePlayer({ 0,0 });
-		}
-	}
-
-	if (_index == 0)
-	{
-		UNITRENDER->setFramePlayer({ frameX,frameY });
-	}
-
-	else
-	{
-		CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, frameX, frameY);
-	}
-
-	if (upgradeReady)
-	{
-		EFFECT->AfterimageEft("playerFrame", { (long)posX,(long)posY }, { frameX ,frameY }, 5);
-	}
-}
-
-void player::idleDelayCount()
-{
-	//포탈 워프시 이미지 렌더 딜레이
-	if (idleDelay > 0)
-	{
-		idleDelay--;
-		move = MOVE::DOWN;
-		state = STATE::IDLE;
-	}
-
-}
-
-void player::tileCol()
-{
-	for (int i = 0; i < 8; i++)
-	{
-		tileCheck[i].isCol = false;
-		if (i < 4) diagonalCheck[i].isCol = false;
-	}
-
-	for (int i = 0; i < vWall.size(); i++)
-	{
-		int num = vWall[i];
-
-		if (tile[num].keyName != "" && tile[num].kind != TERRAIN::WALL) continue;
-		for (int j = 0; j < 8; j++)
-		{
-			if (colCheck(tileCheck[j].rc, tile[num].rc))
+			if (idleDelay > 20)
 			{
-				tileCheck[j].isCol = true;
+
+				UNITRENDER->setFramePlayer({ 8,0 });
+				return;
 			}
+			else if (idleDelay == 16)	SOUNDMANAGER->play("portalOUT", false, 0.2f);
 
-			if (j < 4 && colCheck(diagonalCheck[j].rc, tile[num].rc) && state == STATE::DASH)
+
+			if (idleDelay == 1)
 			{
-				diagonalCheck[j].isCol = true;
-			}
-		}
-	}
-}
 
-void player::colorCheck(image* img)
-{
-	for (int i = 0; i < 8; i++)
-	{
-		tileCheck[i].isCol = false;
-		if (i < 4)diagonalCheck[i].isCol = false;
-	}
-
-	for (int i = 0; i < 8; i++)
-	{
-		int x = tileCheck[i].rc.left + (tileCheck[i].rc.right - tileCheck[i].rc.left) / 2;
-		int y = tileCheck[i].rc.top + (tileCheck[i].rc.bottom - tileCheck[i].rc.top) / 2;
-
-		COLORREF color = GetPixel(img->getMemDC(), x, y);
-		int r = GetRValue(color);
-		int g = GetGValue(color);
-		int b = GetBValue(color);
-
-		if (r == 255 && g == 0 && b == 255)
-		{
-			tileCheck[i].isCol = true;
-		}
-
-		if (i < 4 && state == STATE::DASH)
-		{
-			x = diagonalCheck[i].rc.left + (diagonalCheck[i].rc.right - diagonalCheck[i].rc.left) / 2;
-			y = diagonalCheck[i].rc.top + (diagonalCheck[i].rc.bottom - diagonalCheck[i].rc.top) / 2;
-
-			color = GetPixel(img->getMemDC(), x, y);
-
-			r = GetRValue(color);
-			g = GetGValue(color);
-			b = GetBValue(color);
-
-			if (r == 255 && g == 0 && b == 255) diagonalCheck[i].isCol = true;
-		}
-	}
-}
-
-void player::makeCol(int index, int destX, int destY, int rcSize)
-{
-	tileCheck[index].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2) + destX, CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2) + destY, rcSize, rcSize);
-}
-
-void player::makeCol2(int index, int destX, int destY, int rcSize)
-{
-	diagonalCheck[index].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2) + destX, CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2) + destY, rcSize, rcSize);
-}
-
-void player::resetKey()
-{
-	dashLeft = false;
-	dashRight = false;
-	dashUp = false;
-	dashDown = false;
-}
-
-void player::changeState()
-{
-	if (speed > 0)return;
-	else
-	{
-		if (isLeft)
-		{
-			state = STATE::RUN;
-			if (isUp)
-			{
-				move = MOVE::LEFT_TOP;
-			}
-			else if (isDown)
-			{
-				move = MOVE::LEFT_DOWN;
-			}
-			else // 그냥 순수 LEFT
-			{
-				move = MOVE::LEFT;
+				UNITRENDER->setFramePlayer({ 0,0 });
 			}
 		}
 
-		else if (isRight)
+		if (_index == 0)
 		{
-			state = STATE::RUN;
-			if (isUp)
-			{
-				move = MOVE::RIGHT_TOP;
-			}
-			else if (isDown)
-			{
-				move = MOVE::RIGHT_DOWN;
-			}
-			else // 그냥 순수 LEFT
-			{
-				move = MOVE::RIGHT;
-			}
+			UNITRENDER->setFramePlayer({ frameX,frameY });
 		}
 
-		else if (isUp) // 그냥 순수 UP
-		{
-			state = STATE::RUN;
-			move = MOVE::UP;
-		}
-
-		else if (isDown) // 그냥 순수 DOWN
-		{
-			state = STATE::RUN;
-			move = MOVE::DOWN;
-		}
 		else
 		{
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"), posX - 50, posY - 50, frameX, frameY);
+		}
+
+		if (upgradeReady)
+		{
+			EFFECT->AfterimageEft("playerFrame", { (long)posX,(long)posY }, { frameX ,frameY }, 5);
+		}
+	}
+
+	void player::idleDelayCount()
+	{
+		//포탈 워프시 이미지 렌더 딜레이
+		if (idleDelay > 0)
+		{
+			idleDelay--;
+			move = MOVE::DOWN;
 			state = STATE::IDLE;
 		}
-	}
-
-}
-
-
-void player::death()
-{
-	if (PLAYERDATA->getHp() <= 0)
-	{
-		isDead = true;
-		state = STATE::DIE;
-	}
-}
-//플레이어 피격 데미지
-void player::damage(int damage, float attackAngle, float knockBackSpeed)
-{
-	if (PLAYERDATA->getHp() <= 0) return;
-
-	isDamaged = true;
-
-	knockBack.angle = attackAngle;
-	knockBack.speed = knockBackSpeed;
-	knockBack.percent = 1.0f;
-
-	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
-
-	float angle = attackAngle * (180 / PI);
-
-	bool checkAngle = angle > 90 && angle < 270;
-
-	DAMAGE->generator({ (long)posX, (long)posY }, "rNumbers", damage, checkAngle);
-	SOUNDMANAGER->play("playerHit", false, -0.18f);
-
-	if (inferno->getGauging() && signatureStateCool != 0 && basic)return;
-
-}
-
-void player::damagedCool()
-{
-	if (isDamaged)
-	{
-		frozenTime++;
-
-		if (state == STATE::DASH || state == STATE::SIGNATURE || state == STATE::STANDARD) return;
-		state = STATE::DAMAGED;
 
 	}
-	if (frozenTime > 20)
+
+	void player::tileCol()
 	{
-		isDamaged = false;
-		frozenTime = 0;
-		knockBack.angle = 0;
-		knockBack.speed = 1.5f;
+		for (int i = 0; i < 8; i++)
+		{
+			tileCheck[i].isCol = false;
+			if (i < 4) diagonalCheck[i].isCol = false;
+		}
+
+		for (int i = 0; i < vWall.size(); i++)
+		{
+			int num = vWall[i];
+
+			if (tile[num].keyName != "" && tile[num].kind != TERRAIN::WALL) continue;
+			for (int j = 0; j < 8; j++)
+			{
+				if (colCheck(tileCheck[j].rc, tile[num].rc))
+				{
+					tileCheck[j].isCol = true;
+				}
+
+				if (j < 4 && colCheck(diagonalCheck[j].rc, tile[num].rc) && state == STATE::DASH)
+				{
+					diagonalCheck[j].isCol = true;
+				}
+			}
+		}
+	}
+
+	void player::colorCheck(image * img)
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			tileCheck[i].isCol = false;
+			if (i < 4)diagonalCheck[i].isCol = false;
+		}
+
+		for (int i = 0; i < 8; i++)
+		{
+			int x = tileCheck[i].rc.left + (tileCheck[i].rc.right - tileCheck[i].rc.left) / 2;
+			int y = tileCheck[i].rc.top + (tileCheck[i].rc.bottom - tileCheck[i].rc.top) / 2;
+
+			COLORREF color = GetPixel(img->getMemDC(), x, y);
+			int r = GetRValue(color);
+			int g = GetGValue(color);
+			int b = GetBValue(color);
+
+			if (r == 255 && g == 0 && b == 255)
+			{
+				tileCheck[i].isCol = true;
+			}
+
+			if (i < 4 && state == STATE::DASH)
+			{
+				x = diagonalCheck[i].rc.left + (diagonalCheck[i].rc.right - diagonalCheck[i].rc.left) / 2;
+				y = diagonalCheck[i].rc.top + (diagonalCheck[i].rc.bottom - diagonalCheck[i].rc.top) / 2;
+
+				color = GetPixel(img->getMemDC(), x, y);
+
+				r = GetRValue(color);
+				g = GetGValue(color);
+				b = GetBValue(color);
+
+				if (r == 255 && g == 0 && b == 255) diagonalCheck[i].isCol = true;
+			}
+		}
+	}
+
+	void player::makeCol(int index, int destX, int destY, int rcSize)
+	{
+		tileCheck[index].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2) + destX, CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2) + destY, rcSize, rcSize);
+	}
+
+	void player::makeCol2(int index, int destX, int destY, int rcSize)
+	{
+		diagonalCheck[index].rc = RectMakeCenter(CAMERAMANAGER->GetAbsoluteX(WINSIZEX / 2) + destX, CAMERAMANAGER->GetAbsoluteY(WINSIZEY / 2) + destY, rcSize, rcSize);
+	}
+
+	void player::resetKey()
+	{
+		dashLeft = false;
+		dashRight = false;
+		dashUp = false;
+		dashDown = false;
+	}
+
+	void player::changeState()
+	{
+		if (speed > 0)return;
+		else
+		{
+			if (isLeft)
+			{
+				state = STATE::RUN;
+				if (isUp)
+				{
+					move = MOVE::LEFT_TOP;
+				}
+				else if (isDown)
+				{
+					move = MOVE::LEFT_DOWN;
+				}
+				else // 그냥 순수 LEFT
+				{
+					move = MOVE::LEFT;
+				}
+			}
+
+			else if (isRight)
+			{
+				state = STATE::RUN;
+				if (isUp)
+				{
+					move = MOVE::RIGHT_TOP;
+				}
+				else if (isDown)
+				{
+					move = MOVE::RIGHT_DOWN;
+				}
+				else // 그냥 순수 LEFT
+				{
+					move = MOVE::RIGHT;
+				}
+			}
+
+			else if (isUp) // 그냥 순수 UP
+			{
+				state = STATE::RUN;
+				move = MOVE::UP;
+			}
+
+			else if (isDown) // 그냥 순수 DOWN
+			{
+				state = STATE::RUN;
+				move = MOVE::DOWN;
+			}
+			else
+			{
+				state = STATE::IDLE;
+			}
+		}
+
+	}
+
+
+	void player::death()
+	{
+		if (PLAYERDATA->getHp() <= 0)
+		{
+			isDead = true;
+			state = STATE::DIE;
+		}
+	}
+	//플레이어 피격 데미지
+	void player::damage(int damage, float attackAngle, float knockBackSpeed)
+	{
+		if (PLAYERDATA->getHp() <= 0) return;
+
+		isDamaged = true;
+
+		knockBack.angle = attackAngle;
+		knockBack.speed = knockBackSpeed;
 		knockBack.percent = 1.0f;
+
+		PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
+
+		float angle = attackAngle * (180 / PI);
+
+		bool checkAngle = angle > 90 && angle < 270;
+
+		DAMAGE->generator({ (long)posX, (long)posY }, "rNumbers", damage, checkAngle);
+		SOUNDMANAGER->play("playerHit", false, -0.18f);
+
+		if (inferno->getGauging() && signatureStateCool != 0 && basic)return;
+
 	}
-}
 
-void player::finalAttackDamaged(int damage, int frozenCount)
-{
-	if (PLAYERDATA->getHp() <= 0) return;
-
-	isGrabbed = true;
-	grabbedTime = frozenCount;
-
-	state = STATE::DAMAGED;
-
-	PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
-
-	DAMAGE->generator({ (long)posX, (long)posY }, "rNumbers", damage, false);
-}
-
-void player::grabbedCool()
-{
-	if (grabbedTime > 0)
+	void player::damagedCool()
 	{
+		if (isDamaged)
+		{
+			frozenTime++;
+
+			if (state == STATE::DASH || state == STATE::SIGNATURE || state == STATE::STANDARD) return;
+			state = STATE::DAMAGED;
+
+		}
+		if (frozenTime > 20)
+		{
+			isDamaged = false;
+			frozenTime = 0;
+			knockBack.angle = 0;
+			knockBack.speed = 1.5f;
+			knockBack.percent = 1.0f;
+		}
+	}
+
+	void player::finalAttackDamaged(int damage, int frozenCount)
+	{
+		if (PLAYERDATA->getHp() <= 0) return;
+
+		isGrabbed = true;
+		grabbedTime = frozenCount;
+
 		state = STATE::DAMAGED;
-		grabbedTime--;
-		if (grabbedTime <= 0)
+
+		PLAYERDATA->setHp(PLAYERDATA->getHp() - damage);
+
+		DAMAGE->generator({ (long)posX, (long)posY }, "rNumbers", damage, false);
+	}
+
+	void player::grabbedCool()
+	{
+		if (grabbedTime > 0)
 		{
-			grabbedTime = 0;
-			isGrabbed = false;
+			state = STATE::DAMAGED;
+			grabbedTime--;
+			if (grabbedTime <= 0)
+			{
+				grabbedTime = 0;
+				isGrabbed = false;
+			}
 		}
 	}
-}
 
-void player::chargeSkillGauge(int atkPower, int skillNum)
-{
-	//basic 공격일 때 gauge charge가 빠름
-	if (!upgradeReady && skillGauge <= 100)
+	void player::chargeSkillGauge(int atkPower, int skillNum)
 	{
-		switch (skillNum)
+		//basic 공격일 때 gauge charge가 빠름
+		if (!upgradeReady && skillGauge <= 100)
 		{
-		case 0:
-			skillGauge += (float)(atkPower / atkPower) * 1.7f;
-			break;
-		case 1:
-			if (count % 15 == 0)
-				skillGauge += (float)(atkPower / atkPower) * 1.2f;
-			break;
-		case 2:
-			if (count % 15 == 0)
-				skillGauge += (float)(atkPower / atkPower) * 1.2f;
-			break;
-		case 3:
-			if (count % 20 == 0)
-				skillGauge += (float)(atkPower / atkPower) * 1.2f;
-			break;
-		case 4:
-			if (count % 30 == 0)
-				skillGauge += (float)(atkPower / atkPower) * 0.7f;
-			break;
+			switch (skillNum)
+			{
+			case 0:
+				skillGauge += (float)(atkPower / atkPower) * 1.7f;
+				break;
+			case 1:
+				if (count % 15 == 0)
+					skillGauge += (float)(atkPower / atkPower) * 1.2f;
+				break;
+			case 2:
+				if (count % 15 == 0)
+					skillGauge += (float)(atkPower / atkPower) * 1.2f;
+				break;
+			case 3:
+				if (count % 20 == 0)
+					skillGauge += (float)(atkPower / atkPower) * 1.2f;
+				break;
+			case 4:
+				if (count % 30 == 0)
+					skillGauge += (float)(atkPower / atkPower) * 0.7f;
+				break;
+
+			case 5:
+				if (count % 15 == 0)
+					skillGauge += (float)(atkPower / atkPower) * 1.2f;
+				break;
+
+			}
+
 		}
 
 	}
 
-}
-
-void player::skillGaugeSetUp()
-{
-
-	if (upgradeReady && count % 10 == 0 && skillGauge > 0)
-		skillGauge -= 1.f;
-	else if (skillGauge > 0 && count % 10 == 0)
-		skillGauge -= 0.5f;
-
-
-	if (skillGauge >= 100)
+	void player::skillGaugeSetUp()
 	{
-		skillGauge = 100;
-		upgradeReady = true;
+
+		if (upgradeReady && count % 10 == 0 && skillGauge > 0)
+			skillGauge -= 1.f;
+		else if (skillGauge > 0 && count % 10 == 0)
+			skillGauge -= 0.5f;
+
+
+		if (skillGauge >= 100)
+		{
+			skillGauge = 100;
+			upgradeReady = true;
+		}
+
+		if (upgradeReady && skillGauge <= 0)
+			upgradeReady = false;
+
+		PLAYERDATA->setSkillGauge(skillGauge);
+		PLAYERDATA->setUpgradeReady(upgradeReady);
 	}
 
-	if (upgradeReady && skillGauge <= 0)
-		upgradeReady = false;
+	void player::buttonDown()
+	{
+		//key
+		if (INPUT->GetKey(VK_LEFT) || INPUT->GetKey('A'))isLeft = true;
+		else isLeft = false;
+		if (INPUT->GetKey(VK_RIGHT) || INPUT->GetKey('D'))isRight = true;
+		else isRight = false;
+		if (INPUT->GetKey(VK_UP) || INPUT->GetKey('W'))isUp = true;
+		else isUp = false;
+		if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))isDown = true;
+		else isDown = false;
+	}
+	//del
+	void player::viewText()
+	{
+		//char test[256];
+		//wsprintf(test, "basic : %d", basic);
+		//textOut(getMemDC(), 100, 170, test, WHITE);
+		//wsprintf(test, "standard : %d", standard);
+		//textOut(getMemDC(), 100, 190, test, WHITE);
+		//wsprintf(test, "signature : %d", signature);
+		//textOut(getMemDC(), 100, 210, test, WHITE);
 
-	PLAYERDATA->setSkillGauge(skillGauge);
-	PLAYERDATA->setUpgradeReady(upgradeReady);
-}
-
-void player::buttonDown()
-{
-	//key
-	if (INPUT->GetKey(VK_LEFT) || INPUT->GetKey('A'))isLeft = true;
-	else isLeft = false;
-	if (INPUT->GetKey(VK_RIGHT) || INPUT->GetKey('D'))isRight = true;
-	else isRight = false;
-	if (INPUT->GetKey(VK_UP) || INPUT->GetKey('W'))isUp = true;
-	else isUp = false;
-	if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))isDown = true;
-	else isDown = false;
-}
-//del
-void player::viewText()
-{
-	//char test[256];
-	//wsprintf(test, "basic : %d", basic);
-	//textOut(getMemDC(), 100, 170, test, WHITE);
-	//wsprintf(test, "standard : %d", standard);
-	//textOut(getMemDC(), 100, 190, test, WHITE);
-	//wsprintf(test, "signature : %d", signature);
-	//textOut(getMemDC(), 100, 210, test, WHITE);
-
-}
+	}
