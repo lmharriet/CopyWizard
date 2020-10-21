@@ -140,7 +140,7 @@ void bossScene::render()
 
 	_player->render(1);
 	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
-	//CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("boss"), rc.left, rc.top, 0, 0);
+	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("boss"), rc.left, rc.top, 0, 0);
 
 	_boss->render();
 
