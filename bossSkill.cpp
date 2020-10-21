@@ -112,15 +112,15 @@ void bossSkill::render(HDC hdc)
 		break;
 	case 4:
 		CAMERAMANAGER->FrameRender(hdc, _bossBlazeImg, _posX, _posY, _frameX, _frameY);
-		CAMERAMANAGER->Rectangle(hdc, temp);
+		//CAMERAMANAGER->Rectangle(hdc, temp);
 		break;
 	case 5:
 		CAMERAMANAGER->FrameRender(hdc, _thunderImg, _posX, _posY, _frameX, _frameY);
-		CAMERAMANAGER->Rectangle(hdc, temp);
+		//CAMERAMANAGER->Rectangle(hdc, temp);
 		break;
 	case 6:
 		CAMERAMANAGER->FrameRender(hdc, _windImg, _posX, _posY, _frameX, _frameY);
-		CAMERAMANAGER->Rectangle(hdc, temp);
+		//CAMERAMANAGER->Rectangle(hdc, temp);
 		break;
 	}
 }
