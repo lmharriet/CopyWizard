@@ -45,6 +45,34 @@ HRESULT bossSkill::init(float x, float y, int deleteTime, int type)
 	case 3:
 		temp = RectMake(_posX + 28, _posY + 28, 200, 200);
 		break;
+	case 4:
+		IMAGEMANAGER->addFrameImage("bossblaze", "resource/player/blaze.bmp", 288, 96, 3, 1, true, RGB(255, 0, 255));
+
+		_bossBlazeImg = IMAGEMANAGER->findImage("bossblaze");
+		temp = RectMake(_posX, _posY, 96, 96);
+
+		_frameX = 0;
+		_frameY = 0;
+		break;
+	case 5:
+		IMAGEMANAGER->addFrameImage("bossthunder", "resource/boss/thunder.bmp", 2100, 700, 3, 1, true, RGB(255, 0, 255));
+		_thunderImg = IMAGEMANAGER->findImage("bossthunder");
+
+		temp = RectMake(_posX, _posY, 700, 700);
+
+		_frameX = 0;
+		_frameY = 0;
+		break;
+	case 6:
+		IMAGEMANAGER->addFrameImage("bosswind", "resource/boss/chaosCircle.bmp", 1788 * 3, 116 * 3, 12, 1, true, RGB(255, 0, 255));
+		_windImg = IMAGEMANAGER->findImage("bosswind");
+
+		temp = RectMake(_posX, _posY, 447, 348);
+
+		_frameX = 0;
+		_frameY = 0;
+
+		break;
 	}
 
 	return S_OK;
@@ -82,6 +110,16 @@ void bossSkill::render(HDC hdc)
 	case 3:
 		CAMERAMANAGER->Rectangle(hdc, temp);
 		break;
+	case 4:
+		CAMERAMANAGER->FrameRender(hdc, _bossBlazeImg, _posX, _posY, _frameX, _frameY);
+		//CAMERAMANAGER->Rectangle(hdc, temp);
+		break;
+	case 5:
+		CAMERAMANAGER->FrameRender(hdc, _thunderImg, _posX, _posY, _frameX, _frameY);
+		break;
+	case 6:
+		CAMERAMANAGER->FrameRender(hdc, _windImg, _posX, _posY, _frameX, _frameY);
+		break;
 	}
 }
 
@@ -113,6 +151,32 @@ void bossSkill::animation()
 			_frameX++;
 			if (_frameX > 14) {
 				_frameX = 14;
+			}
+		}
+		break;
+	case 4:
+		_timer++;
+		if (_timer % 2 == 0) {
+			_frameX++;
+			if (_frameX > 3) {
+				_frameX = 0;
+			}
+		}
+		break;
+	case 5:
+		_timer++;
+		if (_timer % 2 == 0) {
+			_frameX++;
+			if (_frameX > 3) {
+				_frameX = 0;
+			}
+		}
+	case 6:
+		_timer++;
+		if (_timer % 2 == 0) {
+			_frameX++;
+			if (_frameX > 12) {
+				_frameX = 12;
 			}
 		}
 		break;
