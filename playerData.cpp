@@ -72,6 +72,7 @@ void playerData::update()
 			{
 				gShroud.isActives = true;
 				gShroud.currentTime = 0;
+				SOUNDMANAGER->play("shieldON", false);
 			}
 		}
 	}
@@ -90,11 +91,11 @@ void playerData::shroudRender(HDC hdc)
 			gShroud.curSize += 0.025f;
 
 
-
 			img->stretchRender(hdc,
 				WINSIZEX / 2 + 4 - (img->getWidth() * gShroud.curSize / 2) ,
 				WINSIZEY / 2 - (img->getHeight() * gShroud.curSize / 2) ,
 				gShroud.curSize);
+				
 		}
 
 		else
