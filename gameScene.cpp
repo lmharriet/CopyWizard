@@ -145,6 +145,8 @@ void gameScene::update()
 	enemyAttack();
 	attackChest();
 
+	gainArcana();
+
 	_shop->shopCollider(_player->getRect());
 	_shop->buyItem();
 
@@ -700,18 +702,16 @@ void gameScene::attackChest()
 	//upgrade
 	for (int i = 0; i < _player->getDragon()->getcolSize(); i++)
 	{
-		for (int j = 0; j < enemy->getMinion().size(); j++)
+		if (colCheck(_player->getDragon()->getColRc(i), _chest->getRc()))
 		{
-			if (colCheck(_player->getDragon()->getColRc(i), enemy->getMinion()[j]->getRC()))
-			{
-				bool criCheck = PLAYERDATA->criAppear();
+			bool criCheck = PLAYERDATA->criAppear();
 
-				int damage = PLAYERDATA->damageCul(_player->getDragon()->getUpgradeAtkPower(i) + RANDOM->range(0, 3), criCheck);
+			int damage = PLAYERDATA->damageCul(_player->getDragon()->getUpgradeAtkPower(i) + RANDOM->range(0, 3), criCheck);
 
-				_chest->damaged(_chest->getPos(), damage, _player->getDragon()->getSkillNum(), criCheck);
+			_chest->damaged(_chest->getPos(), damage, _player->getDragon()->getSkillNum(), criCheck);
 
-			}
 		}
+
 	}
 
 	//ice Spear
@@ -741,6 +741,23 @@ void gameScene::attackChest()
 			_chest->damaged(_chest->getPos(), damage, _player->getSpear()->getSkillNum(), criCheck);
 
 			_player->getSpear()->setUpgradeCol(i, true);
+		}
+	}
+}
+
+void gameScene::gainArcana()
+{
+	for (int i = 0; i < DROP->getCardVec().size(); i++)
+	{
+		if (colCheck(_player->getRect(), DROP->getCardRect(i)))
+		{
+			if (INPUT->GetKeyDown('F'))
+			{
+				
+				_player->setNewSignatrue(DROP->getCardVec()[i].arcanaName, DROP->getCardVec()[i].coolTime);
+				DROP->delCard(i);
+
+			}
 		}
 	}
 }

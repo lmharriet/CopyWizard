@@ -57,6 +57,7 @@ public:
 	void enemyAttack();
 	void enemyUnitRenderInit();
 	void attackChest();
+	void gainArcana();
 	void viewText();
 	//sound
 	void soundInit();

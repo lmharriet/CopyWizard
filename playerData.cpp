@@ -211,7 +211,7 @@ int playerData::damageCul(int damage, bool isCritical)
 
 void playerData::setArcanaInfo(int index, string keyName, string info, int coolTime)
 {
-	if (index > 3) return; // inventory E / R  사용하게 되면 변경 
+	if (index > 5) return; // inventory E / R  사용하게 되면 변경 
 
 	vArcanaInfo[index].skillName = keyName;
 	vArcanaInfo[index].explanation = info;

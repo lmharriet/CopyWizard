@@ -129,7 +129,7 @@ public:
 	void signatureSetUpE();
 	void signatureSetUpR();
 
-	void setSkillUi(ARCANA_TYPE type, string keyName, int coolTime);
+	void setNewSignatrue(string keyName, int coolTime);
 	///////////////////////
 
 
