@@ -252,7 +252,7 @@ void gameScene::checkEnemDie()
 
 		if (enemy->getMinion().size() <= num || enemy->getMinion()[num]->getHp() <= 0)
 		{
-			cout << enemy->getMinion().size() << " / " << num << '\n';
+			//cout << enemy->getMinion().size() << " / " << num << '\n';
 			camInEnemy.erase(camInEnemy.begin() + i);
 			size = camInEnemy.size();
 		}
