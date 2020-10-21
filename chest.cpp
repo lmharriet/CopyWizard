@@ -32,7 +32,17 @@ void chest::update()
         time++;
         if (frameX != img->getMaxFrameX())
         {
-            if (time % 5 == 0) frameX++;
+            if (time % 5 == 0)
+            {
+                if (frameX == 2)
+                {
+                    //아이템, 동전 생성
+                    DROP->dropPoint(pos, 80, 120, 0);
+                }
+
+                frameX++;
+                UNITRENDER->setFrameChest({ frameX,0 });
+            }
         }
     }
 }
