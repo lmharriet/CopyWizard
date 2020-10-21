@@ -633,10 +633,10 @@ void dashFire::singleRender(int index)
 {
 	vDash[index].lifeTime++;
 
-	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("flame"),
-		vDash[index].x - (IMAGEMANAGER->findImage("flame")->getFrameWidth() >> 1),
-		vDash[index].y - (IMAGEMANAGER->findImage("flame")->getFrameHeight() >> 1) - 20,
-		vDash[index].frameX, 0);
+	//CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("flame"),
+	//	vDash[index].x - (IMAGEMANAGER->findImage("flame")->getFrameWidth() >> 1),
+	//	vDash[index].y - (IMAGEMANAGER->findImage("flame")->getFrameHeight() >> 1) - 20,
+	//	vDash[index].frameX, 0);
 
 	if (INPUT->GetToggleKey('L'))	CAMERAMANAGER->Ellipse(getMemDC(), vDash[index].rc);
 	if (vDash[index].lifeTime == 180)

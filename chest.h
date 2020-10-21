@@ -20,7 +20,7 @@ public:
 	void update();
 	//void render();
 
-
+	POINT getPos() { return pos; }
 	RECT getRc() { return rc; }
 	void damaged(int value) { hp -= value; }
 

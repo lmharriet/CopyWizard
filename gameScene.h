@@ -51,6 +51,7 @@ public:
 	void playerAttack();
 	void enemyAttack();
 	void enemyUnitRenderInit();
+	void attackChest();
 	void viewText();
 	//sound
 	void soundInit();
