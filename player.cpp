@@ -4,6 +4,8 @@
 
 HRESULT player::init()
 {
+
+	IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
 	IMAGEMANAGER->addFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
 	IMAGEMANAGER->addFrameImage("flame", "resource/player/flame1.bmp", 4096, 128, 32, 1);
 	IMAGEMANAGER->addFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
@@ -1778,8 +1780,6 @@ void player::grabbedCool()
 			isGrabbed = false;
 		}
 	}
-
-
 }
 
 void player::chargeSkillGauge(int atkPower, int skillNum)
