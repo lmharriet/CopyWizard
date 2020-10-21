@@ -41,11 +41,23 @@ struct skillBlock
 	bool isFire;
 	bool isHit;
 };
+
+struct tagDamageType
+{
+	int skillNum;
+	int currentTime;
+	int endTime;
+};
+
 class player;
 class finalBoss : public gameNode
 {
 private:
 	player* _player;
+
+	//damage calculate
+	vector<tagDamageType> vDamage;
+
 public:
 	void getPlayerInfo(player* _p) {
 		_player = _p;
@@ -59,6 +71,9 @@ private:
 	vector<skillBlock*> thunderBlock;
 	vector<skillBlock*> windBlock;
 	vector<skillBlock*> iceBlock;
+
+
+
 
 	int timer;
 	int count;
@@ -110,6 +125,12 @@ public:
 	void colCheck();
 
 	void finalBossHpInfo(HDC hdc, int destX, int destY);
+
+	bool damageCheck(int skillNum);
+
+	void damage(int damage, float _hitAngle, int skillNum, bool isCritical);
+
+	void damageCul();
 
 	tagFinaleBoss getFinalBoss() {
 		return boss;
