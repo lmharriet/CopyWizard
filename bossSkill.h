@@ -12,6 +12,10 @@ private:
 	image* _wallImg;
 	image* _niddleImg;
 	image* _bossCircleImg;
+	image* _bossBlazeImg;
+	image* _thunderImg;
+	image* _windImg;
+	image* _iceImg;
 
 	int _timer;
 	int _frameX;
