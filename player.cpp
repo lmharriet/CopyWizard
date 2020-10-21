@@ -580,24 +580,24 @@ void player::dashSetUp()
 {
 	if (speed == 0 || isDead) return;
 
-	////searing dash fire
-	//if (arcana[1].skillName == "skill_searingDash")
-	//{
-	//	if (!searingRush->getIsCoolTime() &&
-	//		(speed == 8 || speed == 11 || speed == 14 || speed == 17))
+	//searing dash fire
+	if (arcana[1].skillName == "skill_searingDash")
+	{
+		if (!searingRush->getIsCoolTime() &&
+			(speed == 8 || speed == 11 || speed == 14 || speed == 17))
 
-	//		searingRush->fire(posX, posY);
+			searingRush->fire(posX, posY);
 
-	//	if (!searingRush->getIsCoolTime() && speed == 17) //sound
-	//		SOUNDMANAGER->play("playerfireDash", false);
+		if (!searingRush->getIsCoolTime() && speed == 17) //sound
+			SOUNDMANAGER->play("playerfireDash", false);
 
-	//	if (speed == 7)
-	//	{
-	//		UI->addCoolTime("skill_searingDash");
-	//		searingRush->setIsCoolTime(true);
-	//	}
+		if (speed == 7)
+		{
+			UI->addCoolTime("skill_searingDash");
+			searingRush->setIsCoolTime(true);
+		}
 
-	//}
+	}
 
 	//moving
 	if (dashLeft)

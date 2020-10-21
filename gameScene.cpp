@@ -125,6 +125,7 @@ void gameScene::update()
 
 	enemy->setPlayerRC(RectMake(_player->getX(), _player->getY(), 100, 100));
 	enemy->update();
+	_chest->update();
 
 	UNITRENDER->enemyClear();
 	enemyUnitRenderInit(); // 무조건 UNITERENDER->enemyClear와 UNITRENDER->update() 사이에 있어야함.
@@ -142,6 +143,7 @@ void gameScene::update()
 
 	playerAttack();
 	enemyAttack();
+	attackChest();
 
 	_shop->shopCollider(_player->getRect());
 	_shop->buyItem();
@@ -526,25 +528,26 @@ void gameScene::enemyUnitRenderInit()
 }
 
 void gameScene::attackChest()
+
 {
+	if (_chest->getHp() <= 0)return;
 	//blaze
 	for (int i = 0; i < _player->getBlaze()->getSize(); i++)
 	{
+
 		if (colCheck(_player->getBlaze()->getBullet()[i].rc, _chest->getRc()))
 		{
 			bool criCheck = PLAYERDATA->criAppear();
 			int damage = PLAYERDATA->damageCul(_player->getBlaze()->getBullet()[i].atkPower + RANDOM->range(0, 5), criCheck);
 
-			_chest->damaged(damage);
-
-			DAMAGE->generator(_chest->getPos(), "numbers", damage, true, criCheck);
+			_chest->damaged(_chest->getPos(), damage, 0, criCheck);
 
 			_player->getBlaze()->setCol(i, true);
 
 			break;
 		}
 	}
-
+	//meteor
 	for (int i = 0; i < _player->getMeteor()->getColSize(); i++)
 	{
 		if (colCheck(_player->getMeteor()->getColRect(i), _chest->getRc()))
@@ -555,10 +558,7 @@ void gameScene::attackChest()
 			//데미지 계산
 			int damage = PLAYERDATA->damageCul(_player->getMeteor()->getAtkPower(i) + RANDOM->range(0, 5), criCheck);
 
-			_chest->damaged(damage);
-
-			DAMAGE->generator(_chest->getPos(), "numbers", damage, true, criCheck);
-
+			_chest->damaged(_chest->getPos(), damage, _player->getMeteor()->getSkillNum(), criCheck);
 
 			break;
 		}
@@ -573,9 +573,7 @@ void gameScene::attackChest()
 
 			int damage = PLAYERDATA->damageCul(_player->getDashFire()->getAtk(i) + RANDOM->range(0, 5), criCheck);
 
-			_chest->damaged(damage);
-
-			DAMAGE->generator(_chest->getPos(), "numbers", damage, true, criCheck);
+			_chest->damaged(_chest->getPos(), damage, _player->getDashFire()->getSkillNum(), criCheck);
 		}
 
 	}//end of for
@@ -602,29 +600,28 @@ void gameScene::attackChest()
 
 			int damage = PLAYERDATA->damageCul(_player->getInferno()->getInf().atkPower, criCheck);
 
-			_chest->damaged(damage);
+			_chest->damaged(_chest->getPos(), damage, _player->getInferno()->getSkillNum(), criCheck);
 
-			DAMAGE->generator(_chest->getPos(), "numbers", damage, true, criCheck);
 		}
 	}
 
 
 	//dragonArc
-	/*if (!_player->getDragon()->getUpgrade())
+	if (!_player->getDragon()->getUpgrade())
 	{
 		for (int i = 0; i < _player->getDragon()->getSize(); i++)
 		{
-			if (colCheck(_player->getDragon()->getDragonRC(i),_chest->getRc()))
+			if (colCheck(_player->getDragon()->getDragonRC(i), _chest->getRc()))
 			{
 				bool criCheck = PLAYERDATA->criAppear();
 
 				int damage = PLAYERDATA->damageCul(_player->getDragon()->getAtkPower(i) + RANDOM->range(0, 3), criCheck);
 
-				enemy->getMinion()[j]->hit(damage, _player->getDragon()->getDragonAngle(i), 10.f, 4, criCheck);
+				_chest->damaged(_chest->getPos(), damage, _player->getDragon()->getSkillNum(), criCheck);
 			}
 
 		}
-	}*/
+	}
 
 	//upgrade
 	for (int i = 0; i < _player->getDragon()->getcolSize(); i++)
@@ -637,64 +634,41 @@ void gameScene::attackChest()
 
 				int damage = PLAYERDATA->damageCul(_player->getDragon()->getUpgradeAtkPower(i) + RANDOM->range(0, 3), criCheck);
 
-				//gauge
-				if (PLAYERDATA->getStat().ManaRejection == false)
-				{
-					_player->chargeSkillGauge(damage, 4);
-				}
-				enemy->getMinion()[j]->hit(damage, _player->getDragon()->getHeadAngle(i), 10.f, 4, criCheck);
-			}
+				_chest->damaged(_chest->getPos(), damage, _player->getDragon()->getSkillNum(), criCheck);
 
+			}
 		}
 	}
 
 	//ice Spear
 	for (int i = 0; i < _player->getSpear()->getSize(); i++)
 	{
-		for (int j = 0; j < enemy->getMinion().size(); j++)
+		if (colCheck(_player->getSpear()->getSpearRc(i), _chest->getRc()))
 		{
-			if (colCheck(_player->getSpear()->getSpearRc(i), enemy->getMinion()[j]->getRC()))
-			{
-				//enemy->getMinion()[j]->setPt(_player->getSpear()->getSpearRc(i).left, _player->getSpear()->getSpearRc(i).top);
+			bool criCheck = PLAYERDATA->criAppear();
 
-				bool criCheck = PLAYERDATA->criAppear();
+			int damage = PLAYERDATA->damageCul(_player->getSpear()->getAtkPower(i) + RANDOM->range(0, 3), criCheck);
 
-				int damage = PLAYERDATA->damageCul(_player->getSpear()->getAtkPower(i) + RANDOM->range(0, 3), criCheck);
-				//gauge
-				if (PLAYERDATA->getStat().ManaRejection == false)
-				{
-					_player->chargeSkillGauge(damage, 5);
-				}
-				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, criCheck, true);
+			_chest->damaged(_chest->getPos(), damage, _player->getSpear()->getSkillNum(), criCheck);
 
-				_player->getSpear()->setCol(i, true);
-			}
+			_player->getSpear()->setCol(i, true);
 		}
 	}
 
 	//upgrade
 	for (int i = 0; i < _player->getSpear()->getUpgradeSize(); i++)
 	{
-		for (int j = 0; j < enemy->getMinion().size(); j++)
+		if (colCheck(_player->getSpear()->getUpgradeRC(i), _chest->getRc()))
 		{
-			if (colCheck(_player->getSpear()->getUpgradeRC(i), enemy->getMinion()[j]->getRC()))
-			{
-				bool criCheck = PLAYERDATA->criAppear();
+			bool criCheck = PLAYERDATA->criAppear();
 
-				int damage = PLAYERDATA->damageCul(_player->getSpear()->getUpgradeAtk(i) + RANDOM->range(0, 3), criCheck);
-				//gauge
-				if (PLAYERDATA->getStat().ManaRejection == false)
-				{
-					_player->chargeSkillGauge(damage, 5);
-				}
-				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 30.f, 5, criCheck, true);
+			int damage = PLAYERDATA->damageCul(_player->getSpear()->getUpgradeAtk(i) + RANDOM->range(0, 3), criCheck);
 
-				_player->getSpear()->setUpgradeCol(i, true);
-			}
+			_chest->damaged(_chest->getPos(), damage, _player->getSpear()->getSkillNum(), criCheck);
+
+			_player->getSpear()->setUpgradeCol(i, true);
 		}
 	}
-
-
 }
 
 void gameScene::viewText()
