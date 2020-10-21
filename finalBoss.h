@@ -71,6 +71,7 @@ private:
 	int posPlayer;
 	int skillNum;
 	int hitTimer;
+	int patternCount;
 
 	float dashAngle;
 
@@ -78,6 +79,7 @@ private:
 	bool leftCheck;
 	bool setDashrc;
 	bool isHit;
+	bool bossRespone;
 
 	bool patternStart;
 	bool wallPattern;

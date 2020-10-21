@@ -37,6 +37,7 @@ HRESULT finalBoss::init(int _posX, int _posY)
 
 	timer = 0;
 	count = 0;
+	patternCount = 0;
 
 	changStage = false;
 	leftCheck = false;
@@ -49,6 +50,7 @@ HRESULT finalBoss::init(int _posX, int _posY)
 	icePattern = false;
 
 	isHit = false;
+	bossRespone = false;
 
 	return S_OK;
 }
@@ -274,16 +276,31 @@ void finalBoss::animation()
 		break;
 	case FINALBOSSDAMAGED:
 		frameY = 7;
-		count++;
-		if (count % 5 == 0) {
-			frameX++;
-			if (frameX > 2) {
-				frameX = 2;
-				timer++;
-				if (timer > 5) {
-					timer = 0;
-					count = 0;
+		if (!bossRespone) {
+			count++;
+			if (count % 10 == 0) {
+				frameX++;
+				if (frameX > 7) {
+					frameX = 7;
+					timer++;
+					if (timer > 15) {
+						bossRespone = true;
+						timer = 0;
+						count = 0;
+					}
+				}
+			}
+		}
+		else {
+			count++;
+			if (count % 10 == 0) {
+				frameX++;
+				if (frameX > 10) {
 					boss.bossState = FINALBOSSIDLE;
+					dashCount = RANDOM->range(4, 7);
+					count = 0;
+					patternCount = 0;
+					bossRespone = false;
 				}
 			}
 		}
@@ -293,8 +310,8 @@ void finalBoss::animation()
 		count++;
 		if (count % 10 == 0) {
 			frameX++;
-			if (frameX > 10) {
-				frameX = 10;
+			if (frameX > 7) {
+				frameX = 7;
 			}
 		}
 		break;
@@ -303,7 +320,7 @@ void finalBoss::animation()
 
 void finalBoss::updateDashRect()
 {
-	if (boss.bossState == FINALBOSSIDLE && !setDashrc) {
+	if (boss.bossState == FINALBOSSIDLE && !setDashrc && patternCount != 4) {
 		this->getPosDashRc();
 
 		if (getDistance(boss.center.x, boss.center.y, _player->getX(), _player->getY()) < boss.dashDintance) {
@@ -348,6 +365,9 @@ void finalBoss::updateDashRect()
 		}
 		boss.bossState = FINALBOSSDASH;
 		setDashrc = true;
+	}
+	if (patternCount == 4) {
+		boss.bossState = FINALBOSSDAMAGED;
 	}
 }
 
@@ -409,6 +429,7 @@ void finalBoss::useSkill()
 	if (patternStart) {
 		skillNum = RANDOM->range(5);
 		//skillNum = 1;
+		patternCount++;
 		switch (skillNum)
 		{
 		case 0:
