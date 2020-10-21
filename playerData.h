@@ -42,7 +42,7 @@ class playerData : public singletonBase <playerData>
 private:
 	//stat//
 	int hp;
-	int maxHp;	
+	int maxHp;
 	float skillGauge;
 	bool upgradeReady;
 
@@ -64,6 +64,9 @@ private:
 
 	tagTile* wallTile;
 	vector<int> vWall;
+
+	//
+	STAGEKIND currentStage;
 public:
 	HRESULT init();
 	void release();
@@ -85,7 +88,7 @@ public:
 	//inferno¿ë
 	int getGaugeTime() { return _gaugeTime; }
 	bool getGauging() { return isGauging; }
-	
+
 
 	void setHp(int _hp) { hp = _hp; }
 	void setCoin(int _coin) { coin = _coin; }
@@ -99,7 +102,7 @@ public:
 	void setGauging(bool temp) { isGauging = temp; }
 	void setGaugeTime(int time) { _gaugeTime = time; }
 
-	
+
 	tagStat getStat() { return stat; }
 	void setStat(string itemName);
 
@@ -111,11 +114,11 @@ public:
 	//inven arcana
 	void pushArcanaInfo(tagWizardArcana info) { vArcanaInfo.push_back(info); }
 	vector<tagWizardArcana> getAracaInfo() { return vArcanaInfo; }
-	void setArcanaInfo(int index, string keyName, string info , int CoolTime);
+	void setArcanaInfo(int index, string keyName, string info, int CoolTime);
 
 	bool criAppear();
 
-		
+
 	void setTile(vector<int> tile) { vTile = tile; }
 	vector<int> getTile() { return vTile; }
 
@@ -128,7 +131,9 @@ public:
 	void setTile(tagTile* _tile) { tile = _tile; }
 	tagTile* _getTile() { return tile; }
 
-
+	//currentStage
+	void setCurrentStage(STAGEKIND _currentStage) { currentStage = _currentStage; }
+	STAGEKIND getCurrentStage() { return currentStage; }
 	playerData() {}
 	~playerData() {}
 };

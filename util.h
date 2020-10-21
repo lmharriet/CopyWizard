@@ -1,6 +1,6 @@
 #pragma once
 //=============================================================
-//	## namespace ## MY_UTIL
+//    ## namespace ## MY_UTIL
 //=============================================================
 
 #define PI 3.1415926f
@@ -13,21 +13,28 @@
 
 namespace MY_UTIL
 {
-	//두점 사이의 거리
-	float getDistance(float startX, float startY, float endX, float endY);
-	
-	//두점 사이의 각도
-	float getAngle(float startX, float startY, float endX, float endY);
+    //두점 사이의 거리
+    float getDistance(float startX, float startY, float endX, float endY);
 
-	
-	float lerp(float v0, float v1, float t);
+    //두점 사이의 각도
+    float getAngle(float startX, float startY, float endX, float endY);
+
+
+    float lerp(float v0, float v1, float t);
 
 };
 
 enum class MONSTERKIND {
-	GOLEM,
-	KNIGHT,
-	SUMMONER,
-	GHOUL,
-	GHOULLARGE
+    GOLEM,
+    KNIGHT,
+    SUMMONER,
+    GHOUL,
+    GHOULLARGE
+};
+
+enum STAGEKIND {
+    STARTSTAGE,
+    MIDDLESTAGE,
+    FINALSTAGE,
+    STAGEMAX
 };

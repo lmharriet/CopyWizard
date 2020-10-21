@@ -14,7 +14,7 @@ HRESULT loadItem::init(string strKey, int width, int height)
 	return S_OK;
 }
 
-HRESULT loadItem::init(string strKey, const char * fileName, int width, int height, bool isTrans, COLORREF transColor)
+HRESULT loadItem::init(string strKey, const char* fileName, int width, int height, bool isTrans, COLORREF transColor)
 {
 	//로딩종류 초기화
 	_kind = LOAD_KIND_IMAGE_1;
@@ -30,7 +30,7 @@ HRESULT loadItem::init(string strKey, const char * fileName, int width, int heig
 	return S_OK;
 }
 
-HRESULT loadItem::init(string strKey, const char * fileName, float x, float y, int width, int height, bool isTrans, COLORREF transColor)
+HRESULT loadItem::init(string strKey, const char* fileName, float x, float y, int width, int height, bool isTrans, COLORREF transColor)
 {
 	//로딩종류 초기화
 	_kind = LOAD_KIND_IMAGE_2;
@@ -48,7 +48,7 @@ HRESULT loadItem::init(string strKey, const char * fileName, float x, float y, i
 	return S_OK;
 }
 
-HRESULT loadItem::init(string strKey, const char * fileName, int width, int height, int frameX, int frameY, bool isTrans, COLORREF transColor)
+HRESULT loadItem::init(string strKey, const char* fileName, int width, int height, int frameX, int frameY, bool isTrans, COLORREF transColor)
 {
 	//로딩종류 초기화
 	_kind = LOAD_KIND_FRAMEIMAGE_0;
@@ -66,7 +66,7 @@ HRESULT loadItem::init(string strKey, const char * fileName, int width, int heig
 	return S_OK;
 }
 
-HRESULT loadItem::init(string strKey, const char * fileName, float x, float y, int width, int height, int frameX, int frameY, bool isTrans, COLORREF transColor)
+HRESULT loadItem::init(string strKey, const char* fileName, float x, float y, int width, int height, int frameX, int frameY, bool isTrans, COLORREF transColor)
 {
 	//로딩종류 초기화
 	_kind = LOAD_KIND_FRAMEIMAGE_1;
@@ -86,7 +86,7 @@ HRESULT loadItem::init(string strKey, const char * fileName, float x, float y, i
 	return S_OK;
 }
 
-HRESULT loadItem::init(string strKey, const char* fileName, bool isBGM )
+HRESULT loadItem::init(string strKey, const char* fileName, bool isBGM)
 {
 	//로딩종류 초기화
 	_kind = LOAD_KIND_SOUND;
@@ -105,23 +105,23 @@ HRESULT loadItem::init(string strKey, const char* fileName, bool isBGM )
 //=============================================================
 //	## loading ## (로딩클래스 - 로딩화면 구현하기, 로딩바, 백그라운드)
 //=============================================================
-HRESULT loading::init()
+HRESULT loading::init(string keyName, const char* fileName, int imgWidth, int imgHeight)
 {
 	//로딩화면 백그라운드 이미지 초기화
-	_background = IMAGEMANAGER->addImage("LoadingBackground", "resource/UI/loadingBackground.bmp", WINSIZEX, WINSIZEY);
+	_background = IMAGEMANAGER->addImage(keyName, fileName, imgWidth, imgHeight);
 	//로딩바 이미지 초기화
 	IMAGEMANAGER->addImage("loadingBarFront", "Images/loadingBarFront.bmp", 1190, 20);
 	IMAGEMANAGER->addImage("loadingBarBack", "Images/loadingBarBack.bmp", 1190, 20);
 
 	//플레이어 이미지 초기화
 	_char = IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
-	_enemy = IMAGEMANAGER->addFrameImage("enemyFrame", "resource/UI/loading.bmp",  1233, 202,5, 1 );
+	_enemy = IMAGEMANAGER->addFrameImage("enemyFrame", "resource/UI/loading.bmp", 1233, 202, 5, 1);
 	//로딩바 클래스 초기화
 	_loadingBar = make_unique<progressBar>();
 	_loadingBar->init("loadingBarFront", "loadingBarBack");
 	//로딩바 위치 초기화
 	_loadingBar->setPos(0, 500);
-	
+
 	//현재 게이지
 	_currentGauge = 0;
 	_currentFrameX = 0;
@@ -129,6 +129,7 @@ HRESULT loading::init()
 
 	_playerMaxX = 1300.f;
 	_playerCurrentX = 0.f;
+
 
 	return S_OK;
 }
@@ -151,13 +152,13 @@ void loading::render()
 	_background->render(getMemDC());
 	//로딩바 클래스 렌더
 	//_loadingBar->render();
-	
-	
-	_enemy->frameRender(getMemDC(),_loadingBar->getPosX()+_loadingBar->getWidth()-120,_loadingBar->getPosY()-_enemy->getFrameHeight()+140, _currentEnemyFrameX,0);
-	_char->frameRender(getMemDC(),_loadingBar->getPosX()+ _playerCurrentX,_loadingBar->getPosY()-_char->getFrameHeight()/2+100, _currentFrameX,3);
-	
-	if(_currentGauge < _vLoadItem.size())
-	TextOut(getMemDC(), _loadingBar->getPosX() + _loadingBar->getWidth()-100, WINSIZEY/2+280, _vLoadItem[_currentGauge]->getImageResource().keyName.c_str(),strlen(_vLoadItem[_currentGauge]->getImageResource().keyName.c_str()));
+
+
+	_enemy->frameRender(getMemDC(), _loadingBar->getPosX() + _loadingBar->getWidth() - 120, _loadingBar->getPosY() - _enemy->getFrameHeight() + 140, _currentEnemyFrameX, 0);
+	_char->frameRender(getMemDC(), _loadingBar->getPosX() + _playerCurrentX, _loadingBar->getPosY() - _char->getFrameHeight() / 2 + 100, _currentFrameX, 3);
+
+	if (_currentGauge < _vLoadItem.size())
+		TextOut(getMemDC(), _loadingBar->getPosX() + _loadingBar->getWidth() - 100, WINSIZEY / 2 + 280, _vLoadItem[_currentGauge]->getImageResource().keyName.c_str(), strlen(_vLoadItem[_currentGauge]->getImageResource().keyName.c_str()));
 }
 
 void loading::loadImage(string strKey, int width, int height)
@@ -167,28 +168,28 @@ void loading::loadImage(string strKey, int width, int height)
 	_vLoadItem.push_back(move(item));
 }
 
-void loading::loadImage(string strKey, const char * fileName, int width, int height, bool isTrans, COLORREF transColor)
+void loading::loadImage(string strKey, const char* fileName, int width, int height, bool isTrans, COLORREF transColor)
 {
 	shared_ptr<loadItem> item = make_shared<loadItem>();
 	item->init(strKey, fileName, width, height, isTrans, transColor);
 	_vLoadItem.push_back(move(item));
 }
 
-void loading::loadImage(string strKey, const char * fileName, float x, float y, int width, int height, bool isTrans, COLORREF transColor)
+void loading::loadImage(string strKey, const char* fileName, float x, float y, int width, int height, bool isTrans, COLORREF transColor)
 {
 	shared_ptr<loadItem> item = make_shared<loadItem>();
 	item->init(strKey, fileName, x, y, width, height, isTrans, transColor);
 	_vLoadItem.push_back(move(item));
 }
 
-void loading::loadFrameImage(string strKey, const char * fileName, int width, int height, int frameX, int frameY, bool isTrans, COLORREF transColor)
+void loading::loadFrameImage(string strKey, const char* fileName, int width, int height, int frameX, int frameY, bool isTrans, COLORREF transColor)
 {
 	shared_ptr<loadItem> item = make_shared<loadItem>();
 	item->init(strKey, fileName, width, height, frameX, frameY, isTrans, transColor);
 	_vLoadItem.push_back(move(item));
 }
 
-void loading::loadFrameImage(string strKey, const char * fileName, float x, float y, int width, int height, int frameX, int frameY, bool isTrans, COLORREF transColor)
+void loading::loadFrameImage(string strKey, const char* fileName, float x, float y, int width, int height, int frameX, int frameY, bool isTrans, COLORREF transColor)
 {
 	shared_ptr<loadItem> item = make_shared<loadItem>();
 	item->init(strKey, fileName, width, x, y, height, frameX, frameY, isTrans, transColor);
@@ -213,66 +214,66 @@ bool loading::loadingDone()
 	shared_ptr<loadItem> item = move(_vLoadItem[_currentGauge]);
 	switch (item->getLoadKind())
 	{
-		case LOAD_KIND_IMAGE_0:
-		{
-			tagImageResource img = item->getImageResource();
-			IMAGEMANAGER->addImage(img.keyName, img.width, img.height);
-		}
-		break;
-		
-		case LOAD_KIND_IMAGE_1:
-		{
-			tagImageResource img = item->getImageResource();
-			IMAGEMANAGER->addImage(img.keyName, img.fileName, img.width, img.height, img.isTrans, img.transColor);
-		}
-		break;
-		
-		case LOAD_KIND_IMAGE_2:
-		{
-			tagImageResource img = item->getImageResource();
-			IMAGEMANAGER->addImage(img.keyName, img.fileName, img.x, img.y, img.width, img.height, img.isTrans, img.transColor);
-		}
-		break;
-		
-		case LOAD_KIND_FRAMEIMAGE_0:
-		{
-			tagImageResource img = item->getImageResource();
-			IMAGEMANAGER->addFrameImage(img.keyName, img.fileName, img.width, img.height, img.frameX, img.frameY, img.isTrans, img.transColor);
-		}
-		break;
-		
-		case LOAD_KIND_FRAMEIMAGE_1:
-		{
-			tagImageResource img = item->getImageResource();
-			IMAGEMANAGER->addFrameImage(img.keyName, img.fileName, img.x, img.y, img.width, img.height, img.frameX, img.frameY, img.isTrans, img.transColor);
-		}
-		break;
-
-		//여러분들이 한번 만들어 보기
-		case LOAD_KIND_SOUND:
-		{
-			tagImageResource img = item->getImageResource();
-			SOUNDMANAGER->addSound(img.keyName, img.fileName,img.isTrans,img.isTrans); //loop랑 bgm이랑 같은걸로 되어있음. 
-		}
-		break;
+	case LOAD_KIND_IMAGE_0:
+	{
+		tagImageResource img = item->getImageResource();
+		IMAGEMANAGER->addImage(img.keyName, img.width, img.height);
 	}
-	
+	break;
+
+	case LOAD_KIND_IMAGE_1:
+	{
+		tagImageResource img = item->getImageResource();
+		IMAGEMANAGER->addImage(img.keyName, img.fileName, img.width, img.height, img.isTrans, img.transColor);
+	}
+	break;
+
+	case LOAD_KIND_IMAGE_2:
+	{
+		tagImageResource img = item->getImageResource();
+		IMAGEMANAGER->addImage(img.keyName, img.fileName, img.x, img.y, img.width, img.height, img.isTrans, img.transColor);
+	}
+	break;
+
+	case LOAD_KIND_FRAMEIMAGE_0:
+	{
+		tagImageResource img = item->getImageResource();
+		IMAGEMANAGER->addFrameImage(img.keyName, img.fileName, img.width, img.height, img.frameX, img.frameY, img.isTrans, img.transColor);
+	}
+	break;
+
+	case LOAD_KIND_FRAMEIMAGE_1:
+	{
+		tagImageResource img = item->getImageResource();
+		IMAGEMANAGER->addFrameImage(img.keyName, img.fileName, img.x, img.y, img.width, img.height, img.frameX, img.frameY, img.isTrans, img.transColor);
+	}
+	break;
+
+	//여러분들이 한번 만들어 보기
+	case LOAD_KIND_SOUND:
+	{
+		tagImageResource img = item->getImageResource();
+		SOUNDMANAGER->addSound(img.keyName, img.fileName, img.isTrans, img.isTrans); //loop랑 bgm이랑 같은걸로 되어있음. 
+	}
+	break;
+	}
+
 	//현재 게이지 증가
 	_currentGauge++;
-	
 
-		
+
+
 
 
 	if (_currentGauge % 2 == 0)// 플레이어 이미지
 	{
 		_currentFrameX++;
-		if(_currentGauge%4 ==0)
+		if (_currentGauge % 4 == 0)
 			_currentEnemyFrameX++;
 		if (_currentFrameX > 9)
 			_currentFrameX = 0;
-			
-		if(_currentEnemyFrameX >4)
+
+		if (_currentEnemyFrameX > 4)
 			_currentEnemyFrameX = 0;
 
 		if (_playerMaxX >= _playerCurrentX)// 플레이어 위치
@@ -280,7 +281,7 @@ bool loading::loadingDone()
 		/*else
 			_currentFrameY = */
 	}
-	
+
 
 	//로딩바 이미지 변경
 	_loadingBar->setGauge(_vLoadItem.size(), _currentGauge);

@@ -77,12 +77,13 @@ private:
 	int _currentGauge;
 	int _currentFrameX;
 	int _currentEnemyFrameX;
+	STAGEKIND _stageState;
 
 	float _playerMaxX;
 	float _playerCurrentX;
 
 public:
-	HRESULT init();
+	HRESULT init(string keyName, const char* fileName, int imgWidth, int imgHeight);
 	void release();
 	void update();
 	void render();
@@ -92,7 +93,7 @@ public:
 	void loadImage(string strKey, const char* fileName, float x, float y, int width, int height, bool isTrans = false, COLORREF transColor = RGB(0, 0, 0));
 	void loadFrameImage(string strKey, const char* fileName, int width, int height, int frameX, int frameY, bool isTrans = true, COLORREF transColor = RGB(255, 0, 255));
 	void loadFrameImage(string strKey, const char* fileName, float x, float y, int width, int height, int frameX, int frameY, bool isTrans = true, COLORREF transColor = RGB(255, 0, 255));
-	void loadSound(string strKey, const char* fileName, bool isBGM =false);
+	void loadSound(string strKey, const char* fileName, bool isBGM = false);
 	/*중요함*/
 	//로딩완료 됐냐? (로딩완료후 화면전환)
 	bool loadingDone();
