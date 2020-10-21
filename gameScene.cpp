@@ -419,7 +419,7 @@ void gameScene::playerAttack()
 				{
 					_player->chargeSkillGauge(damage, 5);
 				}
-				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getSpearAngle(i), 10.f, 5, criCheck);
+				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, criCheck);
 			}
 		}
 	}
@@ -433,13 +433,13 @@ void gameScene::playerAttack()
 			{
 				bool criCheck = PLAYERDATA->criAppear();
 
-				int damage = PLAYERDATA->damageCul(_player->getSpear()->getAtkPower(i) + RANDOM->range(0, 3), criCheck);
+				int damage = PLAYERDATA->damageCul(_player->getSpear()->getUpgradeAtk(i) + RANDOM->range(0, 3), criCheck);
 				//gauge
 				if (PLAYERDATA->getStat().ManaRejection == false)
 				{
 					_player->chargeSkillGauge(damage, 5);
 				}
-				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 10.f, 5, criCheck);
+				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 20.f, 5, criCheck);
 			}
 		}
 	}
