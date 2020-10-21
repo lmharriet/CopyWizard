@@ -451,13 +451,7 @@ void monster::render()
 
 	addRender();
 	if (isIceState)
-	{
-		//CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x, pos.y);
 		CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x, getCenterY()-img->getFrameHeight(),180);
-		
-		//IMAGEMANAGER->alphaRender( IMAGEMANAGER->findImage("IceState"), getMemDC(), cul.x, cul.y - img->getFrameHeight(),0,0,152,220,200);
-		
-	}
 	// astar->render(getMemDC());
 	 //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
 	 //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
@@ -492,10 +486,6 @@ void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, b
 
 	hitAngle = _hitAngle;
 	knockBack = _knockBack;
-	isIceState = isIceSTATE;
-
-	if (kind != MONSTERKIND::GOLEM && kind!= MONSTERKIND::GHOULLARGE)
-		state = STATEIMAGE::HIT;
 
 	isHit = true;
 
@@ -511,14 +501,21 @@ void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, b
 		break;
 	case MONSTERKIND::KNIGHT:
 		SOUNDMANAGER->play(knight, false, -0.28f);
+		state = STATEIMAGE::HIT;
+		isIceState = isIceSTATE;
 		break;
 	case MONSTERKIND::SUMMONER:
 		SOUNDMANAGER->play("golemHit", false, -0.28f);
+		state = STATEIMAGE::HIT;
+		isIceState = isIceSTATE;
 		break;
 	case MONSTERKIND::GHOUL:
 		SOUNDMANAGER->play(ghoul, false,-0.28f );
+		state = STATEIMAGE::HIT;
+		isIceState = isIceSTATE;
 	case MONSTERKIND::GHOULLARGE:
 		SOUNDMANAGER->play(ghoul, false, -0.28f);
+		isIceState = isIceSTATE;
 		break;
 
 	}
