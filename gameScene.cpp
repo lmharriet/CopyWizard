@@ -151,7 +151,8 @@ void gameScene::update()
 	if (INPUT->GetKeyDown('J'))
 	{
 		SOUNDMANAGER->stop("ingameBGM");
-		SCENEMANAGER->loadScene("보스방");
+		PLAYERDATA->setCurrentStage(STAGEKIND::MIDDLESTAGE);
+		SCENEMANAGER->loadScene("로딩화면");
 	}
 
 	if (INPUT->GetKeyDown(VK_BACK))
