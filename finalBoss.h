@@ -13,11 +13,11 @@ enum FINALBOSSSTATE
 };
 enum BOSSSKILLKIND
 {
-	SKILL1,
-	SKILL2,
-	SKILL3,
-	SKILL4,
-	SKILL5
+	FINALBOSSWOOD,
+	FINALBOSSBLAZE,
+	FINALBOSSTHUNDER,
+	FINALBOSSWIND,
+	FINALBOSSICE
 };
 struct tagFinaleBoss
 {
@@ -72,9 +72,6 @@ private:
 	vector<skillBlock*> windBlock;
 	vector<skillBlock*> iceBlock;
 
-
-
-
 	int timer;
 	int count;
 	int frameX;
@@ -87,6 +84,8 @@ private:
 	int skillNum;
 	int hitTimer;
 	int patternCount;
+	int posX;
+	int posY;
 
 	float dashAngle;
 
@@ -102,6 +101,9 @@ private:
 	bool thunderPattern;
 	bool windPattern;
 	bool icePattern;
+	bool isDamaged;
+
+	bool gameOver;
 public:
 	HRESULT init(int _posX, int _posY);
 	void release();
@@ -123,6 +125,7 @@ public:
 	void ice();
 	void die();
 	void colCheck();
+	void grogi();
 
 	void finalBossHpInfo(HDC hdc, int destX, int destY);
 

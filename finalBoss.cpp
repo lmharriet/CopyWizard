@@ -11,13 +11,16 @@ HRESULT finalBoss::init(int _posX, int _posY)
 	IMAGEMANAGER->addImage("bosshpbar", "resource/boss/bossHpBar.bmp", 356, 28, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("bosshpbackBar", "resource/boss/bossHpBackBar.bmp", 356, 28, true, RGB(255, 0, 255));
 
+	posX = _posX;
+	posY = _posY;
+
 	boss.center = { _posX, _posY };
 	boss.angle = 0;
 	boss.bossHp = 2000;
 	boss.isHit = false;
 	boss.isCol = false;
 	boss.dashDintance = 400;
-	boss.bossSkill = SKILL2;
+	boss.bossSkill = FINALBOSSICE;
 	boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 100, 100);
 	boss.bossState = FINALBOSSSPONE;
 
@@ -51,6 +54,9 @@ HRESULT finalBoss::init(int _posX, int _posY)
 
 	isHit = false;
 	bossRespone = false;
+	isDamaged = false;
+
+	gameOver = false;
 
 	return S_OK;
 }
@@ -62,12 +68,14 @@ void finalBoss::release()
 void finalBoss::update()
 {
 	this->animation();
-	this->dashColPlayer();
-	this->useSkill();
-	this->die();
-	this->colCheck();
+	if (!gameOver) {
+		this->dashColPlayer();
+		this->useSkill();
+		this->die();
+		this->colCheck();
+		this->grogi();
+	}
 	BOSSMANAGER->update();
-
 	damageCul();
 }
 
@@ -75,12 +83,14 @@ void finalBoss::render()
 {
 	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("finalboss"), boss.rc.left, boss.rc.top, frameX, frameY);
 
-	BOSSMANAGER->render(getMemDC());
-	EFFECT->AfterimageRender(getMemDC());
+	if (!gameOver) {
+		BOSSMANAGER->render(getMemDC());
+		EFFECT->AfterimageRender(getMemDC());
 
-	if (icePattern) {
-		for (int i = 0; i < iceBlock.size(); i++) {
-			CAMERAMANAGER->RotateRender(getMemDC(), IMAGEMANAGER->findImage("bossice"), iceBlock[i]->center.x, iceBlock[i]->center.y, boss.angle);
+		if (icePattern) {
+			for (int i = 0; i < iceBlock.size(); i++) {
+				CAMERAMANAGER->RotateRender(getMemDC(), IMAGEMANAGER->findImage("bossice"), iceBlock[i]->center.x, iceBlock[i]->center.y, boss.angle);
+			}
 		}
 	}
 }
@@ -179,7 +189,7 @@ void finalBoss::animation()
 	case FINALBOSSSKILL:
 		switch (boss.bossSkill)
 		{
-		case SKILL1:
+		case FINALBOSSWOOD:
 			count++;
 			if (count % 5 == 0) {
 				frameX++;
@@ -187,6 +197,7 @@ void finalBoss::animation()
 					frameX = 5;
 					timer++;
 					if (timer > 10) {
+						patternCount++;
 						boss.bossState = FINALBOSSIDLE;
 						setDashrc = false;
 						wallPattern = false;
@@ -198,7 +209,7 @@ void finalBoss::animation()
 				}
 			}
 			break;
-		case SKILL2:
+		case FINALBOSSBLAZE:
 			count++;
 			if (count % 5 == 0) {
 				frameX++;
@@ -206,6 +217,7 @@ void finalBoss::animation()
 					frameX = 5;
 					timer++;
 					if (timer > 10) {
+						patternCount++;
 						boss.bossState = FINALBOSSIDLE;
 						setDashrc = false;
 						blazePattern = false;
@@ -217,7 +229,7 @@ void finalBoss::animation()
 				}
 			}
 			break;
-		case SKILL3:
+		case FINALBOSSTHUNDER:
 			count++;
 			if (count % 5 == 0) {
 				frameX++;
@@ -225,6 +237,7 @@ void finalBoss::animation()
 					frameX = 5;
 					timer++;
 					if (timer > 10) {
+						patternCount++;
 						boss.bossState = FINALBOSSIDLE;
 						setDashrc = false;
 						thunderPattern = false;
@@ -236,7 +249,7 @@ void finalBoss::animation()
 				}
 			}
 			break;
-		case SKILL4:
+		case FINALBOSSWIND:
 			count++;
 			if (count % 5 == 0) {
 				frameX++;
@@ -244,6 +257,7 @@ void finalBoss::animation()
 					frameX = 5;
 					timer++;
 					if (timer > 5) {
+						patternCount++;
 						boss.bossState = FINALBOSSIDLE;
 						setDashrc = false;
 						windPattern = false;
@@ -255,7 +269,7 @@ void finalBoss::animation()
 				}
 			}
 			break;
-		case SKILL5:
+		case FINALBOSSICE:
 			count++;
 			if (count % 5 == 0) {
 				frameX++;
@@ -263,6 +277,7 @@ void finalBoss::animation()
 					frameX = 5;
 					timer++;
 					if (timer > 5) {
+						patternCount++;
 						boss.bossState = FINALBOSSIDLE;
 						setDashrc = false;
 						icePattern = false;
@@ -277,7 +292,6 @@ void finalBoss::animation()
 		}
 		break;
 	case FINALBOSSDAMAGED:
-		frameY = 7;
 		if (!bossRespone) {
 			count++;
 			if (count % 10 == 0) {
@@ -303,6 +317,7 @@ void finalBoss::animation()
 					count = 0;
 					patternCount = 0;
 					bossRespone = false;
+					setDashrc = false;
 				}
 			}
 		}
@@ -322,7 +337,7 @@ void finalBoss::animation()
 
 void finalBoss::updateDashRect()
 {
-	if (boss.bossState == FINALBOSSIDLE && !setDashrc && patternCount != 4) {
+	if (boss.bossState == FINALBOSSIDLE && !setDashrc) {
 		this->getPosDashRc();
 
 		if (getDistance(boss.center.x, boss.center.y, _player->getX(), _player->getY()) < boss.dashDintance) {
@@ -368,9 +383,6 @@ void finalBoss::updateDashRect()
 		boss.bossState = FINALBOSSDASH;
 		setDashrc = true;
 	}
-	if (patternCount == 4) {
-		boss.bossState = FINALBOSSDAMAGED;
-	}
 }
 
 void finalBoss::dashPattern()
@@ -397,12 +409,13 @@ void finalBoss::dashPattern()
 
 void finalBoss::dashColPlayer()
 {
-	if (((getDistance(boss.center.x, boss.center.y, _player->getX(), _player->getY()) < 150 && dashCount < 3) || dashCount == 0) && boss.bossState != FINALBOSSSKILL) {
+	if (((getDistance(boss.center.x, boss.center.y, _player->getX(), _player->getY()) < 150 && dashCount < 3) || dashCount == 0) && boss.bossState != FINALBOSSSKILL && boss.bossState != FINALBOSSDAMAGED) {
 		//스킬발동
 		patternStart = true;
 
 		boss.bossState = FINALBOSSSKILL;
 	}
+
 	if (boss.bossState != FINALBOSSSKILL) {
 		this->dashPattern();
 	}
@@ -431,23 +444,22 @@ void finalBoss::useSkill()
 	if (patternStart) {
 		skillNum = RANDOM->range(5);
 		//skillNum = 1;
-		patternCount++;
 		switch (skillNum)
 		{
 		case 0:
-			boss.bossSkill = SKILL1;
+			boss.bossSkill = FINALBOSSWOOD;
 			break;
 		case 1:
-			boss.bossSkill = SKILL2;
+			boss.bossSkill = FINALBOSSBLAZE;
 			break;
 		case 2:
-			boss.bossSkill = SKILL3;
+			boss.bossSkill = FINALBOSSTHUNDER;
 			break;
 		case 3:
-			boss.bossSkill = SKILL4;
+			boss.bossSkill = FINALBOSSWIND;
 			break;
 		case 4:
-			boss.bossSkill = SKILL5;
+			boss.bossSkill = FINALBOSSICE;
 			break;
 		}
 		patternStart = false;
@@ -455,19 +467,19 @@ void finalBoss::useSkill()
 	if (boss.bossState == FINALBOSSSKILL) {
 		switch (boss.bossSkill)
 		{
-		case SKILL1:
+		case FINALBOSSWOOD:
 			this->wall();
 			break;
-		case SKILL2:
+		case FINALBOSSBLAZE:
 			this->blaze();
 			break;
-		case SKILL3:
+		case FINALBOSSTHUNDER:
 			this->thunder();
 			break;
-		case SKILL4:
+		case FINALBOSSWIND:
 			this->wind();
 			break;
-		case SKILL5:
+		case FINALBOSSICE:
 			this->ice();
 			break;
 		}
@@ -541,7 +553,6 @@ void finalBoss::blaze()
 			_blaze->rc = RectMakeCenter(_blaze->center.x, _blaze->center.y, 20, 20);
 			blazeBlock.push_back(_blaze);
 		}
-		//this->posPlayerAngle();
 		blazePattern = true;
 	}
 	else if (blazePattern && frameX == 5) {
@@ -655,6 +666,10 @@ void finalBoss::die()
 	if (boss.bossHp <= 0) {
 		boss.bossHp = 0;
 		boss.bossState = FINALBOSSDIE;
+		boss.center.x = posX;
+		boss.center.y = posY;
+		boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 100, 100);
+		gameOver = true;
 	}
 }
 
@@ -729,13 +744,27 @@ void finalBoss::colCheck()
 		for (int i = 0; i < iceBlock.size(); i++) {
 			if (IntersectRect(&temp, &_player->getRect(), &iceBlock[i]->rc)) {
 				if (!iceBlock[i]->isHit) {
-					float _windAngle = getAngle(iceBlock[i]->center.x, iceBlock[i]->center.y, _player->getX(), _player->getY());
-					int damage = RANDOM->range(25, 32);
-					_player->damage(damage, _windAngle, 10);
+					float _iceAngle = getAngle(iceBlock[i]->center.x, iceBlock[i]->center.y, _player->getX(), _player->getY());
+					int damage = RANDOM->range(11, 18);
+					_player->damage(damage, _iceAngle, 10);
 					iceBlock[i]->isHit = true;
 				}
 			}
 		}
+	}
+}
+
+void finalBoss::grogi()
+{
+	if (patternCount == 4) {
+		isDamaged = true;
+		patternCount = 0;
+	}
+	if (isDamaged) {
+		frameY = 7;
+		frameX = 0;
+		boss.bossState = FINALBOSSDAMAGED;
+		isDamaged = false;
 	}
 }
 
