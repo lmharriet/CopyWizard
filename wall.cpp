@@ -38,12 +38,8 @@ HRESULT wall::init()
 		count++;
 	}
 
-	//for (int i = 0; i < MAXTILE; i++)
-	//{
-	//	if (tile[i].kind != TERRAIN::DECO)
-	//}
-
-	cout << count << '\n';
+	num = 0;
+	size = 0;
 
 	return S_OK;
 }
@@ -157,141 +153,38 @@ void wall::render()
 
 void wall::render2()
 {
-	for (int i = 0; i < vTile.size(); i++)
+	size = vTile.size();
+
+	for (int i = 0; i < size; i++)
 	{
-		int num = vTile[i];
+		num = vTile[i];
 
-		if (tile[num].keyName == "" || tile[num].kind != TERRAIN::TILE)continue;
+		if (tile[num].kind == TERRAIN::NONE || tile[num].kind != TERRAIN::TILE)continue;
 
-		image* img = IMAGEMANAGER->findImage(tile[num].keyName);
-
-		CAMERAMANAGER->FrameRender(getMemDC(), img, tile[num].rc.left, tile[num].rc.top, tile[num].frame.x, tile[num].frame.y);
+		CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage(tile[num].keyName), tile[num].rc.left, tile[num].rc.top, tile[num].frame.x, tile[num].frame.y);
 	}
 
 	//object image render
-	for (int i = 0; i < vTile.size(); i++)
+	for (int i = 0; i < size; i++)
 	{
-		int num = vTile[i];
+		num = vTile[i];
 
 		if (subTile[num].kind != TERRAIN::DECO) continue;
-
-		image* img = IMAGEMANAGER->findImage(subTile[num].keyName);
 		
-		CAMERAMANAGER->Render(getMemDC(), img, tile[num].rc.left, tile[num].rc.top);
+		CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage(subTile[num].keyName), tile[num].rc.left, tile[num].rc.top);
 	}
-	//string key;
-	//image* img;
-	//int width, height;
-	//for (int f = 0; f < vTile.size(); f++)
-	//{
-	//	int i = vTile[f];
-
-	//	if (tile[i].kind != TERRAIN::WALL && tile[i].kind != TERRAIN::OBJECT)continue;
-
-	//	int w = MAXTILE_WIDTH;
-	//	int w2 = MAXTILE_WIDTH * 2;
-	//	int w3 = MAXTILE_WIDTH * 3;
-	//	int w4 = MAXTILE_WIDTH * 4;
-	//	int w5 = MAXTILE_WIDTH * 5;
-	//	int w6 = MAXTILE_WIDTH * 6;
-
-	//	switch (tile[i].kind)
-	//	{
-	//	case TERRAIN::WALL:
-	//		key = tile[i].keyName;
-
-	//		if (key == "topWall") // fix
-	//		{
-	//			if ((key == tile[i + 1].keyName &&
-	//				key == tile[i - w].keyName && key == tile[i - w + 1].keyName &&
-	//				key == tile[i - w2].keyName && key == tile[i - w2 + 1].keyName &&
-	//				key == tile[i - w3].keyName && key == tile[i - w3 + 1].keyName &&
-	//				key == tile[i - w4].keyName && key == tile[i - w4 + 1].keyName &&
-
-	//				key == tile[i - w3 + 2].keyName && key == tile[i - w3 + 3].keyName &&
-	//				key == tile[i - w3 + 4].keyName && key == tile[i - w3 + 5].keyName &&
-	//				key == tile[i - w4 + 2].keyName && key == tile[i - w4 + 3].keyName &&
-	//				key == tile[i - w4 + 4].keyName && key == tile[i - w4 + 5].keyName &&
-
-	//				key == tile[i - w4 + 10].keyName && key == tile[i - w4 + 11].keyName &&
-	//				key == tile[i - w4 + 12].keyName && key == tile[i - w4 + 13].keyName &&
-	//				key == tile[i - w4 + 14].keyName && key == tile[i - w4 + 15].keyName &&
-
-	//				key == tile[i - w3 + 10].keyName && key == tile[i - w3 + 11].keyName &&
-	//				key == tile[i - w3 + 12].keyName && key == tile[i - w3 + 13].keyName &&
-	//				key == tile[i - w3 + 14].keyName && key == tile[i - w3 + 15].keyName &&
-
-	//				key == tile[i - w2 + 14].keyName && key == tile[i - w2 + 15].keyName &&
-	//				key == tile[i - w + 14].keyName && key == tile[i - w + 15].keyName &&
-	//				key == tile[i + 14].keyName && key == tile[i + 15].keyName)
-	//				== false)
-	//			{
-	//				continue;
-	//			}
-
-	//			height = 8 * TILESIZE;
-
-	//			img = IMAGEMANAGER->findImage(key);
-
-	//			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-	//		}
-
-	//		else if (key == "bottomWall") // fix
-	//		{
-	//			if ((key == tile[i + 1].keyName &&
-	//				key == tile[i - w].keyName && key == tile[i - w + 1].keyName &&
-	//				key == tile[i - w2].keyName && key == tile[i - w2 + 1].keyName &&
-	//				key == tile[i - w3].keyName && key == tile[i - w3 + 1].keyName &&
-	//				key == tile[i - w4].keyName && key == tile[i - w4 + 1].keyName &&
-	//				key == tile[i - w5].keyName && key == tile[i - w5 + 1].keyName &&
-	//				key == tile[i - w6].keyName && key == tile[i - w6 + 1].keyName &&
-
-	//				key == tile[i - w + 2].keyName && key == tile[i - w + 3].keyName &&
-	//				key == tile[i - w + 4].keyName &&
-	//				key == tile[i + 2].keyName && key == tile[i + 3].keyName &&
-	//				key == tile[i + 4].keyName &&
-
-
-	//				key == tile[i - w + 11].keyName && key == tile[i - w + 12].keyName &&
-	//				key == tile[i - w + 13].keyName &&
-	//				key == tile[i + 11].keyName && key == tile[i + 12].keyName &&
-	//				key == tile[i + 13].keyName &&
-
-	//				key == tile[i + 14].keyName && key == tile[i + 15].keyName &&
-	//				key == tile[i - w + 14].keyName && key == tile[i - w + 15].keyName &&
-	//				key == tile[i - w2 + 14].keyName && key == tile[i - w2 + 15].keyName &&
-	//				key == tile[i - w3 + 14].keyName && key == tile[i - w3 + 15].keyName &&
-	//				key == tile[i - w4 + 14].keyName && key == tile[i - w4 + 15].keyName &&
-	//				key == tile[i - w5 + 14].keyName && key == tile[i - w5 + 15].keyName &&
-	//				key == tile[i - w6 + 14].keyName && key == tile[i - w6 + 15].keyName
-	//				) == false)
-	//			{
-	//				continue;
-	//			}
-	//			height = 8 * TILESIZE;
-
-	//			img = IMAGEMANAGER->findImage(key);
-
-	//			CAMERAMANAGER->Render(getMemDC(), img, tile[i].rc.left, tile[i].rc.top - height);
-	//		}
-
-	//		break;
-	//	}
-	//}
-
-
-	//index, keyName 
 }
 
 void wall::collisionTile()
 {
-	//vTile.reserve(1100);
-	//vWall.reserve(250);
 	vTile.clear();
+	vTile.shrink_to_fit();
 	vWall.clear();
+	vWall.shrink_to_fit();
 	
-	
-	for (int i = 0; i < MAXTILE; i++)
+	size = MAXTILE;
+	int i;
+	for (i = 0; i < size; i++)
 	{
 		if (colCheck(*cam, tile[i].rc))
 		{

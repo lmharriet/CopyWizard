@@ -62,8 +62,6 @@ void zObject::release()
 
 void zObject::render(HDC hdc)
 {
-    image* img = IMAGEMANAGER->findImage(keyName);
-
     if (type == "wall")
     {
         tagTile* tile = PLAYERDATA->_getTile();
@@ -74,7 +72,7 @@ void zObject::render(HDC hdc)
         {
             int height = 3 * TILESIZE;
 
-            CAMERAMANAGER->FrameRender(hdc, img,
+            CAMERAMANAGER->FrameRender(hdc, IMAGEMANAGER->findImage(keyName),
                 tile[Index].rc.left,
                 tile[Index].rc.top - height,
                 tile[Index].frame.x, tile[Index].frame.y);
@@ -85,31 +83,33 @@ void zObject::render(HDC hdc)
             keyName == "wallFrame2" ||
             keyName == "wallFrame3")
         {
-            CAMERAMANAGER->FrameRender(hdc, img, tile[Index].rc.left, tile[Index].rc.top, tile[Index].frame.x, tile[Index].frame.y);
+            CAMERAMANAGER->FrameRender(hdc, IMAGEMANAGER->findImage(keyName), tile[Index].rc.left, tile[Index].rc.top, tile[Index].frame.x, tile[Index].frame.y);
         }
-    }
-
-    else if (type == "player")
-    {
-        img->frameRender(hdc, WINSIZEX/2 - 50, WINSIZEY/2 - 50, frame.x, frame.y);
     }
 
     else if (type == "monster")
     {
-        CAMERAMANAGER->FrameRender(hdc, img, x, y, frame.x, frame.y);
+        CAMERAMANAGER->FrameRender(hdc, IMAGEMANAGER->findImage(keyName), x, y, frame.x, frame.y);
+    }
+
+    else if (type == "player")
+    {
+        IMAGEMANAGER->findImage(keyName)->frameRender(hdc, (WINSIZEX >> 1) - 50, (WINSIZEY >> 1) - 50, frame.x, frame.y);
     }
 
     else if (type == "npc")
     {
         //CAMERAMANAGER->Rectangle(hdc, rc);
-        CAMERAMANAGER->Render(hdc, img, x - img->getWidth()/2, rc.top - img->getHeight()/2);
+        CAMERAMANAGER->Render(hdc, IMAGEMANAGER->findImage(keyName),
+            x - (IMAGEMANAGER->findImage(keyName)->getWidth() >> 1),
+            rc.top - (IMAGEMANAGER->findImage(keyName)->getHeight() >> 1));
     }
 
     else if (type == "chest")
     {
-        CAMERAMANAGER->FrameRender(hdc, img,
-            x - img->getFrameWidth() / 2,
-            y - img->getFrameHeight() / 2,
+        CAMERAMANAGER->FrameRender(hdc, IMAGEMANAGER->findImage(keyName),
+            x - (IMAGEMANAGER->findImage(keyName)->getFrameWidth() >> 1),
+            y - (IMAGEMANAGER->findImage(keyName)->getFrameHeight() >> 1),
             frame.x, 0);
     }
 }

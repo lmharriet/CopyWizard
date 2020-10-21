@@ -45,7 +45,8 @@ void unit::update()
 {
     wall = PLAYERDATA->getWall();
 
-    for (int i = 0; i < vUnit.size(); i++)
+    int size = vUnit.size();
+    for (int i = 0; i < size; i++)
     {
         vector<shared_ptr<zObject>> tempObj;
         tempObj.swap(vUnit);
@@ -57,7 +58,8 @@ void unit::update()
 
     vUnit.push_back(chest);
 
-    for (int i = 0; i < wall.size(); i++)
+    size = wall.size();
+    for (int i = 0; i < size; i++)
     {
         shared_ptr<zObject> zo = make_shared<zObject>();
 
@@ -65,7 +67,8 @@ void unit::update()
         vUnit.push_back(zo);
     }
 
-    for (int i = 0; i < vEnemy.size(); i++)
+    size = vEnemy.size();
+    for (int i = 0; i < size; i++)
     {
         shared_ptr<zObject> zo = make_shared<zObject>();
        
@@ -108,7 +111,8 @@ void unit::render(HDC hdc)
 {
     this->sorting();
 
-    for (int i = 0; i < vUnit.size(); i++)
+    int size = vUnit.size();
+    for (int i = 0; i < size; i++)
     {
         vUnit[i]->render(hdc);
     }

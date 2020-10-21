@@ -19,6 +19,10 @@ private:
 	RECT* cam;
 	player* _player;
 	bool isLoad;
+
+	//memory
+	int size;
+	int num;
 public:
 	HRESULT init();
 	void loadMap(int index);
