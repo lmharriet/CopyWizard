@@ -23,7 +23,7 @@ HRESULT playerData::init()
 
 	stat.goldPig = false;
 	stat.CoolTimeReduction = 0;
-	stat.glassMirror = true;
+	stat.glassMirror = false;
 
 	//curse
 	stat.vampireBlood = false;
@@ -39,7 +39,7 @@ HRESULT playerData::init()
 	gShroud.curSize = 0;
 	gShroud.endSize = 1.f;
 	gShroud.endTime = 200;
-	gShroud.isActives = true;
+	gShroud.isActives = false;
 	//add image
 	IMAGEMANAGER->addImage("glassShroud", "Images/item/glassShroud_high.bmp", 120, 120, true, RGB(255, 0, 255));
 
