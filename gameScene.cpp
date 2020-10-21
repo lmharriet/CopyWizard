@@ -536,12 +536,8 @@ void gameScene::soundInit()
 {
 	//sound 
 
-
-
 	isIngameBGM = true;
 	fadeIn = 0.f;
-
-
 
 	SOUNDMANAGER->stop("mapToolBGM");
 	SOUNDMANAGER->stop("titleBGM");

@@ -364,9 +364,8 @@ void bossScene::attackBoss()
 				_player->chargeSkillGauge(damage, 5);
 			}
 			_boss->damage(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, isCri);
-
+			_player->getSpear()->setCol(i, true);
 		}
-
 	}
 
 	//upgrade
@@ -383,6 +382,7 @@ void bossScene::attackBoss()
 				_player->chargeSkillGauge(damage, 5);
 			}
 			_boss->damage(damage, _player->getSpear()->getUpgradeAngle(i), 10.f, 5, isCri);
+			_player->getSpear()->setUpgradeCol(i, true);
 		}
 
 	}

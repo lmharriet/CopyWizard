@@ -210,8 +210,7 @@ void player::other_update()
 	inferno->update();
 	spear->update();
 	idleDelayCount();
-	animation(1);
-
+	
 	inven->update();
 
 	//animation count

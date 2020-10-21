@@ -1062,7 +1062,6 @@ void boss::collCheck()
 					int damage = RANDOM->range(75, 91);
 					_player->damage(damage, _jumpAngle, 10);
 					isHit = true;
-					boss.bossHp = 0;
 				}
 			}
 				  break;
@@ -1260,12 +1259,12 @@ void boss::damage(int damage, float _hitAngle, float _knockBack, int skillNum, b
 
 	boss.bossHp -= damage;
 		
-	DAMAGE->generator(pt, "numbers", damage, true, isCritical);
-
-	//if (cos(_hitAngle) * 2.f > 0)
-	//	DAMAGE->generator(pt, "numbers", damage, false, isCritical);
-	//else
-	//	DAMAGE->generator(pt, "numbers", damage, true, isCritical);
+	//DAMAGE->generator(pt, "numbers", damage, true, isCritical);
+	
+	if (cos(_hitAngle) * 2.f > 0)
+		DAMAGE->generator(pt, "numbers", damage, false, isCritical);
+	else
+		DAMAGE->generator(pt, "numbers", damage, true, isCritical);
 
 	//넉백부분은 일단보류
 	//hitAngle = _hitAngle;
