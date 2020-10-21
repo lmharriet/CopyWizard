@@ -69,6 +69,8 @@ HRESULT gameScene::init()
 
 	PORTAL->initWarp(-1149, 2247);
 
+	warpDelay = 0;
+	isWarp = false;
 	//sound
 	soundInit();
 	return S_OK;
@@ -598,9 +600,23 @@ void gameScene::warp()
 
 	}
 
-	if (colCheck(_player->getRect(), PORTAL->getWarpScene()))
+	if (isWarp == false && colCheck(_player->getRect(), PORTAL->getWarpScene())
+		&& INPUT->GetKeyDown('F'))
 	{
-		SOUNDMANAGER->stop("ingameBGM");
-		SCENEMANAGER->loadScene("보스방");
+		isWarp = true;
+
+		EFFECT->setPortalEffect({ (long)PORTAL->getWarpSceneX(),(long)PORTAL->getWarpSceneY() - 30 });
+		SOUNDMANAGER->play("portalWarp", false);
+	}
+
+	if (isWarp)
+	{
+		warpDelay++;
+
+		if (warpDelay > 30)
+		{
+			SOUNDMANAGER->stop("ingameBGM");
+			SCENEMANAGER->loadScene("보스방");
+		}
 	}
 }

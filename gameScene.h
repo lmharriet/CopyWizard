@@ -40,6 +40,8 @@ private:
 	bool isIngameBGM;
 	float fadeIn;
 
+	int warpDelay;
+	bool isWarp;
 public:
 	HRESULT init();
 	void release();

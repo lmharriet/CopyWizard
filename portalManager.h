@@ -35,6 +35,9 @@ public:
 
 	RECT getWarpScene() { return warpScene.rc; }
 
+	float getWarpSceneX() { return warpScene.x; }
+	float getWarpSceneY() { return warpScene.y; }
+
 	void setCenterPortal(tagPortal center) 
 	{ 
 		centerPortal = center; 
