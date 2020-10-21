@@ -43,6 +43,9 @@ HRESULT playerData::init()
 	//add image
 	IMAGEMANAGER->addImage("glassShroud", "Images/item/glassShroud_high.bmp", 120, 120, true, RGB(255, 0, 255));
 
+	//current Stage
+	currentStage = STAGEKIND::STARTSTAGE;
+
 	return S_OK;
 }
 
@@ -92,10 +95,10 @@ void playerData::shroudRender(HDC hdc)
 
 
 			img->stretchRender(hdc,
-				WINSIZEX / 2 + 4 - (img->getWidth() * gShroud.curSize / 2) ,
-				WINSIZEY / 2 - (img->getHeight() * gShroud.curSize / 2) ,
+				WINSIZEX / 2 + 4 - (img->getWidth() * gShroud.curSize / 2),
+				WINSIZEY / 2 - (img->getHeight() * gShroud.curSize / 2),
 				gShroud.curSize);
-				
+
 		}
 
 		else

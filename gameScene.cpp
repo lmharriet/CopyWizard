@@ -67,7 +67,6 @@ HRESULT gameScene::init()
 	_chest = new chest;
 	_chest->init("silverChest", { -1149,2047 }, 10);
 
-	PORTAL->initWarp(-1149, 2247);
 
 	warpDelay = 0;
 	isWarp = false;
@@ -152,7 +151,8 @@ void gameScene::update()
 	if (INPUT->GetKeyDown('J'))
 	{
 		SOUNDMANAGER->stop("ingameBGM");
-		SCENEMANAGER->loadScene("보스방");
+		PLAYERDATA->setCurrentStage(STAGEKIND::MIDDLESTAGE);
+		SCENEMANAGER->loadScene("로딩화면");
 	}
 
 	if (INPUT->GetKeyDown(VK_BACK))
@@ -845,7 +845,8 @@ void gameScene::warp()
 		if (warpDelay > 30)
 		{
 			SOUNDMANAGER->stop("ingameBGM");
-			SCENEMANAGER->loadScene("보스방");
+			PLAYERDATA->setCurrentStage(STAGEKIND::MIDDLESTAGE);
+			SCENEMANAGER->loadScene("로딩화면");
 		}
 	}
 }
