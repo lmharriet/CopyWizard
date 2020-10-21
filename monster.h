@@ -179,11 +179,12 @@ public:
 	bool getDelete() { return isDelete; }
 	bool getATKCHECK() { return isATK; }
 	bool getRange() { return isRanger; }
-	float getAngle() { return angle; }
 	bool getFx() { return isFxAppear; }
 	bool getBulletFire() { return isBulletFire; }
 	bool getDie() { return isDie; }
 	bool getHit() { return isHit; }
+	bool getAppear() { return isMonsterApeear; }
+	float getAngle() { return angle; }
 	int getBulletDirection() { for (int i = 0; i < MONSTER_MAX; i++) if (bulletDirection[i])return i; }
 	int getHp() { return hp; }
 	int getAttack() { return atk; }

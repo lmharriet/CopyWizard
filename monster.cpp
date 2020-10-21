@@ -441,7 +441,7 @@ void monster::commonUpdate()
 		{
 			isIceState = false;
 			iceBreakCount = 0;
-			//EFFECT->setEffect("iceBreak")
+			EFFECT->iceBreakPlay({ pos.x+img->getFrameWidth()/2, getCenterY()  }, 10);
 		}
 	}
 }

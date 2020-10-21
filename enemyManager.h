@@ -11,8 +11,8 @@ class enemyManager : public gameNode
 {
 	
 private:
-	vector<monster*> _vMinion;
-	vector<monster*>::iterator _viMinion;
+	vector<shared_ptr<monster>> _vMinion;
+	vector<shared_ptr<monster>>::iterator _viMinion;
 	tagTile* tile;
 	RECT playerRC;
 	//vector<enemy*> _vBoss;
@@ -39,7 +39,7 @@ public:
 	//플레이어 렉트 가져오기
 	void setPlayerRC(RECT _playerRC) { playerRC = _playerRC; }
 	//미니언 벡터 가져오기
-	vector<monster*> getMinion() { return _vMinion; }
+	vector<shared_ptr<monster>> getMinion() { return _vMinion; }
 
 	//충돌처리 (미니언들의 총알, 플레이어)
 	//void collision(RECT player);

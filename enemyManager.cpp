@@ -26,10 +26,10 @@ void enemyManager::release()
 	//공용총알 클래스 삭제
 	_bullet->release();
 	SAFE_DELETE(_bullet);
-	for (int i = 0; i < _vMinion.size(); i++)
+	/*for (int i = 0; i < _vMinion.size(); i++)
 	{
 		SAFE_DELETE(_vMinion[i]);
-	}
+	}*/
 }
 
 void enemyManager::update()
@@ -87,28 +87,28 @@ void enemyManager::setMinion(tagTile* _subTile, POINT _monPt)
 		switch (_subTile[i].uKind)
 		{
 		case UNIT_KIND::KNIGHT:
-		{monster* _knight = new knight;
+		{shared_ptr<monster> _knight = make_shared<knight>();
 		_knight->init(tile, pos);
 		_vMinion.push_back(_knight); }
 			break;
 
 		case UNIT_KIND::MAGE:
-		{monster* _summoner = new summoner;
+		{shared_ptr<monster> _summoner = make_shared <summoner>();
 		_summoner->init(tile, pos);
 		_vMinion.push_back(_summoner); }
 			break;
 		case UNIT_KIND::GOLEM:
-		{monster* _golem = new golem;
+		{shared_ptr<monster> _golem = make_shared <golem>();
 		_golem->init(tile, pos);
 		_vMinion.push_back(_golem); }
 			break;
 		case UNIT_KIND::GHOUL:
-		{monster* _ghoul = new ghoul;
+		{shared_ptr<monster> _ghoul = make_shared <ghoul>();
 		_ghoul->init(tile, pos);
 		_vMinion.push_back(_ghoul); }
 			break;
 		case UNIT_KIND::GHOULLARGE:
-		{monster* _ghoulLarge = new ghoulLarge;
+		{shared_ptr<monster> _ghoulLarge = make_shared <ghoulLarge>();
 		_ghoulLarge->init(tile, pos);
 		_vMinion.push_back(_ghoulLarge); }
 			break;
