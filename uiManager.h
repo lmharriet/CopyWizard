@@ -18,6 +18,15 @@ struct tagSkillGaugeBlink
 	bool isActive;
 };
 
+struct tagButtonAnimation
+{
+	string keyName;
+	int frameX;
+	int delay;
+	POINT pos;
+	bool isActive;
+};
+
 class uiManager : public singletonBase<uiManager>
 {
 private:
@@ -30,10 +39,22 @@ private:
 	float skillGauge;
 
 	int blackOpacity;
+	int time;
+	//
+	tagButtonAnimation Fbutton;
+	tagButtonAnimation itemFbutton;
 public:
 	HRESULT init();
 
 	void update();
+
+	void FbuttonRender(HDC hdc);
+
+	void FbuttonRender2(HDC hdc, POINT pt);
+
+	void setActiveButton2(bool temp) { itemFbutton.isActive = temp; }
+
+	void setPoint(POINT pt);
 
 	void render(HDC hdc, int destX, int destY);
 
@@ -55,6 +76,7 @@ public:
 
 	tagSkill getSkillSlot(int index) { return skillSlot[index]; }
 
+	void setActiveButton(bool temp) { Fbutton.isActive = temp; }
 
 	//warp screen
 	void fadeIn();

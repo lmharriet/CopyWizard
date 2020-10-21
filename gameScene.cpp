@@ -219,7 +219,7 @@ void gameScene::render()
 
 	_shop->colRender();
 
-
+	UI->FbuttonRender(getMemDC());
 
 	UI->render(getMemDC(), 50, 50);
 	_player->invenRender();
@@ -818,6 +818,13 @@ void gameScene::warp()
 		_player->setIdleDelay(50);
 
 	}
+
+	if (isWarp == false && colCheck(_player->getRect(), PORTAL->getWarpScene()))
+	{
+		UI->setActiveButton(true);
+		UI->setPoint({ (LONG)PORTAL->getWarpSceneX(),(LONG)PORTAL->getWarpSceneY() });
+	}
+	else UI->setActiveButton(false);
 
 	if (isWarp == false && colCheck(_player->getRect(), PORTAL->getWarpScene())
 		&& INPUT->GetKeyDown('F'))
