@@ -27,7 +27,7 @@ void ghoulLarge::addInit()
 
 void ghoulLarge::update()
 {
-    if (isFindWayOn) //길찾기 on
+    if (isFindWayOn && !isIceState) //길찾기 on
     {
         if (!isATK)
         {
@@ -89,6 +89,12 @@ void ghoulLarge::update()
     }
 
 
+}
+
+void ghoulLarge::addRender()
+{
+    if (isIceState)
+        CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x+20, pos.y-30, 180);
 }
 
 void ghoulLarge::stateImageRender()

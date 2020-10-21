@@ -17,7 +17,7 @@ void knight::addInit()
 void knight::update()
 {
     rc = RectMake(pos.x-10, pos.y+50, img->getFrameWidth(), img->getFrameHeight());
-    if (isFindWayOn) //길찾기 on
+    if (isFindWayOn && !isIceState) //길찾기 on
     {
        RECT astarRC = RectMake(pos.x+10, pos.y+30, img->getFrameWidth(), img->getFrameHeight());
         astar->update(camRC, astarRC, playerRC, &angle);
@@ -70,6 +70,12 @@ void knight::update()
    
     
 
+}
+
+void knight::addRender()
+{
+    if (isIceState)
+        CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x, pos.y+30, 180);
 }
 
 

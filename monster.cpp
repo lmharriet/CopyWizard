@@ -450,16 +450,12 @@ void monster::render()
 {
 
 	addRender();
-	if (isIceState)
-		CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x, getCenterY()-img->getFrameHeight(),180);
+	
 	// astar->render(getMemDC());
 	 //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
 	 //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
 }
 
-void monster::addRender()
-{
-}
 
 void monster::setPt(float x, float y)
 {
