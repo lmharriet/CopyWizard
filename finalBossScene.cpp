@@ -171,7 +171,7 @@ void finalBossScene::attackSura()
 
 			// -> boss damaged
 
-		
+			_finalBoss->damage(damage, _player->getBlaze()->getBullet()[i].angle,0, isCri);
 			_player->getBlaze()->setCol(i, true);
 			
 			break;
@@ -195,7 +195,7 @@ void finalBossScene::attackSura()
 
 			//-> boss damaged
 
-
+			_finalBoss->damage(damage, _player->getMeteor()->getAngle(i), _player->getMeteor()->getSkillNum(), isCri);
 		}
 	}
 
@@ -219,7 +219,7 @@ void finalBossScene::attackSura()
 
 			//-> boss damaged
 
-
+			_finalBoss->damage(damage, 0, _player->getDashFire()->getSkillNum(), isCri);
 		}
 	}
 
@@ -261,7 +261,7 @@ void finalBossScene::attackSura()
 
 
 		//-> boss damaged
-
+		_finalBoss->damage(damage, _player->getInferno()->getInf().angle , _player->getInferno()->getSkillNum(), isCri);
 	}
 
 	//dragonArc
@@ -281,12 +281,12 @@ void finalBossScene::attackSura()
 
 				//bossDamage->
 
-
+				_finalBoss->damage(damage, _player->getDragon()->getDragonAngle(i), _player->getDragon()->getSkillNum(), isCri);
 			}
 		}
 
 	}
-
+	//upgrade dragon
 	for (int i = 0; i < _player->getDragon()->getcolSize(); i++)
 	{
 		if (colCheck(_player->getDragon()->getColRc(i), _finalBoss->getFinalBoss().rc))
@@ -301,7 +301,7 @@ void finalBossScene::attackSura()
 			//bossDamage ->
 
 
-			//_boss->damage(damage, _player->getDragon()->getHeadAngle(i), 10.f, 4, isCri);
+			_finalBoss->damage(damage, _player->getDragon()->getHeadAngle(i), _player->getDragon()->getSkillNum(), isCri);
 		}
 	}
 
@@ -322,9 +322,7 @@ void finalBossScene::attackSura()
 			}
 
 			//boss Damage->
-
-
-			//_boss->damage(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, isCri);
+			_finalBoss->damage(damage, _player->getSpear()->getSpearAngle(i), 5, isCri);
 
 			_player->getSpear()->setCol(i, true);
 		}
@@ -347,7 +345,7 @@ void finalBossScene::attackSura()
 			//->bossDamage
 
 
-			//_boss->damage(damage, _player->getSpear()->getUpgradeAngle(i), 10.f, 5, isCri);
+			_finalBoss->damage(damage, _player->getSpear()->getUpgradeAngle(i), 5, isCri);
 			_player->getSpear()->setUpgradeCol(i, true);
 		}
 

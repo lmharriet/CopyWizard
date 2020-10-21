@@ -1518,6 +1518,20 @@ void player::animation(int _index)
 					frameAnimation(atkIndex, 10, 1);
 				else if (arcana[3].skillName == "skill_dragonArc")
 					frameAnimation(atkIndex, 16, 1);
+
+
+				if (arcana[3].skillName == spear->getInfo().keyName)
+				{
+					if (spear->getGauging())
+						spearIndex = 0;
+					else if (!spear->getGauging() && count % 5 == 0 && spearIndex < 4)
+						spearIndex++;
+
+					CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerSpearFrame"), 
+						posX - 50, posY - 50, spearIndex, 3);
+				}
+
+
 			}
 			else if (move == MOVE::RIGHT)
 			{
@@ -1530,6 +1544,17 @@ void player::animation(int _index)
 					frameAnimation(atkIndex, 20, 1);
 				else if (arcana[3].skillName == "skill_dragonArc")
 					frameAnimation(atkIndex, 15, 1);
+
+				if (arcana[3].skillName == spear->getInfo().keyName)
+				{
+					if (spear->getGauging())
+						spearIndex = 0;
+					else if (!spear->getGauging() && count % 5 == 0 && spearIndex < 4)
+						spearIndex++;
+
+					CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerSpearFrame"),
+						posX - 50, posY - 50, spearIndex, 2);
+				}
 			}
 			else if (move == MOVE::UP || move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
 			{
@@ -1543,6 +1568,17 @@ void player::animation(int _index)
 				else if (arcana[3].skillName == "skill_dragonArc")
 					frameAnimation(atkIndex, 14, 1);
 
+				if (arcana[3].skillName == spear->getInfo().keyName)
+				{
+					if (spear->getGauging())
+						spearIndex = 0;
+					else if (!spear->getGauging() && count % 5 == 0 && spearIndex < 4)
+						spearIndex++;
+
+					CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerSpearFrame"),
+						posX - 50, posY - 50, spearIndex, 1);
+				}
+
 			}
 			else if (move == MOVE::DOWN || move == MOVE::LEFT_DOWN || move == MOVE::RIGHT_DOWN)
 			{
@@ -1555,22 +1591,25 @@ void player::animation(int _index)
 					frameAnimation(atkIndex, 10, 1);
 				else if (arcana[3].skillName == "skill_dragonArc")
 					frameAnimation(atkIndex, 6, 1);
+
+
+				if (arcana[3].skillName == spear->getInfo().keyName)
+				{
+					if (spear->getGauging())
+						spearIndex = 0;
+					else if (!spear->getGauging() && count % 5 == 0 && spearIndex < 4)
+						spearIndex++;
+
+					CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerSpearFrame"),
+						posX - 50, posY - 50, spearIndex, 0);
+				}
+
 			}
 			break;
 		} //end of switch
 	}
 
-	//if (arcana[3].skillName == spear->getInfo().keyName)
-	//{
-	//	if (spear->getGauging())
-	//		spearIndex = 0;
-	//	else if (!spear->getGauging() && count % 5 == 0 && spearIndex < 4)
-	//		spearIndex++;
-
-
-
-	//	//CAMERAMANAGER->FrameRender(getMemDC(),IMAGEMANAGER->findImage("playerSpearFrame"),posX-50,posY-50,spearIndex
-	//}
+	
 
 
 

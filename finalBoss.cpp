@@ -67,6 +67,8 @@ void finalBoss::update()
 	this->die();
 	this->colCheck();
 	BOSSMANAGER->update();
+
+	damageCul();
 }
 
 void finalBoss::render()
@@ -390,7 +392,7 @@ void finalBoss::dashPattern()
 		boss.bossState = FINALBOSSIDLE;
 		dashCount--;
 	}
-	
+
 }
 
 void finalBoss::dashColPlayer()
@@ -748,3 +750,75 @@ void finalBoss::finalBossHpInfo(HDC hdc, int destX, int destY)
 	img->render(hdc, destX + 48, destY + 20, 0, 0, hpBar, img->getHeight());
 }
 
+bool finalBoss::damageCheck(int skillNum)
+{
+
+	for (int i = 0; i < vDamage.size(); i++)
+	{
+		if (vDamage[i].skillNum == skillNum)return false;
+	}
+
+	tagDamageType damage;
+	damage.skillNum = skillNum;
+	damage.currentTime = 0;
+	switch (damage.skillNum)
+	{
+	case 0:
+		damage.endTime = 2;
+		break;
+	case 1:
+		damage.endTime = 10;
+		break;
+	case 2:
+		damage.endTime = 15;
+		break;
+	case 3:
+		damage.endTime = 20;
+		break;
+	case 4:
+		damage.endTime = 7;
+		break;
+	case 5:
+		damage.endTime = 15;
+		break;
+	}
+	vDamage.push_back(damage);
+
+	return true;
+}
+
+void finalBoss::damage(int damage, float _hitAngle, int skillNum, bool isCritical = false)
+{
+	if (damageCheck(skillNum) == false)return;
+
+	image* img = IMAGEMANAGER->findImage("finalboss");
+	POINT pt = { boss.center.x - img->getFrameWidth() / 2,boss.center.y - img->getFrameHeight() / 2 };
+
+	EFFECT->damageEffect(pt);
+
+	boss.bossHp -= damage;
+
+	if (cos(_hitAngle) * 2.f > 0)
+		DAMAGE->generator(pt, "numbers", damage, false, isCritical);
+	else
+		DAMAGE->generator(pt, "numbers", damage, true, isCritical);
+
+}
+
+void finalBoss::damageCul()
+{
+	for (int i = 0; i < vDamage.size(); )
+	{
+		//삭제 확인
+		if (vDamage[i].currentTime == vDamage[i].endTime)
+		{
+			vDamage.erase(vDamage.begin() + i);
+		}
+		else
+		{
+			vDamage[i].currentTime++;
+			i++;
+		}
+
+	}
+}
