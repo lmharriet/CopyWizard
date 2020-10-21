@@ -398,6 +398,7 @@ void shop::colRender()
 {
     //HFONT myFont = CreateFont(25, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "font/MunroSmall.ttf");
     //HFONT oldFont = (HFONT)SelectObject(getMemDC(), myFont);
+    bool isRender = false;
 
     image* back = IMAGEMANAGER->findImage("itemBackBoardFrame");
     RECT rt;
@@ -425,7 +426,11 @@ void shop::colRender()
                 frameX, 0, 130);
             //==========================================================
 
-            //SetTextColor(getMemDC(), RGB(255, 255, 255));
+            isRender = true;
+            UI->setActiveButton2(true);
+            UI->FbuttonRender2(getMemDC(),
+                { AndresShop[j].pt.x + 20,
+                AndresShop[j].pt.y + 13});
 
             TextOut(getMemDC(), CAMERAMANAGER->GetRelativeX(AndresShop[j].pt.x) - 30,
                  CAMERAMANAGER->GetRelativeY(AndresShop[j].pt.y) - 70,
@@ -459,6 +464,12 @@ void shop::colRender()
                 frameX, 0, 130);
             //==========================================================
 
+            isRender = true;
+            UI->setActiveButton2(true);
+            UI->FbuttonRender2(getMemDC(),
+                { NoxShop[j].pt.x + 20,
+                NoxShop[j].pt.y - 26 });
+
             //SetTextColor(getMemDC(), RGB(255, 255, 255));
 
             TextOut(getMemDC(), CAMERAMANAGER->GetRelativeX(NoxShop[j].pt.x) - 30,
@@ -470,6 +481,8 @@ void shop::colRender()
             DrawText(getMemDC(), ch, -1, &rt, DT_CENTER | DT_WORDBREAK);
         }
     }
+
+    if (isRender == false)UI->setActiveButton2(false);
 
     //SelectObject(getMemDC(), oldFont);
     //DeleteObject(myFont);

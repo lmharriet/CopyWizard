@@ -38,6 +38,8 @@ HRESULT uiManager::init()
 
 	IMAGEMANAGER->addImage("blackWindow", "Images/ui/blackWindow.bmp", WINSIZEX, WINSIZEY);
 
+	IMAGEMANAGER->addFrameImage("Fbutton", "Images/ui/Fbutton.bmp", 170, 36, 5, 1);
+
 	for (int i = 0; i < SKILLSLOT_MAX; i++)
 	{
 		skillSlot[i].keyName = "nonSkill";
@@ -59,6 +61,18 @@ HRESULT uiManager::init()
 	hp = 0;
 
 	blackOpacity = 0;
+
+	//
+
+	Fbutton.keyName = "Fbutton";
+	Fbutton.delay = 4;
+	Fbutton.frameX = 0;
+	Fbutton.isActive = false;
+
+	itemFbutton.keyName = "Fbutton";
+	itemFbutton.delay = 4;
+	itemFbutton.frameX = 0;
+	itemFbutton.isActive = false;
 	return S_OK;
 }
 
@@ -110,6 +124,51 @@ void uiManager::update()
 			if (gaugeBlink.opacity == 0)gaugeBlink.isUp = true;
 		}
 	}
+	
+	time++;
+
+	if (Fbutton.isActive)
+	{
+		if (time % Fbutton.delay == 0)
+		{
+			if (Fbutton.frameX < 3) Fbutton.frameX++;
+		}
+	}
+	else Fbutton.frameX = 0;
+
+	if (itemFbutton.isActive)
+	{
+		if (time % itemFbutton.delay == 0)
+		{
+			if (itemFbutton.frameX < 3) itemFbutton.frameX++;
+		}
+	}
+	else itemFbutton.frameX = 0;
+}
+
+void uiManager::FbuttonRender(HDC hdc)
+{
+	if (Fbutton.isActive == false)return;
+
+	CAMERAMANAGER->FrameRender(hdc, IMAGEMANAGER->findImage(Fbutton.keyName),
+		Fbutton.pos.x - (IMAGEMANAGER->findImage(Fbutton.keyName)->getFrameWidth() >> 1),
+		Fbutton.pos.y - (IMAGEMANAGER->findImage(Fbutton.keyName)->getFrameHeight() >> 1) - 100,
+		Fbutton.frameX, 0);
+}
+
+void uiManager::FbuttonRender2(HDC hdc, POINT pt)
+{
+	if (itemFbutton.isActive == false)return;
+
+	CAMERAMANAGER->FrameRender(hdc, IMAGEMANAGER->findImage("Fbutton"),
+		pt.x - (IMAGEMANAGER->findImage("Fbutton")->getFrameWidth() >> 1),
+		pt.y - (IMAGEMANAGER->findImage("Fbutton")->getFrameHeight() >> 1) - 100,
+		itemFbutton.frameX, 0);
+}
+
+void uiManager::setPoint(POINT pt)
+{
+	Fbutton.pos = pt;
 }
 
 void uiManager::render(HDC hdc, int destX, int destY)
