@@ -196,6 +196,8 @@ void bossScene::render()
 
 	EFFECT->pRender(getMemDC());
 
+	DROP->cardRender(getMemDC());
+
 	if(warpDelay == 0) _player->render(1);
 	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	//UNITRENDER->render(getMemDC());

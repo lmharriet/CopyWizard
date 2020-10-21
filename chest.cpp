@@ -21,7 +21,24 @@ HRESULT chest::init(string _keyName, POINT _pos, int _hp)
 
 	string tmp[2][3] = { { "iceSpearSkill","skill_iceSpear","360" },{"dragonSkill","skill_dragonArc","300"} };
 
-	int ran = RANDOM->range(0, 1);
+	int ran = -1;
+
+	for (int i = 0; i < 6; i++)
+	{
+		if (PLAYERDATA->getAracaInfo()[i].skillName == tmp[0][1])
+		{
+			ran = 1;
+			break;
+		}
+
+		if (PLAYERDATA->getAracaInfo()[i].skillName == tmp[1][1])
+		{
+			ran = 0;
+			break;
+		}
+	}
+
+	if(ran == -1) ran = RANDOM->range(0, 1);
 
 	switch (ran)
 	{
@@ -107,7 +124,7 @@ void chest::bossScene_update()
 					POINT rePos = { pos.x - 30, pos.y - 30 };
 					//아이템, 동전 생성
 					DROP->dropPoint(rePos, 80, 120, 0, { -100,100 }, { -80,80 });
-					//DROP->dropPointArcana(arcanaKeyName, rePos, arcanaName, arcanaCoolTime);
+					DROP->dropPointArcana(arcanaKeyName, rePos, arcanaName, arcanaCoolTime);
 
 					//포탈 생성
 					PORTAL->initWarp(746, 543);
