@@ -92,6 +92,7 @@ void gameScene::release()
 
 void gameScene::update()
 {
+	enemyCheckCol();
 	//portal
 	warp();
 
@@ -227,15 +228,35 @@ void gameScene::render()
 
 }
 
+void gameScene::enemyCheckCol()
+{
+	camInEnemy.clear();
+	camInEnemy.shrink_to_fit();
+
+	int size = enemy->getMinion().size();
+	for (int i = 0; i < size; i++)
+	{
+		if (colCheck(cam, enemy->getMinion()[i]->getRC()))
+		{
+			camInEnemy.push_back(i);
+		}
+	}
+}
+
 void gameScene::playerAttack()
 {
+	int sizeA = _player->getBlaze()->getBullet().size();
+	int sizeB = camInEnemy.size();
+	int num = 0;
 	//blaze
-	for (int i = 0; i < _player->getBlaze()->getBullet().size(); i++)
+	for (int i = 0; i < sizeA; i++)
 	{
-		for (int j = 0; j < enemy->getMinion().size(); j++)
+		for (int j = 0; j < sizeB; j++)
 		{
-			if (0 >= enemy->getMinion()[j]->getHp())continue;
-			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[j]->getRC()))
+			num = camInEnemy[j];
+
+			if (0 >= enemy->getMinion()[num]->getHp())continue;
+			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[num]->getRC()))
 			{
 				bool criCheck = PLAYERDATA->criAppear();
 
@@ -251,7 +272,7 @@ void gameScene::playerAttack()
 				SOUNDMANAGER->play("blazeExp", false);
 				PARTICLE->explosionGenerate("explosionParticle", _player->getBlaze()->getBullet()[i].x + 20,
 					_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
-				enemy->getMinion()[j]->hit(damage, _player->getBlaze()->getBullet()[i].angle, 20.f, 0, criCheck);
+				enemy->getMinion()[num]->hit(damage, _player->getBlaze()->getBullet()[i].angle, 20.f, 0, criCheck);
 
 				_player->getBlaze()->setCol(i, true);
 
@@ -261,12 +282,15 @@ void gameScene::playerAttack()
 	}//end of for
 
 	//meteor
-	for (int i = 0; i < _player->getMeteor()->getColSize(); i++)
+	sizeA = _player->getMeteor()->getColSize();
+	for (int i = 0; i < sizeA; i++)
 	{
-		for (int j = 0; j < enemy->getMinion().size(); j++)
+		for (int j = 0; j < sizeB; j++)
 		{
-			if (0 >= enemy->getMinion()[j]->getHp())continue;
-			if (colCheck(_player->getMeteor()->getColRect(i), enemy->getMinion()[j]->getRC()))
+			num = camInEnemy[j];
+
+			if (0 >= enemy->getMinion()[num]->getHp())continue;
+			if (colCheck(_player->getMeteor()->getColRect(i), enemy->getMinion()[num]->getRC()))
 			{
 				//크리티컬?
 				bool criCheck = PLAYERDATA->criAppear();
@@ -280,7 +304,7 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(damage, _player->getMeteor()->getSkillNum());
 				}
 
-				enemy->getMinion()[j]->hit(damage, _player->getMeteor()->getAngle(i),
+				enemy->getMinion()[num]->hit(damage, _player->getMeteor()->getAngle(i),
 					30.f, _player->getMeteor()->getSkillNum(), criCheck);
 
 				break;
@@ -289,12 +313,15 @@ void gameScene::playerAttack()
 	}//end of for
 
 	//rush
-	for (int i = 0; i < _player->getDashFire()->getSize(); i++)
+	sizeA = _player->getDashFire()->getSize();
+	for (int i = 0; i < sizeA; i++)
 	{
-		for (int j = 0; j < enemy->getMinion().size(); j++)
+		for (int j = 0; j < sizeB; j++)
 		{
-			if (0 >= enemy->getMinion()[j]->getHp())continue;
-			if (colCheck(_player->getDashFire()->getRect(i), enemy->getMinion()[j]->getRC()))
+			int num = camInEnemy[j];
+
+			if (0 >= enemy->getMinion()[num]->getHp())continue;
+			if (colCheck(_player->getDashFire()->getRect(i), enemy->getMinion()[num]->getRC()))
 			{
 				bool criCheck = PLAYERDATA->criAppear();
 
@@ -306,23 +333,25 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(damage, _player->getDashFire()->getSkillNum());
 				}
 
-				enemy->getMinion()[j]->hit(damage, 70.f, 20.f, _player->getDashFire()->getSkillNum(), criCheck);
+				enemy->getMinion()[num]->hit(damage, 70.f, 20.f, _player->getDashFire()->getSkillNum(), criCheck);
 			}
 		}
 	}//end of for
 
 
 	//inferno
-	for (int i = 0; i < enemy->getMinion().size(); i++)
+	for (int i = 0; i < sizeB; i++)
 	{
-		long enemyX = enemy->getMinion()[i]->getPos().x;
-		long enemyY = enemy->getMinion()[i]->getPos().y;
+		num = camInEnemy[i];
 
-		if (0 >= enemy->getMinion()[i]->getHp())continue;
-		if (colCheck(_player->getInferno()->getInf().rc, enemy->getMinion()[i]->getRC()))
+		long enemyX = enemy->getMinion()[num]->getPos().x;
+		long enemyY = enemy->getMinion()[num]->getPos().y;
+
+		if (0 >= enemy->getMinion()[num]->getHp())continue;
+		if (colCheck(_player->getInferno()->getInf().rc, enemy->getMinion()[num]->getRC()))
 		{
 			//게이징 + 무브 상태가 아닐 때 inferno와 몬스터 충돌 체크
-			if (!_player->getInferno()->getActive() && _player->getInferno()->CheckCollision(enemy->getMinion()[i]->getRC()))
+			if (!_player->getInferno()->getActive() && _player->getInferno()->CheckCollision(enemy->getMinion()[num]->getRC()))
 			{
 				//충돌되면 그 자리에서 공격
 				if (PLAYERDATA->getGaugeTime() < 50)
@@ -345,7 +374,7 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(damage, 3);
 				}
 
-				if (enemy->getMinion()[i]->getMonsterKind() != MONSTERKIND::GOLEM && enemy->getMinion()[i]->getMonsterKind() != MONSTERKIND::GHOULLARGE)
+				if (enemy->getMinion()[num]->getMonsterKind() != MONSTERKIND::GOLEM && enemy->getMinion()[num]->getMonsterKind() != MONSTERKIND::GHOULLARGE)
 				{
 					float angle = getAngle(enemyX + 40, enemyY + 40,
 						_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
@@ -353,9 +382,9 @@ void gameScene::playerAttack()
 					float x = enemyX + cosf(angle) * 4.5f;
 					float y = enemyY - sinf(angle) * 4.5f;
 
-					enemy->getMinion()[i]->setPt(x, y);
+					enemy->getMinion()[num]->setPt(x, y);
 				}
-				enemy->getMinion()[i]->hit(damage, 0, 0.f, 3, criCheck);
+				enemy->getMinion()[num]->hit(damage, 0, 0.f, 3, criCheck);
 			}
 		}
 	}//end of for
@@ -363,11 +392,14 @@ void gameScene::playerAttack()
 	//dragonArc
 	if (!_player->getDragon()->getUpgrade())
 	{
-		for (int i = 0; i < _player->getDragon()->getSize(); i++)
+		sizeA = _player->getDragon()->getSize();
+		for (int i = 0; i < sizeA; i++)
 		{
-			for (int j = 0; j < enemy->getMinion().size(); j++)
+			for (int j = 0; j < sizeB; j++)
 			{
-				if (colCheck(_player->getDragon()->getDragonRC(i), enemy->getMinion()[j]->getRC()))
+				num = camInEnemy[j];
+
+				if (colCheck(_player->getDragon()->getDragonRC(i), enemy->getMinion()[num]->getRC()))
 				{
 					bool criCheck = PLAYERDATA->criAppear();
 
@@ -378,18 +410,21 @@ void gameScene::playerAttack()
 					{
 						_player->chargeSkillGauge(damage, 4);
 					}
-					enemy->getMinion()[j]->hit(damage, _player->getDragon()->getDragonAngle(i), 10.f, 4, criCheck);
+					enemy->getMinion()[num]->hit(damage, _player->getDragon()->getDragonAngle(i), 10.f, 4, criCheck);
 				}
 			}
 		}
 	}
 
 	//upgrade
-	for (int i = 0; i < _player->getDragon()->getcolSize(); i++)
+	sizeA = _player->getDragon()->getcolSize();
+	for (int i = 0; i < sizeA; i++)
 	{
-		for (int j = 0; j < enemy->getMinion().size(); j++)
+		for (int j = 0; j < sizeB; j++)
 		{
-			if (colCheck(_player->getDragon()->getColRc(i), enemy->getMinion()[j]->getRC()))
+			num = camInEnemy[j];
+
+			if (colCheck(_player->getDragon()->getColRc(i), enemy->getMinion()[num]->getRC()))
 			{
 				bool criCheck = PLAYERDATA->criAppear();
 
@@ -400,18 +435,21 @@ void gameScene::playerAttack()
 				{
 					_player->chargeSkillGauge(damage, 4);
 				}
-				enemy->getMinion()[j]->hit(damage, _player->getDragon()->getHeadAngle(i), 10.f, 4, criCheck);
+				enemy->getMinion()[num]->hit(damage, _player->getDragon()->getHeadAngle(i), 10.f, 4, criCheck);
 			}
 
 		}
 	}
 
 	//ice Spear
-	for (int i = 0; i < _player->getSpear()->getSize(); i++)
+	sizeA = _player->getSpear()->getSize();
+	for (int i = 0; i < sizeA; i++)
 	{
-		for (int j = 0; j < enemy->getMinion().size(); j++)
+		for (int j = 0; j < sizeB; j++)
 		{
-			if (colCheck(_player->getSpear()->getSpearRc(i), enemy->getMinion()[j]->getRC()))
+			num = camInEnemy[j];
+
+			if (colCheck(_player->getSpear()->getSpearRc(i), enemy->getMinion()[num]->getRC()))
 			{
 				//enemy->getMinion()[j]->setPt(_player->getSpear()->getSpearRc(i).left, _player->getSpear()->getSpearRc(i).top);
 
@@ -423,7 +461,7 @@ void gameScene::playerAttack()
 				{
 					_player->chargeSkillGauge(damage, 5);
 				}
-				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, criCheck, true);
+				enemy->getMinion()[num]->hit(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, criCheck, true);
 
 				_player->getSpear()->setCol(i, true);
 			}
@@ -431,11 +469,14 @@ void gameScene::playerAttack()
 	}
 
 	//upgrade
-	for (int i = 0; i < _player->getSpear()->getUpgradeSize(); i++)
+	sizeA = _player->getSpear()->getUpgradeSize();
+	for (int i = 0; i < sizeA; i++)
 	{
-		for (int j = 0; j < enemy->getMinion().size(); j++)
+		for (int j = 0; j < sizeB; j++)
 		{
-			if (colCheck(_player->getSpear()->getUpgradeRC(i), enemy->getMinion()[j]->getRC()))
+			num = camInEnemy[j];
+
+			if (colCheck(_player->getSpear()->getUpgradeRC(i), enemy->getMinion()[num]->getRC()))
 			{
 				bool criCheck = PLAYERDATA->criAppear();
 
@@ -445,7 +486,7 @@ void gameScene::playerAttack()
 				{
 					_player->chargeSkillGauge(damage, 5);
 				}
-				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 30.f, 5, criCheck, true);
+				enemy->getMinion()[num]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 30.f, 5, criCheck, true);
 
 				_player->getSpear()->setUpgradeCol(i, true);
 			}

@@ -9,7 +9,7 @@ HRESULT particleManager::init()
 		vTemp.push_back(new tagParticlePoint);
 	}
 
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < 500; i++)
 	{
 		vTempParticle.push_back(new tagParticle);
 	}
@@ -24,7 +24,7 @@ HRESULT particleManager::init()
 	
 	IMAGEMANAGER->addFrameImage("stoneX2", "Images/particle/stoneX2.bmp", 34, 122, 1, 4);
 	IMAGEMANAGER->addFrameImage("smokeX2", "Images/particle/smokeParticle.bmp", 480, 320, 6, 4);
-	IMAGEMANAGER->addFrameImage("smokeX4", "Images/particle/smokeParticle.bmp", 480/2, 320/2, 6, 4);
+	IMAGEMANAGER->addFrameImage("smokeX4", "Images/particle/smokeParticle.bmp", 480 >> 1, 320 >> 1, 6, 4);
 
 	return S_OK;
 }
@@ -44,8 +44,6 @@ tagParticle* particleManager::getTempParticle()
 		vTempParticle.erase(vTempParticle.begin());
 	}
 
-	//cout << vTempParticle.size() << '\n';
-
 	return particle;
 }
 
@@ -63,22 +61,17 @@ tagParticlePoint* particleManager::getTempPoint()
 		vTemp.erase(vTemp.begin());
 	}
 
-	//cout << vTemp.size() << '\n';
-
 	return point;
 }
 
 void particleManager::returnPoint(tagParticlePoint* particle)
 {
 	vTemp.push_back(particle);
-	//cout << vTemp.size() << '\n';
 }
 
 void particleManager::returnParticle(tagParticle* particle)
 {
 	vTempParticle.push_back(particle);
-
-	//cout << vTempParticle.size() << '\n';
 }
 
 void particleManager::render(HDC hdc)
@@ -87,7 +80,8 @@ void particleManager::render(HDC hdc)
 
 	image* img = nullptr;
 
-	for (int i = 0; i < vParticle.size();)
+	int size = vParticle.size();
+	for (int i = 0; i < size;)
 	{
 		img = IMAGEMANAGER->findImage(vParticle[i]->keyName);
 
@@ -141,14 +135,12 @@ void particleManager::render(HDC hdc)
 			RECT rc1 = RectMakeCenter(vParticle[i]->x, vParticle[i]->y, 10, 10);
 			RECT rc2 = RectMakeCenter(vParticle[i]->endX, vParticle[i]->endY, 30, 30);
 
-			//CAMERAMANAGER->Rectangle(hdc, rc1);
-			//CAMERAMANAGER->Rectangle(hdc, rc2);
-
 			if (colCheck(rc1, rc2) || vParticle[i]->time > 50)
 			{
 				returnParticle(vParticle[i]);
 
 				vParticle.erase(vParticle.begin() + i);
+				size = vParticle.size();
 			}
 			else i++;
 		}
@@ -169,6 +161,7 @@ void particleManager::render(HDC hdc)
 				returnParticle(vParticle[i]);
 
 				vParticle.erase(vParticle.begin() + i);
+				size = vParticle.size();
 			}
 			else i++;
 		}
@@ -183,6 +176,7 @@ void particleManager::render(HDC hdc)
 					returnParticle(vParticle[i]);
 
 					vParticle.erase(vParticle.begin() + i);
+					size = vParticle.size();
 				}
 				else i++;
 
@@ -196,6 +190,7 @@ void particleManager::render(HDC hdc)
 					returnParticle(vParticle[i]);
 
 					vParticle.erase(vParticle.begin() + i);
+					size = vParticle.size();
 				}
 				else i++;
 
@@ -281,7 +276,8 @@ void particleManager::pointActive()
 	if (vParticlePoint.empty())return;
 
 	float* arr;
-	for (int i = 0; i < vParticlePoint.size();)
+	int size = vParticlePoint.size();
+	for (int i = 0; i < size;)
 	{
 		arr = new float[vParticlePoint[i]->maxAngle];
 
@@ -311,6 +307,7 @@ void particleManager::pointActive()
 			returnPoint(vParticlePoint[i]);
 
 			vParticlePoint.erase(vParticlePoint.begin() + i);
+			size = vParticlePoint.size();
 		}
 		else i++;
 	}
@@ -320,7 +317,8 @@ void particleManager::explosionActive()
 {
 	if (vExplosion.empty())return;
 
-	for (int i = 0; i < vExplosion.size(); i++)
+	int size = vExplosion.size();
+	for (int i = 0; i < size; i++)
 	{
 		if (vExplosion[i]->lifeTime > 0)
 		{
@@ -355,6 +353,7 @@ void particleManager::explosionActive()
 				returnPoint(vExplosion[i]);
 
 				vExplosion.erase(vExplosion.begin() + i);
+				size = vExplosion.size();
 			}
 
 			else
@@ -369,6 +368,7 @@ void particleManager::explosionActive()
 			returnPoint(vExplosion[i]);
 
 			vExplosion.erase(vExplosion.begin() + i);
+			size = vExplosion.size();
 			i--;
 		}
 	}

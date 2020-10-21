@@ -17,6 +17,7 @@ public:
 
 private:
 	shared_ptr<enemyManager> enemy;
+	vector<int> camInEnemy;
 	
 	player* _player;			//플레이어 클래스
 	
@@ -47,6 +48,8 @@ public:
 	void release();
 	void update();
 	void render();
+
+	void enemyCheckCol();
 
 	void playerAttack();
 	void enemyAttack();
