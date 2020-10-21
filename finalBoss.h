@@ -7,7 +7,9 @@ enum FINALBOSSSTATE
 	FINALBOSSSPONE,
 	FINALBOSSIDLE,
 	FINALBOSSDASH,
-	FINALBOSSSKILL
+	FINALBOSSSKILL,
+	FINALBOSSDAMAGED,
+	FINALBOSSDIE
 };
 enum BOSSSKILLKIND
 {
@@ -100,7 +102,13 @@ public:
 	void thunder();
 	void wind();
 	void ice();
+	void die();
+	void colCheck();
 
 	void finalBossHpInfo(HDC hdc, int destX, int destY);
+
+	tagFinaleBoss getFinalBoss() {
+		return boss;
+	}
 };
 

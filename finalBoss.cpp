@@ -60,6 +60,7 @@ void finalBoss::update()
 	this->animation();
 	this->dashColPlayer();
 	this->useSkill();
+	this->die();
 	BOSSMANAGER->update();
 }
 
@@ -269,6 +270,32 @@ void finalBoss::animation()
 			break;
 		}
 		break;
+	case FINALBOSSDAMAGED:
+		frameY = 7;
+		count++;
+		if (count % 5 == 0) {
+			frameX++;
+			if (frameX > 2) {
+				frameX = 2;
+				timer++;
+				if (timer > 5) {
+					timer = 0;
+					count = 0;
+					boss.bossState = FINALBOSSIDLE;
+				}
+			}
+		}
+		break;
+	case FINALBOSSDIE:
+		frameY = 7;
+		count++;
+		if (count % 10 == 0) {
+			frameX++;
+			if (frameX > 10) {
+				frameX = 10;
+			}
+		}
+		break;
 	}
 }
 
@@ -329,8 +356,8 @@ void finalBoss::dashPattern()
 	this->updateDashRect();
 
 	if (boss.bossState == FINALBOSSDASH) {
-		boss.center.x += cosf(dashAngle) * 12;
-		boss.center.y += -sinf(dashAngle) * 12;
+		boss.center.x += cosf(dashAngle) * 20;
+		boss.center.y += -sinf(dashAngle) * 20;
 		boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 100, 100);
 		EFFECT->AfterimageEft("finalboss", boss.center, { frameX, frameY }, 2);
 	}
@@ -591,6 +618,28 @@ void finalBoss::ice()
 				iceBlock[i]->center.x += cosf(boss.angle) * 40;
 				iceBlock[i]->center.y += -sinf(boss.angle) * 40;
 				iceBlock[i]->rc = RectMakeCenter(iceBlock[i]->center.x, iceBlock[i]->center.y, 96, 96);
+			}
+		}
+	}
+}
+
+void finalBoss::die()
+{
+	if (boss.bossHp <= 0) {
+		boss.bossHp = 0;
+		boss.bossState = FINALBOSSDIE;
+	}
+}
+
+void finalBoss::colCheck()
+{
+	RECT temp;
+	for (int i = 0; i < BOSSMANAGER->getVector().size(); i++) {
+		if (IntersectRect(&temp, &_player->getRect(), &BOSSMANAGER->getVector()[i]->getRect())) {
+			switch (skillNum)
+			{
+			default:
+				break;
 			}
 		}
 	}
