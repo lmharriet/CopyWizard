@@ -103,7 +103,9 @@ void bossScene::update()
 
 	if (INPUT->GetKeyDown('J'))
 	{
-		SCENEMANAGER->loadScene("시작화면");
+		SOUNDMANAGER->stop("bossBGM");
+		PLAYERDATA->setCurrentStage(STAGEKIND::FINALSTAGE);
+		SCENEMANAGER->loadScene("로딩화면");
 	}
 }
 
