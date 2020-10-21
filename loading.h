@@ -63,8 +63,8 @@ class loading : public gameNode
 {
 private:
 	//로드아이템 클래스를 담을 벡터 및 반복자
-	typedef vector<loadItem*> vLoadItem;
-	typedef vector<loadItem*>::iterator viLoadItem;
+	typedef vector<shared_ptr<loadItem>> vLoadItem;
+	typedef vector<shared_ptr<loadItem>>::iterator viLoadItem;
 
 private:
 	vLoadItem _vLoadItem;
@@ -73,7 +73,7 @@ private:
 	image* _background;
 	image* _char;
 	image* _enemy;
-	progressBar* _loadingBar;
+	unique_ptr<progressBar> _loadingBar;
 	int _currentGauge;
 	int _currentFrameX;
 	int _currentEnemyFrameX;

@@ -115,9 +115,9 @@ HRESULT loading::init()
 
 	//플레이어 이미지 초기화
 	_char = IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
-	_enemy = IMAGEMANAGER->addFrameImage("enemyFrame", "resource/enemy/loading.bmp",  1233, 202,5, 1 );
+	_enemy = IMAGEMANAGER->addFrameImage("enemyFrame", "resource/UI/loading.bmp",  1233, 202,5, 1 );
 	//로딩바 클래스 초기화
-	_loadingBar = new progressBar;
+	_loadingBar = make_unique<progressBar>();
 	_loadingBar->init("loadingBarFront", "loadingBarBack");
 	//로딩바 위치 초기화
 	_loadingBar->setPos(0, 500);
@@ -136,7 +136,7 @@ HRESULT loading::init()
 void loading::release()
 {
 	//로딩바 해제
-	SAFE_DELETE(_loadingBar);
+	//SAFE_DELETE(_loadingBar);
 }
 
 void loading::update()
@@ -162,44 +162,44 @@ void loading::render()
 
 void loading::loadImage(string strKey, int width, int height)
 {
-	loadItem* item = new loadItem;
+	shared_ptr<loadItem> item = make_shared<loadItem>();
 	item->init(strKey, width, height);
-	_vLoadItem.push_back(item);
+	_vLoadItem.push_back(move(item));
 }
 
 void loading::loadImage(string strKey, const char * fileName, int width, int height, bool isTrans, COLORREF transColor)
 {
-	loadItem* item = new loadItem;
+	shared_ptr<loadItem> item = make_shared<loadItem>();
 	item->init(strKey, fileName, width, height, isTrans, transColor);
-	_vLoadItem.push_back(item);
+	_vLoadItem.push_back(move(item));
 }
 
 void loading::loadImage(string strKey, const char * fileName, float x, float y, int width, int height, bool isTrans, COLORREF transColor)
 {
-	loadItem* item = new loadItem;
+	shared_ptr<loadItem> item = make_shared<loadItem>();
 	item->init(strKey, fileName, x, y, width, height, isTrans, transColor);
-	_vLoadItem.push_back(item);
+	_vLoadItem.push_back(move(item));
 }
 
 void loading::loadFrameImage(string strKey, const char * fileName, int width, int height, int frameX, int frameY, bool isTrans, COLORREF transColor)
 {
-	loadItem* item = new loadItem;
+	shared_ptr<loadItem> item = make_shared<loadItem>();
 	item->init(strKey, fileName, width, height, frameX, frameY, isTrans, transColor);
-	_vLoadItem.push_back(item);
+	_vLoadItem.push_back(move(item));
 }
 
 void loading::loadFrameImage(string strKey, const char * fileName, float x, float y, int width, int height, int frameX, int frameY, bool isTrans, COLORREF transColor)
 {
-	loadItem* item = new loadItem;
+	shared_ptr<loadItem> item = make_shared<loadItem>();
 	item->init(strKey, fileName, width, x, y, height, frameX, frameY, isTrans, transColor);
-	_vLoadItem.push_back(item);
+	_vLoadItem.push_back(move(item));
 }
 
 void loading::loadSound(string strKey, const char* fileName, bool isBGM)
 {
-	loadItem* item = new loadItem;
+	shared_ptr<loadItem> item = make_shared<loadItem>();
 	item->init(strKey, fileName, isBGM);
-	_vLoadItem.push_back(item);
+	_vLoadItem.push_back(move(item));
 }
 
 bool loading::loadingDone()
@@ -210,7 +210,7 @@ bool loading::loadingDone()
 		return true;
 	}
 
-	loadItem* item = _vLoadItem[_currentGauge];
+	shared_ptr<loadItem> item = move(_vLoadItem[_currentGauge]);
 	switch (item->getLoadKind())
 	{
 		case LOAD_KIND_IMAGE_0:
