@@ -25,5 +25,6 @@ public:
 	void update();
 	void render();
 	void bossCutScene();
+	void attackSura();
 };
 

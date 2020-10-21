@@ -51,6 +51,8 @@ public:
 
 	void enemyCheckCol();
 
+	void checkEnemDie();
+
 	void playerAttack();
 	void enemyAttack();
 	void enemyUnitRenderInit();

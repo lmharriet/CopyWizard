@@ -203,8 +203,6 @@ void bossScene::attackBoss()
 			PARTICLE->explosionGenerate("explosionParticle", _player->getBlaze()->getBullet()[i].x + 20,
 				_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
 
-			// -> boss damaged
-			//_boss->setBossHp(10);
 			_boss->damage(damage, 0, 0, 0, isCri);
 
 			if (!_boss->getBossAtack()) {
@@ -230,10 +228,11 @@ void bossScene::attackBoss()
 				_player->chargeSkillGauge(damage, 1);
 			}
 
-			//-> boss damaged
-			//_boss->setBossHp(10);
-
 			_boss->damage(damage, 0, 0, _player->getMeteor()->getSkillNum(), isCri);
+
+			if (!_boss->getBossAtack()) {
+				_boss->setBossHit(true);
+			}
 		}
 	}
 
@@ -256,9 +255,11 @@ void bossScene::attackBoss()
 			}
 
 
-			//-> boss damaged
-			//_boss->setBossHp(10);
 			_boss->damage(damage, 0, 0, _player->getDashFire()->getSkillNum(), isCri);
+
+			if (!_boss->getBossAtack()) {
+				_boss->setBossHit(true);
+			}
 		}
 	}
 
@@ -297,11 +298,9 @@ void bossScene::attackBoss()
 		// set boss center x,y (inferno 공격 당하면 inferno쪽으로 끌려오기)
 		_boss->setCenter({ (long)x, (long)y });
 		_boss->setRect((int)x, (int)y);
-		//-> boss damaged
-		//_boss->setBossHp(10);
+		
 
 		_boss->damage(damage, 0, 0, 3, isCri);
-		//DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", damage);
 
 		if (!_boss->getBossAtack()) {
 			_boss->setBossHit(true);
@@ -325,6 +324,10 @@ void bossScene::attackBoss()
 
 				_boss->damage(damage, _player->getDragon()->getDragonAngle(i), 10.f, 4, isCri);
 
+				if (!_boss->getBossAtack()) {
+					_boss->setBossHit(true);
+				}
+
 			}
 		}
 
@@ -342,6 +345,10 @@ void bossScene::attackBoss()
 				_player->chargeSkillGauge(damage, 4);
 			}
 			_boss->damage(damage, _player->getDragon()->getHeadAngle(i), 10.f, 4, isCri);
+
+			if (!_boss->getBossAtack()) {
+				_boss->setBossHit(true);
+			}
 		}
 	}
 
@@ -363,6 +370,10 @@ void bossScene::attackBoss()
 				_player->chargeSkillGauge(damage, 5);
 			}
 			_boss->damage(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, isCri);
+		
+			if (!_boss->getBossAtack()) {
+				_boss->setBossHit(true);
+			}
 			_player->getSpear()->setCol(i, true);
 		}
 	}
@@ -381,6 +392,11 @@ void bossScene::attackBoss()
 				_player->chargeSkillGauge(damage, 5);
 			}
 			_boss->damage(damage, _player->getSpear()->getUpgradeAngle(i), 10.f, 5, isCri);
+		
+			if (!_boss->getBossAtack()) {
+				_boss->setBossHit(true);
+			}
+
 			_player->getSpear()->setUpgradeCol(i, true);
 		}
 

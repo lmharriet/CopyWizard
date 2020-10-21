@@ -243,9 +243,27 @@ void gameScene::enemyCheckCol()
 	}
 }
 
+void gameScene::checkEnemDie()
+{
+	int size = camInEnemy.size();
+	for (int i = 0; i < size;)
+	{
+		int num = camInEnemy[i];
+
+		if (enemy->getMinion().size() <= num || enemy->getMinion()[num]->getHp() <= 0)
+		{
+			//cout << enemy->getMinion().size() << " / " << num << '\n';
+			camInEnemy.erase(camInEnemy.begin() + i);
+			size = camInEnemy.size();
+		}
+		else i++;
+	}
+}
+
 void gameScene::playerAttack()
 {
 	int sizeA = _player->getBlaze()->getBullet().size();
+	checkEnemDie();
 	int sizeB = camInEnemy.size();
 	int num = 0;
 	//blaze
@@ -283,6 +301,8 @@ void gameScene::playerAttack()
 
 	//meteor
 	sizeA = _player->getMeteor()->getColSize();
+	checkEnemDie();
+	sizeB = camInEnemy.size();
 	for (int i = 0; i < sizeA; i++)
 	{
 		for (int j = 0; j < sizeB; j++)
@@ -314,6 +334,8 @@ void gameScene::playerAttack()
 
 	//rush
 	sizeA = _player->getDashFire()->getSize();
+	checkEnemDie();
+	sizeB = camInEnemy.size();
 	for (int i = 0; i < sizeA; i++)
 	{
 		for (int j = 0; j < sizeB; j++)
@@ -338,8 +360,9 @@ void gameScene::playerAttack()
 		}
 	}//end of for
 
-
 	//inferno
+	checkEnemDie();
+	sizeB = camInEnemy.size();
 	for (int i = 0; i < sizeB; i++)
 	{
 		num = camInEnemy[i];
@@ -393,6 +416,8 @@ void gameScene::playerAttack()
 	if (!_player->getDragon()->getUpgrade())
 	{
 		sizeA = _player->getDragon()->getSize();
+		checkEnemDie();
+		sizeB = camInEnemy.size();
 		for (int i = 0; i < sizeA; i++)
 		{
 			for (int j = 0; j < sizeB; j++)
@@ -418,6 +443,8 @@ void gameScene::playerAttack()
 
 	//upgrade
 	sizeA = _player->getDragon()->getcolSize();
+	checkEnemDie();
+	sizeB = camInEnemy.size();
 	for (int i = 0; i < sizeA; i++)
 	{
 		for (int j = 0; j < sizeB; j++)
@@ -443,6 +470,8 @@ void gameScene::playerAttack()
 
 	//ice Spear
 	sizeA = _player->getSpear()->getSize();
+	checkEnemDie();
+	sizeB = camInEnemy.size();
 	for (int i = 0; i < sizeA; i++)
 	{
 		for (int j = 0; j < sizeB; j++)
@@ -470,6 +499,8 @@ void gameScene::playerAttack()
 
 	//upgrade
 	sizeA = _player->getSpear()->getUpgradeSize();
+	checkEnemDie();
+	sizeB = camInEnemy.size();
 	for (int i = 0; i < sizeA; i++)
 	{
 		for (int j = 0; j < sizeB; j++)

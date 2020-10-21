@@ -17,7 +17,6 @@ private:
 	RECT playerRC;
 	//vector<enemy*> _vBoss;
 	
-	
 
 	bullet* _bullet; //°ø¿ëÃÑ¾Ë
 public:
