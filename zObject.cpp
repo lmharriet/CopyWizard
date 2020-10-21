@@ -107,9 +107,14 @@ void zObject::render(HDC hdc)
 
     else if (type == "chest")
     {
-        CAMERAMANAGER->FrameRender(hdc, IMAGEMANAGER->findImage(keyName),
+        //CAMERAMANAGER->FrameRender(hdc, IMAGEMANAGER->findImage(keyName),
+        //    x - (IMAGEMANAGER->findImage(keyName)->getFrameWidth() >> 1),
+        //    y - (IMAGEMANAGER->findImage(keyName)->getFrameHeight() >> 1),
+        //    frame.x, 0);
+
+        CAMERAMANAGER->AlphaFrameRender(hdc, IMAGEMANAGER->findImage(keyName),
             x - (IMAGEMANAGER->findImage(keyName)->getFrameWidth() >> 1),
             y - (IMAGEMANAGER->findImage(keyName)->getFrameHeight() >> 1),
-            frame.x, 0);
+            frame.x, 0, Index);
     }
 }

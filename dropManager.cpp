@@ -72,6 +72,18 @@ void dropManager::render(HDC hdc)
     }
 }
 
+void dropManager::cardRender(HDC hdc)
+{
+    //arcana card render
+    int size = vArcana.size();
+    for (int i = 0; i < size; i++)
+    {
+        if (vArcana[i].size < 0.96f)vArcana[i].size += 0.05f;
+        CAMERAMANAGER->StretchRender(hdc, IMAGEMANAGER->findImage(vArcana[i].keyName),
+            vArcana[i].pos.x, vArcana[i].pos.y, vArcana[i].size);
+    }
+}
+
 void dropManager::coinEffectRender(HDC hdc)
 {
     //하나씩 전달
@@ -141,6 +153,23 @@ void dropManager::dropPoint(POINT pt, int minCoin, int maxCoin, float healBallpe
         ball.rc = RectMakeCenter(pt.x, pt.y, 50, 50);
         vHealBall.push_back(ball);
     }
+}
+
+void dropManager::dropPointArcana(string keyName, POINT pt, string arcanaName, int coolTime)
+{
+    tagDropArcana arcana;
+    arcana.keyName = keyName;
+    arcana.pos = pt;
+    image* img = IMAGEMANAGER->findImage(keyName);
+    arcana.rc = RectMakeCenter(pt.x - img->getWidth() / 2,
+        pt.y - img->getHeight() / 2, 
+        img->getWidth(),
+        img->getHeight());
+    arcana.arcanaName = arcanaName;
+    arcana.size = 0;
+    arcana.coolTime = coolTime;
+
+    vArcana.push_back(arcana);
 }
 
 bool dropManager::checkPercentage(int persentage)

@@ -4,7 +4,10 @@ class chest : public gameNode
 {
 private:
 	int coin;
+	string arcanaKeyName;
 	string arcanaName;
+	int arcanaCoolTime;
+
 	int hp;
 
 	string keyName;
@@ -15,6 +18,7 @@ private:
 	int hitCount;
 
 	int time;
+	int opacity;
 	bool isDie;
 public:
 	HRESULT init(string keyName , POINT _pos, int _hp);

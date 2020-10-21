@@ -188,6 +188,8 @@ void gameScene::render()
 
 	PORTAL->backRender(getMemDC());
 
+	DROP->cardRender(getMemDC());
+
 	UNITRENDER->render(getMemDC());
 
 	DROP->render(getMemDC());

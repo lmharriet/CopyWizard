@@ -34,6 +34,17 @@ struct infoTransfer
 	float maxY;
 };
 
+struct tagDropArcana
+{
+	string arcanaName;
+	RECT rc;
+	int coolTime;
+	
+	float size;
+	string keyName;
+	POINT pos;
+};
+
 struct tagCoinView
 {
 	POINT pt;
@@ -53,14 +64,19 @@ private:
 
 	vector<tagCoinView> coinView;
 	vector<tagCoinView> saveCoinView;
+
+	vector<tagDropArcana> vArcana;
+
 	int dtime;
 	int cTime;
 public:
 	HRESULT init();
 	void update();
 	void render(HDC hdc);
+	void cardRender(HDC hdc);
 	void coinEffectRender(HDC hdc);
 	void dropPoint(POINT pt, int minCoin, int maxCoin, float healBallpercentage = 0.f, POINT rangeX = { -20,20 }, POINT rangeY = { -10,10 });
+	void dropPointArcana(string keyName, POINT pt, string arcanaName, int coolTime);
 	bool checkPercentage(int persentage);
 	void coinGenerator();
 
@@ -77,4 +93,8 @@ public:
 	vector<tagHealBall> getBallVec() { return vHealBall; }
 	RECT getHealRect(int index) { return vHealBall[index].rc; }
 	void delHeal(int index) { vHealBall.erase(vHealBall.begin() + index); }
+
+	vector<tagDropArcana> getCardVec() { return vArcana; }
+	RECT getCardRect(int index) { return vArcana[index].rc; }
+	void delCard(int index) { vArcana.erase(vArcana.begin() + index); }
 };
