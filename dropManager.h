@@ -27,6 +27,11 @@ struct infoTransfer
 	int sCoin;
 	int bCoin;
 	POINT pt;
+
+	float minX;
+	float maxX;
+	float minY;
+	float maxY;
 };
 
 struct tagCoinView
@@ -55,7 +60,7 @@ public:
 	void update();
 	void render(HDC hdc);
 	void coinEffectRender(HDC hdc);
-	void dropPoint(POINT pt, int minCoin, int maxCoin, float healBallpercentage = 0.f);
+	void dropPoint(POINT pt, int minCoin, int maxCoin, float healBallpercentage = 0.f, POINT rangeX = { -20,20 }, POINT rangeY = { -10,10 });
 	bool checkPercentage(int persentage);
 	void coinGenerator();
 

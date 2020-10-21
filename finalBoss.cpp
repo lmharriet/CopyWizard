@@ -1,13 +1,15 @@
 #include "stdafx.h"
 #include "finalBoss.h"
+#include "player.h"
 
 HRESULT finalBoss::init(int _posX, int _posY)
 {
 	IMAGEMANAGER->addFrameImage("finalboss", "resource/boss/master_sura.bmp", 2000, 800, 20, 8, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("bossice", "resource/player/iceSpear.bmp", 96, 96, true, RGB(255, 0, 255));
 
-	_meteor = new meteor;
-	_meteor->init();
+	IMAGEMANAGER->addImage("bossframebar", "resource/boss/bossProgressBarFrame.bmp", 452, 64, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("bosshpbar", "resource/boss/bossHpBar.bmp", 356, 28, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("bosshpbackBar", "resource/boss/bossHpBackBar.bmp", 356, 28, true, RGB(255, 0, 255));
 
 	boss.center = { _posX, _posY };
 	boss.angle = 0;
@@ -18,10 +20,6 @@ HRESULT finalBoss::init(int _posX, int _posY)
 	boss.bossSkill = SKILL2;
 	boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 100, 100);
 	boss.bossState = FINALBOSSSPONE;
-
-	player.center = { 10, 10 };
-	player.angle = 0;
-	player.rc = RectMakeCenter(player.center.x, player.center.y, 100, 100);
 
 	dashRc = RectMakeCenter(0, 0, 30, 30);
 
@@ -59,41 +57,19 @@ void finalBoss::release()
 
 void finalBoss::update()
 {
-	_meteor->update();
-
 	this->animation();
 	this->dashColPlayer();
 	this->useSkill();
 	BOSSMANAGER->update();
-	if (INPUT->GetKey(VK_LEFT)) {
-		player.center.x -= 20;
-	}
-	if (INPUT->GetKey(VK_RIGHT)) {
-		player.center.x += 20;
-	}
-	if (INPUT->GetKey(VK_UP)) {
-		player.center.y -= 20;
-	}
-	if (INPUT->GetKey(VK_DOWN)) {
-		player.center.y += 20;
-	}
-	player.rc = RectMakeCenter(player.center.x, player.center.y, 100, 100);
-
-
 }
 
 void finalBoss::render()
 {
+	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("finalboss"), boss.rc.left, boss.rc.top, frameX, frameY);
+	//IMAGEMANAGER->frameRender("finalboss", getMemDC(), boss.rc.left, boss.rc.top, frameX, frameY);
 
-	_meteor->render();
-
-	//Rectangle(getMemDC(), boss.rc);
-	Rectangle(getMemDC(), player.rc);
-
-	IMAGEMANAGER->frameRender("finalboss", getMemDC(), boss.rc.left, boss.rc.top, frameX, frameY);
-
-	//Rectangle(getMemDC(), dashRc);
 	BOSSMANAGER->render(getMemDC());
+	EFFECT->AfterimageRender(getMemDC());
 
 	if (icePattern) {
 		for (int i = 0; i < iceBlock.size(); i++) {
@@ -129,15 +105,21 @@ void finalBoss::animation()
 			if (count % 5 == 0) {
 				if (frameX == 0) {
 					timer++;
-					if (timer > 5) frameX++;
+					if (timer > 5) {
+						frameX++;
+						timer = 0;
+					}
 				}
 				else {
 					frameX++;
 				}
 				if (frameX > 5) {
-					boss.bossState = FINALBOSSIDLE;
-					count = 0;
-					timer = 0;
+					timer++;
+					if (timer > 10) {
+						boss.bossState = FINALBOSSIDLE;
+						count = 0;
+						timer = 0;
+					}
 				}
 			}
 		}
@@ -295,12 +277,12 @@ void finalBoss::updateDashRect()
 	if (boss.bossState == FINALBOSSIDLE && !setDashrc) {
 		this->getPosDashRc();
 
-		if (getDistance(boss.center.x, boss.center.y, player.center.x, player.center.y) < boss.dashDintance) {
+		if (getDistance(boss.center.x, boss.center.y, _player->getX(), _player->getY()) < boss.dashDintance) {
 			if (dashCount != 0) {
 				boss.dashDintance = 400;
 			}
 			else {
-				boss.dashDintance = getDistance(boss.center.x, boss.center.y, player.center.x, player.center.y);
+				boss.dashDintance = getDistance(boss.center.x, boss.center.y, _player->getX(), _player->getY());
 				dashCount = 6;
 			}
 		}
@@ -347,9 +329,10 @@ void finalBoss::dashPattern()
 	this->updateDashRect();
 
 	if (boss.bossState == FINALBOSSDASH) {
-		boss.center.x += cosf(dashAngle) * 15;
-		boss.center.y += -sinf(dashAngle) * 15;
+		boss.center.x += cosf(dashAngle) * 12;
+		boss.center.y += -sinf(dashAngle) * 12;
 		boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 100, 100);
+		EFFECT->AfterimageEft("finalboss", boss.center, { frameX, frameY }, 2);
 	}
 
 	if (IntersectRect(&temp, &dashRc, &boss.rc)) {
@@ -363,9 +346,8 @@ void finalBoss::dashPattern()
 
 void finalBoss::dashColPlayer()
 {
-	if (((getDistance(boss.center.x, boss.center.y, player.center.x, player.center.y) < 150 && dashCount < 3) || dashCount == 0) && boss.bossState != FINALBOSSSKILL) {
+	if (((getDistance(boss.center.x, boss.center.y, _player->getX(), _player->getY()) < 150 && dashCount < 3) || dashCount == 0) && boss.bossState != FINALBOSSSKILL) {
 		//스킬발동
-		//skillNum = RANDOM->range(2);
 		patternStart = true;
 
 		boss.bossState = FINALBOSSSKILL;
@@ -377,7 +359,7 @@ void finalBoss::dashColPlayer()
 
 void finalBoss::getPosDashRc()
 {
-	dashAngle = getAngle(boss.center.x, boss.center.y, player.center.x, player.center.y);
+	dashAngle = getAngle(boss.center.x, boss.center.y, _player->getX(), _player->getY());
 
 	if (dashAngle >= 1.0f && dashAngle < 2.5f) {
 		posDashRc = 1;
@@ -442,7 +424,7 @@ void finalBoss::useSkill()
 
 void finalBoss::posPlayerAngle()
 {
-	boss.angle = getAngle(boss.center.x, boss.center.y, player.center.x, player.center.y);
+	boss.angle = getAngle(boss.center.x, boss.center.y, _player->getX(), _player->getY());
 	if (boss.angle >= 1.0f && boss.angle < 2.5f) {
 		posPlayer = 1;
 	}
@@ -477,7 +459,7 @@ void finalBoss::wall()
 	}
 	else if (wallPattern && frameX == 5) {
 		for (int i = 0; i < wallBlock.size(); i++) {
-			if (wallBlock[i]->rc.left > 0 && wallBlock[i]->rc.right < WINSIZEX && wallBlock[i]->rc.top > 0 && wallBlock[i]->rc.bottom < WINSIZEY) {
+			if (wallBlock[i]->rc.left > 0 && wallBlock[i]->rc.right < 2048 && wallBlock[i]->rc.top > 0 && wallBlock[i]->rc.bottom < 2048) {
 				wallBlock[i]->blockCount++;
 				if (wallBlock[i]->blockCount % 5 == 0) {
 					BOSSMANAGER->init(wallBlock[i]->center.x, wallBlock[i]->center.y, 40, 0);
@@ -511,7 +493,7 @@ void finalBoss::blaze()
 	}
 	else if (blazePattern && frameX == 5) {
 		for (int i = 0; i < blazeBlock.size(); i++) {
-			if (blazeBlock[i]->rc.left > 0 && blazeBlock[i]->rc.right < WINSIZEX && blazeBlock[i]->rc.top > 0 && blazeBlock[i]->rc.bottom < WINSIZEY) {
+			if (blazeBlock[i]->rc.left > 0 && blazeBlock[i]->rc.right < 2048 && blazeBlock[i]->rc.top > 0 && blazeBlock[i]->rc.bottom < 2048) {
 				blazeBlock[i]->blockCount++;
 				if (blazeBlock[i]->blockCount % 3 == 0) {
 					BOSSMANAGER->init(blazeBlock[i]->center.x, blazeBlock[i]->center.y, 4, 4);
@@ -612,5 +594,16 @@ void finalBoss::ice()
 			}
 		}
 	}
+}
+
+void finalBoss::finalBossHpInfo(HDC hdc, int destX, int destY)
+{
+	image* img = IMAGEMANAGER->findImage("bossframebar");
+	img->render(hdc, destX, destY);
+
+	img = IMAGEMANAGER->findImage("bosshpbar");
+
+	int hpBar = (float)img->getWidth() * ((float)boss.bossHp / 2000);
+	img->render(hdc, destX + 48, destY + 20, 0, 0, hpBar, img->getHeight());
 }
 

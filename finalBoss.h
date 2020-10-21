@@ -39,14 +39,17 @@ struct skillBlock
 	bool isFire;
 	bool isHit;
 };
+class player;
 class finalBoss : public gameNode
 {
 private:
-	meteor* _meteor;
-
+	player* _player;
+public:
+	void getPlayerInfo(player* _p) {
+		_player = _p;
+	}
 private:
 	tagFinaleBoss boss;
-	tagFinaleBoss player;
 
 	RECT dashRc;
 	vector<skillBlock*> wallBlock;
@@ -97,5 +100,7 @@ public:
 	void thunder();
 	void wind();
 	void ice();
+
+	void finalBossHpInfo(HDC hdc, int destX, int destY);
 };
 
