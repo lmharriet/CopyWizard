@@ -422,6 +422,8 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(damage, 5);
 				}
 				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, criCheck,true);
+			
+				_player->getSpear()->setCol(i, true);
 			}
 		}
 	}
@@ -441,7 +443,9 @@ void gameScene::playerAttack()
 				{
 					_player->chargeSkillGauge(damage, 5);
 				}
-				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 20.f, 5, criCheck,true);
+				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 30.f, 5, criCheck,true);
+
+				_player->getSpear()->setUpgradeCol(i, true);
 			}
 		}
 	}
@@ -490,6 +494,7 @@ void gameScene::enemyUnitRenderInit()
 {
 	for (int i = 0; i < enemy->getMinion().size(); i++)
 	{
+		if (!enemy->getMinion()[i]->getAppear()) continue;
 		POINT currentFrame = enemy->getMinion()[i]->getCurrentFrame();
 		POINT monsterPos = enemy->getMinion()[i]->getPos();
 		switch (enemy->getMinion()[i]->getMonsterKind())

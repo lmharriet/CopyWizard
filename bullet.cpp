@@ -1545,7 +1545,7 @@ void iceSpear::render()
 	for (int i = 0; i < vSpear.size(); i++)
 	{
 		CAMERAMANAGER->RotateRender(getMemDC(), img, vSpear[i].x, vSpear[i].y, vSpear[i].angle);
-		CAMERAMANAGER->Ellipse(getMemDC(), vSpear[i].rc);
+		if (INPUT->GetToggleKey('L'))CAMERAMANAGER->Ellipse(getMemDC(), vSpear[i].rc);
 	}
 	
 	for (int i = 0; i < vStay.size(); i++)
@@ -1555,7 +1555,7 @@ void iceSpear::render()
 
 	for (int i = 0; i < vUltSpear.size(); i++)
 	{
-		CAMERAMANAGER->Ellipse(getMemDC(), vUltSpear[i].rc);
+		if(INPUT->GetToggleKey('L'))CAMERAMANAGER->Ellipse(getMemDC(), vUltSpear[i].rc);
 
 		if (vUltSpear[i].isBig)
 		{
@@ -1624,7 +1624,7 @@ void iceSpear::fire(float x, float y, float angle)
 
 	spear.range = rangeCul(500, x, y, angle);
 	spear.rc = RectMakeCenter(spear.x, spear.y, 30, 30);
-
+	spear.collision = false;
 
 	vSpear.push_back(spear);
 	isCoolTime = true;
@@ -1634,7 +1634,7 @@ void iceSpear::fire(float x, float y, float angle)
 
 void iceSpear::move()
 {
-	for (int i = 0; i < vSpear.size();)
+	for (int i = 0; i < vSpear.size();i ++)
 	{
 		vSpear[i].x += cosf(vSpear[i].angle) * vSpear[i].speed;
 		vSpear[i].y -= sinf(vSpear[i].angle) * vSpear[i].speed;
@@ -1652,6 +1652,11 @@ void iceSpear::move()
 			saveRange = 0;
 			vSpear.erase(vSpear.begin() + i);
 		}
+		else if (vSpear[i].distance < vSpear[i].range && vSpear[i].collision)
+		{
+			saveRange = 0;
+			vSpear.erase(vSpear.begin());
+		}
 		else i++;
 	}
 }
@@ -1663,7 +1668,7 @@ void iceSpear::upgradefire(float x, float y, float angle)
 	active = true;
 	tagStaySpear spear;
 	spear.angle = angle;
-	spear.speed = 23.f;
+	spear.speed = 35.f;
 
 	posX = spear.fireX = x;
 	posY = spear.fireY = y;
@@ -1732,6 +1737,7 @@ void iceSpear::fireCount()
 		ultSpear.range = rangeCul(500, ultSpear.fireX, ultSpear.fireY, ultSpear.angle);
 		ultSpear.atkPower = 25;
 		ultSpear.rc = RectMakeCenter(ultSpear.x, ultSpear.y, 30, 30);
+		ultSpear.collision = false;
 
 		vUltSpear.push_back(ultSpear);
 		vStay.erase(vStay.begin());
@@ -1748,7 +1754,7 @@ void iceSpear::upgradeMove()
 	{
 		float distance = getDistance(vUltSpear[i].fireX, vUltSpear[i].fireY, vUltSpear[i].x, vUltSpear[i].y);
 
-		if (distance < vUltSpear[i].range)
+		if (distance < vUltSpear[i].range && !vUltSpear[i].collision)
 		{
 			//ÀÌµ¿
 			vUltSpear[i].x += cosf(vUltSpear[i].angle) * vUltSpear[i].speed;
@@ -1766,7 +1772,8 @@ void iceSpear::upgradeMove()
 				vUltSpear[i].rc = RectMakeCenter(x, y, 30, 30);
 			}
 		}
-		if (distance < vUltSpear[i].range && !vUltSpear[i].isBig)
+		
+		if (distance < vUltSpear[i].range &&!vUltSpear[i].isBig)
 		{
 			i++;
 			continue;
@@ -1785,6 +1792,19 @@ void iceSpear::upgradeMove()
 					eTime = 0;
 					saveRange = 0;
 		
+				}
+			}
+			else if (distance < vUltSpear[i].range && vUltSpear[i].collision)
+			{
+				eTime++;
+
+				if (eTime > 35)
+				{
+					vUltSpear.clear();
+					active = false;
+					eTime = 0;
+					saveRange = 0;
+
 				}
 			}
 		}
