@@ -26,7 +26,7 @@ void ghoul::update()
     {
         RECT astarRC = RectMake(pos.x+10 , pos.y-30 , img->getFrameWidth(), img->getFrameHeight());
         astar->update(camRC, astarRC, playerRC, &angle);
-        if (!isATK)
+        if (!isATK && !isIceState)
         {
             if (rc.left + img->getFrameWidth() / 2 < playerRC.left)
             {
@@ -52,18 +52,21 @@ void ghoul::update()
                 atkDirection[MONSTER_DOWN] = true;
             }
         }
-        if (astar->getFirstTile() && !isATK && !isDie && !isHit) // 걸을 때
+        
+        
+        if (astar->getFirstTile() && !isATK  && !isHit && !isIceState && !isDie) // 걸을 때
         {
             state = STATEIMAGE::WALK;
             pos.x += cos(angle) * speed;
             pos.y += -sin(angle) * speed;
 
         }
-        else if (!isDie && !isHit) // 걷지 않고 있을 때
+        else if ( !isHit && !isIceState && !isDie) // 걷지 않고 있을 때
         {
             state = STATEIMAGE::ATK;
             isATK = true;
         }
+
 
 
     }
@@ -76,7 +79,7 @@ void ghoul::update()
             
         }
     }
-    if (isMonsterApeear && !isSpeedUp)
+    if ( !isSpeedUp && isMonsterApeear)
     {
         speedUpCount++;
         if (!(speedUpCount % 30) )
@@ -86,6 +89,7 @@ void ghoul::update()
             isSpeedUp = true;
         }
     }
+   
 
 }
 

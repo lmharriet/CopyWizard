@@ -421,7 +421,7 @@ void gameScene::playerAttack()
 				{
 					_player->chargeSkillGauge(damage, 5);
 				}
-				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, criCheck);
+				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, criCheck,true);
 			}
 		}
 	}
@@ -441,7 +441,7 @@ void gameScene::playerAttack()
 				{
 					_player->chargeSkillGauge(damage, 5);
 				}
-				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 20.f, 5, criCheck);
+				enemy->getMinion()[j]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 20.f, 5, criCheck,true);
 			}
 		}
 	}

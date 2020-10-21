@@ -827,7 +827,7 @@ void player::signatureSetUpE()
 
 		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool())
 		{
-			if (upgradeReady)
+			if (!upgradeReady)
 			{
 				if (INPUT->GetKey('E'))
 				{

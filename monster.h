@@ -92,6 +92,7 @@ protected:
 		ATK,
 		HIT,
 		DIE,
+		
 
 		STATEMAX
 	};
@@ -120,6 +121,8 @@ protected:
 	int hitTime;
 	int colCount = 0;
 	int monsterAppearCount = 0;
+	const int iceBreakTime = 100;
+	int iceBreakCount = 0;
 	bool isWallcol = false;
 	bool isFindWayOn = false;
 	bool isLeft = false;
@@ -133,6 +136,7 @@ protected:
 	bool isMonsterApeear = false;
 	bool isCardAppear = false;
 	bool isCardFxAppear = false;
+	bool isIceState = false;
 	
 	//bool isBulletEmpty = true;
 	bool isAstar;
@@ -199,7 +203,7 @@ public:
 	void setFx(bool Fx) {  isFxAppear = Fx; }
 	void setBulletFire(bool isFire) { isBulletFire = isFire; }
 	
-	void hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical = false);
+	void hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical = false, bool isIceSTATE =false);
 	bool hitCheck(int skillNum);
 
 	void hitCul();

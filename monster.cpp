@@ -395,8 +395,12 @@ void monster::commonUpdate()
 	}
 	if (isMonsterApeear)
 	{
+		if (isIceState)
+			iceBreakCount++;
+		
 		update(); //몬스터별 업데이트
 
+		
 		if (isHit && !isDie)
 		{
 			if (kind != MONSTERKIND::GOLEM && kind!=MONSTERKIND::GHOULLARGE)
@@ -431,15 +435,29 @@ void monster::commonUpdate()
 		{
 			state = STATEIMAGE::DIE;
 		}
-	}
-	if (isMonsterApeear)
 		stateImageRender();
+
+		if (iceBreakCount > iceBreakTime)
+		{
+			isIceState = false;
+			iceBreakCount = 0;
+			//EFFECT->setEffect("iceBreak")
+		}
+	}
 }
 
 void monster::render()
 {
 
 	addRender();
+	if (isIceState)
+	{
+		//CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x, pos.y);
+		CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x, getCenterY()-img->getFrameHeight(),180);
+		
+		//IMAGEMANAGER->alphaRender( IMAGEMANAGER->findImage("IceState"), getMemDC(), cul.x, cul.y - img->getFrameHeight(),0,0,152,220,200);
+		
+	}
 	// astar->render(getMemDC());
 	 //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
 	 //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
@@ -455,7 +473,7 @@ void monster::setPt(float x, float y)
 		pos = { (long)x, (long)y };
 }
 
-void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical)
+void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical, bool isIceSTATE)
 {
 	if (hitCheck(skillNum) == false)return;
 
@@ -474,7 +492,7 @@ void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, b
 
 	hitAngle = _hitAngle;
 	knockBack = _knockBack;
-
+	isIceState = isIceSTATE;
 
 	if (kind != MONSTERKIND::GOLEM && kind!= MONSTERKIND::GHOULLARGE)
 		state = STATEIMAGE::HIT;
