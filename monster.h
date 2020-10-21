@@ -160,7 +160,7 @@ public:
 	void commonUpdate();
 	void render();
 	virtual void update()=0;
-	virtual void addRender();
+	virtual void addRender()=0;
 	virtual void stateImageRender() = 0;
 	virtual void addInit()=0;
 

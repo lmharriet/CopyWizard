@@ -27,45 +27,49 @@ void summoner::addInit()
 
 void summoner::update()
 {
-    if(isFindWayOn)
-    atkTime++;
-    if (!isATK && !isDie && !isHit) 
+    if (isIceState)
+        atkTime = 0;
+    if (isFindWayOn && !isIceState)
     {
-        state = STATEIMAGE::IDLE;
-        
-        if ((rc.left + (rc.right-rc.left) / 2) < playerRC.left)
+        atkTime++;
+        if (!isATK && !isHit && !isDie)
         {
-            atkDirection[MONSTER_LEFT] = false;
-            atkDirection[MONSTER_RIGHT] = true;
+            state = STATEIMAGE::IDLE;
+
+            if ((rc.left + (rc.right - rc.left) / 2) < playerRC.left)
+            {
+                atkDirection[MONSTER_LEFT] = false;
+                atkDirection[MONSTER_RIGHT] = true;
+            }
+            else
+            {
+                atkDirection[MONSTER_LEFT] = true;
+                atkDirection[MONSTER_RIGHT] = false;
+            }
+            if ((rc.top + (rc.bottom - rc.top) / 2) < playerRC.top)
+            {
+                atkDirection[MONSTER_UP] = false;
+                atkDirection[MONSTER_DOWN] = true;
+            }
+            else
+            {
+                atkDirection[MONSTER_UP] = true;
+                atkDirection[MONSTER_DOWN] = false;
+            }
         }
-        else
+
+        if ( atkTime % randomTime == 0 && !isATK && !isHit&&!isDie)
         {
-            atkDirection[MONSTER_LEFT] = true;
-            atkDirection[MONSTER_RIGHT] = false;
-        }
-        if ((rc.top + (rc.bottom - rc.top) / 2) < playerRC.top)
-        {
-            atkDirection[MONSTER_UP] = false;
-            atkDirection[MONSTER_DOWN] = true;
-        }
-        else
-        {
-            atkDirection[MONSTER_UP] = true;
-            atkDirection[MONSTER_DOWN] = false;
+            state = STATEIMAGE::ATK;
+            isATK = true;
+            PARTICLE->collectingGenerate("stoneX2", pos.x + 55, pos.y - 45, 18, 60.f, 2.f, 50, 20, 5);
+            fireCount = atkTime - 1;
+
         }
     }
     
-    if (!isDie && atkTime%randomTime==0 && isFindWayOn && !isATK && !isHit)
-    {
-        state = STATEIMAGE::ATK;
-        isATK = true;
-        PARTICLE->collectingGenerate("stoneX2", pos.x + 55, pos.y - 45, 18, 60.f, 2.f, 50, 20, 5);
-        fireCount = atkTime-1 ;
         
-    }
-    
-        
-    if (isATK&& !isHit && !isFxAppear )
+    if (isATK && !isFxAppear && !isHit)
     {
         fireCount++;
         
@@ -103,6 +107,8 @@ void summoner::addRender()
             CAMERAMANAGER->StretchFrameRender(getMemDC(), skillImg, pos.x + 20, pos.y - 72, 0, 0, imgSize);
         }
     }
+    if (isIceState)
+        CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x, getCenterY() - img->getFrameHeight(), 180);
 }
 
 void summoner::stateImageRender()
