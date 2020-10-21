@@ -51,7 +51,7 @@ HRESULT player::init()
 
 	//animation count ,index
 	atkCount = atkIndex = index = dashIndex = count = dashCount = basicCount = basicIndex = 0;
-	basicStateCool = infernoStateCool = signatureStateCool = 0;
+	basicStateCool = infernoStateCool = meteorStateCool = dragonStateCool = spearStateCool = 0;
 	spearIndex = 0;
 	idleDelay = 0;
 
@@ -139,7 +139,7 @@ void player::update()
 
 
 	//플레이어 컨트롤 조건
-	if (speed == 0 && basicStateCool == 0 && signatureStateCool == 0 && frozenTime == 0
+	if (speed == 0 && basicStateCool == 0 && meteorStateCool == 0 && frozenTime == 0
 		&& !isDead && !inferno->getGauging() && idleDelay == 0)
 	{
 		controller();
@@ -201,7 +201,6 @@ void player::update()
 	death();
 	//don't touch!
 	buttonDown();
-
 }
 
 void player::other_update()
@@ -230,7 +229,7 @@ void player::other_update()
 	angleTenth = (int)(saveAngle * (18 / PI));
 
 
-	if (speed == 0 && basicStateCool == 0 && signatureStateCool == 0 && frozenTime == 0
+	if (speed == 0 && basicStateCool == 0 && meteorStateCool == 0 && frozenTime == 0
 		&& !isDead && !inferno->getGauging() && !isGrabbed && idleDelay == 0)
 	{
 		controller();
@@ -351,8 +350,6 @@ void player::render(int _index)
 			CAMERAMANAGER->Rectangle(getMemDC(), diagonalCheck[i].rc);
 		}
 	}
-
-	viewText();
 }
 
 void player::invenRender()
@@ -484,53 +481,59 @@ void player::controller()
 
 void player::skillInit()
 {
-	arcana[0].type = ARCANA_TYPE::TYPE_BASIC;
-	arcana[0].skillName = blaze->getInfo().keyName;
-	arcana[0].explanation = blaze->getInfo().explanation;
-	arcana[0].coolTime = blaze->getInfo().coolTime;
-
-	arcana[1].type = ARCANA_TYPE::TYPE_DASH;
-	arcana[1].skillName = searingRush->getInfo().keyName;
-	arcana[1].explanation = searingRush->getInfo().explanation;
-	arcana[1].coolTime = searingRush->getInfo().coolTime;
-
-	arcana[2].type = ARCANA_TYPE::TYPE_STANDARD;
-	arcana[2].skillName = inferno->getInfo().keyName;
-	arcana[2].explanation = inferno->getInfo().explanation;
-	arcana[2].coolTime = inferno->getInfo().coolTime;
-
-	arcana[3].type = ARCANA_TYPE::TYPE_SIGNATURE;
-	arcana[3].skillName = Meteor->getInfo().keyName;
-	arcana[3].explanation = Meteor->getInfo().explanation;
-	arcana[3].coolTime = Meteor->getInfo().coolTime;
-
-	arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
-	arcana[4].skillName = "";//dragon->getInfo().keyName;
-	arcana[4].explanation = "";// dragon->getInfo().explanation;
-	arcana[4].coolTime = 0; // dragon->getInfo().coolTime;
-
-	arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
-	arcana[4].skillName = "nonSkill";//dragon->getInfo().keyName;
-	arcana[4].explanation = "";// dragon->getInfo().explanation;
-	arcana[4].coolTime = 0; // dragon->getInfo().coolTime;
-
-
-	arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
-	arcana[5].skillName = "nonSkill";// spear->getInfo().keyName;
-	arcana[5].explanation = "";//spear->getInfo().explanation;
-	arcana[5].coolTime = 0;// spear->getInfo().coolTime;
-
-
-	for (int i = 0; i < ARCANA_SLOT; i++)
+	if (PLAYERDATA->getAracaInfo().size() > 0) // 이미 데이터를 가지고 있을 때
 	{
-		UI->setSkillSlot(arcana[i].skillName, arcana[i].coolTime);
-		PLAYERDATA->pushArcanaInfo(arcana[i]);
+		int size = PLAYERDATA->getAracaInfo().size();
+		for (int i = 0; i < size; i++)
+		{
+			arcana[i] = PLAYERDATA->getAracaInfo()[i];
+			cout << i << ", " << arcana[i].skillName << '\n';
+		}
+	}
+
+	else
+	{
+		arcana[0].type = ARCANA_TYPE::TYPE_BASIC;
+		arcana[0].skillName = blaze->getInfo().keyName;
+		arcana[0].explanation = blaze->getInfo().explanation;
+		arcana[0].coolTime = blaze->getInfo().coolTime;
+
+		arcana[1].type = ARCANA_TYPE::TYPE_DASH;
+		arcana[1].skillName = searingRush->getInfo().keyName;
+		arcana[1].explanation = searingRush->getInfo().explanation;
+		arcana[1].coolTime = searingRush->getInfo().coolTime;
+
+		arcana[2].type = ARCANA_TYPE::TYPE_STANDARD;
+		arcana[2].skillName = inferno->getInfo().keyName;
+		arcana[2].explanation = inferno->getInfo().explanation;
+		arcana[2].coolTime = inferno->getInfo().coolTime;
+
+		arcana[3].type = ARCANA_TYPE::TYPE_SIGNATURE;
+		arcana[3].skillName = Meteor->getInfo().keyName;
+		arcana[3].explanation = Meteor->getInfo().explanation;
+		arcana[3].coolTime = Meteor->getInfo().coolTime;
+
+		arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
+		arcana[4].skillName = "nonSkill";//dragon->getInfo().keyName;//"nonSkill";
+		arcana[4].explanation = "";// dragon->getInfo().explanation;// "";
+		arcana[4].coolTime = 0;//dragon->getInfo().coolTime;//0;
+
+		arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
+		arcana[5].skillName = "nonSkill";//spear->getInfo().keyName;//"nonSkill";
+		arcana[5].explanation = "";//spear->getInfo().explanation; //"";
+		arcana[5].coolTime = 0;//spear->getInfo().coolTime;//0;
+
+
+		for (int i = 0; i < ARCANA_SLOT; i++)
+		{
+			UI->setSkillSlot(arcana[i].skillName, arcana[i].coolTime);
+			PLAYERDATA->pushArcanaInfo(arcana[i]);
+		}
 	}
 }
 
 void player::setNewSignatrue(string keyName, int coolTime)
 {
-
 	for (int i = 4; i < 6; i++)
 	{
 		if (arcana[i].skillName != "nonSkill")continue;
@@ -539,11 +542,10 @@ void player::setNewSignatrue(string keyName, int coolTime)
 		arcana[i].coolTime = coolTime;
 		arcana[i].explanation = "";
 
-		UI->setSkillSlot(arcana[i].skillName, arcana[i].coolTime);
+		
 		PLAYERDATA->setArcanaInfo(i, arcana[i].skillName, arcana[i].explanation, coolTime);
 		break;
 	}
-
 }
 
 void player::basicSetUp()
@@ -551,7 +553,7 @@ void player::basicSetUp()
 	if (arcana[0].skillName == blaze->getInfo().keyName)
 	{
 		if (INPUT->GetKeyDown(VK_LBUTTON) && !blaze->getCool() && !isDead && speed == 0 && !inferno->getGauging()
-			&& frozenTime == 0)
+			&& frozenTime == 0 && !isGrabbed)
 		{
 			saveAngle = attackAngle;
 			basic = true;
@@ -707,8 +709,8 @@ void player::standardSetUp()
 {
 	if (arcana[2].skillName == inferno->getInfo().keyName)
 	{
-		if (INPUT->GetKeyDown(VK_RBUTTON) && frozenTime == 0 && !inferno->getGauging() && !isDead
-			&& speed == 0 && signatureStateCool == 0 && !inferno->getCool() && !isGrabbed)
+		if (INPUT->GetKeyDown(VK_RBUTTON) && !inferno->getGauging() && !isDead && speed == 0 && meteorStateCool == 0 
+			&&dragonStateCool==0  && spearStateCool==0&& !inferno->getCool() && !isGrabbed && frozenTime == 0 )
 		{
 			standard = true;
 			saveAngle = attackAngle;
@@ -734,7 +736,7 @@ void player::signatureSetUp()
 	float mouseY = CAMERAMANAGER->GetAbsoluteY(_ptMouse.y);
 
 	if (INPUT->GetKeyDown('Q') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
-		&& !Meteor->getCool() && !dragon->getCool() && signatureStateCool == 0)
+		&& !Meteor->getCool() && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
 	{
 		signature = true;
 	}
@@ -746,89 +748,60 @@ void player::signatureSetUp()
 			if (arcana[3].skillName == Meteor->getInfo().keyName)
 			{
 
-				if (signatureStateCool == 0)
+				if (meteorStateCool == 0)
 				{
-					signatureStateCool = 30;
+					meteorStateCool = 30;
 					Meteor->creatMeteor(mouseX, mouseY, 0);
 				}
 
-				if (signatureStateCool > 0)
+				if (meteorStateCool > 0)
 				{
 					state = STATE::SIGNATURE;
-					signatureStateCool--;
+					meteorStateCool--;
 
 				}
-				if (signatureStateCool == 0) signature = false;
+				if (meteorStateCool == 0) signature = false;
 			}
 
-			else if (arcana[3].skillName == dragon->getInfo().keyName)
-			{
-				if (signatureStateCool == 0)
-				{
-					signatureStateCool = 30;
-					dragon->fire(posX, posY, attackAngle);
-
-				}
-				if (signatureStateCool > 0)
-				{
-					state = STATE::SIGNATURE;
-					signatureStateCool--;
-				}
-				if (signatureStateCool == 0) signature = false;
-			}
 		}
 		else
 		{
 			TIME->setTest(12.f);
 			EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
-			if (arcana[3].skillName == "skill_meteor")
+			if (arcana[3].skillName == Meteor->getInfo().keyName)
 			{
 
-				if (signatureStateCool == 0)
+				if (meteorStateCool == 0)
 				{
-					signatureStateCool = 30;
+					meteorStateCool = 30;
 					Meteor->creatMeteor(mouseX, mouseY, 0);
 
 					//skillGauge 초기화
 					skillGauge = 0;
 				}
-				if (signatureStateCool >= 0)
+				if (meteorStateCool >= 0)
 				{
 					state = STATE::SIGNATURE;
-					signatureStateCool--;
+					meteorStateCool--;
 
-					if (signatureStateCool == 0) signature = false;
+					if (meteorStateCool == 0) signature = false;
 				}
 
 			}
-			else if (arcana[3].skillName == "skill_dragonArc")
-			{
-				TIME->setTest(12.f);
-				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
-				if (signatureStateCool == 0)
-				{
-					signatureStateCool = 30;
-					dragon->phoenixFire(posX, posY, attackAngle);
-					skillGauge = 0;
-				}
-				if (signatureStateCool >= 0)
-				{
-					state = STATE::SIGNATURE;
-					signatureStateCool--;
-					if (signatureStateCool == 0) signature = false;
 
-				}
-			}
+
 		}
 	}
 }
 
 void player::signatureSetUpE()
 {
+	if (arcana[4].skillName == "nonSkill")return;
 	// arcana[4] , key -> E
 	if (arcana[4].skillName == spear->getInfo().keyName)
 	{
-		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !isGrabbed && !spear->getCool())
+		if (!isDead && !spear->getCool() && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
+			&& !Meteor->getCool() && !dragon->getCool() && meteorStateCool == 0 && dragonStateCool==0 &&spearStateCool==0)
 		{
 			if (!upgradeReady)
 			{
@@ -858,76 +831,78 @@ void player::signatureSetUpE()
 	}
 	else if (arcana[4].skillName == dragon->getInfo().keyName)
 	{
-		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool())
+
+		if (!upgradeReady)
 		{
-			if (!upgradeReady)
+			if (INPUT->GetKeyDown('E') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
+				&& !Meteor->getCool() && !dragon->getCool() && basicStateCool==0 && meteorStateCool ==0 && dragonStateCool == 0 && spearStateCool == 0)
 			{
-				if (INPUT->GetKeyDown('E') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
-					&& !Meteor->getCool() && !dragon->getCool() && signatureStateCool == 0)
-				{
-					signature = true;
-				}
-
-				if (signature)
-				{
-
-					if (signatureStateCool == 0)
-					{
-						signatureStateCool = 30;
-						dragon->fire(posX, posY, attackAngle);
-
-					}
-					if (signatureStateCool > 0)
-					{
-						state = STATE::SIGNATURE;
-						signatureStateCool--;
-					}
-					if (signatureStateCool == 0) signature = false;
-
-				}
+				signatureE = true;
 			}
-			else
+
+			if (signatureE)
 			{
-				TIME->setTest(12.f);
-				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
 
-				if (INPUT->GetKeyDown('E') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
-					&& !Meteor->getCool() && !dragon->getCool() && signatureStateCool == 0)
+				if (dragonStateCool == 0)
 				{
-					signature = true;
-				}
+					dragonStateCool = 30;
+					dragon->fire(posX, posY, attackAngle);
 
-				if (signature)
+				}
+				if (dragonStateCool > 0)
 				{
-					if (signatureStateCool == 0)
-					{
-						signatureStateCool = 30;
-						dragon->phoenixFire(posX, posY, attackAngle);
-						skillGauge = 0;
-					}
-					if (signatureStateCool >= 0)
-					{
-						state = STATE::SIGNATURE;
-						signatureStateCool--;
-						if (signatureStateCool == 0) signature = false;
-
-					}
+					state = STATE::SIGNATURE;
+					dragonStateCool--;
 				}
+				if (dragonStateCool == 0) signatureE = false;
 
 			}
 		}
-	}
+		else
+		{
+			TIME->setTest(12.f);
+			EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
 
+			if (INPUT->GetKeyDown('E') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
+				&& !Meteor->getCool() && !dragon->getCool() && meteorStateCool == 0 && dragonStateCool ==0 && spearStateCool==0)
+			{
+				signatureE = true;
+			}
+
+			if (signatureE)
+			{
+				if (dragonStateCool == 0)
+				{
+					dragonStateCool = 30;
+					dragon->phoenixFire(posX, posY, attackAngle);
+					skillGauge = 0;
+				}
+				if (dragonStateCool >= 0)
+				{
+					state = STATE::SIGNATURE;
+					dragonStateCool--;
+					if (dragonStateCool == 0) signatureE = false;
+
+				}
+			}
+
+		}
+
+	}
+	
 }
 
 void player::signatureSetUpR()
 {
 	// arcana[5], key->R
+	if (arcana[5].skillName == "nonSkill")return;
+
 	if (arcana[5].skillName == spear->getInfo().keyName)
 	{
-		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool())
+		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool() && frozenTime == 0 &&  speed == 0
+			&& !Meteor->getCool() && !dragon->getCool() && basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
 		{
-
+			
 			if (!upgradeReady)
 			{
 				if (INPUT->GetKey('R'))
@@ -954,64 +929,62 @@ void player::signatureSetUpR()
 	else if (arcana[5].skillName == dragon->getInfo().keyName)
 	{
 
-		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool())
+		if (!upgradeReady)
 		{
-			if (!upgradeReady)
+			if (INPUT->GetKeyDown('R') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
+				&& !Meteor->getCool() && !dragon->getCool() && meteorStateCool == 0)
 			{
-				if (INPUT->GetKeyDown('R') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
-					&& !Meteor->getCool() && !dragon->getCool() && signatureStateCool == 0)
+				signatureR = true;
+			}
+
+			if (signature)
+			{
+
+				if (meteorStateCool == 0)
 				{
-					signature = true;
-				}
-
-				if (signature)
-				{
-
-					if (signatureStateCool == 0)
-					{
-						signatureStateCool = 30;
-						dragon->fire(posX, posY, attackAngle);
-
-					}
-					if (signatureStateCool > 0)
-					{
-						state = STATE::SIGNATURE;
-						signatureStateCool--;
-					}
-					if (signatureStateCool == 0) signature = false;
+					meteorStateCool = 30;
+					dragon->fire(posX, posY, attackAngle);
 
 				}
-
+				if (meteorStateCool > 0)
+				{
+					state = STATE::SIGNATURE;
+					meteorStateCool--;
+				}
+				if (meteorStateCool == 0) signature = false;
 
 			}
-			else
+
+
+		}
+		else
+		{
+			TIME->setTest(12.f);
+			EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
+
+			if (INPUT->GetKeyDown('R') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
+				&& !Meteor->getCool() && !dragon->getCool() && meteorStateCool == 0)
 			{
-				TIME->setTest(12.f);
-				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
+				signature = true;
+			}
 
-				if (INPUT->GetKeyDown('R') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
-					&& !Meteor->getCool() && !dragon->getCool() && signatureStateCool == 0)
+			if (signature)
+			{
+				if (meteorStateCool == 0)
 				{
-					signature = true;
+					meteorStateCool = 30;
+					dragon->phoenixFire(posX, posY, attackAngle);
+					skillGauge = 0;
 				}
-
-				if (signature)
+				if (meteorStateCool >= 0)
 				{
-					if (signatureStateCool == 0)
-					{
-						signatureStateCool = 30;
-						dragon->phoenixFire(posX, posY, attackAngle);
-						skillGauge = 0;
-					}
-					if (signatureStateCool >= 0)
-					{
-						state = STATE::SIGNATURE;
-						signatureStateCool--;
-						if (signatureStateCool == 0) signature = false;
+					state = STATE::SIGNATURE;
+					meteorStateCool--;
+					if (meteorStateCool == 0) signature = false;
 
-					}
 				}
 			}
+
 
 		}
 	}
@@ -1671,10 +1644,6 @@ void player::animation(int _index)
 		} //end of switch
 	}
 
-
-
-
-
 }
 
 void player::frameAnimation(int frameX, int frameY, int _index)
@@ -1897,7 +1866,7 @@ void player::damage(int damage, float attackAngle, float knockBackSpeed)
 	DAMAGE->generator({ (long)posX, (long)posY }, "rNumbers", damage, checkAngle);
 	SOUNDMANAGER->play("playerHit", false, -0.18f);
 
-	if (inferno->getGauging() && signatureStateCool != 0 && basic)return;
+	if (inferno->getGauging() && meteorStateCool != 0 && basic)return;
 
 }
 
@@ -2020,16 +1989,4 @@ void player::buttonDown()
 	else isUp = false;
 	if (INPUT->GetKey(VK_DOWN) || INPUT->GetKey('S'))isDown = true;
 	else isDown = false;
-}
-//del
-void player::viewText()
-{
-	//char test[256];
-	//wsprintf(test, "basic : %d", basic);
-	//textOut(getMemDC(), 100, 170, test, WHITE);
-	//wsprintf(test, "standard : %d", standard);
-	//textOut(getMemDC(), 100, 190, test, WHITE);
-	//wsprintf(test, "signature : %d", signature);
-	//textOut(getMemDC(), 100, 210, test, WHITE);
-
 }

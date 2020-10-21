@@ -55,7 +55,9 @@ private:
 	//coolTime
 	int basicStateCool;
 	int infernoStateCool;
-	int signatureStateCool;
+	int meteorStateCool;
+	int dragonStateCool;
+	int spearStateCool;
 	int knockBackCool;
 	int blazeCount;
 
@@ -97,7 +99,6 @@ private:
 	bool isLeft, isRight, isUp, isDown;
 	
 	bool isDead;
-
 
 	//temp
 	bool uiOn;
@@ -168,7 +169,6 @@ public:
 
 	//Don't touch
 	void buttonDown();
-	void viewText();
 
 
 	//getter ,setter

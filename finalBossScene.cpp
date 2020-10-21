@@ -9,7 +9,7 @@ HRESULT finalBossScene::init()
 	IMAGEMANAGER->addImage("finalroom", "resource/boss/finalroom.bmp", MAXWIDTH, MAXHEIGHT, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("finalframe", "resource/boss/finalroommargenta.bmp", MAXWIDTH, MAXHEIGHT, true, RGB(255, 0, 255));
 
-	UI->init();
+	//UI->init();
 
 	_player = new player;
 	_player->init();

@@ -32,7 +32,7 @@ HRESULT loadingScene::init()
 	//로딩 이미지 및 사운드 초기화
 	this->loadingImage();
 	this->loadingSound();
-
+	PLAYERDATA->init();
 	return S_OK;
 }
 

@@ -753,8 +753,8 @@ void gameScene::gainArcana()
 		{
 			if (INPUT->GetKeyDown('F'))
 			{
-				
 				_player->setNewSignatrue(DROP->getCardVec()[i].arcanaName, DROP->getCardVec()[i].coolTime);
+
 				DROP->delCard(i);
 
 			}
