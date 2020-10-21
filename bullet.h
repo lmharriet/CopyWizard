@@ -563,6 +563,7 @@ public:
 	//upgrade
 	RECT getUpgradeRC(int index) { return vUltSpear[index].rc; }
 	int getUpgradeSize() { return vUltSpear.size(); }
+	int getUpgradeAtk(int index) { return vUltSpear[index].atkPower; }
 	float getUpgradeAngle(int index) { return vUltSpear[index].angle; }
 	bool getIsBig(int index) { return vUltSpear[index].isBig; }
 	bool getCool() { return isCoolTime; }

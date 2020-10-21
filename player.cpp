@@ -827,7 +827,7 @@ void player::signatureSetUpE()
 
 		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool())
 		{
-			if (!upgradeReady)
+			if (upgradeReady)
 			{
 				if (INPUT->GetKey('E'))
 				{
@@ -840,8 +840,8 @@ void player::signatureSetUpE()
 			}
 			else
 			{
-				//vector out of range...수정하기 -> 
-				if (INPUT->GetKeyDown('E') )
+
+				if (INPUT->GetKeyDown('E'))
 				{
 					spear->upgradefire(posX, posY, attackAngle);
 					skillGauge = 0;
@@ -1514,11 +1514,18 @@ void player::frameAnimation(int frameX, int frameY, int _index)
 	{
 		if (idleDelay > 20)
 		{
+
 			UNITRENDER->setFramePlayer({ 8,0 });
 			return;
 		}
+		else if (idleDelay == 16)	SOUNDMANAGER->play("portalOUT", false,0.2f);
 
-		if (idleDelay == 1)UNITRENDER->setFramePlayer({ 0,0 });
+
+		if (idleDelay == 1)
+		{
+
+			UNITRENDER->setFramePlayer({ 0,0 });
+		}
 	}
 
 	if (_index == 0)
@@ -1536,6 +1543,7 @@ void player::frameAnimation(int frameX, int frameY, int _index)
 		EFFECT->AfterimageEft("playerFrame", { (long)posX,(long)posY }, { frameX ,frameY }, 5);
 	}
 }
+
 void player::idleDelayCount()
 {
 	//포탈 워프시 이미지 렌더 딜레이
@@ -1545,7 +1553,9 @@ void player::idleDelayCount()
 		move = MOVE::DOWN;
 		state = STATE::IDLE;
 	}
+
 }
+
 void player::tileCol()
 {
 	for (int i = 0; i < 8; i++)

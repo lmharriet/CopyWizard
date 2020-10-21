@@ -1730,7 +1730,7 @@ void iceSpear::fireCount()
 		ultSpear.fireX = vStay[0].fireX;
 		ultSpear.fireY = vStay[0].fireY;
 		ultSpear.range = rangeCul(500, ultSpear.fireX, ultSpear.fireY, ultSpear.angle);
-
+		ultSpear.atkPower = 25;
 		ultSpear.rc = RectMakeCenter(ultSpear.x, ultSpear.y, 30, 30);
 
 		vUltSpear.push_back(ultSpear);
@@ -1766,7 +1766,11 @@ void iceSpear::upgradeMove()
 				vUltSpear[i].rc = RectMakeCenter(x, y, 30, 30);
 			}
 		}
-
+		if (distance < vUltSpear[i].range && !vUltSpear[i].isBig)
+		{
+			i++;
+			continue;
+		}
 		if (vUltSpear[i].isBig)
 		{
 			//»èÁ¦
@@ -1780,7 +1784,7 @@ void iceSpear::upgradeMove()
 					active = false;
 					eTime = 0;
 					saveRange = 0;
-					break;
+		
 				}
 			}
 		}

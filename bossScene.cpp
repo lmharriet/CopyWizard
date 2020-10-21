@@ -39,7 +39,7 @@ HRESULT bossScene::init()
 
 	//sound
 	soundInit();
-	
+
 
 	return S_OK;
 }
@@ -60,7 +60,7 @@ void bossScene::release()
 
 void bossScene::update()
 {
-	
+
 	_player->getBlaze()->setBossScene(true);
 
 
@@ -83,7 +83,7 @@ void bossScene::update()
 		_player->other_update();
 	}
 	else _player->setStateIDLE();
-	
+
 
 	//pixel collision
 	_player->colorCheck(IMAGEMANAGER->findImage("bossRoom"));
@@ -111,8 +111,8 @@ void bossScene::bossCutScene()
 {
 	if (!isBattle && colCheck(_player->getRect(), area))
 	{
-		SOUNDMANAGER->play("CutSceneSFX", false,-0.3f);
-		SOUNDMANAGER->play("CutSceneVO", false,-0.2f);
+		SOUNDMANAGER->play("CutSceneSFX", false, -0.3f);
+		SOUNDMANAGER->play("CutSceneVO", false, -0.2f);
 		isBattle = true; // 한번만 실행하기 위함
 		CAMERAMANAGER->setCutScene
 		(
@@ -154,29 +154,29 @@ void bossScene::render()
 		_boss->bossHpInfo(getMemDC(), WINSIZEX / 2 - 226, 100);
 
 		TextOut(getMemDC(), WINSIZEX / 2 - 110, 90, str, strlen(str));
-		
+
 	}
 
 	_player->invenRender();
-	
+
 	DAMAGE->render(getMemDC());
 }
 
 void bossScene::soundInit()
 {
-	
+
 
 	isBossBGM = true;
 	fadeIn = 0.f;
 
-	
+
 
 	SOUNDMANAGER->stop("ingameBGM");
 	SOUNDMANAGER->stop("mapToolBGM");
 	SOUNDMANAGER->stop("titleBGM");
 
 	SOUNDMANAGER->play("bossBGM", true);
-	
+
 }
 
 void bossScene::attackBoss()
@@ -187,7 +187,7 @@ void bossScene::attackBoss()
 	{
 		if (colCheck(_player->getBlaze()->getBullet()[i].rc, _boss->getBossRect()))
 		{
-			
+
 
 			bool isCri = PLAYERDATA->criAppear();
 
@@ -196,7 +196,7 @@ void bossScene::attackBoss()
 			//gauge
 			if (PLAYERDATA->getStat().ManaRejection == false)
 			{
-				_player->chargeSkillGauge(damage,0);
+				_player->chargeSkillGauge(damage, 0);
 			}
 
 
@@ -221,7 +221,7 @@ void bossScene::attackBoss()
 	{
 		if (colCheck(_player->getMeteor()->getColRect(i), _boss->getBossRect()))
 		{
-			
+
 			bool isCri = PLAYERDATA->criAppear();
 			int damage = PLAYERDATA->damageCul(_player->getMeteor()->getAtkPower(i), isCri);
 
@@ -243,7 +243,7 @@ void bossScene::attackBoss()
 	{
 		if (colCheck(_player->getDashFire()->getRect(i), _boss->getBossRect()))
 		{
-			
+
 
 			bool isCri = PLAYERDATA->criAppear();
 
@@ -253,7 +253,7 @@ void bossScene::attackBoss()
 			//gauge
 			if (PLAYERDATA->getStat().ManaRejection == false)
 			{
-				_player->chargeSkillGauge(damage,2);
+				_player->chargeSkillGauge(damage, 2);
 			}
 
 
@@ -278,21 +278,21 @@ void bossScene::attackBoss()
 
 		}
 	}
-	else if (PLAYERDATA->getGaugeTime() >= 50 &&_player->getInferno()->CheckCollision(_boss->getBossRect()))
+	else if (PLAYERDATA->getGaugeTime() >= 50 && _player->getInferno()->CheckCollision(_boss->getBossRect()))
 	{
 		bool isCri = PLAYERDATA->criAppear();
-	
+
 		int damage = PLAYERDATA->damageCul(_player->getInferno()->getInf().atkPower, isCri);
 
 		//gauge
 		if (PLAYERDATA->getStat().ManaRejection == false)
 		{
-			_player->chargeSkillGauge(damage,3);
+			_player->chargeSkillGauge(damage, 3);
 		}
-		
+
 		float angle = getAngle(_boss->getBoss().center.x, _boss->getBoss().center.y,
 			_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
-		
+
 		float x = _boss->getBoss().center.x + cosf(angle) * 6.f;
 		float y = _boss->getBoss().center.y - sinf(angle) * 6.f;
 		// set boss center x,y (inferno 공격 당하면 inferno쪽으로 끌려오기)
@@ -300,7 +300,7 @@ void bossScene::attackBoss()
 		_boss->setRect((int)x, (int)y);
 		//-> boss damaged
 		//_boss->setBossHp(10);
-		
+
 		_boss->damage(damage, 0, 0, 3, isCri);
 		//DAMAGE->generator({ (long)_boss->getBossRect().left + 75, (long)_boss->getBossRect().top + 75 }, "numbers", damage);
 
@@ -317,7 +317,7 @@ void bossScene::attackBoss()
 			if (colCheck(_player->getDragon()->getDragonRC(i), _boss->getBossRect()))
 			{
 				bool isCri = PLAYERDATA->criAppear();
-				int damage = PLAYERDATA->damageCul(_player->getDragon()->getAtkPower(i) + RANDOM->range(0, 3),isCri);
+				int damage = PLAYERDATA->damageCul(_player->getDragon()->getAtkPower(i) + RANDOM->range(0, 3), isCri);
 
 				if (PLAYERDATA->getStat().ManaRejection == false)
 				{
@@ -330,13 +330,13 @@ void bossScene::attackBoss()
 		}
 
 	}
-	
+
 	for (int i = 0; i < _player->getDragon()->getcolSize(); i++)
 	{
 		if (colCheck(_player->getDragon()->getColRc(i), _boss->getBossRect()))
 		{
 			bool isCri = PLAYERDATA->criAppear();
-			int damage = PLAYERDATA->damageCul(_player->getDragon()->getUpgradeAtkPower(i) + RANDOM->range(0, 3),isCri);
+			int damage = PLAYERDATA->damageCul(_player->getDragon()->getUpgradeAtkPower(i) + RANDOM->range(0, 3), isCri);
 
 			if (PLAYERDATA->getStat().ManaRejection == false)
 			{
@@ -345,4 +345,47 @@ void bossScene::attackBoss()
 			_boss->damage(damage, _player->getDragon()->getHeadAngle(i), 10.f, 4, isCri);
 		}
 	}
+
+
+
+	//ice Spear
+	for (int i = 0; i < _player->getSpear()->getSize(); i++)
+	{
+		if (colCheck(_player->getSpear()->getSpearRc(i), _boss->getBossRect()))
+		{
+			//enemy->getMinion()[j]->setPt(_player->getSpear()->getSpearRc(i).left, _player->getSpear()->getSpearRc(i).top);
+
+			bool isCri = PLAYERDATA->criAppear();
+
+			int damage = PLAYERDATA->damageCul(_player->getSpear()->getAtkPower(i) + RANDOM->range(0, 3), isCri);
+			//gauge
+			if (PLAYERDATA->getStat().ManaRejection == false)
+			{
+				_player->chargeSkillGauge(damage, 5);
+			}
+			_boss->damage(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, isCri);
+
+		}
+
+	}
+
+	//upgrade
+	for (int i = 0; i < _player->getSpear()->getUpgradeSize(); i++)
+	{
+		if (colCheck(_player->getSpear()->getUpgradeRC(i), _boss->getBossRect()))
+		{
+			bool isCri = PLAYERDATA->criAppear();
+
+			int damage = PLAYERDATA->damageCul(_player->getSpear()->getUpgradeAtk(i) + RANDOM->range(0, 3), isCri);
+			//gauge
+			if (PLAYERDATA->getStat().ManaRejection == false)
+			{
+				_player->chargeSkillGauge(damage, 5);
+			}
+			_boss->damage(damage, _player->getSpear()->getUpgradeAngle(i), 10.f, 5, isCri);
+		}
+
+	}
+
+
 }
