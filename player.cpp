@@ -487,7 +487,7 @@ void player::skillInit()
 		for (int i = 0; i < size; i++)
 		{
 			arcana[i] = PLAYERDATA->getAracaInfo()[i];
-			cout << i << ", " << arcana[i].skillName << '\n';
+
 		}
 	}
 

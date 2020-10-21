@@ -79,6 +79,7 @@ void playerData::update()
 			}
 		}
 	}
+
 }
 
 void playerData::shroudRender(HDC hdc)
@@ -216,6 +217,8 @@ void playerData::setArcanaInfo(int index, string keyName, string info, int coolT
 	vArcanaInfo[index].skillName = keyName;
 	vArcanaInfo[index].explanation = info;
 	vArcanaInfo[index].coolTime = coolTime;
+	UI->setSkillSlot(vArcanaInfo[index].skillName, vArcanaInfo[index].coolTime);
+
 }
 
 bool playerData::criAppear()
