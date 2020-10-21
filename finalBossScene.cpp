@@ -37,6 +37,9 @@ HRESULT finalBossScene::init()
 	PARTICLE->init();
 	DAMAGE->init();
 
+	UI->fadeIn();
+	EFFECT->setPortalEffect({ (long)_player->getX(),(long)_player->getY() });
+
 	return S_OK;
 }
 
@@ -121,8 +124,9 @@ void finalBossScene::render()
 		_finalBoss->finalBossHpInfo(getMemDC(), WINSIZEX / 2 - 226, 100);
 
 		TextOut(getMemDC(), WINSIZEX / 2 - 70, 90, str, strlen(str));
-
 	}
+
+	EFFECT->portalRender(getMemDC());
 
 	DAMAGE->render(getMemDC());
 }

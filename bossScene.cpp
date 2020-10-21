@@ -47,6 +47,9 @@ HRESULT bossScene::init()
 	isWarp = false;
 	gameOver = false;
 
+	UI->fadeIn();
+	EFFECT->setPortalEffect({ (long)_player->getX(),(long)_player->getY() });
+
 	return S_OK;
 }
 
