@@ -28,7 +28,7 @@ HRESULT boss::init(int _posX, int _posY)
 	boss.center.y = posY;
 	boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
 	boss.angle = 0;
-	boss.bossHp = 2000;
+	boss.bossHp = 1;
 	boss.isHit = false;
 
 	posPlayer = 5;
@@ -98,12 +98,13 @@ void boss::render()
 		}
 	}
 	else {
-		CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("bossNpc"), 730, 240);
+		//CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("bossNpc"), 730, 240);
 		if (!isNPCAppear)
 		{
 			
+
 			SOUNDMANAGER->play("BOX_appear",false,0.3f);
-			isNPCAppear = true;
+			//isNPCAppear = true;
 		}
 	}
 

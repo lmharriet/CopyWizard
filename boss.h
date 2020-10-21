@@ -150,6 +150,9 @@ public:
 	void setCenter(POINT pt) { boss.center = { pt.x,pt.y }; }
 	void setBossHit(bool bossHit) { boss.isHit = bossHit; }
 	//void setBossHp(int bosshp) { boss.bossHp -= bosshp; }
+
+	//10/22
+	bool getGameOver() { return gameOver; }
 };
 
 

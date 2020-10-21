@@ -47,6 +47,15 @@ void portalManager::backRender(HDC hdc)
 	}
 }
 
+void portalManager::bossScene_backRender(HDC hdc)
+{
+	image* sceneStone = IMAGEMANAGER->findImage("sceneWarpStone");
+
+	CAMERAMANAGER->Render(hdc, sceneStone,
+		warpScene.x - sceneStone->getWidth() / 2,
+		warpScene.y - sceneStone->getHeight() / 2);
+}
+
 void portalManager::render(HDC hdc)
 {
 	image* img = IMAGEMANAGER->findImage("portalFrame");

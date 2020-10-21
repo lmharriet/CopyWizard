@@ -4,6 +4,7 @@
 HRESULT chest::init(string _keyName, POINT _pos, int _hp)
 {
 	IMAGEMANAGER->addFrameImage("silverChest", "Images/npc/silverChest.bmp", 936, 212, 6, 1);
+	IMAGEMANAGER->addFrameImage("GoldChest", "Images/npc/goldChest.bmp", 936, 226, 6, 1);
 
 	IMAGEMANAGER->addImage("iceSpearSkill", "Images/item/iceSpearSkill.bmp", 32, 49, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("dragonSkill", "Images/item/dragonSkill.bmp", 32, 49, true, RGB(255, 0, 255));
@@ -36,7 +37,7 @@ HRESULT chest::init(string _keyName, POINT _pos, int _hp)
 		break;
 	}
 
-	UNITRENDER->addUnit(255, "silverChest", "chest", { 0,0 }, _pos.x, _pos.y);
+	UNITRENDER->addUnit(255, _keyName, "chest", { 0,0 }, _pos.x, _pos.y);
 	
 	hitCount = 0;
 
@@ -66,6 +67,11 @@ void chest::update()
 					//아이템, 동전 생성
 					DROP->dropPoint(rePos, 80, 120, 0, { -100,100 }, { -80,80 });
 					DROP->dropPointArcana(arcanaKeyName, rePos, arcanaName, arcanaCoolTime);
+
+					//포탈 생성
+					PORTAL->initWarp(-1149, 2247);
+					EFFECT->setPortalEffect({ (long)PORTAL->getWarpSceneX(),(long)PORTAL->getWarpSceneY() - 30 });
+					SOUNDMANAGER->play("portalWarp", false);
 				}
 
 				frameX++;
@@ -76,6 +82,47 @@ void chest::update()
 		else
 		{
 			if(opacity > 0) opacity -= 17;
+
+			UNITRENDER->setIndexChest(opacity);
+		}
+	}
+}
+
+void chest::bossScene_update()
+{
+	hitCount++;
+
+	image* img = IMAGEMANAGER->findImage(keyName);
+	if (hp <= 0) isDie = true;
+
+	if (isDie)
+	{
+		time++;
+		if (frameX != img->getMaxFrameX())
+		{
+			if (time % 5 == 0)
+			{
+				if (frameX == 2)
+				{
+					POINT rePos = { pos.x - 30, pos.y - 30 };
+					//아이템, 동전 생성
+					DROP->dropPoint(rePos, 80, 120, 0, { -100,100 }, { -80,80 });
+					//DROP->dropPointArcana(arcanaKeyName, rePos, arcanaName, arcanaCoolTime);
+
+					//포탈 생성
+					PORTAL->initWarp(746, 543);
+					EFFECT->setPortalEffect({ (long)PORTAL->getWarpSceneX(),(long)PORTAL->getWarpSceneY() - 30 });
+					SOUNDMANAGER->play("portalWarp", false);
+				}
+
+				frameX++;
+				//UNITRENDER->setFrameChest({ frameX,0 });
+			}
+		}
+
+		else
+		{
+			if (opacity > 0) opacity -= 17;
 
 			UNITRENDER->setIndexChest(opacity);
 		}
@@ -114,4 +161,14 @@ void chest::damaged(POINT pt, int value, int skillNum ,bool criCheck)
 	}
 
 	DAMAGE->generator(pt, "numbers", value, true, criCheck);
+}
+
+void chest::render(HDC hdc)
+{
+	//IMAGEMANAGER->findImage(keyName);
+	CAMERAMANAGER->AlphaFrameRender(hdc, IMAGEMANAGER->findImage(keyName),
+		pos.x - IMAGEMANAGER->findImage(keyName)->getFrameWidth()/2,
+		pos.y - IMAGEMANAGER->findImage(keyName)->getFrameHeight()/2,
+		frameX, 0, opacity);
+	//CAMERAMANAGER->Rectangle(hdc, rc);
 }
