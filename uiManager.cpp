@@ -120,9 +120,7 @@ void uiManager::render(HDC hdc, int destX, int destY)
 
 	if (blackOpacity > 0)
 	{
-		image* img = IMAGEMANAGER->findImage("blackWindow");
-
-		img->alphaRender(hdc, blackOpacity);
+		IMAGEMANAGER->alphaRender("blackWindow", hdc, blackOpacity);
 
 		blackOpacity -= 5;
 	}

@@ -1,6 +1,6 @@
 #pragma once
 #include "singletonBase.h"
-#define SKILLSLOT_MAX 4
+#define SKILLSLOT_MAX 6
 struct tagSkill
 {
 	string keyName;
