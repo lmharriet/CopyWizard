@@ -88,7 +88,7 @@ void effectManager::render(HDC hdc)
 
             if (vEft[i].flipImg == false) // 애니메이션 정방향 출력
             {
-                if (time % vEft[i].frameDelay == 0 && vEft[i].imgCount < vEft[i].maxFrame) vEft[i].imgCount++;
+                if (time % vEft[i].frameDelay == 0) vEft[i].imgCount++;
 
                 if (vEft[i].isEraseSize) // 삭제조건 : 사이즈
                 {
@@ -102,7 +102,7 @@ void effectManager::render(HDC hdc)
 
                 else if (vEft[i].isEraseTime == false) // 삭제조건 : 프레임
                 {
-                    if (vEft[i].imgCount == vEft[i].maxFrame) vEft.erase(vEft.begin() + i);
+                    if (vEft[i].imgCount-1 == vEft[i].maxFrame) vEft.erase(vEft.begin() + i);
                     else i++;
                 }
 
@@ -280,6 +280,7 @@ void effectManager::addImage()
     IMAGEMANAGER->addFrameImage("portal2", "Images/effect/red_portal.bmp", 488, 110, 8, 1);
 
     IMAGEMANAGER->addFrameImage("portalFrame", "Images/effect/portalFrame.bmp", 177, 108, 3, 1);
+    IMAGEMANAGER->addFrameImage("iceBreak", "Images/effect/iceBreak.bmp", 403, 125, 3, 1);
 }
 
 void effectManager::dashEffect(MOVE direction, POINT pos)
@@ -779,4 +780,9 @@ void effectManager::ultEftPlay(POINT pt, int delay)
 {
     //setEffect("ultLight", pt, true, delay, false, 0, 0, 0);
     setEffect("ultLight", pt, false, false, 0, delay);
+}
+
+void effectManager::iceBreakPlay(POINT pt, int delay)
+{
+    setEffect("iceBreak", pt, false, false, 0, delay);
 }

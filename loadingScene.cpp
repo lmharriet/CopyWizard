@@ -70,7 +70,7 @@ void loadingScene::loadingImage()
 	_loading->loadFrameImage("knightSlashUp", "resource/enemyEffect/knightSlashUp.bmp", 246, 82, 3, 1);
 	_loading->loadFrameImage("knightSlashDown", "resource/enemyEffect/knightSlashDown.bmp", 246, 82, 3, 1);
 	_loading->loadFrameImage("stoneFly", "resource/enemyEffect/stoneFrame.bmp", 144, 72, 2, 1);
-	_loading->loadImage("IceState", "resource/player/isIce.bmp", 152, 220,true,RGB(255,0,255));
+	_loading->loadImage("IceState", "resource/player/isIce.bmp", 122, 177,true,RGB(255,0,255));
 	
 
 

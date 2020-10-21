@@ -192,4 +192,5 @@ public:
 	void AfterimageEft(string keyName, POINT pt, POINT frame, int delay);
 	void AfterimageRender(HDC hdc);
 	void ultEftPlay(POINT pt, int delay);
+	void iceBreakPlay(POINT pt, int delay);
 };
