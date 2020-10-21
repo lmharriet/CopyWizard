@@ -70,12 +70,14 @@ private:
 	int posDashRc;
 	int posPlayer;
 	int skillNum;
+	int hitTimer;
 
 	float dashAngle;
 
 	bool changStage;
 	bool leftCheck;
 	bool setDashrc;
+	bool isHit;
 
 	bool patternStart;
 	bool wallPattern;
@@ -110,5 +112,9 @@ public:
 	tagFinaleBoss getFinalBoss() {
 		return boss;
 	}
+
+	void setRect(int x, int y) { boss.rc = RectMakeCenter(x, y, 150, 150); }
+	void setCenter(POINT pt) { boss.center = { pt.x,pt.y }; }
+	void setBossHit(bool bossHit) { boss.isHit = bossHit; }
 };
 

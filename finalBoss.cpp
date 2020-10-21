@@ -30,6 +30,7 @@ HRESULT finalBoss::init(int _posX, int _posY)
 	posDashRc = 0;
 	dashCount = 6;
 	posPlayer = 0;
+	hitTimer = 0;
 	skillNum = RANDOM->range(5);
 
 	dashAngle = 0;
@@ -47,6 +48,8 @@ HRESULT finalBoss::init(int _posX, int _posY)
 	windPattern = false;
 	icePattern = false;
 
+	isHit = false;
+
 	return S_OK;
 }
 
@@ -61,6 +64,7 @@ void finalBoss::update()
 	this->dashColPlayer();
 	this->useSkill();
 	this->die();
+	this->colCheck();
 	BOSSMANAGER->update();
 }
 
@@ -582,7 +586,7 @@ void finalBoss::wind()
 		for (int i = 0; i < windBlock.size(); i++) {
 			windBlock[i]->blockCount++;
 			if (windBlock[i]->blockCount % 5 == 0) {
-				BOSSMANAGER->init(windBlock[i]->center.x - 50, windBlock[i]->center.y, 20, 6);
+				BOSSMANAGER->init(windBlock[i]->center.x - 100, windBlock[i]->center.y, 20, 6);
 			}
 			windBlock[i]->center.x += cosf(windBlock[i]->angle) * 30;
 			windBlock[i]->center.y += -sinf(windBlock[i]->angle) * 30;
@@ -601,6 +605,7 @@ void finalBoss::ice()
 			skillBlock* _ice = new skillBlock;
 			_ice->angle = (i * 72) * PI / 180;
 			_ice->blockCount = 0;
+			_ice->isHit = false;
 			_ice->rc = RectMakeCenter(boss.center.x, boss.center.y, 96, 96);
 			_ice->center.x = cosf(_ice->angle) * 100 + boss.center.x - 50;
 			_ice->center.y = -sinf(_ice->angle) * 100 + boss.center.y - 100;
@@ -638,8 +643,79 @@ void finalBoss::colCheck()
 		if (IntersectRect(&temp, &_player->getRect(), &BOSSMANAGER->getVector()[i]->getRect())) {
 			switch (skillNum)
 			{
-			default:
+			case 0:
+				if (!isHit) {
+					float _wallAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 30, BOSSMANAGER->getVector()[i]->getRect().top + 30, _player->getX(), _player->getY());
+					int damage = RANDOM->range(8, 12);
+					_player->damage(damage, _wallAngle, 10);
+					isHit = true;
+				}
+				if (isHit) {
+					hitTimer++;
+					if (hitTimer > 20) {
+						hitTimer = 0;
+						isHit = false;
+					}
+				}
 				break;
+			case 1:
+				if (!isHit) {
+					float _blazeAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 48, BOSSMANAGER->getVector()[i]->getRect().top + 48, _player->getX(), _player->getY());
+					int damage = RANDOM->range(34, 48);
+					_player->damage(damage, _blazeAngle, 10);
+					isHit = true;
+				}
+				if (isHit) {
+					hitTimer++;
+					if (hitTimer > 50) {
+						hitTimer = 0;
+						isHit = false;
+					}
+				}
+				break;
+			case 2:
+				if (!isHit) {
+					float _thunderAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 350, BOSSMANAGER->getVector()[i]->getRect().top + 350, _player->getX(), _player->getY());
+					int damage = RANDOM->range(3, 8);
+					_player->damage(damage, _thunderAngle, 10);
+					isHit = true;
+				}
+				if (isHit) {
+					hitTimer++;
+					if (hitTimer > 20) {
+						hitTimer = 0;
+						isHit = false;
+					}
+				}
+				break;
+			case 3:
+				if (!isHit) {
+					float _windAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 220, BOSSMANAGER->getVector()[i]->getRect().top + 170, _player->getX(), _player->getY());
+					int damage = RANDOM->range(12, 24);
+					_player->damage(damage, _windAngle, 20);
+					isHit = true;
+				}
+				if (isHit) {
+					hitTimer++;
+					if (hitTimer > 20) {
+						hitTimer = 0;
+						isHit = false;
+					}
+				}
+				break;
+			}
+		}
+	}
+
+	if (skillNum == 4) {
+		for (int i = 0; i < iceBlock.size(); i++) {
+			if (IntersectRect(&temp, &_player->getRect(), &iceBlock[i]->rc)) {
+				if (!iceBlock[i]->isHit) {
+					float _windAngle = getAngle(iceBlock[i]->center.x, iceBlock[i]->center.y, _player->getX(), _player->getY());
+					int damage = RANDOM->range(25, 32);
+					_player->damage(damage, _windAngle, 10);
+					iceBlock[i]->isHit = true;
+				}
 			}
 		}
 	}
