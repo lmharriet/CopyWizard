@@ -29,6 +29,7 @@ public:
 
 	void addUnit(int _index, string _keyName, string type, POINT frame, float _x = 0, float _y = 0);
 	void setFramePlayer(POINT frame) { player->setFrame(frame); }
+	void setFrameChest(POINT frame) { chest->setFrame(frame); }
 	void setPlayerRect(RECT rc) { player->setRect(rc); }
 	void enemyInit(int kind, POINT currentFrame, POINT pos);
 	void enemyClear() { vEnemy.clear(); }
