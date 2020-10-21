@@ -179,8 +179,6 @@ void gameScene::render()
 
 	_shop->render();
 
-	DROP->render(getMemDC());
-
 	EFFECT->pRender(getMemDC());
 
 	EFFECT->alwaysEftRender(getMemDC());
@@ -191,6 +189,8 @@ void gameScene::render()
 	PORTAL->backRender(getMemDC());
 
 	UNITRENDER->render(getMemDC());
+
+	DROP->render(getMemDC());
 
 	PORTAL->render(getMemDC());
 
@@ -791,6 +791,7 @@ void gameScene::warp()
 	if (isWarp == false && colCheck(_player->getRect(), PORTAL->getWarpScene())
 		&& INPUT->GetKeyDown('F'))
 	{
+		_player->setIdleDelay(50);
 		isWarp = true;
 
 		EFFECT->setPortalEffect({ (long)PORTAL->getWarpSceneX(),(long)PORTAL->getWarpSceneY() - 30 });

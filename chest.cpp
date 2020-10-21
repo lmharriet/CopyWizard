@@ -40,8 +40,10 @@ void chest::update()
 			{
 				if (frameX == 2)
 				{
+					POINT rePos = { pos.x - 30, pos.y - 30 };
 					//아이템, 동전 생성
-					DROP->dropPoint(pos, 80, 120, 0);
+					DROP->dropPoint(rePos, 80, 120, 0);
+					DROP->dropPoint(rePos, 80, 120, 0, { -100,100 }, { -80,80 });
 				}
 
 				frameX++;

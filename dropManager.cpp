@@ -109,7 +109,7 @@ void dropManager::coinEffectRender(HDC hdc)
     }
 }
 
-void dropManager::dropPoint(POINT pt, int minCoin, int maxCoin, float healBallPercentage)
+void dropManager::dropPoint(POINT pt, int minCoin, int maxCoin, float healBallpercentage, POINT rangeX, POINT rangeY)
 {
     //코인 생성
     int ranCoin = RANDOM->range(minCoin, maxCoin);
@@ -123,7 +123,7 @@ void dropManager::dropPoint(POINT pt, int minCoin, int maxCoin, float healBallPe
     ranCoin -= (sCoin * 5);
     int bCoin = ranCoin;
 
-    vTransfer.push_back({ gCoin,sCoin,bCoin,pt });
+    vTransfer.push_back({ gCoin,sCoin,bCoin,pt,(float)rangeX.x,(float)rangeX.y,(float)rangeY.x,(float)rangeY.y });
 
     //포션 생성 (후에 플레이어 포션 드랍율을 매개변수로 받아와 포션 드랍 유/무를 정한다)
     float sum = 0.1f + PLAYERDATA->getStat().potionDropChance;
@@ -161,8 +161,8 @@ void dropManager::coinGenerator()
         for (int i = 0; i < iter->gCoin; i++)
         {
             POINT pos = iter->pt;
-            pos.x += RANDOM->range(-20, 20);
-            pos.y += RANDOM->range(-10, 10);
+            pos.x += RANDOM->range(iter->minX, iter->maxX);
+            pos.y += RANDOM->range(iter->minY, iter->maxY);
 
             vCoin.push_back({ pos,RectMakeCenter(pos.x,pos.y,20,20),10,
             0.2f,
@@ -172,8 +172,8 @@ void dropManager::coinGenerator()
         for (int j = 0; j < iter->sCoin; j++)
         {
             POINT pos = iter->pt;
-            pos.x += RANDOM->range(-20, 20);
-            pos.y += RANDOM->range(-10, 10);
+            pos.x += RANDOM->range(iter->minX, iter->maxX);
+            pos.y += RANDOM->range(iter->minY, iter->maxY);
 
             vCoin.push_back({ pos,RectMakeCenter(pos.x,pos.y,20,20),5,
             0.2f,
@@ -183,8 +183,8 @@ void dropManager::coinGenerator()
         for (int j = 0; j < iter->bCoin; j++)
         {
             POINT pos = iter->pt;
-            pos.x += RANDOM->range(-20, 20);
-            pos.y += RANDOM->range(-10, 10);
+            pos.x += RANDOM->range(iter->minX, iter->maxX);
+            pos.y += RANDOM->range(iter->minY, iter->maxY);
 
             vCoin.push_back({ pos,RectMakeCenter(pos.x,pos.y,20,20),1,
             0.2f,
