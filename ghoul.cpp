@@ -28,7 +28,7 @@ void ghoul::update()
         astar->update(camRC, astarRC, playerRC, &angle);
         if (!isATK)
         {
-            if (rc.left + img->getFrameWidth() / 2 < playerRC.left)
+            if (getCenterX() < playerRC.left)
             {
                 atkDirection[MONSTER_LEFT] = false;
                 atkDirection[MONSTER_RIGHT] = true;
@@ -39,7 +39,7 @@ void ghoul::update()
                 atkDirection[MONSTER_LEFT] = true;
                 atkDirection[MONSTER_RIGHT] = false;
             }
-            if (rc.top + img->getFrameHeight() / 2 > playerRC.top)
+            if (getCenterY()> playerRC.top)
             {
 
                 atkDirection[MONSTER_UP] = true;
@@ -82,7 +82,7 @@ void ghoul::update()
     if ( !isSpeedUp && isMonsterApeear)
     {
         speedUpCount++;
-        if (!(speedUpCount % 30) )
+        if (!(speedUpCount == 30) )
         {
             speed = 16.f;
             speedUpCount = 0;

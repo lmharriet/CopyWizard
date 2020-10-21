@@ -36,7 +36,7 @@ void summoner::update()
         {
             state = STATEIMAGE::IDLE;
 
-            if ((rc.left + (rc.right - rc.left) / 2) < playerRC.left)
+            if ((rc.left + ((rc.right - rc.left) >>1)) < playerRC.left)
             {
                 atkDirection[MONSTER_LEFT] = false;
                 atkDirection[MONSTER_RIGHT] = true;
@@ -46,7 +46,7 @@ void summoner::update()
                 atkDirection[MONSTER_LEFT] = true;
                 atkDirection[MONSTER_RIGHT] = false;
             }
-            if ((rc.top + (rc.bottom - rc.top) / 2) < playerRC.top)
+            if ((rc.top + ((rc.bottom - rc.top) >> 1)) < playerRC.top)
             {
                 atkDirection[MONSTER_UP] = false;
                 atkDirection[MONSTER_DOWN] = true;
@@ -94,7 +94,7 @@ void summoner::addRender()
             SOUNDMANAGER->play("summonerCasting", false, -0.15f);
             isCharging = true;
         }
-        if (!isCasting/*&&!isFxAppear*/)
+        if (!isCasting)
         {
 
             imgSize += 0.02f;
