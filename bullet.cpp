@@ -29,16 +29,15 @@ void bullet::update()
 
 void bullet::render()
 {
-	for (int i = 0; i < _vBullet.size(); i++)
+	int size = _vBullet.size();
+	for (int i = 0; i < size; i++)
 	{
 		//CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
 		if (_vBullet[i].bulletImage)
 			CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage,
-				_vBullet[i].x - _vBullet[i].bulletImage->getFrameWidth() / 2,
-				_vBullet[i].y - _vBullet[i].bulletImage->getFrameHeight() / 2,
+				_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth() >> 1),
+				_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight() >> 1),
 				_vBullet[i].FrameX, _vBullet[i].FrameY);
-
-
 	}
 }
 
@@ -80,25 +79,32 @@ void bullet::fire(float x, float y, float angle, float speed, int damage, MONSTE
 
 void bullet::move()
 {
-
-	for (int i = 0; i < _vBullet.size(); i++)
+	int size = _vBullet.size();
+	for (int i = 0; i < size; i++)
 	{
 		_vBullet[i].FrameX = 1;
 		_vBullet[i].x += cosf(_vBullet[i].angle) * _vBullet[i].speed;
 		_vBullet[i].y += -sinf(_vBullet[i].angle) * _vBullet[i].speed;
+
 		switch (_vBullet[i].kind)
 		{
 		case MONSTERKIND::GOLEM:
 			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 130, 200);
 			_vBullet[i].count++;
 			if (_vBullet[i].count >= 10)
+			{
 				_vBullet.erase(_vBullet.begin() + i);
+				size = _vBullet.size();
+			}
 			break;
 		case MONSTERKIND::KNIGHT:
 			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 110, 150);
 			_vBullet[i].count++;
 			if (_vBullet[i].count >= 5)
+			{
 				_vBullet.erase(_vBullet.begin() + i);
+				size = _vBullet.size();
+			}
 			break;
 		case MONSTERKIND::SUMMONER:
 		{
@@ -108,6 +114,7 @@ void bullet::move()
 			if (_range < distance)//총알이 사거리 보다 커졌을때
 			{
 				_vBullet.erase(_vBullet.begin() + i);
+				size = _vBullet.size();
 			}
 		}
 		break;
@@ -115,7 +122,10 @@ void bullet::move()
 			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 90, 130);
 			_vBullet[i].count++;
 			if (_vBullet[i].count >= 5)
+			{
 				_vBullet.erase(_vBullet.begin() + i);
+				size = _vBullet.size();
+			}
 			break;
 		case MONSTERKIND::GHOULLARGE:
 			_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 120, 140);
@@ -125,6 +135,7 @@ void bullet::move()
 			if (_ghoulLargeRange < distance)//총알이 사거리 보다 커졌을때
 			{
 				_vBullet.erase(_vBullet.begin() + i);
+				size = _vBullet.size();
 			}
 			break;
 		}
@@ -181,7 +192,7 @@ void bomb::update()
 	if (isCoolTime)
 	{
 		currentCoolTime++;
-		if (currentCoolTime == info.coolTime )
+		if (currentCoolTime == info.coolTime)
 		{
 			isCoolTime = false;
 			currentCoolTime = 0;
@@ -191,7 +202,8 @@ void bomb::update()
 
 void bomb::render()
 {
-	for (int i = 0; i < _vBullet.size(); i++)
+	int size = _vBullet.size();
+	for (int i = 0; i < size; i++)
 	{
 		CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage,
 			_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth() / 2),
@@ -212,7 +224,8 @@ float bomb::getRange(float angle, float x, float y)
 		float posY = y - sinf(angle) * (32 * i);
 		RECT rTmp = RectMakeCenter(posX, posY, 4, 4);
 
-		for (int j = 0; j < PLAYERDATA->getWall().size(); j++)
+		int size = PLAYERDATA->getWall().size();
+		for (int j = 0; j < size; j++)
 		{
 			int num = PLAYERDATA->getWall()[j];
 
@@ -274,7 +287,8 @@ void bomb::bombActive()
 
 void bomb::move() // blaze tile충돌은 gameScene에서만 되도록 처리하기
 {
-	for (int i = 0; i < _vBullet.size();)
+	int size = _vBullet.size();
+	for (int i = 0; i < size;)
 	{
 		_vBullet[i].x += cosf(_vBullet[i].angle) * _vBullet[i].speed;
 		_vBullet[i].y += -sinf(_vBullet[i].angle) * _vBullet[i].speed;
@@ -285,6 +299,7 @@ void bomb::move() // blaze tile충돌은 gameScene에서만 되도록 처리하기
 		if (_vBullet[i].range < distance || _vBullet[i].collision)
 		{
 			removeBomb(i);
+			size = _vBullet.size();
 		}
 		else i++;
 	}
@@ -307,7 +322,7 @@ HRESULT meteor::init()
 	IMAGEMANAGER->addFrameImage("circle", "resource/player/castingCircle1.bmp", 3072, 128, 24, 1, true, RGB(255, 0, 0));
 	IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 1200, 250, 6, 1);
 	currentCoolTime = 0;
-	
+
 	isCoolTime = false;
 
 	count = index = 0;
@@ -349,7 +364,8 @@ void meteor::update()
 	}
 
 	//데미지 넣을 용도
-	for (int i = 0; i < vDamage.size();)
+	int size = vDamage.size();
+	for (int i = 0; i < size;)
 	{
 		vDamage[i].lifeTime--;
 
@@ -398,11 +414,8 @@ void meteor::update()
 
 void meteor::render()
 {
-	image* img = IMAGEMANAGER->findImage("circle");
-
-	char temp[126];
-
-	for (int i = 0; i < vCircle.size(); i++)
+	int size = vCircle.size();
+	for (int i = 0; i < size; i++)
 	{
 		vCircle[i].count++;
 		if (vCircle[i].count % 3 == 0)
@@ -412,10 +425,14 @@ void meteor::render()
 		}
 
 		//CAMERAMANAGER->Ellipse(getMemDC(), vCircle[i].rc);
-		CAMERAMANAGER->FrameRender(getMemDC(), img,
-			vCircle[i].x - img->getFrameWidth() / 2, vCircle[i].y - img->getFrameHeight() / 2, vCircle[i].index, 0);
+		CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("circle"),
+			vCircle[i].x - (IMAGEMANAGER->findImage("circle")->getFrameWidth() >> 1),
+			vCircle[i].y - (IMAGEMANAGER->findImage("circle")->getFrameHeight() >> 1),
+			vCircle[i].index, 0);
 	}
-	for (int i = 0; i < vMeteor.size(); i++)
+
+	size = vMeteor.size();
+	for (int i = 0; i < size; i++)
 	{
 		if (count % 5 == 0)
 		{
@@ -424,8 +441,8 @@ void meteor::render()
 		}
 
 		CAMERAMANAGER->FrameRender(getMemDC(), vMeteor[i].img,
-			vMeteor[i].x - vMeteor[i].img->getFrameWidth() / 2 - 10,
-			vMeteor[i].y - vMeteor[i].img->getFrameHeight() / 2 - 50,
+			vMeteor[i].x - (vMeteor[i].img->getFrameWidth() >> 1) - 10,
+			vMeteor[i].y - (vMeteor[i].img->getFrameHeight() >> 1) - 50,
 			index, 0);
 	}
 	if (INPUT->GetToggleKey('L'))
@@ -456,7 +473,7 @@ void meteor::creatMeteor(float x, float y, float angle)
 {
 	char meteo_sound[20];
 	sprintf(meteo_sound, "meteoFire%d", RANDOM->range(4));
-	if (upgrade != true)
+	if (upgrade == false)
 	{
 		tagMeteor meteor;
 		meteor.endY = y;
@@ -492,7 +509,8 @@ void meteor::creatMeteor(float x, float y, float angle)
 
 void meteor::move()
 {
-	for (int i = 0; i < vMeteor.size();)
+	int size = vMeteor.size();
+	for (int i = 0; i < size;)
 	{
 		if (count % 2 == 0)PARTICLE->smokeParticlePlay(vMeteor[i].x, vMeteor[i].y);
 
@@ -523,6 +541,7 @@ void meteor::move()
 			index = 0;
 			vMeteor.erase(vMeteor.begin() + i);
 			vCircle.erase(vCircle.begin() + i);
+			size = vMeteor.size();
 			char meteo_sound[20];
 			sprintf(meteo_sound, "meteoExp%d", RANDOM->range(4));
 			SOUNDMANAGER->play(meteo_sound, false);
@@ -614,11 +633,10 @@ void dashFire::singleRender(int index)
 {
 	vDash[index].lifeTime++;
 
-	image* img = IMAGEMANAGER->findImage("flame");
-
-	CAMERAMANAGER->FrameRender(getMemDC(), img,
-		vDash[index].x - img->getFrameWidth() / 2,
-		vDash[index].y - img->getFrameHeight() / 2 - 20, vDash[index].frameX, 0);
+	CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("flame"),
+		vDash[index].x - (IMAGEMANAGER->findImage("flame")->getFrameWidth() >> 1),
+		vDash[index].y - (IMAGEMANAGER->findImage("flame")->getFrameHeight() >> 1) - 20,
+		vDash[index].frameX, 0);
 
 	if (INPUT->GetToggleKey('L'))	CAMERAMANAGER->Ellipse(getMemDC(), vDash[index].rc);
 	if (vDash[index].lifeTime == 180)
@@ -628,7 +646,7 @@ void dashFire::singleRender(int index)
 	else
 	{
 		if (vDash[index].lifeTime % 5 == 0) vDash[index].frameX++;
-		if (vDash[index].frameX == img->getMaxFrameX()) vDash[index].frameX = 0;
+		if (vDash[index].frameX == IMAGEMANAGER->findImage("flame")->getMaxFrameX()) vDash[index].frameX = 0;
 	}
 }
 
@@ -736,7 +754,8 @@ void RagingInferno::render()
 
 		if (PLAYERDATA->getGaugeTime() >= 50)
 		{
-			for (int i = 0; i < vTail.size();)
+			int size = vTail.size();
+			for (int i = 0; i < size;)
 			{
 				//이동
 				vTail[i].x += cosf(vTail[i].angle) * vTail[i].speed;
@@ -753,7 +772,11 @@ void RagingInferno::render()
 				PARTICLE->generate("frameParticle", vTail[i].x, vTail[i].y, vTail[i].angle, 4, 1.f, true);
 
 				//삭제
-				if (vTail[i].currentTime == vTail[i].lifeTime) vTail.erase(vTail.begin() + i);
+				if (vTail[i].currentTime == vTail[i].lifeTime)
+				{
+					vTail.erase(vTail.begin() + i);
+					size = vTail.size();
+				}
 				else
 				{
 					vTail[i].currentTime++;
@@ -851,8 +874,8 @@ void RagingInferno::move()
 				vTail.push_back(tail);
 			}
 			time++;
-		
-		
+
+
 		}
 
 		if (inferno.lifeTime == 0)
@@ -951,7 +974,8 @@ void dragonArc::render()
 {
 	if (!upgrade)
 	{
-		for (int i = 0; i < vDragon.size(); i++)
+		int size = vDragon.size();
+		for (int i = 0; i < size; i++)
 		{
 
 			if (count % 2 == 0)
@@ -961,8 +985,9 @@ void dragonArc::render()
 			}
 
 			CAMERAMANAGER->FrameRender(getMemDC(), vDragon[i].img,
-				vDragon[i].x - vDragon[i].img->getFrameWidth() / 2,
-				vDragon[i].y - vDragon[i].img->getFrameHeight() / 2, vDragon[i].index, vDragon[i].frameY);
+				vDragon[i].x - (vDragon[i].img->getFrameWidth() >> 1),
+				vDragon[i].y - (vDragon[i].img->getFrameHeight() >> 1),
+				vDragon[i].index, vDragon[i].frameY);
 
 			//CAMERAMANAGER->Ellipse(getMemDC(), vDragon[i].rc);
 		}
@@ -978,7 +1003,8 @@ void dragonArc::render()
 		//	dragonHead.x - img->getFrameWidth() / 2,
 		//	dragonHead.y - img->getFrameHeight() / 2, dragonHead.index, dragonHead.frameY);
 
-		for (int i = 0; i < vWings.size(); i++)
+		int size = vWings.size();
+		for (int i = 0; i < size; i++)
 		{
 			//CAMERAMANAGER->Ellipse(getMemDC(), vWings[i].rc);
 			if (count % 2 == 0)
@@ -1065,10 +1091,12 @@ void dragonArc::fire(float x, float y, float angle)
 
 void dragonArc::move()
 {
+	int size;
 	switch (pattern)
 	{
 	case 0:
-		for (int i = 0; i < vDragon.size();)
+		size = vDragon.size();
+		for (int i = 0; i < size;)
 		{
 			if (vDragon[i].currentTime < 21)
 			{
@@ -1108,7 +1136,11 @@ void dragonArc::move()
 				else vDragon[i].angle += sinf(0.07f);
 			}
 
-			if (vDragon[i].currentTime == vDragon[i].lifeTime) vDragon.erase(vDragon.begin() + i);
+			if (vDragon[i].currentTime == vDragon[i].lifeTime)
+			{
+				vDragon.erase(vDragon.begin() + i);
+				size = vDragon.size();
+			}
 			else
 			{
 				vDragon[i].currentTime++;
@@ -1119,7 +1151,8 @@ void dragonArc::move()
 
 		break;
 	case 1:
-		for (int i = 0; i < vDragon.size();)
+		size = vDragon.size();
+		for (int i = 0; i < size;)
 		{
 			if (vDragon[i].currentTime < 35 || vDragon[i].currentTime > 69)
 			{
@@ -1181,7 +1214,11 @@ void dragonArc::move()
 				}
 			}
 
-			if (vDragon[i].currentTime == vDragon[i].lifeTime) vDragon.erase(vDragon.begin() + i);
+			if (vDragon[i].currentTime == vDragon[i].lifeTime)
+			{
+				vDragon.erase(vDragon.begin() + i);
+				size = vDragon.size();
+			}
 			else
 			{
 				vDragon[i].currentTime++;
@@ -1256,7 +1293,8 @@ void dragonArc::phoenixMove()
 		dragonHead.y -= sinf(dragonHead.angle) * dragonHead.speed * dragonHead.persent;
 		dragonHead.rc = RectMakeCenter(dragonHead.x, dragonHead.y, 40, 40);
 
-		for (int i = 0; i < vColRound.size(); i++)
+		int size = vColRound.size();
+		for (int i = 0; i < size; i++)
 		{
 			vColRound[i].x += cosf(vColRound[i].angle) * dragonHead.speed * dragonHead.persent;
 			vColRound[i].y -= sinf(vColRound[i].angle) * dragonHead.speed * dragonHead.persent;
@@ -1274,7 +1312,8 @@ void dragonArc::phoenixMove()
 		else dragonHead.currentTime++;
 	}
 
-	for (int i = 0; i < vWings.size();)
+	int size = vWings.size();
+	for (int i = 0; i < size;)
 	{
 		vWings[i].x += cosf(vWings[i].angle) * vWings[i].speed * dragonHead.persent;
 		vWings[i].y -= sinf(vWings[i].angle) * vWings[i].speed * dragonHead.persent;
@@ -1282,40 +1321,32 @@ void dragonArc::phoenixMove()
 
 		if (vWings[i].currentTime < 20)
 		{
-			if (i == 0) // static
+			switch (i)
 			{
+			case 0:
 				vWings[i].x += cosf(vWings[i].angle + PI / 2) * 3;
 				vWings[i].y -= sinf(vWings[i].angle + PI / 2) * 3;
-			}
-
-			else if (i == 1) // static
-			{
+				break;
+			case 1:
 				vWings[i].x += cosf(vWings[i].angle - PI / 2) * 3;
 				vWings[i].y -= sinf(vWings[i].angle - PI / 2) * 3;
-			}
-
-			else if (i == 2) // <<-, ->
-			{
+				break;
+			case 2:
 				vWings[i].x += cosf(vWings[i].angle + (290 * (PI / 180))) * 4;
 				vWings[i].y -= sinf(vWings[i].angle + (290 * (PI / 180))) * 4;
-			}
-
-			else if (i == 3) // <<-, ->
-			{
+				break;
+			case 3:
 				vWings[i].x += cosf(vWings[i].angle - (290 * (PI / 180))) * 4;
 				vWings[i].y -= sinf(vWings[i].angle - (290 * (PI / 180))) * 4;
-			}
-
-			else if (i == 4) // <-
-			{
+				break;
+			case 4:
 				vWings[i].x += cosf(vWings[i].angle + PI / 2) * 6;
 				vWings[i].y -= sinf(vWings[i].angle + PI / 2) * 6;
-			}
-
-			else if (i == 5) // <-
-			{
+				break;
+			case 5:
 				vWings[i].x += cosf(vWings[i].angle - PI / 2) * 6;
 				vWings[i].y -= sinf(vWings[i].angle - PI / 2) * 6;
+				break;
 			}
 		}
 
@@ -1487,13 +1518,13 @@ void dragonArc::coolTimeReduction()
 HRESULT iceSpear::init()
 {
 	IMAGEMANAGER->addImage("skill_spear", "resource/player/iceSpear.bmp", 96, 96, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("skill_spearX2", "resource/player/iceSpear.bmp", 96*2, 96*2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("skill_spearX2", "resource/player/iceSpear.bmp", 96 * 2, 96 * 2, true, RGB(255, 0, 255));
 	imgRadius = IMAGEMANAGER->findImage("skill_spear")->getWidth() / 2;
-	
+
 	info.keyName = "skill_iceSpear";
 	info.explanation = "";
 	info.coolTime = 360;
-	
+
 	isCoolTime = false;
 	currentCoolTime = 0;
 	gauge = 0;
@@ -1542,20 +1573,23 @@ void iceSpear::render()
 	image* img = IMAGEMANAGER->findImage("skill_spear");
 	image* big = IMAGEMANAGER->findImage("skill_spearX2");
 
-	for (int i = 0; i < vSpear.size(); i++)
+	int size = vSpear.size();
+	for (int i = 0; i < size; i++)
 	{
 		CAMERAMANAGER->RotateRender(getMemDC(), img, vSpear[i].x, vSpear[i].y, vSpear[i].angle);
 		if (INPUT->GetToggleKey('L'))CAMERAMANAGER->Ellipse(getMemDC(), vSpear[i].rc);
 	}
-	
-	for (int i = 0; i < vStay.size(); i++)
+
+	size = vStay.size();
+	for (int i = 0; i < size; i++)
 	{
 		CAMERAMANAGER->RotateRender(getMemDC(), img, vStay[i].x, vStay[i].y, vStay[i].angle);
 	}
 
-	for (int i = 0; i < vUltSpear.size(); i++)
+	size = vUltSpear.size();
+	for (int i = 0; i < size; i++)
 	{
-		if(INPUT->GetToggleKey('L'))CAMERAMANAGER->Ellipse(getMemDC(), vUltSpear[i].rc);
+		if (INPUT->GetToggleKey('L'))CAMERAMANAGER->Ellipse(getMemDC(), vUltSpear[i].rc);
 
 		if (vUltSpear[i].isBig)
 		{
@@ -1592,7 +1626,8 @@ float iceSpear::rangeCul(float maxRange, float x, float y, float angle)
 
 		POINT pt = { (LONG)culX,(LONG)culY };
 
-		for (int j = 0; j < iWall.size(); j++)
+		int size = iWall.size();
+		for (int j = 0; j < size; j++)
 		{
 			int num = PLAYERDATA->getWall()[j];
 
@@ -1634,7 +1669,8 @@ void iceSpear::fire(float x, float y, float angle)
 
 void iceSpear::move()
 {
-	for (int i = 0; i < vSpear.size();i ++)
+	int size = vSpear.size();
+	for (int i = 0; i < size; i++)
 	{
 		vSpear[i].x += cosf(vSpear[i].angle) * vSpear[i].speed;
 		vSpear[i].y -= sinf(vSpear[i].angle) * vSpear[i].speed;
@@ -1651,11 +1687,13 @@ void iceSpear::move()
 		{
 			saveRange = 0;
 			vSpear.erase(vSpear.begin() + i);
+			size = vSpear.size();
 		}
 		else if (vSpear[i].distance < vSpear[i].range && vSpear[i].collision)
 		{
 			saveRange = 0;
 			vSpear.erase(vSpear.begin());
+			size = vSpear.size();
 		}
 		else i++;
 	}
@@ -1743,14 +1781,15 @@ void iceSpear::fireCount()
 		vStay.erase(vStay.begin());
 
 		sTime = 0;
-		
+
 	}
 
 	sTime++;
 }
 void iceSpear::upgradeMove()
 {
-	for (int i = 0; i < vUltSpear.size();)
+	int size = vUltSpear.size();
+	for (int i = 0; i < size;)
 	{
 		float distance = getDistance(vUltSpear[i].fireX, vUltSpear[i].fireY, vUltSpear[i].x, vUltSpear[i].y);
 
@@ -1764,7 +1803,7 @@ void iceSpear::upgradeMove()
 			float y = vUltSpear[i].y - sinf(vUltSpear[i].angle) * imgRadius;
 
 			if (vUltSpear[i].isBig)
-			{	
+			{
 				vUltSpear[i].rc = RectMakeCenter(x, y, 50, 50);
 			}
 			else
@@ -1772,8 +1811,8 @@ void iceSpear::upgradeMove()
 				vUltSpear[i].rc = RectMakeCenter(x, y, 30, 30);
 			}
 		}
-		
-		if (distance < vUltSpear[i].range &&!vUltSpear[i].isBig)
+
+		if (distance < vUltSpear[i].range && !vUltSpear[i].isBig)
 		{
 			i++;
 			continue;
@@ -1791,7 +1830,7 @@ void iceSpear::upgradeMove()
 					active = false;
 					eTime = 0;
 					saveRange = 0;
-		
+					size = vUltSpear.size();
 				}
 			}
 			else if (distance < vUltSpear[i].range && vUltSpear[i].collision)
@@ -1804,7 +1843,7 @@ void iceSpear::upgradeMove()
 					active = false;
 					eTime = 0;
 					saveRange = 0;
-
+					size = vUltSpear.size();
 				}
 			}
 		}
