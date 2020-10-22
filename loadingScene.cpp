@@ -253,7 +253,7 @@ void loadingScene::loadingSound()
 		SOUNDMANAGER->addSound("iceSpearBreak", "Sound/player/iceSpearBreak.mp3");
 		SOUNDMANAGER->addSound("iceSpearHit", "Sound/player/iceSpearHit.mp3");
 		
-		
+		//UI
 		SOUNDMANAGER->addSound("healBall", "Sound/healBall.mp3");
 		SOUNDMANAGER->addSound("portalWarp", "Sound/portalWarp.mp3");
 		SOUNDMANAGER->addSound("coinGet", "Sound/coinGet.mp3");
@@ -268,8 +268,10 @@ void loadingScene::loadingSound()
 		SOUNDMANAGER->addSound("BOX_appear", "Sound/UI/BOX_appear.mp3");
 		SOUNDMANAGER->addSound("portalIN", "Sound/UI/portalIN.mp3");
 		SOUNDMANAGER->addSound("portalOUT", "Sound/UI/portalOUT.mp3");
+		SOUNDMANAGER->addSound("monsterAppear", "Sound/UI/monsterAppear.mp3");
+		SOUNDMANAGER->addSound("cardAppear", "Sound/UI/cardAppear.mp3");
 		
-		
+		//¸ó½ºÅÍ
 		SOUNDMANAGER->addSound("golemAtk", "Sound/golem_atk.mp3");
 		SOUNDMANAGER->addSound("golemWalkL", "Sound/golem_walkL.mp3");
 		SOUNDMANAGER->addSound("golemWalkR", "Sound/golem_walkR.mp3");

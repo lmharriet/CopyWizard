@@ -377,10 +377,11 @@ void monster::commonUpdate()
 	else
 		isFindWayOn = false;
 
-	if (isCardAppear)
+	if (isCardAppear&&monsterAppearCount>=0)
 	{
 		if (!isCardFxAppear)
 		{
+			SOUNDMANAGER->play("cardAppear", false,-0.35f);
 			switch (kind)
 			{
 			case MONSTERKIND::GOLEM:
@@ -406,6 +407,8 @@ void monster::commonUpdate()
 		if (monsterAppearCount == 50)
 		{
 			isMonsterApeear = true;
+			SOUNDMANAGER->play("monsterAppear", false,-0.35f);
+			monsterAppearCount = -1;
 		}
 	}
 	if (isMonsterApeear)
