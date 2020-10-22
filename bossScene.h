@@ -40,4 +40,5 @@ public:
 	void soundInit();
 	void attackBoss();
 	void attackChest();
+	void gainArcana();
 };
