@@ -58,6 +58,8 @@ private:
 	int meteorStateCool;
 	int dragonStateCool;
 	int spearStateCool;
+
+
 	int knockBackCool;
 	int blazeCount;
 

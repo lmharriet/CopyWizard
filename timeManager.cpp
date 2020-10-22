@@ -104,14 +104,14 @@ void timeManager::update(float lockFPS)
 
 void timeManager::render(HDC hdc)
 {
-	char str[256];
-	//FPS
-	sprintf(str, "FPS: %d", _frameRate);
-	TextOut(hdc, 0, 0, str, strlen(str));
-	//전체시간
-	sprintf(str, "Time: %.2f", _time);
-	TextOut(hdc, 0, 20, str, strlen(str));
-	//한프레임당 경과시간
-	sprintf(str, "DeltaTime: %.2f", _deltaTime);
-	TextOut(hdc, 0, 40, str, strlen(str));
+	//char str[256];
+	////FPS
+	//sprintf(str, "FPS: %d", _frameRate);
+	//TextOut(hdc, 0, 0, str, strlen(str));
+	////전체시간
+	//sprintf(str, "Time: %.2f", _time);
+	//TextOut(hdc, 0, 20, str, strlen(str));
+	////한프레임당 경과시간
+	//sprintf(str, "DeltaTime: %.2f", _deltaTime);
+	//TextOut(hdc, 0, 40, str, strlen(str));
 }

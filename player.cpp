@@ -836,15 +836,19 @@ void player::signatureSetUpE()
 
 	if (arcana[4].skillName == "nonSkill")return;
 	// arcana[4] , key -> E
-	if (arcana[4].skillName == spear->getInfo().keyName)
-	{
-		if (!isDead && !spear->getCool() && frozenTime == 0 && !isGrabbed && !inferno->getGauging() && speed == 0
-			&& spearStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0)
-		{
 
-			signatureE = true;
-		}
-		if (signatureE)
+
+	if (INPUT->GetKeyDown('E') && !isDead && !spear->getCool() && frozenTime == 0 && !isGrabbed && !inferno->getGauging() && speed == 0
+		&& spearStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0)
+	{
+
+		signatureE = true;
+	}
+
+
+	if (signatureE)
+	{
+		if (arcana[4].skillName == spear->getInfo().keyName)
 		{
 			if (!upgradeReady)
 			{
@@ -868,8 +872,8 @@ void player::signatureSetUpE()
 			}
 			else
 			{
-				TIME->setTest(12.f);
-				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
+				/*TIME->setTest(12.f);
+				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);*/
 
 				if (spearStateCool == 0)
 				{
@@ -887,20 +891,10 @@ void player::signatureSetUpE()
 						signatureE = false;
 				}
 			}
+
 		}
-	}
-	else if (arcana[4].skillName == dragon->getInfo().keyName)
-	{
-
-		if (INPUT->GetKeyDown('E') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
-			&& !dragon->getCool() && basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
+		else if (arcana[4].skillName == dragon->getInfo().keyName)
 		{
-			signatureE = true;
-		}
-
-		if (signatureE)
-		{
-
 			if (!upgradeReady)
 			{
 				if (dragonStateCool == 0)
@@ -920,17 +914,10 @@ void player::signatureSetUpE()
 
 			else
 			{
-				TIME->setTest(12.f);
-				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
+				/*TIME->setTest(12.f);
+				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);*/
 
-				/*if (INPUT->GetKeyDown('E') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0 &&
-					!dragon->getCool() && basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
-				{
-					signatureE = true;
-				}*/
 
-				//if (signatureE)
-				//{
 				if (dragonStateCool == 0)
 				{
 					dragonStateCool = 30;
@@ -944,9 +931,10 @@ void player::signatureSetUpE()
 					if (dragonStateCool == 0) signatureE = false;
 
 				}
-				//}
+
 
 			}
+
 		}
 	}
 
@@ -957,15 +945,16 @@ void player::signatureSetUpR()
 	// arcana[5], key->R
 	if (arcana[5].skillName == "nonSkill")return;
 
-	if (arcana[5].skillName == spear->getInfo().keyName)
-	{
-		if (INPUT->GetKeyDown('R') && !isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool() && frozenTime == 0 && speed == 0
-			&& basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
-		{
-			signatureR = true;
-		}
 
-		if (signatureR)
+	if (INPUT->GetKeyDown('R') && !isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool() && frozenTime == 0 && speed == 0
+		&& basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
+	{
+		signatureR = true;
+	}
+
+	if (signatureR)
+	{
+		if (arcana[5].skillName == spear->getInfo().keyName)
 		{
 			if (!upgradeReady)
 			{
@@ -1008,17 +997,8 @@ void player::signatureSetUpR()
 
 			}
 		}
-	}
-	else if (arcana[5].skillName == dragon->getInfo().keyName)
-	{
 
-		if (INPUT->GetKeyDown('R') && !isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool() && frozenTime == 0 && speed == 0
-			&& basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
-		{
-			signatureR = true;
-		}
-
-		if (signatureR)
+		else if (arcana[5].skillName == dragon->getInfo().keyName)
 		{
 			if (!upgradeReady)
 			{
@@ -1039,8 +1019,8 @@ void player::signatureSetUpR()
 
 			else
 			{
-				TIME->setTest(12.f);
-				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
+			/*	TIME->setTest(12.f);
+				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);*/
 
 
 				if (dragonStateCool == 0)
@@ -1058,9 +1038,9 @@ void player::signatureSetUpR()
 				}
 
 			}
-		} // end of if (signatureR)
-	}
 
+		}
+	}
 }
 
 void player::takeCoin()
@@ -1451,7 +1431,7 @@ void player::animation(int _index)
 		}
 		break;
 		case STATE::SPEAR:
-
+		{
 			int tenth = (int)(attackAngle * (18 / PI));
 
 			if (tenth > 14 && tenth <= 23)
@@ -1500,8 +1480,8 @@ void player::animation(int _index)
 				frameAnimation(atkIndex, 6);
 
 			}
-
-			break;
+		}
+		break;
 		}
 	}
 	else
@@ -1820,8 +1800,8 @@ void player::animation(int _index)
 					if (atkIndex > 9)atkIndex = 0;
 				}
 				frameAnimation(atkIndex, 16, 1);
-
 			}
+
 			else if (tenth <= 4 && tenth >= 0 || tenth > 32)
 			{
 				if (atkCount % 10 == 0)
@@ -1857,7 +1837,58 @@ void player::animation(int _index)
 			}
 		}
 		break;
+		case STATE::SPEAR:
+		{
+			int tenth = (int)(attackAngle * (18 / PI));
 
+			if (tenth > 14 && tenth <= 23)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+
+					if (spearStateCool == 0) move = MOVE::LEFT;
+				}
+				frameAnimation(atkIndex, 16, 1);
+			}
+
+			else if (tenth <= 4 && tenth >= 0 || tenth > 32)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+
+				if (spearStateCool == 0) move = MOVE::RIGHT;
+				frameAnimation(atkIndex, 15, 1);
+
+			}
+			else if (tenth > 4 && tenth <= 14)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				if (spearStateCool == 0) move = MOVE::UP;
+				frameAnimation(atkIndex, 14, 1);
+
+			}
+			else if (tenth > 23 && tenth <= 32)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				if (spearStateCool == 0) move = MOVE::DOWN;
+				frameAnimation(atkIndex, 6, 1);
+
+			}
+		}
+		break;
 		} //end of switch
 	}
 
