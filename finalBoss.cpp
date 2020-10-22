@@ -698,9 +698,30 @@ void finalBoss::colCheck()
 			case 0:
 				if (!isHit) {
 					CAMERAMANAGER->Shake(20, 20, 5);
-					float _wallAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 30, BOSSMANAGER->getVector()[i]->getRect().top + 30, _player->getX(), _player->getY());
-					int damage = RANDOM->range(8, 12);
-					_player->damage(damage, _wallAngle, 10);
+
+					if (PLAYERDATA->getShroud())
+					{
+						PLAYERDATA->setShroud(false);
+						SOUNDMANAGER->play("shieldOFF", false, 1.0f);
+					}
+
+					else
+					{
+						float _wallAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 30, BOSSMANAGER->getVector()[i]->getRect().top + 30, _player->getX(), _player->getY());
+						int damage = RANDOM->range(8, 12);
+						
+						if (PLAYERDATA->getStat().doubleDamage)
+						{
+							_player->damage(damage * 2, _wallAngle, 10);
+						}
+
+						else
+						{
+							_player->damage(damage, _wallAngle, 10);
+						}
+
+					}
+
 					isHit = true;
 				}
 				if (isHit) {
@@ -713,10 +734,31 @@ void finalBoss::colCheck()
 				break;
 			case 2:
 				if (!isHit) {
-					CAMERAMANAGER->Shake(20, 20, 5);
-					float _thunderAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 350, BOSSMANAGER->getVector()[i]->getRect().top + 350, _player->getX(), _player->getY());
-					int damage = RANDOM->range(3, 8);
-					_player->damage(damage, _thunderAngle, 10);
+
+					if (PLAYERDATA->getShroud())
+					{
+						PLAYERDATA->setShroud(false);
+						SOUNDMANAGER->play("shieldOFF", false, 1.0f);
+					}
+
+					else
+					{
+						CAMERAMANAGER->Shake(20, 20, 5);
+						float _thunderAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 350, BOSSMANAGER->getVector()[i]->getRect().top + 350, _player->getX(), _player->getY());
+						int damage = RANDOM->range(3, 8);
+
+						if (PLAYERDATA->getStat().doubleDamage)
+						{
+							_player->damage(damage * 2, _thunderAngle, 10);
+						}
+
+						else
+						{
+							_player->damage(damage, _thunderAngle, 10);
+						}
+
+					}
+
 					isHit = true;
 				}
 				if (isHit) {
@@ -729,10 +771,31 @@ void finalBoss::colCheck()
 				break;
 			case 3:
 				if (!isHit) {
-					CAMERAMANAGER->Shake(20, 20, 5);
-					float _windAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 220, BOSSMANAGER->getVector()[i]->getRect().top + 170, _player->getX(), _player->getY());
-					int damage = RANDOM->range(12, 24);
-					_player->damage(damage, _windAngle, 20);
+
+					if (PLAYERDATA->getShroud())
+					{
+						PLAYERDATA->setShroud(false);
+						SOUNDMANAGER->play("shieldOFF", false, 1.0f);
+					}
+
+					else
+					{
+						CAMERAMANAGER->Shake(20, 20, 5);
+						float _windAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 220, BOSSMANAGER->getVector()[i]->getRect().top + 170, _player->getX(), _player->getY());
+						int damage = RANDOM->range(12, 24);
+
+						if (PLAYERDATA->getStat().doubleDamage)
+						{
+							_player->damage(damage * 2, _windAngle, 20);
+						}
+
+						else
+						{
+							_player->damage(damage, _windAngle, 20);
+						}
+						
+					}
+
 					isHit = true;
 				}
 				if (isHit) {
@@ -750,10 +813,30 @@ void finalBoss::colCheck()
 		for (int i = 0; i < blazeBlock.size(); i++) {
 			if (IntersectRect(&temp, &_player->getRect(), &blazeBlock[i]->rc)) {
 				if (!blazeBlock[i]->isHit) {
-					CAMERAMANAGER->Shake(20, 20, 5);
-					float _blazeAngle = getAngle(blazeBlock[i]->center.x, blazeBlock[i]->center.y, _player->getX(), _player->getY());
-					int damage = RANDOM->range(11, 18);
-					_player->damage(damage, _blazeAngle, 20);
+
+					if (PLAYERDATA->getShroud())
+					{
+						PLAYERDATA->setShroud(false);
+						SOUNDMANAGER->play("shieldOFF", false, 1.0f);
+					}
+
+					else
+					{
+						CAMERAMANAGER->Shake(20, 20, 5);
+						float _blazeAngle = getAngle(blazeBlock[i]->center.x, blazeBlock[i]->center.y, _player->getX(), _player->getY());
+						int damage = RANDOM->range(11, 18);
+
+						if (PLAYERDATA->getStat().doubleDamage)
+						{
+							_player->damage(damage * 2, _blazeAngle, 20);
+						}
+
+						else
+						{
+							_player->damage(damage, _blazeAngle, 20);
+						}
+					}
+
 					blazeBlock[i]->isHit = true;
 				}
 			}
@@ -763,10 +846,30 @@ void finalBoss::colCheck()
 		for (int i = 0; i < iceBlock.size(); i++) {
 			if (IntersectRect(&temp, &_player->getRect(), &iceSpearRc[i])) {
 				if (!iceBlock[i]->isHit) {
-					CAMERAMANAGER->Shake(20, 20, 5);
-					float _iceAngle = getAngle(iceBlock[i]->center.x, iceBlock[i]->center.y, _player->getX(), _player->getY());
-					int damage = RANDOM->range(11, 15);
-					_player->damage(damage, _iceAngle, 10);
+
+					if (PLAYERDATA->getShroud())
+					{
+						PLAYERDATA->setShroud(false);
+						SOUNDMANAGER->play("shieldOFF", false, 1.0f);
+					}
+
+					else
+					{
+						CAMERAMANAGER->Shake(20, 20, 5);
+						float _iceAngle = getAngle(iceBlock[i]->center.x, iceBlock[i]->center.y, _player->getX(), _player->getY());
+						int damage = RANDOM->range(11, 15);
+
+						if (PLAYERDATA->getStat().doubleDamage)
+						{
+							_player->damage(damage * 2, _iceAngle, 10);
+						}
+
+						else
+						{
+							_player->damage(damage, _iceAngle, 10);
+						}
+					}
+
 					iceBlock[i]->isHit = true;
 				}
 			}
