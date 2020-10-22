@@ -94,7 +94,7 @@ void ghoulLarge::update()
 void ghoulLarge::addRender()
 {
     if (isIceState)
-        CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x+20, pos.y-30, 180);
+        CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x+20, pos.y-30, 160);
 }
 
 void ghoulLarge::stateImageRender()

@@ -108,7 +108,7 @@ void summoner::addRender()
         }
     }
     if (isIceState)
-        CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x, getCenterY() - img->getFrameHeight(), 180);
+        CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x, getCenterY() - img->getFrameHeight(), 160);
 }
 
 void summoner::stateImageRender()

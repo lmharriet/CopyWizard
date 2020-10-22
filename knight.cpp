@@ -24,7 +24,7 @@ void knight::update()
     {
        RECT astarRC = RectMake(pos.x+10, pos.y+30, img->getFrameWidth(), img->getFrameHeight());
         astar->update(camRC, astarRC, playerRC, &angle);
-        if (!isATK)
+        if (!isATK&&!isHit && !isDie)
         {
             if (rc.left + (img->getFrameWidth() >> 1) < playerRC.left)
             {
@@ -49,18 +49,18 @@ void knight::update()
                 atkDirection[MONSTER_UP] = false;
                 atkDirection[MONSTER_DOWN] = true;
             }
-        }
-        if (astar->getFirstTile() && !isATK && !isDie && !isHit) // 걸을 때
-        {
-            state = STATEIMAGE::WALK;
-            pos.x += cos(angle) * speed;
-            pos.y += -sin(angle) * speed;
-            
-        }
-        else if(!isDie && !isHit) // 걷지 않고 있을 때
-        {
-            state = STATEIMAGE::ATK;
-            isATK = true;
+            if (astar->getFirstTile()) // 걸을 때
+            {
+                state = STATEIMAGE::WALK;
+                pos.x += cos(angle) * speed;
+                pos.y += -sin(angle) * speed;
+                
+            }
+            else if(!isDie && !isHit) // 걷지 않고 있을 때
+            {
+                state = STATEIMAGE::ATK;
+                isATK = true;
+            }
         }
         
 
@@ -81,7 +81,7 @@ void knight::update()
 void knight::addRender()
 {
     if (isIceState)
-        CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x, pos.y+30, 180);
+        CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x, pos.y+30, 160);
     //CAMERAMANAGER->Rectangle(getMemDC(), rc);
     //CAMERAMANAGER->Rectangle(getMemDC(), playerRC);
 }
