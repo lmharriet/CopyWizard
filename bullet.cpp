@@ -1516,7 +1516,7 @@ void dragonArc::coolTimeReduction()
 
 HRESULT iceSpear::init()
 {
-	IMAGEMANAGER->addImage("skill_spear", "resource/player/iceSpear.bmp", 96, 96, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("skill_spear", "resource/player/iceSpear.bmp", 130, 130, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("skill_spearX2", "resource/player/iceSpear.bmp", 96 * 2, 96 * 2, true, RGB(255, 0, 255));
 	imgRadius = IMAGEMANAGER->findImage("skill_spear")->getWidth() / 2;
 
@@ -1526,14 +1526,12 @@ HRESULT iceSpear::init()
 
 	isCoolTime = false;
 	currentCoolTime = 0;
-	gauge = 0;
 
 	spearCount = time = 0;
 	eTime = sTime = delay = 0;
 	upgread = false;
 	active = false;
 
-	gauging = false;
 	saveRange = 0;
 	return S_OK;
 }
@@ -1602,16 +1600,6 @@ void iceSpear::render()
 	}
 }
 
-//non-upgrade
-void iceSpear::chargeSpear()
-{
-	if (gauge < 0.99f)
-	{
-		gauge += 0.02f;
-		gauging = true;
-	}
-}
-
 float iceSpear::rangeCul(float maxRange, float x, float y, float angle)
 {
 	if (saveRange > 0)return saveRange;
@@ -1647,9 +1635,9 @@ float iceSpear::rangeCul(float maxRange, float x, float y, float angle)
 
 void iceSpear::fire(float x, float y, float angle)
 {
-	if (vSpear.size() > 0)return;
+	//if (vSpear.size() > 0)return;
 
-	if (gauge < 0.2f) gauge = 0.2f;
+	//if (gauge < 0.2f) gauge = 0.2f;
 
 	tagSpear spear;
 
@@ -1657,8 +1645,8 @@ void iceSpear::fire(float x, float y, float angle)
 	spear.y = spear.fireY = y;
 	spear.angle = angle;
 
-	spear.speed = 25.f * gauge;
-	spear.atkPower = (30.f * gauge) + 1;
+	spear.speed = 25.f;
+	spear.atkPower = 30.f;
 
 	spear.range = rangeCul(500, x, y, angle);
 	spear.rc = RectMakeCenter(spear.x, spear.y, 30, 30);
@@ -1666,7 +1654,6 @@ void iceSpear::fire(float x, float y, float angle)
 
 	vSpear.push_back(spear);
 	isCoolTime = true;
-	gauge = 0.f;
 	UI->addCoolTime(info.keyName);
 }
 
@@ -1695,6 +1682,7 @@ void iceSpear::move()
 		else if (vSpear[i].distance < vSpear[i].range && vSpear[i].collision)
 		{
 			saveRange = 0;
+			CAMERAMANAGER->Shake(20, 20, 2);
 			vSpear.erase(vSpear.begin());
 			size = vSpear.size();
 		}
@@ -1839,9 +1827,10 @@ void iceSpear::upgradeMove()
 			else if (distance < vUltSpear[i].range && vUltSpear[i].collision)
 			{
 				eTime++;
-
+				
 				if (eTime > 35)
 				{
+					
 					vUltSpear.clear();
 					active = false;
 					eTime = 0;

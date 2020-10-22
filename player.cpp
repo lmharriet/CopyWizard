@@ -513,25 +513,25 @@ void player::skillInit()
 		arcana[3].explanation = Meteor->getInfo().explanation;
 		arcana[3].coolTime = Meteor->getInfo().coolTime;
 
-		arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		arcana[4].skillName = "nonSkill";
-		arcana[4].explanation = "";
-		arcana[4].coolTime = 0;
-
-		arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		arcana[5].skillName = "nonSkill";
-		arcana[5].explanation = "";
-		arcana[5].coolTime = 0;
-
 		//arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		//arcana[4].skillName = dragon->getInfo().keyName;//"nonSkill";
-		//arcana[4].explanation = dragon->getInfo().explanation;// "";
-		//arcana[4].coolTime = dragon->getInfo().coolTime;//0;
+		//arcana[4].skillName = "nonSkill";
+		//arcana[4].explanation = "";
+		//arcana[4].coolTime = 0;
 
 		//arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		//arcana[5].skillName = spear->getInfo().keyName;//"nonSkill";
-		//arcana[5].explanation = spear->getInfo().explanation; //"";
-		//arcana[5].coolTime = 0;//spear->getInfo().coolTime;//0;
+		//arcana[5].skillName = "nonSkill";
+		//arcana[5].explanation = "";
+		//arcana[5].coolTime = 0;
+
+		arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
+		arcana[4].skillName = dragon->getInfo().keyName;//"nonSkill";
+		arcana[4].explanation = dragon->getInfo().explanation;// "";
+		arcana[4].coolTime = dragon->getInfo().coolTime;//0;
+
+		arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
+		arcana[5].skillName = spear->getInfo().keyName;//"nonSkill";
+		arcana[5].explanation = spear->getInfo().explanation; //"";
+		arcana[5].coolTime = 0;//spear->getInfo().coolTime;//0;
 
 
 
@@ -816,21 +816,15 @@ void player::signatureSetUpE()
 		{
 			if (!upgradeReady)
 			{
-				if (INPUT->GetKey('E'))
-				{
-					spear->chargeSpear();
-					spear->setGauging(true);
-				}
-
-				if (INPUT->GetKeyUp('E'))
+				if (INPUT->GetKeyDown('E'))
 				{
 					spear->fire(posX, posY, attackAngle);
 				}
 			}
 			else
 			{
-				TIME->setTest(12.f);
-				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
+				//TIME->setTest(12.f);
+				//EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
 				if (INPUT->GetKeyDown('E'))
 				{
 					spear->upgradefire(posX, posY, attackAngle);
@@ -871,8 +865,8 @@ void player::signatureSetUpE()
 		}
 		else
 		{
-			TIME->setTest(12.f);
-			EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
+			//TIME->setTest(12.f);
+			//EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
 
 			if (INPUT->GetKeyDown('E') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0&&
 				!dragon->getCool() && basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
@@ -916,11 +910,15 @@ void player::signatureSetUpR()
 
 			if (!upgradeReady)
 			{
-				if (INPUT->GetKey('R'))
-				{
-					spear->chargeSpear();
-				}
-				if (INPUT->GetKeyUp('R'))
+				//if (INPUT->GetKey('R'))
+				//{
+				//	spear->chargeSpear();
+				//}
+				//if (INPUT->GetKeyUp('R'))
+				//{
+				//	spear->fire(posX, posY, attackAngle);
+				//}
+				if (INPUT->GetKeyDown('R'))
 				{
 					spear->fire(posX, posY, attackAngle);
 				}
@@ -2036,7 +2034,7 @@ void player::chargeSkillGauge(int atkPower, int skillNum)
 		switch (skillNum)
 		{
 		case 0:
-			skillGauge += (float)(atkPower / atkPower) * 1.7f;
+			skillGauge += (float)(atkPower / atkPower) * 4.f;// 1.7f;
 			break;
 		case 1:
 			if (count % 15 == 0)
