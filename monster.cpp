@@ -413,6 +413,14 @@ void monster::commonUpdate()
 
 		if (isIceState)
 			iceBreakCount++;
+
+		if (iceBreakCount > iceBreakTime)
+		{
+			isIceState = false;
+			iceBreakCount = 0;
+			EFFECT->iceBreakPlay(position, 10);
+			state = STATEIMAGE::IDLE;
+		}
 		
 		update(); //몬스터별 업데이트
 
@@ -454,12 +462,7 @@ void monster::commonUpdate()
 		}
 		stateImageRender();
 
-		if (iceBreakCount > iceBreakTime)
-		{
-			isIceState = false;
-			iceBreakCount = 0;
-			EFFECT->iceBreakPlay(position, 10);
-		}
+	
 	}
 }
 
@@ -626,6 +629,8 @@ void monster::die()
 	{
 
 		isDie = true;
+		if (isIceState)
+			isIceState = false;
 
 		switch (kind)
 		{
