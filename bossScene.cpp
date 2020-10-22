@@ -233,10 +233,10 @@ void bossScene::render()
 
 	EFFECT->portalRender(getMemDC());
 
-	ptOut(getMemDC(), { 500,500 }, 
+	/*ptOut(getMemDC(), { 500,500 }, 
 		{CAMERAMANAGER->GetAbsoluteX(_ptMouse.x),
 		CAMERAMANAGER->GetAbsoluteY(_ptMouse.y)},
-		RGB(255, 255, 255));
+		RGB(255, 255, 255));*/
 }
 
 void bossScene::soundInit()

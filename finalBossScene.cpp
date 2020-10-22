@@ -227,7 +227,7 @@ void finalBossScene::render()
 
 	if (isBattle && isEnd == false) {
 		char str[128];
-		wsprintf(str, "MATER SURA");
+		wsprintf(str, "MASTER SURA");
 		_finalBoss->finalBossHpInfo(getMemDC(), WINSIZEX / 2 - 226, 100);
 
 		TextOut(getMemDC(), WINSIZEX / 2 - 70, 90, str, strlen(str));

@@ -16,7 +16,7 @@ HRESULT finalBoss::init(int _posX, int _posY)
 
 	boss.center = { _posX, _posY };
 	boss.angle = 0;
-	boss.bossHp = 1;
+	boss.bossHp = 3000;
 	boss.isHit = false;
 	boss.isCol = false;
 	boss.dashDintance = 400;
@@ -533,6 +533,7 @@ void finalBoss::wall()
 	}
 	else if (wallPattern && frameX == 5) {
 		for (int i = 0; i < wallBlock.size(); i++) {
+			CAMERAMANAGER->Shake(30, 30, 10);
 			if (wallBlock[i]->rc.left > 0 && wallBlock[i]->rc.right < 2048 && wallBlock[i]->rc.top > 0 && wallBlock[i]->rc.bottom < 2048) {
 				wallBlock[i]->blockCount++;
 				if (wallBlock[i]->blockCount % 5 == 0) {
@@ -697,6 +698,7 @@ void finalBoss::colCheck()
 			{
 			case 0:
 				if (!isHit) {
+					CAMERAMANAGER->Shake(20, 20, 5);
 					float _wallAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 30, BOSSMANAGER->getVector()[i]->getRect().top + 30, _player->getX(), _player->getY());
 					int damage = RANDOM->range(8, 12);
 					_player->damage(damage, _wallAngle, 10);
@@ -712,6 +714,7 @@ void finalBoss::colCheck()
 				break;
 			case 2:
 				if (!isHit) {
+					CAMERAMANAGER->Shake(20, 20, 5);
 					float _thunderAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 350, BOSSMANAGER->getVector()[i]->getRect().top + 350, _player->getX(), _player->getY());
 					int damage = RANDOM->range(3, 8);
 					_player->damage(damage, _thunderAngle, 10);
@@ -727,6 +730,7 @@ void finalBoss::colCheck()
 				break;
 			case 3:
 				if (!isHit) {
+					CAMERAMANAGER->Shake(20, 20, 5);
 					float _windAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left + 220, BOSSMANAGER->getVector()[i]->getRect().top + 170, _player->getX(), _player->getY());
 					int damage = RANDOM->range(12, 24);
 					_player->damage(damage, _windAngle, 20);
@@ -747,6 +751,7 @@ void finalBoss::colCheck()
 		for (int i = 0; i < blazeBlock.size(); i++) {
 			if (IntersectRect(&temp, &_player->getRect(), &blazeBlock[i]->rc)) {
 				if (!blazeBlock[i]->isHit) {
+					CAMERAMANAGER->Shake(20, 20, 5);
 					float _blazeAngle = getAngle(blazeBlock[i]->center.x, blazeBlock[i]->center.y, _player->getX(), _player->getY());
 					int damage = RANDOM->range(11, 18);
 					_player->damage(damage, _blazeAngle, 20);
@@ -759,6 +764,7 @@ void finalBoss::colCheck()
 		for (int i = 0; i < iceBlock.size(); i++) {
 			if (IntersectRect(&temp, &_player->getRect(), &iceSpearRc[i])) {
 				if (!iceBlock[i]->isHit) {
+					CAMERAMANAGER->Shake(20, 20, 5);
 					float _iceAngle = getAngle(iceBlock[i]->center.x, iceBlock[i]->center.y, _player->getX(), _player->getY());
 					int damage = RANDOM->range(11, 15);
 					_player->damage(damage, _iceAngle, 10);
@@ -790,7 +796,7 @@ void finalBoss::finalBossHpInfo(HDC hdc, int destX, int destY)
 
 	img = IMAGEMANAGER->findImage("bosshpbar");
 
-	int hpBar = (float)img->getWidth() * ((float)boss.bossHp / 2000);
+	int hpBar = (float)img->getWidth() * ((float)boss.bossHp / 3000);
 	img->render(hdc, destX + 48, destY + 20, 0, 0, hpBar, img->getHeight());
 }
 
