@@ -159,9 +159,9 @@ void bossScene::warp()
 
 		if (warpDelay > 30)
 		{
-			SOUNDMANAGER->stop("ingameBGM");
-			PLAYERDATA->setCurrentStage(STAGEKIND::MIDDLESTAGE);
-			SCENEMANAGER->loadScene("최종보스방");
+			SOUNDMANAGER->stop("bossBGM");
+			PLAYERDATA->setCurrentStage(STAGEKIND::FINALSTAGE);
+			SCENEMANAGER->loadScene("로딩화면");
 		}
 	}
 }
