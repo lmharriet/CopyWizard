@@ -127,7 +127,7 @@ void bossScene::update()
 	{
 		gameOver = true;
 		//상자 생성
-		_chest->init("GoldChest", { _boss->getBossRect().left, _boss->getBossRect().top }, 10);
+		_chest->init("GoldChest", { _boss->getBossRect().left+100 , _boss->getBossRect().top }, 10);
 	}
 
 	if (gameOver) _chest->bossScene_update();

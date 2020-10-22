@@ -522,7 +522,7 @@ void gameScene::playerAttack()
 				{
 					_player->chargeSkillGauge(damage, 5);
 				}
-				CAMERAMANAGER->Shake(10, 10, 2);
+
 				enemy->getMinion()[num]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 30.f, 5, criCheck, true);
 
 				_player->getSpear()->setUpgradeCol(i, true);
