@@ -94,48 +94,125 @@ void loadingScene::loadingImage()
 	case STARTSTAGE:
 		//플레이어 이미지
 	//_loading->loadFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);  loading.cpp -> init에 있습니다. 모르겠으면 재윤한테 이야기하기하세요 
-		_loading[currentLoading]->loadFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
-		_loading[currentLoading]->loadFrameImage("meteor", "resource/player/meteor.bmp", 1200, 250, 6, 1);
-		_loading[currentLoading]->loadFrameImage("flame", "resource/player/flame1.bmp", 4096, 128, 32, 1);
-		_loading[currentLoading]->loadFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
-		_loading[currentLoading]->loadFrameImage("playerFrame", "resource/player/playerSpearFrame.bmp", 400, 400, 4, 4);
-		_loading[currentLoading]->loadFrameImage("playerSpearFrame", "resource/player/playerSpearFrame.bmp", 400, 400, 4, 4);
+		IMAGEMANAGER->addFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
+		IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 1200, 250, 6, 1);
+		IMAGEMANAGER->addFrameImage("flame", "resource/player/flame1.bmp", 4096, 128, 32, 1);
+		IMAGEMANAGER->addFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
+		IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerSpearFrame.bmp", 400, 400, 4, 4);
+		IMAGEMANAGER->addFrameImage("playerSpearFrame", "resource/player/playerSpearFrame.bmp", 400, 400, 4, 4);
+		
+		IMAGEMANAGER->addFrameImage("summoner", "resource/enemy/SummonerSource.bmp", 500, 800, 5, 8);
+		IMAGEMANAGER->addFrameImage("golem", "resource/enemy/Golem.bmp", 1080, 1050, 6, 5);
+		IMAGEMANAGER->addFrameImage("knight", "resource/enemy/knight.bmp", 650, 1123, 6, 8);
+		IMAGEMANAGER->addFrameImage("golemHit", "resource/enemy/golemHit.bmp", 1080, 630, 6, 3);
+		IMAGEMANAGER->addFrameImage("ghoul", "resource/enemy/ghoul.bmp", 800, 933, 6, 7);
+		IMAGEMANAGER->addFrameImage("ghoulLarge", "resource/enemy/ghoulKing.bmp", 1050, 1500, 7, 10);
+		IMAGEMANAGER->addFrameImage("ghoulLargeHit", "resource/enemy/ghoulKingHit.bmp", 1050, 1500, 7, 10);
+		
+		IMAGEMANAGER->addFrameImage("smallSlash", "resource/enemyEffect/smallSlash.bmp", 600, 1200, 3, 6);
+		IMAGEMANAGER->addFrameImage("knightSlashL", "resource/enemyEffect/knightSlashL.bmp", 246, 82, 3, 1);
+		IMAGEMANAGER->addFrameImage("knightSlashR", "resource/enemyEffect/knightSlashR.bmp", 246, 82, 3, 1);
+		IMAGEMANAGER->addFrameImage("knightSlashUp", "resource/enemyEffect/knightSlashUp.bmp", 246, 82, 3, 1);
+		IMAGEMANAGER->addFrameImage("knightSlashDown", "resource/enemyEffect/knightSlashDown.bmp", 246, 82, 3, 1);
+		IMAGEMANAGER->addFrameImage("stoneFly", "resource/enemyEffect/stoneFrame.bmp", 144, 72, 2, 1);
+		IMAGEMANAGER->addImage("IceState", "resource/player/isIce.bmp", 122, 177, true, RGB(255, 0, 255));
 
+		for (int i = 0; i < 200; i++)
+		{
+			
+			if (i < 40)
+			{
+				char str[50] = "맵 만드는 중 ...";
+				_loading[currentLoading]->loadImage(str, 100, 100);
+			}
+			else if (i < 80)
+			{
+				char str[50] = "몬스터 생성 중 ...";
+				_loading[currentLoading]->loadImage(str, 100, 100);
 
-		//몬스터 이미지
-		_loading[currentLoading]->loadFrameImage("summoner", "resource/enemy/SummonerSource.bmp", 500, 800, 5, 8);
-		_loading[currentLoading]->loadFrameImage("golem", "resource/enemy/Golem.bmp", 1080, 1050, 6, 5);
-		_loading[currentLoading]->loadFrameImage("knight", "resource/enemy/knight.bmp", 650, 1123, 6, 8);
-		_loading[currentLoading]->loadFrameImage("golemHit", "resource/enemy/golemHit.bmp", 1080, 630, 6, 3);
-		_loading[currentLoading]->loadFrameImage("ghoul", "resource/enemy/ghoul.bmp", 800, 933, 6, 7);
-		_loading[currentLoading]->loadFrameImage("ghoulLarge", "resource/enemy/ghoulKing.bmp", 1050, 1500, 7, 10);
-		_loading[currentLoading]->loadFrameImage("ghoulLargeHit", "resource/enemy/ghoulKingHit.bmp", 1050, 1500, 7, 10);
+			}
+			else if (i < 120)
+			{
+				char str[50] =  "소리를 불러오는 중 ...";
+				_loading[currentLoading]->loadImage(str, 100, 100);
+			}
+			else if (i < 160)
+			{
+				char str[50] =  "어둠을 걷어내는 중 ...";
+				_loading[currentLoading]->loadImage(str, 100, 100);
+			}
+			else 
+			{
+				char str[50] = "손님맞이 방정리 중 ...";
+				_loading[currentLoading]->loadImage(str, 100, 100);
+			}
 
-
-		//스킬 이펙트 이미지
-		_loading[currentLoading]->loadFrameImage("smallSlash", "resource/enemyEffect/smallSlash.bmp", 600, 1200, 3, 6);
-		_loading[currentLoading]->loadFrameImage("knightSlashL", "resource/enemyEffect/knightSlashL.bmp", 246, 82, 3, 1);
-		_loading[currentLoading]->loadFrameImage("knightSlashR", "resource/enemyEffect/knightSlashR.bmp", 246, 82, 3, 1);
-		_loading[currentLoading]->loadFrameImage("knightSlashUp", "resource/enemyEffect/knightSlashUp.bmp", 246, 82, 3, 1);
-		_loading[currentLoading]->loadFrameImage("knightSlashDown", "resource/enemyEffect/knightSlashDown.bmp", 246, 82, 3, 1);
-		_loading[currentLoading]->loadFrameImage("stoneFly", "resource/enemyEffect/stoneFrame.bmp", 144, 72, 2, 1);
-		_loading[currentLoading]->loadImage("IceState", "resource/player/isIce.bmp", 122, 177, true, RGB(255, 0, 255));
+		}
 		break;
 	case MIDDLESTAGE:
-		for (int i = 0; i < 150; i++)
+		for (int i = 0; i < 200; i++)
 		{
-			char str[20];
-			sprintf(str, "bossImg%d", i);
-			_loading[MIDDLESTAGE]->loadImage(str, 100, 100);
+			if (i < 40)
+			{
+				char str[50] = "아틀라스 생성하는중 ...";
+				_loading[currentLoading]->loadImage(str, 100, 100);
+			}
+			else if (i < 80)
+			{
+				char str[50] = "맵만드는중 ...";
+				_loading[currentLoading]->loadImage(str, 100, 100);
+
+			}
+			else if (i < 120)
+			{
+				char str[50] = "소리를 불러오는 중 ...";
+				_loading[currentLoading]->loadImage(str, 100, 100);
+			}
+			else if (i < 160)
+			{
+				char str[50] = "어둠을 걷어내는 중 ...";
+				_loading[currentLoading]->loadImage(str, 100, 100);
+			}
+			else
+			{
+				char str[50] = "아틀라스의 방정리 중 ...";
+				_loading[currentLoading]->loadImage(str, 100, 100);
+			}
+			
 		}
 		break;
 	case FINALSTAGE:
 		for (int i = 0; i < 200; i++)
 		{
-			char str[20];
-			sprintf(str, "FianlBossImg%d", i);
-			_loading[FINALSTAGE]->loadImage(str, 100, 100);
+			if (i < 40)
+			{
+				char str[50] = "맵만드는중 ...";
+				_loading[currentLoading]->loadImage(str, 100, 100);
+			}
+			else if (i < 80)
+			{
+				char str[50] = "마스터 수라 생성중 ..";
+				_loading[currentLoading]->loadImage(str, 100, 100);
+
+			}
+			else if (i < 120)
+			{
+				char str[50] = "소리를 불러오는 중 ...";
+				_loading[currentLoading]->loadImage(str, 100, 100);
+			}
+			else if (i < 160)
+			{
+				char str[50] = "마스터 수라의 성 정리 중 ...";
+				_loading[currentLoading]->loadImage(str, 100, 100);
+			}
+			else
+			{
+				char str[50] = "당근밭주인 초코우유 사오는 중 ... ";
+				_loading[currentLoading]->loadImage(str, 100, 100);
+			}
+
 		}
+		
 		break;
 
 	}
@@ -150,88 +227,87 @@ void loadingScene::loadingSound()
 	{
 	case STARTSTAGE:
 		//플레이어 사운드
-		_loading[STARTSTAGE]->loadSound("playerHit", "Sound/player/hit.mp3");
-		_loading[STARTSTAGE]->loadSound("playerNomalDash", "Sound/player/nomalDash.mp3");
-		_loading[STARTSTAGE]->loadSound("playerfireDash", "Sound/player/fireDash.mp3");
-		_loading[STARTSTAGE]->loadSound("playerFoot", "Sound/player/footstep.mp3");
-		_loading[STARTSTAGE]->loadSound("blazeFire", "Sound/player/blaze_fire.mp3");
-		_loading[STARTSTAGE]->loadSound("blazeExp", "Sound/player/blaze_exp.mp3");
-		_loading[STARTSTAGE]->loadSound("RagingInfernoExp", "Sound/player/RagingInferno_exp.mp3");
-		_loading[STARTSTAGE]->loadSound("RagingInfernoFire", "Sound/player/RagingInferno_fire.mp3");
-		_loading[STARTSTAGE]->loadSound("meteoFire0", "Sound/player/meteo_fire0.mp3");
-		_loading[STARTSTAGE]->loadSound("meteoFire1", "Sound/player/meteo_fire1.mp3");
-		_loading[STARTSTAGE]->loadSound("meteoFire2", "Sound/player/meteo_fire2.mp3");
-		_loading[STARTSTAGE]->loadSound("meteoFire3", "Sound/player/meteo_fire3.mp3");
-		_loading[STARTSTAGE]->loadSound("meteoExp0", "Sound/player/meteo_full0.mp3");
-		_loading[STARTSTAGE]->loadSound("meteoExp1", "Sound/player/meteo_full1.mp3");
-		_loading[STARTSTAGE]->loadSound("meteoExp2", "Sound/player/meteo_full2.mp3");
-		_loading[STARTSTAGE]->loadSound("meteoExp3", "Sound/player/meteo_full3.mp3");
-
-		//UI 사운드
-		_loading[STARTSTAGE]->loadSound("healBall", "Sound/healBall.mp3");
-		_loading[STARTSTAGE]->loadSound("portalWarp", "Sound/portalWarp.mp3");
-		_loading[STARTSTAGE]->loadSound("coinGet", "Sound/coinGet.mp3");
-		_loading[STARTSTAGE]->loadSound("invenOpen", "Sound/UI/inventoryON.mp3");
-		_loading[STARTSTAGE]->loadSound("invenClose", "Sound/UI/inventoryOFF.mp3");
-		_loading[STARTSTAGE]->loadSound("npcBuyFirst", "Sound/UI/npcBuy.mp3");
-		_loading[STARTSTAGE]->loadSound("npcBuy", "Sound/UI/npcBuy02.mp3");
-		_loading[STARTSTAGE]->loadSound("invenClose", "Sound/UI/inventoryOFF.mp3");
-		_loading[STARTSTAGE]->loadSound("shieldON", "Sound/UI/shieldON.mp3");
-		_loading[STARTSTAGE]->loadSound("shieldOFF", "Sound/UI/shieldOFF.mp3");
-		_loading[STARTSTAGE]->loadSound("npcNox", "Sound/UI/npc_nox.mp3");
-		_loading[STARTSTAGE]->loadSound("BOX_appear", "Sound/UI/BOX_appear.mp3");
-		_loading[STARTSTAGE]->loadSound("portalIN", "Sound/UI/portalIN.mp3");
-		_loading[STARTSTAGE]->loadSound("portalOUT", "Sound/UI/portalOUT.mp3");
-
-		//몬스터 사운드
-		_loading[STARTSTAGE]->loadSound("golemAtk", "Sound/golem_atk.mp3");
-		_loading[STARTSTAGE]->loadSound("golemWalkL", "Sound/golem_walkL.mp3");
-		_loading[STARTSTAGE]->loadSound("golemWalkR", "Sound/golem_walkR.mp3");
-		_loading[STARTSTAGE]->loadSound("golemDie", "Sound/golem_die.mp3");
-		_loading[STARTSTAGE]->loadSound("golemHit", "Sound/golem_hit.mp3");
-
-		_loading[STARTSTAGE]->loadSound("knightAtk0", "Sound/knight_atk0.mp3");
-		_loading[STARTSTAGE]->loadSound("knightAtk1", "Sound/knight_atk1.mp3");
-		_loading[STARTSTAGE]->loadSound("knightAtk2", "Sound/knight_atk2.mp3");
-		_loading[STARTSTAGE]->loadSound("knightAtk3", "Sound/knight_atk3.mp3");
-		_loading[STARTSTAGE]->loadSound("knightWalkL", "Sound/knight_walkL.mp3");
-		_loading[STARTSTAGE]->loadSound("knightWalkR", "Sound/knignt_walkR.mp3");
-		_loading[STARTSTAGE]->loadSound("knightDie", "Sound/knight_die.mp3");
-		_loading[STARTSTAGE]->loadSound("knightHit0", "Sound/knight_hit0.mp3");
-		_loading[STARTSTAGE]->loadSound("knightHit1", "Sound/knight_hit1.mp3");
-
-		_loading[STARTSTAGE]->loadSound("summonerCasting", "Sound/summoner_casting.mp3");
-		_loading[STARTSTAGE]->loadSound("summonerFire", "Sound/summoner_fire.mp3");
-		_loading[STARTSTAGE]->loadSound("summonerAtk", "Sound/summoner_atk.mp3");
-
-		_loading[STARTSTAGE]->loadSound("ghoulHit0", "Sound/ghoulHit0.mp3");
-		_loading[STARTSTAGE]->loadSound("ghoulHit1", "Sound/ghoulHit1.mp3");
-		_loading[STARTSTAGE]->loadSound("ghoulDie", "Sound/ghoulDie.mp3");
-		_loading[STARTSTAGE]->loadSound("ghoulATK", "Sound/ghoulATK.mp3");
-		_loading[STARTSTAGE]->loadSound("ghoulWalk", "Sound/ghoulWalk.mp3");
-
+		SOUNDMANAGER->addSound("playerHit", "Sound/player/hit.mp3");
+		SOUNDMANAGER->addSound("playerNomalDash", "Sound/player/nomalDash.mp3");
+		SOUNDMANAGER->addSound("playerfireDash", "Sound/player/fireDash.mp3");
+		SOUNDMANAGER->addSound("playerFoot", "Sound/player/footstep.mp3");
+		SOUNDMANAGER->addSound("blazeFire", "Sound/player/blaze_fire.mp3");
+		SOUNDMANAGER->addSound("blazeExp", "Sound/player/blaze_exp.mp3");
+		SOUNDMANAGER->addSound("RagingInfernoExp", "Sound/player/RagingInferno_exp.mp3");
+		SOUNDMANAGER->addSound("RagingInfernoFire", "Sound/player/RagingInferno_fire.mp3");
+		SOUNDMANAGER->addSound("meteoFire0", "Sound/player/meteo_fire0.mp3");
+		SOUNDMANAGER->addSound("meteoFire1", "Sound/player/meteo_fire1.mp3");
+		SOUNDMANAGER->addSound("meteoFire2", "Sound/player/meteo_fire2.mp3");
+		SOUNDMANAGER->addSound("meteoFire3", "Sound/player/meteo_fire3.mp3");
+		SOUNDMANAGER->addSound("meteoExp0", "Sound/player/meteo_full0.mp3");
+		SOUNDMANAGER->addSound("meteoExp1", "Sound/player/meteo_full1.mp3");
+		SOUNDMANAGER->addSound("meteoExp2", "Sound/player/meteo_full2.mp3");
+		SOUNDMANAGER->addSound("meteoExp3", "Sound/player/meteo_full3.mp3");
+		
+		
+		SOUNDMANAGER->addSound("healBall", "Sound/healBall.mp3");
+		SOUNDMANAGER->addSound("portalWarp", "Sound/portalWarp.mp3");
+		SOUNDMANAGER->addSound("coinGet", "Sound/coinGet.mp3");
+		SOUNDMANAGER->addSound("invenOpen", "Sound/UI/inventoryON.mp3");
+		SOUNDMANAGER->addSound("invenClose", "Sound/UI/inventoryOFF.mp3");
+		SOUNDMANAGER->addSound("npcBuyFirst", "Sound/UI/npcBuy.mp3");
+		SOUNDMANAGER->addSound("npcBuy", "Sound/UI/npcBuy02.mp3");
+		SOUNDMANAGER->addSound("invenClose", "Sound/UI/inventoryOFF.mp3");
+		SOUNDMANAGER->addSound("shieldON", "Sound/UI/shieldON.mp3");
+		SOUNDMANAGER->addSound("shieldOFF", "Sound/UI/shieldOFF.mp3");
+		SOUNDMANAGER->addSound("npcNox", "Sound/UI/npc_nox.mp3");
+		SOUNDMANAGER->addSound("BOX_appear", "Sound/UI/BOX_appear.mp3");
+		SOUNDMANAGER->addSound("portalIN", "Sound/UI/portalIN.mp3");
+		SOUNDMANAGER->addSound("portalOUT", "Sound/UI/portalOUT.mp3");
+		
+		
+		SOUNDMANAGER->addSound("golemAtk", "Sound/golem_atk.mp3");
+		SOUNDMANAGER->addSound("golemWalkL", "Sound/golem_walkL.mp3");
+		SOUNDMANAGER->addSound("golemWalkR", "Sound/golem_walkR.mp3");
+		SOUNDMANAGER->addSound("golemDie", "Sound/golem_die.mp3");
+		SOUNDMANAGER->addSound("golemHit", "Sound/golem_hit.mp3");
+		
+		SOUNDMANAGER->addSound("knightAtk0", "Sound/knight_atk0.mp3");
+		SOUNDMANAGER->addSound("knightAtk1", "Sound/knight_atk1.mp3");
+		SOUNDMANAGER->addSound("knightAtk2", "Sound/knight_atk2.mp3");
+		SOUNDMANAGER->addSound("knightAtk3", "Sound/knight_atk3.mp3");
+		SOUNDMANAGER->addSound("knightWalkL", "Sound/knight_walkL.mp3");
+		SOUNDMANAGER->addSound("knightWalkR", "Sound/knignt_walkR.mp3");
+		SOUNDMANAGER->addSound("knightDie", "Sound/knight_die.mp3");
+		SOUNDMANAGER->addSound("knightHit0", "Sound/knight_hit0.mp3");
+		SOUNDMANAGER->addSound("knightHit1", "Sound/knight_hit1.mp3");
+		
+		SOUNDMANAGER->addSound("summonerCasting", "Sound/summoner_casting.mp3");
+		SOUNDMANAGER->addSound("summonerFire", "Sound/summoner_fire.mp3");
+		SOUNDMANAGER->addSound("summonerAtk", "Sound/summoner_atk.mp3");
+		
+		SOUNDMANAGER->addSound("ghoulHit0", "Sound/ghoulHit0.mp3");
+		SOUNDMANAGER->addSound("ghoulHit1", "Sound/ghoulHit1.mp3");
+		SOUNDMANAGER->addSound("ghoulDie", "Sound/ghoulDie.mp3");
+		SOUNDMANAGER->addSound("ghoulATK", "Sound/ghoulATK.mp3");
+		SOUNDMANAGER->addSound("ghoulWalk", "Sound/ghoulWalk.mp3");
 
 		break;
 	case MIDDLESTAGE:
 		//보스  
-		_loading[MIDDLESTAGE]->loadSound("bossDrillSFX", "Sound/bossDrillSFX.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossDrillVO", "Sound/bossDrillVO.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossJumpSFX", "Sound/bossJumpSFX.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossJumpVO", "Sound/bossJumpVO.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossNiddleSFX", "Sound/bossNiddleSFX.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossNiddleSFX_END", "Sound/bossNiddleSFX_END.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossPunchSFX", "Sound/bossPunchSFX.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossPunchSFX02", "Sound/bossPunchSFX02.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossPunchVO", "Sound/bossPunchVO.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossPunchEXP", "Sound/bossPunchEXP.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossWallSFX", "Sound/bossWallSFX.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossWallVO", "Sound/bossWallVO.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossFinalATK_start", "Sound/bossFinalATK_start.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossFinalATK_end", "Sound/bossFinalATK_end.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossFinalATK_up", "Sound/bossFinalATK_up.mp3");
-		_loading[MIDDLESTAGE]->loadSound("bossDie", "Sound/bossDie.mp3");
-		_loading[MIDDLESTAGE]->loadSound("CutSceneSFX", "Sound/CutSceneSFX.mp3");
-		_loading[MIDDLESTAGE]->loadSound("CutSceneVO", "Sound/CutSceneVO.mp3");
+		SOUNDMANAGER->addSound("bossDrillSFX", "Sound/bossDrillSFX.mp3");
+		SOUNDMANAGER->addSound("bossDrillVO", "Sound/bossDrillVO.mp3");
+		SOUNDMANAGER->addSound("bossJumpSFX", "Sound/bossJumpSFX.mp3");
+		SOUNDMANAGER->addSound("bossJumpVO", "Sound/bossJumpVO.mp3");
+		SOUNDMANAGER->addSound("bossNiddleSFX", "Sound/bossNiddleSFX.mp3");
+		SOUNDMANAGER->addSound("bossNiddleSFX_END", "Sound/bossNiddleSFX_END.mp3");
+		SOUNDMANAGER->addSound("bossPunchSFX", "Sound/bossPunchSFX.mp3");
+		SOUNDMANAGER->addSound("bossPunchSFX02", "Sound/bossPunchSFX02.mp3");
+		SOUNDMANAGER->addSound("bossPunchVO", "Sound/bossPunchVO.mp3");
+		SOUNDMANAGER->addSound("bossPunchEXP", "Sound/bossPunchEXP.mp3");
+		SOUNDMANAGER->addSound("bossWallSFX", "Sound/bossWallSFX.mp3");
+		SOUNDMANAGER->addSound("bossWallVO", "Sound/bossWallVO.mp3");
+		SOUNDMANAGER->addSound("bossFinalATK_start", "Sound/bossFinalATK_start.mp3");
+		SOUNDMANAGER->addSound("bossFinalATK_end", "Sound/bossFinalATK_end.mp3");
+		SOUNDMANAGER->addSound("bossFinalATK_up", "Sound/bossFinalATK_up.mp3");
+		SOUNDMANAGER->addSound("bossDie", "Sound/bossDie.mp3");
+		SOUNDMANAGER->addSound("CutSceneSFX", "Sound/CutSceneSFX.mp3");
+		SOUNDMANAGER->addSound("CutSceneVO", "Sound/CutSceneVO.mp3");
 		break;
 	case FINALSTAGE:
 

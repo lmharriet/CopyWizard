@@ -514,14 +514,25 @@ void player::skillInit()
 		arcana[3].coolTime = Meteor->getInfo().coolTime;
 
 		arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		arcana[4].skillName = "nonSkill";//dragon->getInfo().keyName;//"nonSkill";
-		arcana[4].explanation = "";// dragon->getInfo().explanation;// "";
-		arcana[4].coolTime = 0;//dragon->getInfo().coolTime;//0;
+		arcana[4].skillName = "nonSkill";
+		arcana[4].explanation = "";
+		arcana[4].coolTime = 0;
 
 		arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		arcana[5].skillName = "nonSkill";//spear->getInfo().keyName;//"nonSkill";
-		arcana[5].explanation = "";//spear->getInfo().explanation; //"";
-		arcana[5].coolTime = 0;//spear->getInfo().coolTime;//0;
+		arcana[5].skillName = "nonSkill";
+		arcana[5].explanation = "";
+		arcana[5].coolTime = 0;
+
+		//arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
+		//arcana[4].skillName = dragon->getInfo().keyName;//"nonSkill";
+		//arcana[4].explanation = dragon->getInfo().explanation;// "";
+		//arcana[4].coolTime = dragon->getInfo().coolTime;//0;
+
+		//arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
+		//arcana[5].skillName = spear->getInfo().keyName;//"nonSkill";
+		//arcana[5].explanation = spear->getInfo().explanation; //"";
+		//arcana[5].coolTime = 0;//spear->getInfo().coolTime;//0;
+
 
 
 		for (int i = 0; i < ARCANA_SLOT; i++)
@@ -542,7 +553,7 @@ void player::setNewSignatrue(string keyName, int coolTime)
 		arcana[i].coolTime = coolTime;
 		arcana[i].explanation = "";
 
-		
+
 		PLAYERDATA->setArcanaInfo(i, arcana[i].skillName, arcana[i].explanation, coolTime);
 		break;
 	}
@@ -709,8 +720,8 @@ void player::standardSetUp()
 {
 	if (arcana[2].skillName == inferno->getInfo().keyName)
 	{
-		if (INPUT->GetKeyDown(VK_RBUTTON) && !inferno->getGauging() && !isDead && speed == 0 && meteorStateCool == 0 
-			&&dragonStateCool==0  && spearStateCool==0&& !inferno->getCool() && !isGrabbed && frozenTime == 0 )
+		if (INPUT->GetKeyDown(VK_RBUTTON) && !inferno->getGauging() && !isDead && speed == 0 && meteorStateCool == 0
+			&& dragonStateCool == 0 && spearStateCool == 0 && !inferno->getCool() && !isGrabbed && frozenTime == 0)
 		{
 			standard = true;
 			saveAngle = attackAngle;
@@ -801,7 +812,7 @@ void player::signatureSetUpE()
 	if (arcana[4].skillName == spear->getInfo().keyName)
 	{
 		if (!isDead && !spear->getCool() && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
-			&& !Meteor->getCool() && !dragon->getCool() && meteorStateCool == 0 && dragonStateCool==0 &&spearStateCool==0)
+			&& !Meteor->getCool() && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
 		{
 			if (!upgradeReady)
 			{
@@ -835,7 +846,7 @@ void player::signatureSetUpE()
 		if (!upgradeReady)
 		{
 			if (INPUT->GetKeyDown('E') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
-				&& !Meteor->getCool() && !dragon->getCool() && basicStateCool==0 && meteorStateCool ==0 && dragonStateCool == 0 && spearStateCool == 0)
+				&& !Meteor->getCool() && !dragon->getCool() && basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
 			{
 				signatureE = true;
 			}
@@ -851,7 +862,7 @@ void player::signatureSetUpE()
 				}
 				if (dragonStateCool > 0)
 				{
-					state = STATE::SIGNATURE;
+					state = STATE::DRAGON;
 					dragonStateCool--;
 				}
 				if (dragonStateCool == 0) signatureE = false;
@@ -864,7 +875,7 @@ void player::signatureSetUpE()
 			EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
 
 			if (INPUT->GetKeyDown('E') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
-				&& !Meteor->getCool() && !dragon->getCool() && meteorStateCool == 0 && dragonStateCool ==0 && spearStateCool==0)
+				&& !Meteor->getCool() && !dragon->getCool() && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
 			{
 				signatureE = true;
 			}
@@ -879,7 +890,7 @@ void player::signatureSetUpE()
 				}
 				if (dragonStateCool >= 0)
 				{
-					state = STATE::SIGNATURE;
+					state = STATE::DRAGON;
 					dragonStateCool--;
 					if (dragonStateCool == 0) signatureE = false;
 
@@ -889,7 +900,7 @@ void player::signatureSetUpE()
 		}
 
 	}
-	
+
 }
 
 void player::signatureSetUpR()
@@ -899,10 +910,10 @@ void player::signatureSetUpR()
 
 	if (arcana[5].skillName == spear->getInfo().keyName)
 	{
-		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool() && frozenTime == 0 &&  speed == 0
+		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool() && frozenTime == 0 && speed == 0
 			&& !Meteor->getCool() && !dragon->getCool() && basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
 		{
-			
+
 			if (!upgradeReady)
 			{
 				if (INPUT->GetKey('R'))
@@ -990,6 +1001,7 @@ void player::signatureSetUpR()
 	}
 
 }
+
 void player::takeCoin()
 {
 	for (int i = 0; i < DROP->getCoinVec().size(); i++)
@@ -1287,8 +1299,7 @@ void player::animation(int _index)
 				}
 				if (arcana[3].skillName == "skill_meteor")
 					frameAnimation(atkIndex, 10);
-				else if (arcana[3].skillName == "skill_dragonArc")
-					frameAnimation(atkIndex, 16);
+
 
 			}
 			else if (move == MOVE::RIGHT)
@@ -1300,8 +1311,7 @@ void player::animation(int _index)
 				}
 				if (arcana[3].skillName == "skill_meteor")
 					frameAnimation(atkIndex, 20);
-				else if (arcana[3].skillName == "skill_dragonArc")
-					frameAnimation(atkIndex, 15);
+
 
 			}
 			else if (move == MOVE::UP || move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
@@ -1313,8 +1323,7 @@ void player::animation(int _index)
 				}
 				if (arcana[3].skillName == "skill_meteor")
 					frameAnimation(atkIndex, 20);
-				else if (arcana[3].skillName == "skill_dragonArc")
-					frameAnimation(atkIndex, 14);
+
 
 			}
 			else if (move == MOVE::DOWN || move == MOVE::LEFT_DOWN || move == MOVE::RIGHT_DOWN)
@@ -1326,11 +1335,62 @@ void player::animation(int _index)
 				}
 				if (arcana[3].skillName == "skill_meteor")
 					frameAnimation(atkIndex, 10);
-				else if (arcana[3].skillName == "skill_dragonArc")
-					frameAnimation(atkIndex, 6);
 
-				break;
+
 			}
+			break;
+
+		case STATE::DRAGON:
+		{
+			int tenth = (int)(attackAngle * (18 / PI));
+
+			if (tenth > 14 && tenth <= 23)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				frameAnimation(atkIndex, 16);
+			}
+
+			else if (tenth <= 4 && tenth >= 0 || tenth > 32)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+
+				frameAnimation(atkIndex, 15);
+
+			}
+			else if (tenth > 4 && tenth <= 14)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+
+				frameAnimation(atkIndex, 14);
+
+			}
+			else if (tenth > 23 && tenth <= 32)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+
+				frameAnimation(atkIndex, 6);
+
+			}
+		}
+		break;
+		case STATE::SPEAR:
+			break;
 		}
 	}
 	else
@@ -1596,8 +1656,7 @@ void player::animation(int _index)
 				}
 				if (arcana[3].skillName == "skill_meteor")
 					frameAnimation(atkIndex, 10, 1);
-				else if (arcana[3].skillName == "skill_dragonArc")
-					frameAnimation(atkIndex, 16, 1);
+
 
 
 			}
@@ -1610,8 +1669,7 @@ void player::animation(int _index)
 				}
 				if (arcana[3].skillName == "skill_meteor")
 					frameAnimation(atkIndex, 20, 1);
-				else if (arcana[3].skillName == "skill_dragonArc")
-					frameAnimation(atkIndex, 15, 1);
+
 
 			}
 			else if (move == MOVE::UP || move == MOVE::LEFT_TOP || move == MOVE::RIGHT_TOP)
@@ -1623,8 +1681,7 @@ void player::animation(int _index)
 				}
 				if (arcana[3].skillName == "skill_meteor")
 					frameAnimation(atkIndex, 20, 1);
-				else if (arcana[3].skillName == "skill_dragonArc")
-					frameAnimation(atkIndex, 14, 1);
+
 
 			}
 			else if (move == MOVE::DOWN || move == MOVE::LEFT_DOWN || move == MOVE::RIGHT_DOWN)
@@ -1636,11 +1693,60 @@ void player::animation(int _index)
 				}
 				if (arcana[3].skillName == "skill_meteor")
 					frameAnimation(atkIndex, 10, 1);
-				else if (arcana[3].skillName == "skill_dragonArc")
-					frameAnimation(atkIndex, 6, 1);
+
 
 			}
 			break;
+		case STATE::DRAGON:
+		{
+			int tenth = (int)(attackAngle * (18 / PI));
+
+			if (tenth > 14 && tenth <= 23)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				frameAnimation(atkIndex, 16, 1);
+
+			}
+			else if (tenth <= 4 && tenth >= 0 || tenth > 32)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+
+				frameAnimation(atkIndex, 15, 1);
+
+			}
+			else if (tenth > 4 && tenth <= 14)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+
+				frameAnimation(atkIndex, 14, 1);
+
+			}
+			else if (tenth > 23 && tenth <= 32)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+
+				frameAnimation(atkIndex, 6, 1);
+
+			}
+		}
+		break;
+
 		} //end of switch
 	}
 
@@ -1890,12 +1996,16 @@ void player::damagedCool()
 	}
 }
 
-void player::finalAttackDamaged(int damage, int frozenCount)
+void player::finalAttackDamaged(int damage, int frozenCount, float attackAngle)
 {
 	if (PLAYERDATA->getHp() <= 0) return;
 
 	isGrabbed = true;
 	grabbedTime = frozenCount;
+
+	knockBack.angle = attackAngle;
+	knockBack.speed = 0.0f;
+	knockBack.percent = 0.0f;
 
 	state = STATE::DAMAGED;
 
@@ -1951,9 +2061,7 @@ void player::chargeSkillGauge(int atkPower, int skillNum)
 			break;
 
 		}
-
 	}
-
 }
 
 void player::skillGaugeSetUp()

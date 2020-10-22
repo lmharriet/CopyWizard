@@ -34,17 +34,17 @@ private:
 
 	MOVE move;
 	STATE state;
-	
+
 
 	RECT rc;
 
 	tagCollider tileCheck[8];
 	tagCollider diagonalCheck[4];
 
-	
+
 	float posX, posY;
 	float attackAngle;
-	float saveAngle ;
+	float saveAngle;
 
 
 	int angleTenth;
@@ -68,7 +68,7 @@ private:
 
 
 	//animation count , index
-	int dashCount,dashIndex;
+	int dashCount, dashIndex;
 	int atkCount, atkIndex;
 	int count, index;
 	int basicCount, basicIndex;
@@ -76,28 +76,28 @@ private:
 
 	//animation delay
 	int idleDelay;
-	
-	
+
+
 	//damage
 	int frozenTime;
 	int grabbedTime;
 	bool isDamaged;
 	bool isGrabbed;
-	
+
 	tagKnockBack knockBack;
 
 	//dash
 	bool dashLeft, dashRight, dashUp, dashDown;
-	
+
 	//skill kind
-	bool basic, standard, signature, signatureE,signatureR;
+	bool basic, standard, signature, signatureE, signatureR;
 
 
 
-	
+
 	// 신호 중복 방지
 	bool isLeft, isRight, isUp, isDown;
-	
+
 	bool isDead;
 
 	//temp
@@ -159,7 +159,7 @@ public:
 
 	void damagedCool();
 
-	void finalAttackDamaged(int damage, int frozenCount);
+	void finalAttackDamaged(int damage, int frozenCount, float attackAngle);
 
 	void grabbedCool();
 
@@ -184,15 +184,15 @@ public:
 
 	bool getDamaged() { return isDamaged; }
 
-	
+
 	void setX(float x) { posX = x; }
 	void setY(float y) { posY = y; }
 	void reposRect() { rc = RectMakeCenter(posX, posY, 100, 100); }
 	void setStateIDLE() { state = STATE::IDLE; }
-	
+
 	void setDamaged(bool temp) { isDamaged = temp; }
-	
-	void setIdleDelay(int value) { idleDelay = value;}
+
+	void setIdleDelay(int value) { idleDelay = value; }
 
 	void setTileAd(tagTile* _tile) { tile = _tile; }
 	void setTileAd0(vector<int> _vTile) { vTile = _vTile; }
