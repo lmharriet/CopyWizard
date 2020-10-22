@@ -219,7 +219,6 @@ void bossScene::render()
 
 	CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("frontFrame"), 0, 0);
 	PARTICLE->render(getMemDC());
-	UI->render(getMemDC(), 50, 50);
 
 	if (isBattle) {
 		char str[128];
@@ -240,6 +239,8 @@ void bossScene::render()
 	{
 		IMAGEMANAGER->findImage("glassEffect")->render(getMemDC());
 	}
+
+	UI->render(getMemDC(), 50, 50);
 
 	_player->invenRender();
 }
