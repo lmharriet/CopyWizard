@@ -135,6 +135,7 @@ void chest::bossScene_update()
 					//카드, 동전 생성
 					DROP->dropPoint(rePos, 80, 120, 0, { -100,100 }, { -80,80 });
 					DROP->dropPointArcana(arcanaKeyName, rePos, arcanaName, arcanaCoolTime);
+					DROP->dropPoint_heal(rePos, { 1,4 }, { -30,30 }, { -10,10 });
 
 					//아이템 생성
 					tagDropItem _item;
