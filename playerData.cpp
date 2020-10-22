@@ -23,7 +23,7 @@ HRESULT playerData::init()
 
 	stat.goldPig = false;
 	stat.CoolTimeReduction = 0;
-	stat.glassMirror = false;
+	stat.glassMirror = true;
 
 	//curse
 	stat.vampireBlood = false;
@@ -46,7 +46,7 @@ HRESULT playerData::init()
 	//current Stage
 	currentStage = STAGEKIND::STARTSTAGE;
 
-	cout << "PLAYERDATA INIT" << '\n';
+	//cout << "PLAYERDATA INIT" << '\n';
 
 	return S_OK;
 }

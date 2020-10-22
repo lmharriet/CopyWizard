@@ -203,6 +203,8 @@ void finalBossScene::render()
 			_player->getX() - 50, _player->getY() - 50, pFrame.x, pFrame.y);
 	}
 
+	PLAYERDATA->shroudRender(getMemDC());
+
 	_finalBoss->render();
 
 	if (isEnd)
@@ -228,6 +230,12 @@ void finalBossScene::render()
 	}
 
 	PARTICLE->render(getMemDC());
+
+	if (PLAYERDATA->getStat().reducedVisibility)
+	{
+		IMAGEMANAGER->findImage("glassEffect")->render(getMemDC());
+	}
+
 	UI->render(getMemDC(), 50, 50);
 
 	_player->invenRender();

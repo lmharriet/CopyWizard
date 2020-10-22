@@ -1064,9 +1064,29 @@ void boss::collCheck()
 			{
 			case 1: {
 				if (!isHit) {
-					float _jumpAngle = getAngle(boss.center.x, boss.center.y, _player->getX(), _player->getY());
-					int damage = RANDOM->range(75, 91);
-					_player->damage(damage, _jumpAngle, 10);
+
+					if (PLAYERDATA->getShroud() == false)
+					{
+						float _jumpAngle = getAngle(boss.center.x, boss.center.y, _player->getX(), _player->getY());
+						int damage = RANDOM->range(75, 91);
+
+						if (PLAYERDATA->getStat().doubleDamage)
+						{
+							_player->damage(damage * 2, _jumpAngle, 10);
+						}
+
+						else
+						{
+							_player->damage(damage, _jumpAngle, 10);
+						}
+					}
+
+					else
+					{
+						PLAYERDATA->setShroud(false);
+						SOUNDMANAGER->play("shieldOFF", false, 1.0f);
+					}
+
 					isHit = true;
 				}
 			}
@@ -1084,7 +1104,27 @@ void boss::collCheck()
 								SOUNDMANAGER->play("bossNiddleSFX_END",false,-0.35f);
 							}
 							int damage = RANDOM->range(8, 13);
-							_player->damage(damage, _niddelAngle, 3);
+
+							if (PLAYERDATA->getShroud())
+							{
+								PLAYERDATA->setShroud(false);
+								SOUNDMANAGER->play("shieldOFF", false, 1.0f);
+							}
+
+							else
+							{
+								if (PLAYERDATA->getStat().doubleDamage)
+								{
+									_player->damage(damage * 2, _niddelAngle, 3);
+								}
+
+								else
+								{
+									_player->damage(damage, _niddelAngle, 3);
+								}
+							}
+							
+
 							break;
 						}
 					}
@@ -1093,9 +1133,29 @@ void boss::collCheck()
 				  break;
 			case 5: {
 				if (!isHit) {
-					float _wallAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left, BOSSMANAGER->getVector()[i]->getRect().top, _player->getRect().left, _player->getRect().top);
-					int damage = RANDOM->range(8, 13);
-					_player->damage(damage, _wallAngle, 8);
+
+					if (PLAYERDATA->getShroud())
+					{
+						PLAYERDATA->setShroud(false);
+						SOUNDMANAGER->play("shieldOFF", false, 1.0f);
+					}
+
+					else
+					{
+						float _wallAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left, BOSSMANAGER->getVector()[i]->getRect().top, _player->getRect().left, _player->getRect().top);
+						int damage = RANDOM->range(8, 13);
+
+						if (PLAYERDATA->getStat().doubleDamage)
+						{
+							_player->damage(damage * 2, _wallAngle, 8);
+						}
+
+						else
+						{
+							_player->damage(damage, _wallAngle, 8);
+						}
+					}
+
 					isHit = true;
 				}
 				break;
@@ -1108,9 +1168,29 @@ void boss::collCheck()
 		for (int i = 0; i < punchBlock.size(); i++) {
 			if (IntersectRect(&temp, &_player->getRect(), &punchBlock[i]->rc)) {
 				SOUNDMANAGER->play("bossPunchEXP", false,-0.3f);
-				float _punchAngle = getAngle(punchBlock[i]->rc.left, punchBlock[i]->rc.top, _player->getRect().left, _player->getRect().top);
-				int damage = RANDOM->range(10, 20);
-				_player->damage(damage, _punchAngle, 6);
+
+				if (PLAYERDATA->getShroud())
+				{
+					PLAYERDATA->setShroud(false);
+					SOUNDMANAGER->play("shieldOFF", false, 1.0f);
+				}
+
+				else
+				{
+					float _punchAngle = getAngle(punchBlock[i]->rc.left, punchBlock[i]->rc.top, _player->getRect().left, _player->getRect().top);
+					int damage = RANDOM->range(10, 20);
+
+					if (PLAYERDATA->getStat().doubleDamage)
+					{
+						_player->damage(damage * 2, _punchAngle, 6);
+					}
+
+					else
+					{
+						_player->damage(damage, _punchAngle, 6);
+					}
+				}
+
 				PARTICLE->crashRockParticlePlay(punchBlock[i]->rc.left + 50, punchBlock[i]->rc.top + 50);
 				punchBlock.erase(punchBlock.begin() + i);
 				break;
@@ -1120,9 +1200,29 @@ void boss::collCheck()
 
 	if (IntersectRect(&temp, &drillBlock.rc, &_player->getRect())) {
 		if (!isHit) {
-			float _drillBlock = getAngle(drillBlock.rc.left, drillBlock.rc.top, _player->getRect().left, _player->getRect().top);
-			int damage = RANDOM->range(1, 5);
-			_player->damage(damage, _drillBlock, 10);
+
+			if (PLAYERDATA->getShroud())
+			{
+				PLAYERDATA->setShroud(false);
+				SOUNDMANAGER->play("shieldOFF", false, 1.0f);
+			}
+
+			else
+			{
+				float _drillBlock = getAngle(drillBlock.rc.left, drillBlock.rc.top, _player->getRect().left, _player->getRect().top);
+				int damage = RANDOM->range(1, 5);
+
+				if (PLAYERDATA->getStat().doubleDamage)
+				{
+					_player->damage(damage * 2, _drillBlock, 10);
+				}
+
+				else
+				{
+					_player->damage(damage, _drillBlock, 10);
+				}
+			}
+			
 			isHit = true;
 		}
 	}

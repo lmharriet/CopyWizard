@@ -14,6 +14,7 @@ private:
 	RECT area;
 
 	bool isBattle;
+	int cTime;
 	int cutTime;
 
 	player* _player;

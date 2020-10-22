@@ -47,6 +47,7 @@ HRESULT bossScene::init()
 	warpDelay = 0;
 	isWarp = false;
 	gameOver = false;
+	cTime = 0;
 
 	UI->fadeIn();
 	EFFECT->setPortalEffect({ (long)_player->getX(),(long)_player->getY() });
@@ -189,6 +190,8 @@ void bossScene::bossCutScene()
 			10.f                                    // lerp ¼Óµµ
 		);
 	}
+
+	if (isBattle && cTime < 200)cTime++;
 }
 
 void bossScene::render()
@@ -200,12 +203,14 @@ void bossScene::render()
 
 	PORTAL->bossScene_backRender(getMemDC());
 
+
 	EFFECT->pRender(getMemDC());
 
 	DROP->cardRender(getMemDC());
 
 	if(warpDelay == 0) _player->render(1);
 	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
+	if(!isBattle || cTime == 200) PLAYERDATA->shroudRender(getMemDC());
 	//UNITRENDER->render(getMemDC());
 	if(gameOver) _chest->render(getMemDC());
 
@@ -227,16 +232,16 @@ void bossScene::render()
 
 	DROP->coinEffectRender(getMemDC());
 
-	_player->invenRender();
-
 	DAMAGE->render(getMemDC());
 
 	EFFECT->portalRender(getMemDC());
 
-	/*ptOut(getMemDC(), { 500,500 }, 
-		{CAMERAMANAGER->GetAbsoluteX(_ptMouse.x),
-		CAMERAMANAGER->GetAbsoluteY(_ptMouse.y)},
-		RGB(255, 255, 255));*/
+	if (PLAYERDATA->getStat().reducedVisibility)
+	{
+		IMAGEMANAGER->findImage("glassEffect")->render(getMemDC());
+	}
+
+	_player->invenRender();
 }
 
 void bossScene::soundInit()
