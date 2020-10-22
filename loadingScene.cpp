@@ -247,8 +247,8 @@ void loadingScene::loadingSound()
 		SOUNDMANAGER->addSound("meteoExp2", "Sound/player/meteo_full2.mp3");
 		SOUNDMANAGER->addSound("meteoExp3", "Sound/player/meteo_full3.mp3");
 		SOUNDMANAGER->addSound("fireDragon", "Sound/player/fireDragon.mp3");
-		SOUNDMANAGER->addSound("iceSpaerATK", "Sound/player/iceSpaerATK.mp3");
-		SOUNDMANAGER->addSound("iceSpaerFire", "Sound/player/iceSpaerFire.mp3");
+		SOUNDMANAGER->addSound("iceSpearATK", "Sound/player/iceSpearATK.mp3");
+		SOUNDMANAGER->addSound("iceSpearFire", "Sound/player/iceSpearFire.mp3");
 		SOUNDMANAGER->addSound("iceSpearBreak", "Sound/player/iceSpearBreak.mp3");
 		SOUNDMANAGER->addSound("iceSpearHit", "Sound/player/iceSpearHit.mp3");
 		

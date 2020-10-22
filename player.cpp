@@ -544,20 +544,20 @@ void player::skillInit()
 		arcana[4].explanation = "";
 		arcana[4].coolTime = 0;
 
-		arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		arcana[5].skillName = "nonSkill";
-		arcana[5].explanation = "";
-		arcana[5].coolTime = 0;
+		//arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
+		//arcana[5].skillName = "nonSkill";
+		//arcana[5].explanation = "";
+		//arcana[5].coolTime = 0;
 
 		//arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
 		//arcana[4].skillName = dragon->getInfo().keyName;//"nonSkill";
 		//arcana[4].explanation = dragon->getInfo().explanation;// "";
 		//arcana[4].coolTime = dragon->getInfo().coolTime;//0;
 
-		//arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		//arcana[5].skillName = spear->getInfo().keyName;//"nonSkill";
-		//arcana[5].explanation = spear->getInfo().explanation; //"";
-		//arcana[5].coolTime = 0;//spear->getInfo().coolTime;//0;
+		arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
+		arcana[5].skillName = spear->getInfo().keyName;//"nonSkill";
+		arcana[5].explanation = spear->getInfo().explanation; //"";
+		arcana[5].coolTime = 0;//spear->getInfo().coolTime;//0;
 
 
 

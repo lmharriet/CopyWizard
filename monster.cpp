@@ -420,7 +420,7 @@ void monster::commonUpdate()
 			iceBreakCount = 0;
 			EFFECT->iceBreakPlay(position, 10);
 			state = STATEIMAGE::IDLE;
-			SOUNDMANAGER->play("iceSpearBreak", false);
+			SOUNDMANAGER->play("iceSpearBreak", false ,- 0.2f);
 			isIceHitSound = false;
 		}
 		
@@ -478,7 +478,7 @@ void monster::render()
 		{
 			if (!isIceHitSound)
 			{
-				SOUNDMANAGER->play("iceSpearHit", false);
+				SOUNDMANAGER->play("iceSpearHit", false,-0.2f);
 				isIceHitSound = true;
 			}
 		}

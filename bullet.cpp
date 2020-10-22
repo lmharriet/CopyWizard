@@ -1648,7 +1648,8 @@ void iceSpear::fire(float x, float y, float angle)
 
 	//if (gauge < 0.2f) gauge = 0.2f;
 
-	SOUNDMANAGER->play("iceSpearFire", false);
+	SOUNDMANAGER->play("iceSpearFire", false,-0.2f);
+	
 	tagSpear spear;
 
 	spear.x = spear.fireX = x;
@@ -1695,7 +1696,7 @@ void iceSpear::move()
 			CAMERAMANAGER->Shake(20, 20, 2);
 			vSpear.erase(vSpear.begin());
 			size = vSpear.size();
-			SOUNDMANAGER->play("iceSpearATK", false);
+			SOUNDMANAGER->play("iceSpearATK", false,-0.2f);
 		}
 		else i++;
 	}
