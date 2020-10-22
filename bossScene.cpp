@@ -113,7 +113,7 @@ void bossScene::update()
 	attackBoss();
 
 	attackChest();
-
+	gainArcana();
 	if (INPUT->GetKeyDown('J'))
 	{
 		SOUNDMANAGER->stop("bossBGM");
@@ -617,6 +617,23 @@ void bossScene::attackChest()
 			_chest->damaged(_chest->getPos(), damage, _player->getSpear()->getSkillNum(), criCheck);
 
 			_player->getSpear()->setUpgradeCol(i, true);
+		}
+	}
+}
+
+void bossScene::gainArcana()
+{
+	for (int i = 0; i < DROP->getCardVec().size(); i++)
+	{
+		if (colCheck(_player->getRect(), DROP->getCardRect(i)))
+		{
+			if (INPUT->GetKeyDown('F'))
+			{
+				_player->setNewSignatrue(DROP->getCardVec()[i].arcanaName, DROP->getCardVec()[i].coolTime);
+
+				DROP->delCard(i);
+
+			}
 		}
 	}
 }
