@@ -3,6 +3,7 @@
 
 HRESULT finalBossScene::init()
 {
+	
 	IMAGEMANAGER->addImage("finalbossroom", "resource/boss/final boss room.bmp", MAXWIDTH, MAXHEIGHT, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("finalbackframe", "resource/boss/final boss room margenta.bmp", MAXWIDTH, MAXHEIGHT, true, RGB(255, 0, 255));
 
@@ -48,6 +49,13 @@ HRESULT finalBossScene::init()
 	IMAGEMANAGER->addImage("boxHead", "Images/npc/boxHead.bmp", 213, 168, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("boxBottom", "Images/npc/boxBottom.bmp", 213, 168, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("carrot", "Images/npc/carrot.bmp", 50, 45, true, RGB(255, 0, 255));
+
+	//sound
+	isBossBGM = true;
+	fadeIn = 0.f;
+	SOUNDMANAGER->play("castleAmb", false,1.0f);
+	SOUNDMANAGER->play("portalWarp", false);
+	//SOUNDMANAGER->fadeIn("castleAmb", 1.0f);
 	return S_OK;
 }
 
@@ -65,6 +73,18 @@ void finalBossScene::release()
 
 void finalBossScene::update()
 {
+	if (_finalBoss->getStageChange())
+	{
+		if (isBossBGM)
+		{
+			
+			SOUNDMANAGER->fadeIn("bossBGM", fadeIn);
+			fadeIn += 0.002f;
+			if (fadeIn >= SOUNDMANAGER->getVolumeBGM())
+				isBossBGM = false;
+		}
+	}
+
 	_player->getBlaze()->setBossScene(true);
 
 	PLAYERDATA->update();

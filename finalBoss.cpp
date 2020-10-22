@@ -120,6 +120,9 @@ void finalBoss::animation()
 						frameY = 6;
 						timer = 0;
 						count = 0;
+						cout << "in" << endl;
+						SOUNDMANAGER->play("finalBossSpawn", false);
+						SOUNDMANAGER->play("bossBGM", false);
 					}
 				}
 			}

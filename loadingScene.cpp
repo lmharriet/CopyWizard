@@ -312,7 +312,11 @@ void loadingScene::loadingSound()
 		SOUNDMANAGER->addSound("CutSceneVO", "Sound/CutSceneVO.mp3");
 		break;
 	case FINALSTAGE:
-
+		SOUNDMANAGER->addSound("finalBossSpawn", "Sound/finalBoss/finalBoss_spawn.mp3");
+		SOUNDMANAGER->addSound("castleAmb", "Sound/finalBoss/castleAmb.mp3",false,true);
+		SOUNDMANAGER->addSound("fnialBoss_fireBall", "Sound/finalBoss/finalBoss_fireBall.mp3");
+		SOUNDMANAGER->addSound("fnialBoss_iceSpear", "Sound/finalBoss/finalBoss_iceSpearAppear.mp3");
+		SOUNDMANAGER->addSound("fnialBoss_wind", "Sound/finalBoss/finalBoss_wind.mp3");
 
 		break;
 	}

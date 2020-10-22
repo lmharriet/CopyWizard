@@ -106,6 +106,7 @@ private:
 	bool windPattern;
 	bool icePattern;
 	bool isDamaged;
+	
 
 	bool gameOver;
 public:
@@ -148,6 +149,7 @@ public:
 	void setBossHit(bool bossHit) { boss.isHit = bossHit; }
 
 	bool getGameOver() { return gameOver; }
+	bool getStageChange() {	return changStage;	}
 	int getX() { return posX; }
 	int getY() { return posY; }
 };
