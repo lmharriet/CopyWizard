@@ -257,6 +257,9 @@ void bossScene::soundInit()
 
 void bossScene::attackBoss()
 {
+
+	if (!isBattle) return;
+
 	if (_boss->getBoss().bossHp <= 0) return;
 	//blaze
 	for (int i = 0; i < _player->getBlaze()->getSize(); i++)
