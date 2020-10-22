@@ -40,6 +40,7 @@ HRESULT wall::init()
 
 	num = 0;
 	size = 0;
+	isFrameRect = false;
 
 	return S_OK;
 }
@@ -162,6 +163,18 @@ void wall::render2()
 		if (tile[num].kind == TERRAIN::NONE || tile[num].kind != TERRAIN::TILE)continue;
 
 		CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage(tile[num].keyName), tile[num].rc.left, tile[num].rc.top, tile[num].frame.x, tile[num].frame.y);
+		
+		if (isFrameRect)
+		{
+			RECT tmp = tile[num].rc;
+
+			tmp.left = CAMERAMANAGER->GetRelativeX(tmp.left);
+			tmp.right = CAMERAMANAGER->GetRelativeX(tmp.right);
+			tmp.top = CAMERAMANAGER->GetRelativeY(tmp.top);
+			tmp.bottom = CAMERAMANAGER->GetRelativeY(tmp.bottom);
+
+			FrameRect(getMemDC(), tmp, RGB(255, 0, 0));
+		}
 	}
 
 	//object image render

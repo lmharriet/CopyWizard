@@ -20,6 +20,7 @@ private:
 	player* _player;
 	bool isLoad;
 
+	bool isFrameRect;
 	//memory
 	int size;
 	int num;
@@ -33,8 +34,8 @@ public:
 
 	void collisionTile();
 
-
-
+	bool getFrameRect() { return isFrameRect; }
+	void setFrameRect(bool temp) { isFrameRect = temp; }
 	//
 	void getRectAd(RECT* _cam) { cam = _cam; }
 	POINT getCulPt() { return culPt; }
