@@ -99,9 +99,7 @@ private:
 	bool isLeft, isRight, isUp, isDown;
 
 	bool isDead;
-
-	//temp
-	bool uiOn;
+	int restartCount;
 
 	//sound
 	int walkCount;
@@ -189,7 +187,6 @@ public:
 	void setY(float y) { posY = y; }
 	void reposRect() { rc = RectMakeCenter(posX, posY, 100, 100); }
 	void setStateIDLE() { state = STATE::IDLE; }
-
 	void setDamaged(bool temp) { isDamaged = temp; }
 
 	void setIdleDelay(int value) { idleDelay = value; }

@@ -40,6 +40,14 @@ HRESULT finalBossScene::init()
 	UI->fadeIn();
 	EFFECT->setPortalEffect({ (long)_player->getX(),(long)_player->getY() });
 
+	_chest = new chest;
+	isEnd = false;
+	endCutTime = 0;
+	saveY = 0;
+
+	IMAGEMANAGER->addImage("boxHead", "Images/npc/boxHead.bmp", 213, 168, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("boxBottom", "Images/npc/boxBottom.bmp", 213, 168, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("carrot", "Images/npc/carrot.bmp", 50, 45, true, RGB(255, 0, 255));
 	return S_OK;
 }
 
@@ -68,7 +76,13 @@ void finalBossScene::update()
 	if (!CAMERAMANAGER->getIsCutScene())
 	{
 		UI->update();
-		_player->other_update();
+
+		if(endCutTime == 0) _player->other_update();
+
+		else
+		{
+			CAMERAMANAGER->MovePivotLerp(bottomBox.x + 80, saveY + 60, 1.5f);
+		}
 	}
 	else _player->setStateIDLE();
 
@@ -83,6 +97,23 @@ void finalBossScene::update()
 		_finalBoss->update();
 	}
 
+	if (isEnd == false && _finalBoss->getGameOver())
+	{
+		isEnd = true;
+		_player->setStateIDLE();
+		pFrame = { 1,0 };
+		boxRc = RectMakeCenter(_finalBoss->getX(), _finalBoss->getY() - 60, 300, 300);
+		//				_finalBoss->getX() - IMAGEMANAGER->findImage("endingBox")->getFrameWidth() / 2,
+		//_finalBoss->getY() - 100 - IMAGEMANAGER->findImage("endingBox")->getFrameHeight() / 2,
+		topBox = { _finalBoss->getX() - IMAGEMANAGER->findImage("boxHead")->getWidth() / 2,
+			_finalBoss->getY() - 100 - IMAGEMANAGER->findImage("boxBottom")->getHeight() / 2 };
+
+		bottomBox = { _finalBoss->getX() - IMAGEMANAGER->findImage("boxHead")->getWidth() / 2,
+			_finalBoss->getY() - 100 - IMAGEMANAGER->findImage("boxBottom")->getHeight() / 2 };
+
+		saveY = _finalBoss->getY() - 100 - IMAGEMANAGER->findImage("boxBottom")->getHeight() / 2;
+	}
+
 	if (isBattle && !mapChange) {
 		mapCount++;
 		if (mapCount > 180) {
@@ -94,6 +125,34 @@ void finalBossScene::update()
 
 	PARTICLE->pointActive();
 	PARTICLE->explosionActive();
+
+	endCutScene();
+}
+
+void finalBossScene::endCutScene()
+{
+	if (isEnd == false)return;
+
+	if (colCheck(_player->getRect(), boxRc))
+	{
+		endCutTime++;
+
+		if (endCutTime % 15 == 0 && boxFrameX < 5)
+		{
+			boxFrameX++;
+			_player->setStateIDLE();
+		}
+	}
+
+	if (endCutTime > 100)
+	{
+		_player->frameAnimation(2, 0, 1);
+	}
+
+	if (endCutTime == 200)
+	{
+		UI->fadeOut();
+	}
 }
 
 void finalBossScene::render()
@@ -109,16 +168,44 @@ void finalBossScene::render()
 
 	EFFECT->pRender(getMemDC());
 
-	_player->render(1);
+	if(endCutTime == 0) _player->render(1);
+
+	else
+	{
+		CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("playerFrame"),
+			_player->getX() - 50, _player->getY() - 50, pFrame.x, pFrame.y);
+	}
 
 	_finalBoss->render();
+
+	if (isEnd)
+	{
+		//CAMERAMANAGER->Rectangle(getMemDC(), boxRc);
+		if (boxFrameX < 4)
+		{
+			CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("endingBox"),
+				_finalBoss->getX() - IMAGEMANAGER->findImage("endingBox")->getFrameWidth() / 2,
+				_finalBoss->getY() - 100 - IMAGEMANAGER->findImage("endingBox")->getFrameHeight() / 2,
+				boxFrameX, 0);
+		}
+
+		else
+		{
+			//topBox,bottomBox
+			CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("boxBottom"), bottomBox.x, bottomBox.y);
+			CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("carrot"), bottomBox.x + 80, bottomBox.y + 60);
+			CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("boxHead"), topBox.x, topBox.y);
+
+			if (topBox.y > (saveY - 100))topBox.y--;
+		}
+	}
 
 	PARTICLE->render(getMemDC());
 	UI->render(getMemDC(), 50, 50);
 
 	_player->invenRender();
 
-	if (isBattle) {
+	if (isBattle && isEnd == false) {
 		char str[128];
 		wsprintf(str, "MATER SURA");
 		_finalBoss->finalBossHpInfo(getMemDC(), WINSIZEX / 2 - 226, 100);
@@ -150,6 +237,7 @@ void finalBossScene::bossCutScene()
 		);
 	}
 }
+
 void finalBossScene::attackSura()
 {
 	if (_finalBoss->getFinalBoss().bossHp <= 0) return;

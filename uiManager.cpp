@@ -183,6 +183,13 @@ void uiManager::render(HDC hdc, int destX, int destY)
 
 		blackOpacity -= 5;
 	}
+
+	if (blackOpacity2 > 0)
+	{
+		IMAGEMANAGER->alphaRender("blackWindow", hdc, blackOpacity2);
+
+		if(blackOpacity2 <= 250) blackOpacity2 += 5;
+	}
 }
 
 void uiManager::infoRender(HDC hdc, int destX, int destY)
@@ -356,4 +363,9 @@ void uiManager::addCoolTime(string keyName)
 void uiManager::fadeIn()
 {
 	blackOpacity = 255;
+}
+
+void uiManager::fadeOut()
+{
+	blackOpacity2 = 1;
 }

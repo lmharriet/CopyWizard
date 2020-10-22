@@ -86,6 +86,7 @@ HRESULT player::init()
 	gaugeMaxCool = 120;
 	upgradeReady = false;
 
+	restartCount = 0;
 
 	//sound
 	walkCount = 0;
@@ -114,6 +115,7 @@ void player::release()
 
 void player::update()
 {
+
 	PLAYERDATA->update();
 
 	blaze->update();
@@ -199,6 +201,19 @@ void player::update()
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
 	death();
+
+
+	if (isDead)
+	{
+		restartCount++;
+		if (restartCount == 300)
+		{
+			SCENEMANAGER->loadScene("시작화면");
+			restartCount = 0;
+
+		}
+	}
+	//cout << restartCount << '\n';
 	//don't touch!
 	buttonDown();
 }
@@ -288,6 +303,17 @@ void player::other_update()
 	// camera가 따라가는 대상
 	CAMERAMANAGER->MovePivot(posX, posY);
 	death();
+
+	if (isDead)
+	{
+		restartCount++;
+		if (restartCount == 300)
+		{
+			SCENEMANAGER->loadScene("시작화면");
+			restartCount = 0;
+
+		}
+	}
 
 	//don't touch!
 	buttonDown();
@@ -513,25 +539,25 @@ void player::skillInit()
 		arcana[3].explanation = Meteor->getInfo().explanation;
 		arcana[3].coolTime = Meteor->getInfo().coolTime;
 
-		//arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		//arcana[4].skillName = "nonSkill";
-		//arcana[4].explanation = "";
-		//arcana[4].coolTime = 0;
-
-		//arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		//arcana[5].skillName = "nonSkill";
-		//arcana[5].explanation = "";
-		//arcana[5].coolTime = 0;
-
 		arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		arcana[4].skillName = dragon->getInfo().keyName;//"nonSkill";
-		arcana[4].explanation = dragon->getInfo().explanation;// "";
-		arcana[4].coolTime = dragon->getInfo().coolTime;//0;
+		arcana[4].skillName = "nonSkill";
+		arcana[4].explanation = "";
+		arcana[4].coolTime = 0;
 
 		arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		arcana[5].skillName = spear->getInfo().keyName;//"nonSkill";
-		arcana[5].explanation = spear->getInfo().explanation; //"";
-		arcana[5].coolTime = 0;//spear->getInfo().coolTime;//0;
+		arcana[5].skillName = "nonSkill";
+		arcana[5].explanation = "";
+		arcana[5].coolTime = 0;
+
+		//arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
+		//arcana[4].skillName = dragon->getInfo().keyName;//"nonSkill";
+		//arcana[4].explanation = dragon->getInfo().explanation;// "";
+		//arcana[4].coolTime = dragon->getInfo().coolTime;//0;
+
+		//arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
+		//arcana[5].skillName = spear->getInfo().keyName;//"nonSkill";
+		//arcana[5].explanation = spear->getInfo().explanation; //"";
+		//arcana[5].coolTime = 0;//spear->getInfo().coolTime;//0;
 
 
 
@@ -979,7 +1005,7 @@ void player::signatureSetUpR()
 					if (spearStateCool == 0)
 						signatureE = false;
 				}
-			
+
 
 			}
 		}

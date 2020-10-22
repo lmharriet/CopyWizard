@@ -146,5 +146,9 @@ public:
 	void setRect(int x, int y) { boss.rc = RectMakeCenter(x, y, 150, 150); }
 	void setCenter(POINT pt) { boss.center = { pt.x,pt.y }; }
 	void setBossHit(bool bossHit) { boss.isHit = bossHit; }
+
+	bool getGameOver() { return gameOver; }
+	int getX() { return posX; }
+	int getY() { return posY; }
 };
 
