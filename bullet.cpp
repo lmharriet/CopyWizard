@@ -1091,7 +1091,6 @@ void dragonArc::fire(float x, float y, float angle)
 			UI->addCoolTime(info.keyName);
 
 		}
-		cout << "dragon1" << endl;
 		break;
 	}
 
@@ -1244,6 +1243,7 @@ void dragonArc::phoenixFire(float x, float y, float angle)
 	//fire
 	if (dragonHead.isFire == false)
 	{
+		SOUNDMANAGER->play("fireDragonUpgrade", false);
 		dragonHead.img = IMAGEMANAGER->findImage("dragon");
 		dragonHead.isFire = true;
 		dragonHead.currentTime = 0;
@@ -1779,7 +1779,7 @@ void iceSpear::fireCount()
 		ultSpear.atkPower = 25;
 		ultSpear.rc = RectMakeCenter(ultSpear.x, ultSpear.y, 30, 30);
 		ultSpear.collision = false;
-
+		SOUNDMANAGER->play("iceSpearFire", false, -0.2f);
 		vUltSpear.push_back(ultSpear);
 		vStay.erase(vStay.begin());
 
