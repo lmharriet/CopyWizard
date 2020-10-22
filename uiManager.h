@@ -39,6 +39,7 @@ private:
 	float skillGauge;
 
 	int blackOpacity;
+	int blackOpacity2;
 	int time;
 	//
 	tagButtonAnimation Fbutton;
@@ -80,4 +81,5 @@ public:
 
 	//warp screen
 	void fadeIn();
+	void fadeOut();
 };

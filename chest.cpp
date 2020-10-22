@@ -5,6 +5,7 @@ HRESULT chest::init(string _keyName, POINT _pos, int _hp)
 {
 	IMAGEMANAGER->addFrameImage("silverChest", "Images/npc/silverChest.bmp", 936, 212, 6, 1);
 	IMAGEMANAGER->addFrameImage("GoldChest", "Images/npc/goldChest.bmp", 936, 226, 6, 1);
+	IMAGEMANAGER->addFrameImage("endingBox", "Images/npc/endingBox.bmp", 1065, 168, 5, 1);
 
 	IMAGEMANAGER->addImage("iceSpearSkill", "Images/item/iceSpearSkill.bmp", 32, 49, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("dragonSkill", "Images/item/dragonSkill.bmp", 32, 49, true, RGB(255, 0, 255));
