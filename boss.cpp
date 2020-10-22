@@ -1345,7 +1345,7 @@ void boss::bossFinalAttack(int patternType)
 				if (count < 90) {
 					if (!isHit) {
 						int damage = RANDOM->range(5, 8);
-						_player->finalAttackDamaged(damage, 40);
+						_player->finalAttackDamaged(damage, 40,90);
 						SOUNDMANAGER->play("bossPunchSFX02", false, -0.25f);
 						isHit = true;
 					}
@@ -1366,7 +1366,7 @@ void boss::bossFinalAttack(int patternType)
 				else {
 					if (!isHit) {
 						int damage = RANDOM->range(2, 5);
-						_player->finalAttackDamaged(damage, 100);
+						_player->finalAttackDamaged(damage, 100,90);
 						SOUNDMANAGER->play("bossPunchSFX02", false, -0.25f);
 						isHit = true;
 					}
@@ -1426,7 +1426,7 @@ void boss::bossFinalAttack(int patternType)
 					if (!isHit) {
 						
 						int damage = RANDOM->range(2, 6);
-						_player->finalAttackDamaged(damage, 10);
+						_player->finalAttackDamaged(damage, 10,90);
 						isHit = true;
 					}
 					if (isHit) {
