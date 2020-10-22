@@ -166,6 +166,8 @@ void gameScene::update()
 		//EFFECT->setAlwaysPoint("curseEffect", pt);
 		//EFFECT->setEffect("portal1", pt, false, false, 0, 3);
 		//EFFECT->setBackEffect("portal1", pt, 3);
+		if(_wall->getFrameRect()) _wall->setFrameRect(false);
+		else _wall->setFrameRect(true);
 	}
 
 
