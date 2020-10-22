@@ -122,7 +122,7 @@ void loadingScene::loadingImage()
 		_loading[currentLoading]->loadImage("IceState", "resource/player/isIce.bmp", 122, 177, true, RGB(255, 0, 255));
 		break;
 	case MIDDLESTAGE:
-		for (int i = 0; i < 300; i++)
+		for (int i = 0; i < 150; i++)
 		{
 			char str[20];
 			sprintf(str, "bossImg%d", i);
@@ -133,7 +133,7 @@ void loadingScene::loadingImage()
 		for (int i = 0; i < 300; i++)
 		{
 			char str[20];
-			sprintf(str, "bossImg%d", i);
+			sprintf(str, "FianlBossImg%d", i);
 			_loading[FINALSTAGE]->loadImage(str, 100, 100);
 		}
 		break;
