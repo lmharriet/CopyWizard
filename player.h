@@ -99,9 +99,7 @@ private:
 	bool isLeft, isRight, isUp, isDown;
 
 	bool isDead;
-
-	//temp
-	bool uiOn;
+	int restartCount;
 
 	//sound
 	int walkCount;
