@@ -130,7 +130,7 @@ void loadingScene::loadingImage()
 		}
 		break;
 	case FINALSTAGE:
-		for (int i = 0; i < 300; i++)
+		for (int i = 0; i < 200; i++)
 		{
 			char str[20];
 			sprintf(str, "FianlBossImg%d", i);
