@@ -66,6 +66,7 @@ private:
 	tagFinaleBoss boss;
 
 	RECT dashRc;
+	RECT iceSpearRc[5];
 	vector<skillBlock*> wallBlock;
 	vector<skillBlock*> blazeBlock;
 	vector<skillBlock*> thunderBlock;
@@ -86,8 +87,11 @@ private:
 	int patternCount;
 	int posX;
 	int posY;
+	int iceSpearRcX[5];
+	int iceSpearRcY[5];
 
 	float dashAngle;
+	float iceSpearAngle[5];
 
 	bool changStage;
 	bool leftCheck;

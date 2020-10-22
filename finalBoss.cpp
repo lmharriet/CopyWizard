@@ -5,7 +5,7 @@
 HRESULT finalBoss::init(int _posX, int _posY)
 {
 	IMAGEMANAGER->addFrameImage("finalboss", "resource/boss/master_sura.bmp", 2000, 800, 20, 8, true, RGB(255, 0, 255));
-	IMAGEMANAGER->addImage("bossice", "resource/player/iceSpear.bmp", 96, 96, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("bossice", "resource/player/iceSpear.bmp", 96 * 1.5, 96 * 1.5, true, RGB(255, 0, 255));
 
 	IMAGEMANAGER->addImage("bossframebar", "resource/boss/bossProgressBarFrame.bmp", 452, 64, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("bosshpbar", "resource/boss/bossHpBar.bmp", 356, 28, true, RGB(255, 0, 255));
@@ -37,6 +37,12 @@ HRESULT finalBoss::init(int _posX, int _posY)
 	skillNum = RANDOM->range(5);
 
 	dashAngle = 0;
+	for (int i = 0; i < 5; i++) {
+		iceSpearAngle[i] = 0;
+		iceSpearRcX[i] = 0;
+		iceSpearRcY[i] = 0;
+		iceSpearRc[i] = RectMakeCenter(iceSpearRcX[i], iceSpearRcY[i], 20, 20);
+	}
 
 	timer = 0;
 	count = 0;
@@ -89,7 +95,8 @@ void finalBoss::render()
 
 		if (icePattern) {
 			for (int i = 0; i < iceBlock.size(); i++) {
-				CAMERAMANAGER->RotateRender(getMemDC(), IMAGEMANAGER->findImage("bossice"), iceBlock[i]->center.x, iceBlock[i]->center.y, boss.angle);
+				CAMERAMANAGER->RotateRender(getMemDC(), IMAGEMANAGER->findImage("bossice"), iceBlock[i]->center.x, iceBlock[i]->center.y, iceSpearAngle[i]);
+				//CAMERAMANAGER->Rectangle(getMemDC(), iceSpearRc[i]);
 			}
 		}
 	}
@@ -442,8 +449,8 @@ void finalBoss::getPosDashRc()
 void finalBoss::useSkill()
 {
 	if (patternStart) {
-		skillNum = RANDOM->range(5);
-		//skillNum = 1;
+		//skillNum = RANDOM->range(5);
+		skillNum = 4;
 		switch (skillNum)
 		{
 		case 0:
@@ -640,8 +647,8 @@ void finalBoss::ice()
 			_ice->blockCount = 0;
 			_ice->isHit = false;
 			_ice->rc = RectMakeCenter(boss.center.x, boss.center.y, 96, 96);
-			_ice->center.x = cosf(_ice->angle) * 100 + boss.center.x - 50;
-			_ice->center.y = -sinf(_ice->angle) * 100 + boss.center.y - 100;
+			_ice->center.x = cosf(_ice->angle) * 350 + boss.center.x - 50;
+			_ice->center.y = -sinf(_ice->angle) * 350 + boss.center.y - 100;
 			_ice->rc = RectMakeCenter(_ice->center.x, _ice->center.y, 20, 20);
 			iceBlock.push_back(_ice);
 		}
@@ -650,12 +657,17 @@ void finalBoss::ice()
 	else {
 		for (int i = 0; i < iceBlock.size(); i++) {
 			if (frameX != 5) {
-				this->posPlayerAngle();
+				for (int i = 0; i < 5; i++) {
+					iceSpearAngle[i] = getAngle(iceBlock[i]->center.x, iceBlock[i]->center.y, _player->getX(), _player->getY());
+				}
 			}
 			else {
-				iceBlock[i]->center.x += cosf(boss.angle) * 40;
-				iceBlock[i]->center.y += -sinf(boss.angle) * 40;
+				iceBlock[i]->center.x += cosf(iceSpearAngle[i]) * 40;
+				iceBlock[i]->center.y += -sinf(iceSpearAngle[i]) * 40;
 				iceBlock[i]->rc = RectMakeCenter(iceBlock[i]->center.x, iceBlock[i]->center.y, 96, 96);
+				iceSpearRcX[i] = iceBlock[i]->center.x + cosf(iceSpearAngle[i]) * 30;
+				iceSpearRcY[i] = iceBlock[i]->center.y + -sinf(iceSpearAngle[i]) * 30;
+				iceSpearRc[i] = RectMakeCenter(iceSpearRcX[i], iceSpearRcY[i], 30, 30);
 			}
 		}
 	}
@@ -742,10 +754,10 @@ void finalBoss::colCheck()
 	}
 	if (skillNum == 4) {
 		for (int i = 0; i < iceBlock.size(); i++) {
-			if (IntersectRect(&temp, &_player->getRect(), &iceBlock[i]->rc)) {
+			if (IntersectRect(&temp, &_player->getRect(), &iceSpearRc[i])) {
 				if (!iceBlock[i]->isHit) {
 					float _iceAngle = getAngle(iceBlock[i]->center.x, iceBlock[i]->center.y, _player->getX(), _player->getY());
-					int damage = RANDOM->range(11, 18);
+					int damage = RANDOM->range(11, 15);
 					_player->damage(damage, _iceAngle, 10);
 					iceBlock[i]->isHit = true;
 				}
