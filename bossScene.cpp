@@ -50,6 +50,7 @@ HRESULT bossScene::init()
 
 	UI->fadeIn();
 	EFFECT->setPortalEffect({ (long)_player->getX(),(long)_player->getY() });
+	SOUNDMANAGER->play("portalWarp", false);
 
 	return S_OK;
 }
