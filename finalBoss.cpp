@@ -449,8 +449,8 @@ void finalBoss::getPosDashRc()
 void finalBoss::useSkill()
 {
 	if (patternStart) {
-		//skillNum = RANDOM->range(5);
-		skillNum = 4;
+		skillNum = RANDOM->range(5);
+		//skillNum = 4;
 		switch (skillNum)
 		{
 		case 0:
