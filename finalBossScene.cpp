@@ -44,6 +44,7 @@ HRESULT finalBossScene::init()
 	_chest = new chest;
 	isEnd = false;
 	endCutTime = 0;
+	isCutScene = false;
 	saveY = 0;
 
 	IMAGEMANAGER->addImage("boxHead", "Images/npc/boxHead.bmp", 213, 168, true, RGB(255, 0, 255));
@@ -53,6 +54,7 @@ HRESULT finalBossScene::init()
 	//sound
 	isBossBGM = false;
 	fadeIn = 0.f;
+	sTime = 0;
 	
 	SOUNDMANAGER->play("portalWarp", false);
 	return S_OK;
@@ -153,6 +155,8 @@ void finalBossScene::update()
 	PARTICLE->pointActive();
 	PARTICLE->explosionActive();
 
+	if (isCutScene && sTime < 250)sTime++;
+
 	endCutScene();
 }
 
@@ -203,7 +207,7 @@ void finalBossScene::render()
 			_player->getX() - 50, _player->getY() - 50, pFrame.x, pFrame.y);
 	}
 
-	PLAYERDATA->shroudRender(getMemDC());
+	if(isBattle == false || sTime >= 250) PLAYERDATA->shroudRender(getMemDC());
 
 	_finalBoss->render();
 
@@ -270,6 +274,7 @@ void finalBossScene::bossCutScene()
 			50,                                     // 시작지점으로 되돌아오는 시간
 			10.f                                    // lerp 속도
 		);
+		isCutScene = true;
 	}
 }
 

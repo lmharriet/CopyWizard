@@ -37,6 +37,8 @@ private:
 	//sound
 	bool isBossBGM;
 	float fadeIn;
+	int sTime;
+	bool isCutScene;
 public:
 	HRESULT init();
 	void release();
