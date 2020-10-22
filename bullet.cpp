@@ -728,6 +728,11 @@ void RagingInferno::update()
 	{
 		gaugeTime = 50;
 		inferno.lifeTime--;
+		if (PLAYERDATA->getCurrentStage() == STAGEKIND::STARTSTAGE)
+			SOUNDMANAGER->play("RagingInfernoExp", false);
+		else
+			SOUNDMANAGER->play("RagingInfernoExpBoss", false);
+		
 	}
 
 	if (isCoolTime)
@@ -833,7 +838,10 @@ void RagingInferno::move()
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 3, 3.f, 0.8f, 10);
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 5, 5.f, 0.7f, 10);
 			PARTICLE->pointGenerate("frameParticle", inferno.x, inferno.y, 2, 100, 7, 7.f, 0.6f, 10);
-			SOUNDMANAGER->play("RagingInfernoExp", false);
+			if (PLAYERDATA->getCurrentStage() == STAGEKIND::STARTSTAGE)
+				SOUNDMANAGER->play("RagingInfernoExp", false);
+			else
+				SOUNDMANAGER->play("RagingInfernoExpBoss", false);
 		}
 
 		if (gaugeTime >= 50)

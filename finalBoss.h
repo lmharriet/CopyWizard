@@ -109,6 +109,13 @@ private:
 	
 
 	bool gameOver;
+
+	//sound
+	bool isThunder;
+	bool isIce;
+	bool isBlaze;
+	bool isWood;
+	bool isWind;
 public:
 	HRESULT init(int _posX, int _posY);
 	void release();

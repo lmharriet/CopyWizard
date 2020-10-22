@@ -236,6 +236,7 @@ void loadingScene::loadingSound()
 		SOUNDMANAGER->addSound("blazeFire", "Sound/player/blaze_fire.mp3");
 		SOUNDMANAGER->addSound("blazeExp", "Sound/player/blaze_exp.mp3");
 		SOUNDMANAGER->addSound("RagingInfernoExp", "Sound/player/RagingInferno_exp.mp3");
+		SOUNDMANAGER->addSound("RagingInfernoExpBoss", "Sound/player/RagingInferno_exp_boss.mp3");
 		SOUNDMANAGER->addSound("RagingInfernoFire", "Sound/player/RagingInferno_fire.mp3");
 		SOUNDMANAGER->addSound("meteoFire0", "Sound/player/meteo_fire0.mp3");
 		SOUNDMANAGER->addSound("meteoFire1", "Sound/player/meteo_fire1.mp3");
@@ -318,9 +319,10 @@ void loadingScene::loadingSound()
 		
 		SOUNDMANAGER->addSound("finalBossSpawn", "Sound/finalBoss/spawn.mp3");
 		SOUNDMANAGER->addSound("castleAmb", "Sound/finalBoss/castleAmb.mp3");
-		SOUNDMANAGER->addSound("fnialBoss_fireBall", "Sound/finalBoss/fireBall.mp3");
-		SOUNDMANAGER->addSound("fnialBoss_iceSpear", "Sound/finalBoss/iceSpearAppear.mp3");
-		SOUNDMANAGER->addSound("fnialBoss_wind", "Sound/finalBoss/wind.mp3");
+		SOUNDMANAGER->addSound("finalBoss_blaze", "Sound/finalBoss/fireBall.mp3");
+		SOUNDMANAGER->addSound("finalBoss_iceSpear", "Sound/finalBoss/iceSpearAppear.mp3");
+		SOUNDMANAGER->addSound("finalBoss_wind", "Sound/finalBoss/wind.mp3");
+		SOUNDMANAGER->addSound("finalBoss_thunder", "Sound/finalBoss/elec.mp3");
 
 		break;
 	}

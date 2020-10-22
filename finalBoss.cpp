@@ -64,6 +64,8 @@ HRESULT finalBoss::init(int _posX, int _posY)
 
 	gameOver = false;
 
+	//sound
+	isThunder = isIce = isBlaze = isWood = isWind = false;
 	return S_OK;
 }
 
@@ -120,7 +122,7 @@ void finalBoss::animation()
 						frameY = 6;
 						timer = 0;
 						count = 0;
-						SOUNDMANAGER->play("finalBossSpawn",false,0.5f);
+						SOUNDMANAGER->play("finalBossSpawn",false,-0.15f);
 						SOUNDMANAGER->play("bossBGM", false);
 					}
 				}
@@ -200,12 +202,18 @@ void finalBoss::animation()
 		{
 		case FINALBOSSWOOD:
 			count++;
+			if (!isWood)
+			{
+				SOUNDMANAGER->play("bossFinalATK_end", false,-0.35f);
+				isWood = true;
+			}
 			if (count % 5 == 0) {
 				frameX++;
 				if (frameX > 5) {
 					frameX = 5;
 					timer++;
 					if (timer > 10) {
+						isWood = false;
 						patternCount++;
 						boss.bossState = FINALBOSSIDLE;
 						setDashrc = false;
@@ -220,12 +228,18 @@ void finalBoss::animation()
 			break;
 		case FINALBOSSBLAZE:
 			count++;
+			if (!isBlaze)
+			{
+				SOUNDMANAGER->play("finalBoss_blaze", false,-0.38f);
+				isBlaze = true;
+			}
 			if (count % 5 == 0) {
 				frameX++;
 				if (frameX > 5) {
 					frameX = 5;
 					timer++;
 					if (timer > 10) {
+						isBlaze = false;
 						patternCount++;
 						boss.bossState = FINALBOSSIDLE;
 						setDashrc = false;
@@ -240,12 +254,18 @@ void finalBoss::animation()
 			break;
 		case FINALBOSSTHUNDER:
 			count++;
+			if (!isThunder)
+			{
+				SOUNDMANAGER->play("finalBoss_thunder", false,-0.35f);
+				isThunder = true;
+			}
 			if (count % 5 == 0) {
 				frameX++;
 				if (frameX > 5) {
 					frameX = 5;
 					timer++;
 					if (timer > 10) {
+						isThunder = false;
 						patternCount++;
 						boss.bossState = FINALBOSSIDLE;
 						setDashrc = false;
@@ -259,6 +279,11 @@ void finalBoss::animation()
 			}
 			break;
 		case FINALBOSSWIND:
+			if (!isWind)
+			{
+				SOUNDMANAGER->play("finalBoss_wind", false,-0.28f);
+				isWind = true;
+			}
 			count++;
 			if (count % 5 == 0) {
 				frameX++;
@@ -266,6 +291,7 @@ void finalBoss::animation()
 					frameX = 5;
 					timer++;
 					if (timer > 5) {
+						isWind = false;
 						patternCount++;
 						boss.bossState = FINALBOSSIDLE;
 						setDashrc = false;
@@ -280,12 +306,18 @@ void finalBoss::animation()
 			break;
 		case FINALBOSSICE:
 			count++;
+			if (!isIce)
+			{
+				SOUNDMANAGER->play("finalBoss_iceSpear", false,-0.35f);
+				isIce = true;
+			}
 			if (count % 5 == 0) {
 				frameX++;
 				if (frameX > 5) {
 					frameX = 5;
 					timer++;
 					if (timer > 5) {
+						isIce = false;
 						patternCount++;
 						boss.bossState = FINALBOSSIDLE;
 						setDashrc = false;
