@@ -1028,6 +1028,7 @@ void dragonArc::fire(float x, float y, float angle)
 	switch (pattern)
 	{
 	case 0:
+		SOUNDMANAGER->play("fireDragon", false, -0.2f);
 
 		tagDragon dragon;
 
@@ -1090,6 +1091,7 @@ void dragonArc::fire(float x, float y, float angle)
 			UI->addCoolTime(info.keyName);
 
 		}
+		cout << "dragon1" << endl;
 		break;
 	}
 
@@ -1646,6 +1648,7 @@ void iceSpear::fire(float x, float y, float angle)
 
 	//if (gauge < 0.2f) gauge = 0.2f;
 
+	SOUNDMANAGER->play("iceSpearFire", false);
 	tagSpear spear;
 
 	spear.x = spear.fireX = x;
@@ -1692,6 +1695,7 @@ void iceSpear::move()
 			CAMERAMANAGER->Shake(20, 20, 2);
 			vSpear.erase(vSpear.begin());
 			size = vSpear.size();
+			SOUNDMANAGER->play("iceSpearATK", false);
 		}
 		else i++;
 	}

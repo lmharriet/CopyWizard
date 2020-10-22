@@ -420,6 +420,8 @@ void monster::commonUpdate()
 			iceBreakCount = 0;
 			EFFECT->iceBreakPlay(position, 10);
 			state = STATEIMAGE::IDLE;
+			SOUNDMANAGER->play("iceSpearBreak", false);
+			isIceHitSound = false;
 		}
 		
 		update(); //몬스터별 업데이트
@@ -470,7 +472,17 @@ void monster::render()
 {
 
 	addRender();
-	
+	if (isIceState)
+	{
+		if (kind != MONSTERKIND::GHOULLARGE && kind != MONSTERKIND::GOLEM)
+		{
+			if (!isIceHitSound)
+			{
+				SOUNDMANAGER->play("iceSpearHit", false);
+				isIceHitSound = true;
+			}
+		}
+	}
 	// astar->render(getMemDC());
 	 //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
 	 //FrameRect(getMemDC(), rc, RGB(255, 255, 255));

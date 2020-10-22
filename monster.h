@@ -136,6 +136,7 @@ protected:
 	bool isCardAppear = false;
 	bool isCardFxAppear = false;
 	bool isIceState = false;
+	bool isIceHitSound = false;
 
 	//bool isBulletEmpty = true;
 	bool isAstar;
