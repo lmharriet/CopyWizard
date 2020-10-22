@@ -807,30 +807,60 @@ void player::signatureSetUp()
 
 void player::signatureSetUpE()
 {
+
 	if (arcana[4].skillName == "nonSkill")return;
 	// arcana[4] , key -> E
 	if (arcana[4].skillName == spear->getInfo().keyName)
 	{
 		if (!isDead && !spear->getCool() && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
-			 && spearStateCool == 0)
+			&& spearStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0)
+		{
+
+			signatureE = true;
+		}
+		if (signatureE)
 		{
 			if (!upgradeReady)
 			{
-				if (INPUT->GetKeyDown('E'))
+
+				if (spearStateCool == 0)
 				{
+					spearStateCool = 20;
 					spear->fire(posX, posY, attackAngle);
+
+
+				}
+
+				if (spearStateCool > 0)
+				{
+					state = STATE::SPEAR;
+					spearStateCool--;
+
+					if (spearStateCool == 0)
+						signatureE = false;
 				}
 			}
 			else
 			{
 				//TIME->setTest(12.f);
 				//EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
-				if (INPUT->GetKeyDown('E'))
+
+
+				if (spearStateCool == 0)
 				{
+					spearStateCool = 20;
 					spear->upgradefire(posX, posY, attackAngle);
 					skillGauge = 0;
 				}
 
+				if (spearStateCool > 0)
+				{
+					state = STATE::SPEAR;
+					spearStateCool--;
+
+					if (spearStateCool == 0)
+						signatureE = false;
+				}
 			}
 		}
 	}
@@ -868,7 +898,7 @@ void player::signatureSetUpE()
 			//TIME->setTest(12.f);
 			//EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
 
-			if (INPUT->GetKeyDown('E') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0&&
+			if (INPUT->GetKeyDown('E') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0 &&
 				!dragon->getCool() && basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
 			{
 				signatureE = true;
@@ -904,33 +934,52 @@ void player::signatureSetUpR()
 
 	if (arcana[5].skillName == spear->getInfo().keyName)
 	{
-		if (!isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool() && frozenTime == 0 && speed == 0
+		if (INPUT->GetKeyDown('R') && !isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool() && frozenTime == 0 && speed == 0
 			&& basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
 		{
+			signatureR = true;
+		}
 
+		if (signatureR)
+		{
 			if (!upgradeReady)
 			{
-				//if (INPUT->GetKey('R'))
-				//{
-				//	spear->chargeSpear();
-				//}
-				//if (INPUT->GetKeyUp('R'))
-				//{
-				//	spear->fire(posX, posY, attackAngle);
-				//}
-				if (INPUT->GetKeyDown('R'))
+
+				if (spearStateCool == 0)
 				{
+					spearStateCool = 20;
 					spear->fire(posX, posY, attackAngle);
+
 				}
+
+				if (spearStateCool > 0)
+				{
+					state = STATE::SPEAR;
+					spearStateCool--;
+
+					if (spearStateCool == 0)
+						signatureR = false;
+				}
+
 			}
 			else
 			{
-
-				if (INPUT->GetKeyDown('R'))
+				if (spearStateCool == 0)
 				{
+					spearStateCool = 20;
 					spear->upgradefire(posX, posY, attackAngle);
 					skillGauge = 0;
 				}
+
+				if (spearStateCool > 0)
+				{
+					state = STATE::SPEAR;
+					spearStateCool--;
+
+					if (spearStateCool == 0)
+						signatureE = false;
+				}
+			
 
 			}
 		}
@@ -941,7 +990,7 @@ void player::signatureSetUpR()
 		if (!upgradeReady)
 		{
 			if (INPUT->GetKeyDown('R') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
-				 && !dragon->getCool() && basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
+				&& !dragon->getCool() && basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
 			{
 				signatureR = true;
 			}
@@ -972,7 +1021,7 @@ void player::signatureSetUpR()
 			EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);
 
 			if (INPUT->GetKeyDown('R') && frozenTime == 0 && !isDead && !isGrabbed && !inferno->getGauging() && speed == 0
-			&& !dragon->getCool() && basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
+				&& !dragon->getCool() && basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
 			{
 				signature = true;
 			}
@@ -1388,6 +1437,56 @@ void player::animation(int _index)
 		}
 		break;
 		case STATE::SPEAR:
+
+			int tenth = (int)(attackAngle * (18 / PI));
+
+			if (tenth > 14 && tenth <= 23)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+
+					if (spearStateCool == 0) move = MOVE::LEFT;
+				}
+				frameAnimation(atkIndex, 16);
+			}
+
+			else if (tenth <= 4 && tenth >= 0 || tenth > 32)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+
+				if (spearStateCool == 0) move = MOVE::RIGHT;
+				frameAnimation(atkIndex, 15);
+
+			}
+			else if (tenth > 4 && tenth <= 14)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				if (spearStateCool == 0) move = MOVE::UP;
+				frameAnimation(atkIndex, 14);
+
+			}
+			else if (tenth > 23 && tenth <= 32)
+			{
+				if (atkCount % 10 == 0)
+				{
+					atkIndex++;
+					if (atkIndex > 9)atkIndex = 0;
+				}
+				if (spearStateCool == 0) move = MOVE::DOWN;
+				frameAnimation(atkIndex, 6);
+
+			}
+
 			break;
 		}
 	}

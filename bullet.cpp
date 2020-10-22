@@ -1292,8 +1292,7 @@ void dragonArc::phoenixMove()
 		dragonHead.y -= sinf(dragonHead.angle) * dragonHead.speed * dragonHead.persent;
 		dragonHead.rc = RectMakeCenter(dragonHead.x, dragonHead.y, 40, 40);
 
-		int size = vColRound.size();
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < vColRound.size(); i++)
 		{
 			vColRound[i].x += cosf(vColRound[i].angle) * dragonHead.speed * dragonHead.persent;
 			vColRound[i].y -= sinf(vColRound[i].angle) * dragonHead.speed * dragonHead.persent;
@@ -1311,8 +1310,8 @@ void dragonArc::phoenixMove()
 		else dragonHead.currentTime++;
 	}
 
-	int size = vWings.size();
-	for (int i = 0; i < size;)
+
+	for (int i = 0; i < vWings.size();)
 	{
 		vWings[i].x += cosf(vWings[i].angle) * vWings[i].speed * dragonHead.persent;
 		vWings[i].y -= sinf(vWings[i].angle) * vWings[i].speed * dragonHead.persent;
@@ -1697,7 +1696,7 @@ void iceSpear::upgradefire(float x, float y, float angle)
 	active = true;
 	tagStaySpear spear;
 	spear.angle = angle;
-	spear.speed = 35.f;
+	spear.speed = 45.f;
 
 	posX = spear.fireX = x;
 	posY = spear.fireY = y;
@@ -1805,6 +1804,7 @@ void iceSpear::upgradeMove()
 
 		if (distance < vUltSpear[i].range && !vUltSpear[i].isBig)
 		{
+			CAMERAMANAGER->Shake(10, 10, 2);
 			i++;
 			continue;
 		}
@@ -1832,6 +1832,7 @@ void iceSpear::upgradeMove()
 				{
 					
 					vUltSpear.clear();
+					CAMERAMANAGER->Shake(5, 5, 2);
 					active = false;
 					eTime = 0;
 					saveRange = 0;
