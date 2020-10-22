@@ -23,7 +23,7 @@ HRESULT playerData::init()
 
 	stat.goldPig = false;
 	stat.CoolTimeReduction = 0;
-	stat.glassMirror = true;
+	stat.glassMirror = false;
 
 	//curse
 	stat.vampireBlood = false;
