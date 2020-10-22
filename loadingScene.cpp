@@ -289,6 +289,9 @@ void loadingScene::loadingSound()
 		SOUNDMANAGER->addSound("ghoulATK", "Sound/ghoulATK.mp3");
 		SOUNDMANAGER->addSound("ghoulWalk", "Sound/ghoulWalk.mp3");
 
+
+		
+
 		break;
 	case MIDDLESTAGE:
 		//º¸½º  
@@ -312,7 +315,12 @@ void loadingScene::loadingSound()
 		SOUNDMANAGER->addSound("CutSceneVO", "Sound/CutSceneVO.mp3");
 		break;
 	case FINALSTAGE:
-
+		
+		SOUNDMANAGER->addSound("finalBossSpawn", "Sound/finalBoss/spawn.mp3");
+		SOUNDMANAGER->addSound("castleAmb", "Sound/finalBoss/castleAmb.mp3");
+		SOUNDMANAGER->addSound("fnialBoss_fireBall", "Sound/finalBoss/fireBall.mp3");
+		SOUNDMANAGER->addSound("fnialBoss_iceSpear", "Sound/finalBoss/iceSpearAppear.mp3");
+		SOUNDMANAGER->addSound("fnialBoss_wind", "Sound/finalBoss/wind.mp3");
 
 		break;
 	}

@@ -20,6 +20,7 @@ private:
 	int time;
 	int opacity;
 	bool isDie;
+	bool isBoxAppear;
 public:
 	HRESULT init(string keyName , POINT _pos, int _hp);
 

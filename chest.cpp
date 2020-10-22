@@ -62,6 +62,7 @@ HRESULT chest::init(string _keyName, POINT _pos, int _hp)
 	time = 0;
 	opacity = 255;
 	isDie = false;
+	isBoxAppear = false;
 	return S_OK;
 }
 
@@ -70,7 +71,15 @@ void chest::update()
 	hitCount++;
 	
 	image* img = IMAGEMANAGER->findImage(keyName);
-	if (hp <= 0) isDie = true;
+	if (hp <= 0) 
+	{
+		isDie = true;
+		if (!isBoxAppear)
+		{
+			SOUNDMANAGER->play("BOX_appear", false, 0.3f);
+			isBoxAppear = true;
+		}
+	}
 
 	if (isDie)
 	{

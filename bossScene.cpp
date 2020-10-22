@@ -50,6 +50,7 @@ HRESULT bossScene::init()
 
 	UI->fadeIn();
 	EFFECT->setPortalEffect({ (long)_player->getX(),(long)_player->getY() });
+	SOUNDMANAGER->play("portalWarp", false);
 
 	return S_OK;
 }
@@ -232,10 +233,10 @@ void bossScene::render()
 
 	EFFECT->portalRender(getMemDC());
 
-	ptOut(getMemDC(), { 500,500 }, 
+	/*ptOut(getMemDC(), { 500,500 }, 
 		{CAMERAMANAGER->GetAbsoluteX(_ptMouse.x),
 		CAMERAMANAGER->GetAbsoluteY(_ptMouse.y)},
-		RGB(255, 255, 255));
+		RGB(255, 255, 255));*/
 }
 
 void bossScene::soundInit()

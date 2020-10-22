@@ -33,6 +33,10 @@ private:
 
 	//player
 	POINT pFrame;
+
+	//sound
+	bool isBossBGM;
+	float fadeIn;
 public:
 	HRESULT init();
 	void release();
