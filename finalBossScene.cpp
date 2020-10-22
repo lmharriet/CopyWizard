@@ -51,11 +51,10 @@ HRESULT finalBossScene::init()
 	IMAGEMANAGER->addImage("carrot", "Images/npc/carrot.bmp", 50, 45, true, RGB(255, 0, 255));
 
 	//sound
-	isBossBGM = true;
+	isBossBGM = false;
 	fadeIn = 0.f;
-	SOUNDMANAGER->play("castleAmb", false,1.0f);
+	
 	SOUNDMANAGER->play("portalWarp", false);
-	//SOUNDMANAGER->fadeIn("castleAmb", 1.0f);
 	return S_OK;
 }
 
@@ -82,6 +81,14 @@ void finalBossScene::update()
 			fadeIn += 0.002f;
 			if (fadeIn >= SOUNDMANAGER->getVolumeBGM())
 				isBossBGM = false;
+		}
+	}
+	else
+	{
+		if (!isBossBGM)
+		{
+			//SOUNDMANAGER->play("castleAmb", false);
+			isBossBGM = true;
 		}
 	}
 
