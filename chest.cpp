@@ -122,10 +122,30 @@ void chest::bossScene_update()
 				if (frameX == 2)
 				{
 					POINT rePos = { pos.x - 30, pos.y - 30 };
-					//아이템, 동전 생성
+					//카드, 동전 생성
 					DROP->dropPoint(rePos, 80, 120, 0, { -100,100 }, { -80,80 });
 					DROP->dropPointArcana(arcanaKeyName, rePos, arcanaName, arcanaCoolTime);
 
+					//아이템 생성
+					tagDropItem _item;
+
+					int typeRandom = RANDOM->range(0, 1);
+
+					switch (typeRandom)
+					{
+					case 0: // normal
+						_item.item = ITEM->getRandomItem(true);
+						break;
+					case 1: // curse
+						_item.item = ITEM->getRandomItem(false);
+						break;
+					}
+					_item.pos = rePos;
+					_item.rc = RectMake(rePos.x - IMAGEMANAGER->findImage("itemFrame")->getFrameWidth() / 2,
+						rePos.y - IMAGEMANAGER->findImage("itemFrame")->getFrameHeight()/2 ,
+						50, 50);
+
+					DROP->dropPointItem(_item);
 					//포탈 생성
 					PORTAL->initWarp(746, 543);
 					EFFECT->setPortalEffect({ (long)PORTAL->getWarpSceneX(),(long)PORTAL->getWarpSceneY() - 30 });

@@ -82,6 +82,18 @@ void dropManager::cardRender(HDC hdc)
         CAMERAMANAGER->StretchRender(hdc, IMAGEMANAGER->findImage(vArcana[i].keyName),
             vArcana[i].pos.x, vArcana[i].pos.y, vArcana[i].size);
     }
+
+    //item render
+    size = vItem.size();
+    for (int i = 0; i < size; i++)
+    {
+        CAMERAMANAGER->FrameRender(hdc, IMAGEMANAGER->findImage("itemFrame"),
+            vItem[i].pos.x - IMAGEMANAGER->findImage("itemFrame")->getFrameWidth() / 2,
+            vItem[i].pos.y - IMAGEMANAGER->findImage("itemFrame")->getFrameHeight() / 2,
+            vItem[i].item.frame.x, vItem[i].item.frame.y);
+
+        //CAMERAMANAGER->Rectangle(hdc, vItem[i].rc);
+    }
 }
 
 void dropManager::coinEffectRender(HDC hdc)
@@ -172,6 +184,11 @@ void dropManager::dropPointArcana(string keyName, POINT pt, string arcanaName, i
     vArcana.push_back(arcana);
 }
 
+void dropManager::dropPointItem(tagDropItem _item)
+{
+    vItem.push_back(_item);
+}
+
 bool dropManager::checkPercentage(int persentage)
 {
     int ran = RANDOM->range(1, 100);
@@ -248,3 +265,25 @@ void dropManager::getCoinEffect(int money)
 
     saveCoinView.push_back(cView);
 }
+
+void dropManager::dropPoint_heal(POINT pt, POINT rangeNum, POINT rangeX, POINT rangeY)
+{
+    tagHealBall heal;
+    heal.currentFrameX = 0;
+    heal.heal = 50;
+    heal.pt = pt;
+
+    int number = RANDOM->range((int)rangeNum.x, (int)rangeNum.y);
+
+    for (int i = 0; i < number; i++)
+    {
+        POINT tmpPt = heal.pt;
+
+        tmpPt.x += RANDOM->range((int)rangeX.x, (int)rangeX.y);
+        tmpPt.y += RANDOM->range((int)rangeY.x, (int)rangeY.y);
+
+        heal.rc = RectMakeCenter(tmpPt.x, tmpPt.y, 50, 50);
+        vHealBall.push_back(heal);
+    }
+}
+

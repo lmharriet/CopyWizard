@@ -54,6 +54,13 @@ struct tagCoinView
 	float speed;
 };
 
+struct tagDropItem
+{
+	tagItem item;
+	RECT rc;
+	POINT pos;
+};
+
 class dropManager : public singletonBase<dropManager>
 {
 private:
@@ -66,6 +73,7 @@ private:
 	vector<tagCoinView> saveCoinView;
 
 	vector<tagDropArcana> vArcana;
+	vector<tagDropItem> vItem;
 
 	int dtime;
 	int cTime;
@@ -77,10 +85,13 @@ public:
 	void coinEffectRender(HDC hdc);
 	void dropPoint(POINT pt, int minCoin, int maxCoin, float healBallpercentage = 0.f, POINT rangeX = { -20,20 }, POINT rangeY = { -10,10 });
 	void dropPointArcana(string keyName, POINT pt, string arcanaName, int coolTime);
+	void dropPointItem(tagDropItem _item);
 	bool checkPercentage(int persentage);
 	void coinGenerator();
 
 	void getCoinEffect(int money);
+
+	void dropPoint_heal(POINT pt, POINT rangeNum, POINT rangeX, POINT rangeY);
 
 	vector<tagCoin> getCoinVec() { return vCoin; }
 	RECT getCoinRect(int index) { return vCoin[index].rc; }
@@ -97,4 +108,8 @@ public:
 	vector<tagDropArcana> getCardVec() { return vArcana; }
 	RECT getCardRect(int index) { return vArcana[index].rc; }
 	void delCard(int index) { vArcana.erase(vArcana.begin() + index); }
+
+	vector<tagDropItem> getItemVec() { return vItem; }
+	RECT getItemRect(int index) { return vItem[index].rc; }
+	void delItem(int index) { vItem.erase(vItem.begin() + index); }
 };

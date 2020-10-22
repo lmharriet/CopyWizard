@@ -46,6 +46,8 @@ HRESULT playerData::init()
 	//current Stage
 	currentStage = STAGEKIND::STARTSTAGE;
 
+	cout << "PLAYERDATA INIT" << '\n';
+
 	return S_OK;
 }
 

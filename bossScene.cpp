@@ -9,6 +9,7 @@ HRESULT bossScene::init()
 	IMAGEMANAGER->addImage("frontFrame", "map/frontFrame.bmp", MAXWIDTH, MAXHEIGHT, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("backFrame", "map/backFrame.bmp", MAXWIDTH, MAXHEIGHT, true, RGB(255, 0, 255));
 	//UI->init();
+	//ITEM->init();
 
 	_player = new player;
 	_player->init();
@@ -114,6 +115,7 @@ void bossScene::update()
 
 	attackChest();
 	gainArcana();
+	gainItem();
 	if (INPUT->GetKeyDown('J'))
 	{
 		SOUNDMANAGER->stop("bossBGM");
@@ -205,7 +207,7 @@ void bossScene::render()
 	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	//UNITRENDER->render(getMemDC());
 	if(gameOver) _chest->render(getMemDC());
-	DROP->cardRender(getMemDC());
+
 	_boss->render();
 	DROP->render(getMemDC());
 
@@ -350,7 +352,6 @@ void bossScene::attackBoss()
 		{
 			PLAYERDATA->setGaugeTime(50);
 			_player->getInferno()->setActive(true);
-
 		}
 	}
 	else if (PLAYERDATA->getGaugeTime() >= 50 && _player->getInferno()->CheckCollision(_boss->getBossRect()))
@@ -364,16 +365,6 @@ void bossScene::attackBoss()
 		{
 			_player->chargeSkillGauge(damage, 3);
 		}
-
-		float angle = getAngle(_boss->getBoss().center.x, _boss->getBoss().center.y,
-			_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
-
-		float x = _boss->getBoss().center.x + cosf(angle) * 6.f;
-		float y = _boss->getBoss().center.y - sinf(angle) * 6.f;
-		// set boss center x,y (inferno 공격 당하면 inferno쪽으로 끌려오기)
-		_boss->setCenter({ (long)x, (long)y });
-		_boss->setRect((int)x, (int)y);
-		
 
 		_boss->damage(damage, 0, 0, 3, isCri);
 
@@ -633,6 +624,25 @@ void bossScene::gainArcana()
 
 				DROP->delCard(i);
 
+			}
+		}
+	}
+}
+
+void bossScene::gainItem()
+{
+	for (int i = 0; i < DROP->getItemVec().size(); i++)
+	{
+		if (colCheck(_player->getRect(), DROP->getItemRect(i)))
+		{
+			if (INPUT->GetKeyDown('F'))
+			{
+				PLAYERDATA->setStat(DROP->getItemVec()[i].item.keyName);
+
+				tagItem _item = ITEM->getItem(DROP->getItemVec()[i].item.keyName);
+				PLAYERDATA->pushInven(_item);
+
+				DROP->delItem(i);
 			}
 		}
 	}

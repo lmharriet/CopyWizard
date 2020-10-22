@@ -41,4 +41,5 @@ public:
 	void attackBoss();
 	void attackChest();
 	void gainArcana();
+	void gainItem();
 };
