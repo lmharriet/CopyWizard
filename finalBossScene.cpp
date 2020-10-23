@@ -297,7 +297,6 @@ void finalBossScene::attackSura()
 			}
 
 
-			SOUNDMANAGER->play("blazeExp", false);
 			PARTICLE->explosionGenerate("explosionParticle", _player->getBlaze()->getBullet()[i].x + 20,
 				_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
 

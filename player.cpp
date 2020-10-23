@@ -209,9 +209,8 @@ void player::update()
 		if (restartCount == 300)
 		{
 			PLAYERDATA->init();
-			PLAYERDATA->setCurrentStage(STAGEKIND::STARTSTAGE);
-			SCENEMANAGER->loadScene("시작화면");
 			restartCount = 0;
+			SCENEMANAGER->loadScene("시작화면");
 
 		}
 	}
@@ -311,9 +310,9 @@ void player::other_update()
 		restartCount++;
 		if (restartCount == 300)
 		{
-			SCENEMANAGER->loadScene("시작화면");
+			PLAYERDATA->init();
 			restartCount = 0;
-
+			SCENEMANAGER->loadScene("시작화면");
 		}
 	}
 
@@ -509,6 +508,7 @@ void player::controller()
 
 void player::skillInit()
 {
+
 	if (PLAYERDATA->getAracaInfo().size() > 0) // 이미 데이터를 가지고 있을 때
 	{
 		int size = PLAYERDATA->getAracaInfo().size();
@@ -516,11 +516,14 @@ void player::skillInit()
 		{
 			arcana[i] = PLAYERDATA->getAracaInfo()[i];
 
+			cout << "받아온다" << '\n';
 		}
 	}
 
 	else
 	{
+		cout << "안받아온다" << '\n';
+
 		arcana[0].type = ARCANA_TYPE::TYPE_BASIC;
 		arcana[0].skillName = blaze->getInfo().keyName;
 		arcana[0].explanation = blaze->getInfo().explanation;
@@ -560,7 +563,6 @@ void player::skillInit()
 		//arcana[5].skillName = spear->getInfo().keyName;//"nonSkill";
 		//arcana[5].explanation = spear->getInfo().explanation; //"";
 		//arcana[5].coolTime = 0;//spear->getInfo().coolTime;//0;
-
 
 
 		for (int i = 0; i < ARCANA_SLOT; i++)

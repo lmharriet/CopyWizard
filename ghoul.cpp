@@ -237,13 +237,8 @@ void ghoul::stateATK()
     //sprintf(str, "knightAtk%d", RANDOM->range(4));
 
     if(checkCount ==0 && (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x == 2))
-    {
-    cout << "delayL : " << delayL << endl;
-    cout << "delayR : " << delayR << endl;
-    cout << "frameIndexL[STATEIMAGE::ATK].x : " << frameIndexL[STATEIMAGE::ATK].x << endl;
-    cout << "frameIndexR[STATEIMAGE::ATK].x : " << frameIndexR[STATEIMAGE::ATK].x << endl;
-    checkCount++;
-    }
+        checkCount++;
+
     if (atkDirection[MONSTER_UP] && playerRC.left > rc.left && playerRC.right < rc.right + 40)
     {
         if ((delayL == 0 || delayR ==0)&& (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x ==2))

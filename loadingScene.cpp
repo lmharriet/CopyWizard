@@ -5,12 +5,12 @@ HRESULT loadingScene::init()
 {
 
 	//로딩클래스 초기화
-	currentLoading = PLAYERDATA->getCurrentStage();
 	if (_loading[STARTSTAGE] == nullptr)
 	{
 		PLAYERDATA->init();
-		currentLoading = STARTSTAGE;
+		//currentLoading = STARTSTAGE;
 	}
+	currentLoading = PLAYERDATA->getCurrentStage();
 	switch (currentLoading)
 	{
 	case STARTSTAGE:
@@ -50,6 +50,7 @@ void loadingScene::release()
 void loadingScene::update()
 {
 	//로딩클래스 업데이트
+	//currentLoading = PLAYERDATA->getCurrentStage();
 	_loading[currentLoading]->update();
 
 	//로딩완료후 화면 변경
