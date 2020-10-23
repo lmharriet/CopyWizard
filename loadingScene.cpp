@@ -14,16 +14,16 @@ HRESULT loadingScene::init()
 	switch (currentLoading)
 	{
 	case STARTSTAGE:
-		_loading[STARTSTAGE] = make_unique<loading>();
-		_loading[STARTSTAGE]->init("LoadingBackground", "resource/UI/loadingBackground.bmp", WINSIZEX, WINSIZEY);
+		_loading[currentLoading] = make_unique<loading>();
+		_loading[currentLoading]->init("LoadingBackground", "resource/UI/loadingBackground.bmp", WINSIZEX, WINSIZEY);
 		break;
 	case MIDDLESTAGE:
-		_loading[MIDDLESTAGE] = make_unique<loading>();
-		_loading[MIDDLESTAGE]->init("LoadingBackground1", "resource/UI/loadingBG1.bmp", WINSIZEX, WINSIZEY);
+		_loading[currentLoading] = make_unique<loading>();
+		_loading[currentLoading]->init("LoadingBackground1", "resource/UI/loadingBG1.bmp", WINSIZEX, WINSIZEY);
 		break;
 	case FINALSTAGE:
-		_loading[FINALSTAGE] = make_unique<loading>();
-		_loading[FINALSTAGE]->init("LoadingBackground2", "resource/UI/loadingBG2.bmp", WINSIZEX, WINSIZEY);
+		_loading[currentLoading] = make_unique<loading>();
+		_loading[currentLoading]->init("LoadingBackground2", "resource/UI/loadingBG2.bmp", WINSIZEX, WINSIZEY);
 		break;
 	}
 
@@ -112,6 +112,7 @@ void loadingScene::loadingImage()
 		IMAGEMANAGER->addFrameImage("ghoulLarge", "resource/enemy/ghoulKing.bmp", 1050, 1500, 7, 10);
 		IMAGEMANAGER->addFrameImage("ghoulLargeHit", "resource/enemy/ghoulKingHit.bmp", 1050, 1500, 7, 10);
 		
+		//스킬 이미지
 		IMAGEMANAGER->addFrameImage("smallSlash", "resource/enemyEffect/smallSlash.bmp", 600, 1200, 3, 6);
 		IMAGEMANAGER->addFrameImage("knightSlashL", "resource/enemyEffect/knightSlashL.bmp", 246, 82, 3, 1);
 		IMAGEMANAGER->addFrameImage("knightSlashR", "resource/enemyEffect/knightSlashR.bmp", 246, 82, 3, 1);
@@ -162,7 +163,7 @@ void loadingScene::loadingImage()
 			}
 			else if (i < 80)
 			{
-				char str[50] = "맵만드는중 ...";
+				char str[50] = "맵 만드는중 ...";
 				_loading[currentLoading]->loadImage(str, 100, 100);
 
 			}
@@ -189,7 +190,7 @@ void loadingScene::loadingImage()
 		{
 			if (i < 40)
 			{
-				char str[50] = "맵만드는중 ...";
+				char str[50] = "맵 만드는중 ...";
 				_loading[currentLoading]->loadImage(str, 100, 100);
 			}
 			else if (i < 80)

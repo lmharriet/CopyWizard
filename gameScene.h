@@ -29,7 +29,7 @@ private:
 
 	wall* _wall;
 
-	chest* _chest;
+	unique_ptr<chest> _chest;
 
 	RECT cam;
 	RECT checkArea;
