@@ -19,7 +19,7 @@ void knight::update()
     if (!isATK)
         savePlayerRC = playerRC;
 
-    rc = RectMake(pos.x-10, pos.y+50, img->getFrameWidth(), img->getFrameHeight());
+    rc = RectMake(pos.x-10, pos.y+30, img->getFrameWidth(), img->getFrameHeight());
     if (isFindWayOn && !isIceState) //±æÃ£±â on
     {
        RECT astarRC = RectMake(pos.x+10, pos.y+30, img->getFrameWidth(), img->getFrameHeight());
