@@ -209,6 +209,7 @@ void player::update()
 		if (restartCount == 300)
 		{
 			PLAYERDATA->init();
+			PLAYERDATA->setCurrentStage(STAGEKIND::STARTSTAGE);
 			SCENEMANAGER->loadScene("시작화면");
 			restartCount = 0;
 
