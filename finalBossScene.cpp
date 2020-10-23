@@ -89,7 +89,7 @@ void finalBossScene::update()
 	{
 		if (!isBossBGM)
 		{
-			SOUNDMANAGER->play("castleAmb", false,-0.4f);
+			SOUNDMANAGER->play("castleAmb", false,-0.38f);
 			isBossBGM = true;
 		}
 	}
