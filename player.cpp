@@ -515,15 +515,11 @@ void player::skillInit()
 		for (int i = 0; i < size; i++)
 		{
 			arcana[i] = PLAYERDATA->getAracaInfo()[i];
-
-			cout << "받아온다" << '\n';
 		}
 	}
 
 	else
 	{
-		cout << "안받아온다" << '\n';
-
 		arcana[0].type = ARCANA_TYPE::TYPE_BASIC;
 		arcana[0].skillName = blaze->getInfo().keyName;
 		arcana[0].explanation = blaze->getInfo().explanation;
