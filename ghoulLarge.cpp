@@ -6,7 +6,7 @@ void ghoulLarge::addInit()
     kind = MONSTERKIND::GHOULLARGE;
     atk = 30;
     armour = 0.55f;
-    speed = 3.f;
+    speed = 3.5f;
     hp = 200;
     img = IMAGEMANAGER->findImage("ghoulLarge");
     isKnockBack = false;
@@ -161,7 +161,7 @@ void ghoulLarge::stateATK()
 
     if (atkDirection[MONSTER_UP] && playerRC.left > rc.left && playerRC.right < rc.right + 40)
     {
-        if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 1 || frameIndexR[STATEIMAGE::ATK].x == 4))
+        if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 2 || frameIndexR[STATEIMAGE::ATK].x == 3))
         {
             //EFFECT->setEffect("knightSlashUp", { pos.x + 60 ,pos.y + 20 }, true);
             SOUNDMANAGER->play(str, false, soundVolum); // 사운드수정예정
@@ -177,7 +177,7 @@ void ghoulLarge::stateATK()
 
     else if (atkDirection[MONSTER_DOWN] && playerRC.left > rc.left && playerRC.right < rc.right + 80)
     {
-        if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 1 || frameIndexR[STATEIMAGE::ATK].x == 4))
+        if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 2 || frameIndexR[STATEIMAGE::ATK].x == 3))
         {
             //EFFECT->setEffect("knightSlashDown", { pos.x + 70,pos.y + 150 }, true);
             SOUNDMANAGER->play(str, false, soundVolum);
@@ -190,7 +190,7 @@ void ghoulLarge::stateATK()
             delay++;
         }
     }
-    if (delay == 0 && frameIndexL[STATEIMAGE::ATK].x == 1)
+    if (delay == 0 && frameIndexL[STATEIMAGE::ATK].x == 2)
     {
         //EFFECT->setEffect("knightSlashL", { pos.x  ,pos.y + 80 }, true);
         SOUNDMANAGER->play(str, false, soundVolum);
@@ -202,7 +202,7 @@ void ghoulLarge::stateATK()
         isDash = true;
         delay++;
     }
-    else if (delay == 0 && frameIndexR[STATEIMAGE::ATK].x == 4)
+    else if (delay == 0 && frameIndexR[STATEIMAGE::ATK].x == 3)
     {
         //EFFECT->setEffect("knightSlashR", { pos.x + 110,pos.y + 80 }, true);
         SOUNDMANAGER->play(str, false, soundVolum);

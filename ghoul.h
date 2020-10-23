@@ -7,6 +7,10 @@ private:
 	bool isSpeedUp;
 	bool isIdle;
 	bool isNoHit;
+
+	int checkCount=0;
+	int delayL;
+	int delayR;
 public:
 	void addInit()override;
 	void update() override;

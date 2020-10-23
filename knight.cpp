@@ -6,7 +6,7 @@ void knight::addInit()
     kind = MONSTERKIND::KNIGHT;
     atk = 5;
     armour = 0.7f;
-    speed = 5.5f;
+    speed = 6.f;
     hp = 100;
     img = IMAGEMANAGER->findImage("knight");
     skillImg = NULL;
@@ -56,7 +56,7 @@ void knight::update()
                 pos.y += -sin(angle) * speed;
                 
             }
-            else if(!isDie && !isHit) // 걷지 않고 있을 때
+            else if( !isHit&& !isDie) // 걷지 않고 있을 때
             {
                 state = STATEIMAGE::ATK;
                 isATK = true;

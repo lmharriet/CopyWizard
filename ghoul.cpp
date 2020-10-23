@@ -14,9 +14,30 @@ void ghoul::addInit()
     isRanger = false;
 
     speedUpCount = 0;
+    delayL = 0;
+    delayR = 0;
     isSpeedUp = false;
     isIdle = false;
     isNoHit = true;
+
+    frameIndexL[STATEIMAGE::IDLE].x = 5;
+    frameIndexL[STATEIMAGE::IDLE].y = 0;
+    frameIndexL[STATEIMAGE::WALK].x = 5;
+    frameIndexL[STATEIMAGE::WALK].y = 2;
+    frameIndexL[STATEIMAGE::ATK].x = 5;
+    frameIndexL[STATEIMAGE::ATK].y = 0;
+    frameIndexL[STATEIMAGE::DIE].x = 5;
+    frameIndexL[STATEIMAGE::DIE].y = 5;
+
+    frameIndexR[STATEIMAGE::IDLE].x = 0;
+    frameIndexR[STATEIMAGE::IDLE].y = 0;
+    frameIndexR[STATEIMAGE::WALK].x = 0;
+    frameIndexR[STATEIMAGE::WALK].y = 1;
+    frameIndexR[STATEIMAGE::ATK].x = 0;
+    frameIndexR[STATEIMAGE::ATK].y = 0;
+    frameIndexR[STATEIMAGE::DIE].x = 0;
+    frameIndexR[STATEIMAGE::DIE].y = 3;
+
 }
 
 void ghoul::update()
@@ -24,10 +45,10 @@ void ghoul::update()
     //rc = RectMake(pos.x - 10, pos.y + 50, img->getFrameWidth(), img->getFrameHeight());
     if (isFindWayOn && !isIceState) //길찾기 on
     {
-        RECT astarRC = RectMake(pos.x+10 , pos.y-30 , img->getFrameWidth(), img->getFrameHeight());
-        astar->update(camRC, astarRC, playerRC, &angle);
         if (!isATK)
         {
+            RECT astarRC = RectMake(pos.x + 10, pos.y - 30, img->getFrameWidth(), img->getFrameHeight());
+            astar->update(camRC, astarRC, playerRC, &angle);
             if (getCenterX() < playerRC.left)
             {
                 atkDirection[MONSTER_LEFT] = false;
@@ -118,7 +139,7 @@ void ghoul::stateImageRender()
     case STATEIMAGE::HIT:
         stateHIT({ 5,6 }, { 0,6 });
         isNoHit = false;
-        speed = 3.f;
+        speed = 4.f;
         atk = 5;
         break;
 
@@ -178,8 +199,8 @@ void ghoul::stateIDLE()
 {
     if (atkDirection[MONSTER_LEFT])
     {
-        frameIndexL[STATEIMAGE::IDLE].x = 5;
-        frameIndexL[STATEIMAGE::IDLE].y = 0;
+        /*frameIndexL[STATEIMAGE::IDLE].x = 5;
+        frameIndexL[STATEIMAGE::IDLE].y = 0;*/
         frameIndexL[STATEIMAGE::WALK].x = 5;
         frameIndexL[STATEIMAGE::WALK].y = 2;
         frameIndexL[STATEIMAGE::ATK].x = 5;
@@ -191,8 +212,8 @@ void ghoul::stateIDLE()
     }
     else
     {
-        frameIndexR[STATEIMAGE::IDLE].x = 0;
-        frameIndexR[STATEIMAGE::IDLE].y = 0;
+        /*frameIndexR[STATEIMAGE::IDLE].x = 0;
+        frameIndexR[STATEIMAGE::IDLE].y = 0;*/
         frameIndexR[STATEIMAGE::WALK].x = 0;
         frameIndexR[STATEIMAGE::WALK].y = 1;
         frameIndexR[STATEIMAGE::ATK].x = 0;
@@ -207,7 +228,6 @@ void ghoul::stateIDLE()
     bulletDirection[MONSTER_LEFT] = false;
     bulletDirection[MONSTER_RIGHT] = false;
     isFxAppear = false;
-    
 }
 
 void ghoul::stateATK()
@@ -216,10 +236,17 @@ void ghoul::stateATK()
     float soundVolum = 0.0f;
     //sprintf(str, "knightAtk%d", RANDOM->range(4));
 
-
+    if(checkCount ==0 && (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x == 2))
+    {
+    cout << "delayL : " << delayL << endl;
+    cout << "delayR : " << delayR << endl;
+    cout << "frameIndexL[STATEIMAGE::ATK].x : " << frameIndexL[STATEIMAGE::ATK].x << endl;
+    cout << "frameIndexR[STATEIMAGE::ATK].x : " << frameIndexR[STATEIMAGE::ATK].x << endl;
+    checkCount++;
+    }
     if (atkDirection[MONSTER_UP] && playerRC.left > rc.left && playerRC.right < rc.right + 40)
     {
-        if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x ==2))
+        if ((delayL == 0 || delayR ==0)&& (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x ==2))
         {
             EFFECT->setEffect("knightSlashUp", { pos.x + 60 ,pos.y+20 }, true);
             SOUNDMANAGER->play(str, false, soundVolum); // 사운드수정예정
@@ -228,13 +255,14 @@ void ghoul::stateATK()
             bulletDirection[MONSTER_LEFT] = false;
             bulletDirection[MONSTER_RIGHT] = false;
             isFxAppear = true;
-            delay++;
+            delayL++;
+            delayR++;
         }
     }
 
     else if (atkDirection[MONSTER_DOWN] && playerRC.left > rc.left && playerRC.right < rc.right + 80)
     {
-        if (delay == 0 && (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x == 2))
+        if ((delayL == 0 || delayR == 0) && (frameIndexL[STATEIMAGE::ATK].x == 3 || frameIndexR[STATEIMAGE::ATK].x == 2))
         {
             EFFECT->setEffect("knightSlashDown", { pos.x + 70,pos.y + 150 }, true);
             SOUNDMANAGER->play(str, false, soundVolum); 
@@ -243,10 +271,11 @@ void ghoul::stateATK()
             bulletDirection[MONSTER_LEFT] = false;
             bulletDirection[MONSTER_RIGHT] = false;
             isFxAppear = true;
-            delay++;
+            delayL++;
+            delayR++;
         }
     }
-    if (delay == 0 && frameIndexL[STATEIMAGE::ATK].x == 3)
+    if ((delayL == 0 || delayR == 0) && frameIndexL[STATEIMAGE::ATK].x == 3)
     {
         EFFECT->setEffect("knightSlashL", { pos.x  ,pos.y + 80 }, true);
         SOUNDMANAGER->play(str, false, soundVolum);
@@ -255,9 +284,10 @@ void ghoul::stateATK()
         bulletDirection[MONSTER_LEFT] = true;
         bulletDirection[MONSTER_RIGHT] = false;
         isFxAppear = true;
-        delay++;
+        delayL++;
+        delayR++;
     }
-    else if (delay == 0 && frameIndexR[STATEIMAGE::ATK].x == 2)
+    else if ((delayL == 0 || delayR == 0) && frameIndexR[STATEIMAGE::ATK].x == 2)
     {
         EFFECT->setEffect("knightSlashR", { pos.x + 110,pos.y + 80 }, true);
         SOUNDMANAGER->play(str, false, soundVolum); 
@@ -266,8 +296,11 @@ void ghoul::stateATK()
         bulletDirection[MONSTER_LEFT] = false;
         bulletDirection[MONSTER_RIGHT] = true;
         isFxAppear = true;
-        delay++;
+        delayL++;
+        delayR++;
     }
+
+    
 
     if (atkDirection[MONSTER_LEFT])
     {
@@ -281,12 +314,12 @@ void ghoul::stateATK()
             if (frameIndexL[STATEIMAGE::ATK].x < 3)
             {
                 frameIndexL[STATEIMAGE::ATK].x = 3;
-                delay++;
-                if (delay > 5)
+                delayL++;
+                if (delayL > 5)
                 {
                     isATK = false;
                     isFxAppear = false;
-                    delay = 0;
+                    delayL = 0;
                     frameIndexL[STATEIMAGE::ATK].x = 5;
                 }
             }
@@ -307,12 +340,12 @@ void ghoul::stateATK()
             if (frameIndexR[STATEIMAGE::ATK].x > 2)
             {
                 frameIndexR[STATEIMAGE::ATK].x = 2;
-                delay++;
-                if (delay > 5)
+                delayR++;
+                if (delayR > 5)
                 {
                     isATK = false;
                     isFxAppear = false;
-                    delay = 0;
+                    delayR = 0;
                     frameIndexR[STATEIMAGE::ATK].x = 0;
 
                 }
