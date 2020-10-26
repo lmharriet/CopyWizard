@@ -113,6 +113,7 @@ public:
 	void release();
 	void update();
 	void other_update();
+	void attackCircleRender();
 	void render(int _index = 0);
 	void invenRender();
 

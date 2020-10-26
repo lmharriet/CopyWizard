@@ -1,3 +1,4 @@
+
 #include "stdafx.h"
 #include "finalBossScene.h"
 
@@ -198,6 +199,8 @@ void finalBossScene::render()
 	}
 
 	EFFECT->pRender(getMemDC());
+
+	_player->attackCircleRender();
 
 	if(endCutTime == 0) _player->render(1);
 

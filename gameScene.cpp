@@ -197,13 +197,15 @@ void gameScene::render()
 
 	DROP->cardRender(getMemDC());
 
-	UNITRENDER->render(getMemDC());
+	_player->attackCircleRender();
+
+	UNITRENDER->render(getMemDC()); // unit
 
 	DROP->render(getMemDC());
 
 	PORTAL->render(getMemDC());
 
-	_player->render();
+	_player->render(); // skill
 
 	EFFECT->emotionRender(getMemDC());
 

@@ -208,6 +208,8 @@ void bossScene::render()
 
 	DROP->cardRender(getMemDC());
 
+	_player->attackCircleRender();
+
 	if(warpDelay == 0) _player->render(1);
 	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	if(!isBattle || cTime == 200) PLAYERDATA->shroudRender(getMemDC());

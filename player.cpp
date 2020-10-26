@@ -180,18 +180,7 @@ void player::update()
 
 
 	damagedCool();
-	// knockBack lerp
-	if (isDamaged)
-	{
-		int index = 0;
-		for (int i = 0; i < 4; i++) index = i;
 
-		if (tileCheck[index].isCol || tileCheck[index + 4].isCol || diagonalCheck[index].isCol)return;
-		knockBack.percent -= 0.2f;
-		posX += cosf(knockBack.angle) * (knockBack.speed + knockBack.percent);
-		posY -= sinf(knockBack.angle) * (knockBack.speed + knockBack.percent);
-		rc = RectMakeCenter(posX, posY, 50, 50);
-	}
 
 	skillGaugeSetUp();
 
@@ -217,6 +206,40 @@ void player::update()
 	//cout << restartCount << '\n';
 	//don't touch!
 	buttonDown();
+
+	// knockBack lerp
+	if (isDamaged)
+	{
+		int index = 0;
+		for (int i = 0; i < 4; i++) index = i;
+
+		if (tileCheck[index].isCol || tileCheck[index + 4].isCol || diagonalCheck[index].isCol)
+		{
+			knockBack.percent = 0;
+			knockBack.speed = 0;
+			return;
+		}
+
+		float cul = knockBack.speed + knockBack.percent;
+		POINT check = { (LONG)(posX + cosf(knockBack.angle) * cul),
+						(LONG)(posY - sinf(knockBack.angle) * cul) };
+
+		for (int i = 0; i < vWall.size(); i++)
+		{
+			int num = vWall[i];
+			if (PtInRect(&tile[num].rc, check))
+			{
+				knockBack.percent = 0;
+				knockBack.speed = 0;
+				return;
+			}
+		}
+
+		knockBack.percent -= 0.2f;
+		posX += cosf(knockBack.angle) * (knockBack.speed + knockBack.percent);
+		posY -= sinf(knockBack.angle) * (knockBack.speed + knockBack.percent);
+		rc = RectMakeCenter(posX, posY, 50, 50);
+	}
 }
 
 void player::other_update()
@@ -283,18 +306,6 @@ void player::other_update()
 	damagedCool();
 	grabbedCool();
 
-	// knockBack lerp
-	if (isDamaged)
-	{
-		if (tileCheck[index].isCol || tileCheck[index + 4].isCol || diagonalCheck[index].isCol)return;
-		knockBack.percent -= 0.2f;
-		posX += cosf(knockBack.angle) * (knockBack.speed + knockBack.percent);
-		posY -= sinf(knockBack.angle) * (knockBack.speed + knockBack.percent);
-		rc = RectMakeCenter(posX, posY, 50, 50);
-	}
-
-
-
 	skillGaugeSetUp();
 
 
@@ -318,15 +329,51 @@ void player::other_update()
 
 	//don't touch!
 	buttonDown();
+	
+	// knockBack lerp
+	if (isDamaged)
+	{
+		if (tileCheck[index].isCol || tileCheck[index + 4].isCol || diagonalCheck[index].isCol)
+		{
+			knockBack.speed = 0;
+			knockBack.percent = 0;
+			return;
+		}
 
+		float cul = knockBack.speed + knockBack.percent;
+		POINT check = { (LONG)(posX + cosf(knockBack.angle) * cul),
+						(LONG)(posY - sinf(knockBack.angle) * cul) };
+
+		//color, rgb
+
+		for (int i = 0; i < vWall.size(); i++)
+		{
+			int num = vWall[i];
+			
+			if (PtInRect(&tile[num].rc, check))
+			{
+				knockBack.speed = 0;
+				knockBack.percent = 0;
+				return;
+			}
+		}
+
+		knockBack.percent -= 0.2f;
+		posX += cosf(knockBack.angle) * (cul);
+		posY -= sinf(knockBack.angle) * (cul);
+		rc = RectMakeCenter(posX, posY, 50, 50);
+	}
 }
 
-void player::render(int _index)
+void player::attackCircleRender()
 {
 	int tempAngle = attackAngle * (18 / PI);
 	image* img = IMAGEMANAGER->findImage("PlayerAttackCircle");
 	CAMERAMANAGER->AlphaFrameRender(getMemDC(), img, posX - 50, posY - 20, tempAngle, 0, 50);
+}
 
+void player::render(int _index)
+{
 
 	if (_index == 0)
 	{
@@ -1980,8 +2027,8 @@ void player::colorCheck(image* img)
 
 	for (int i = 0; i < 8; i++)
 	{
-		int x = tileCheck[i].rc.left + (tileCheck[i].rc.right - tileCheck[i].rc.left) / 2;
-		int y = tileCheck[i].rc.top + (tileCheck[i].rc.bottom - tileCheck[i].rc.top) / 2;
+		int x = getRcCenterX(tileCheck[i].rc);
+		int y = getRcCenterY(tileCheck[i].rc);
 
 		COLORREF color = GetPixel(img->getMemDC(), x, y);
 		int r = GetRValue(color);
