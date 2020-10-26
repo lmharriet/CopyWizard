@@ -61,7 +61,7 @@ HRESULT uiManager::init()
 	hp = 0;
 
 	blackOpacity = 0;
-
+	blackOpacity2 = 0;
 	//
 
 	Fbutton.keyName = "Fbutton";

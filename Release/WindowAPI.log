@@ -1,0 +1,29 @@
+﻿  gameScene.cpp
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\player.h(7,10): warning C4067: 전처리기 지시문 다음에 예기치 않은 토큰이 있습니다. 줄 바꿈 문자가 필요합니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\player.h(193,47): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\player.h(193,41): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\monster.h(192,27): warning C4244: 'return': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(20,53): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(20,36): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(129,60): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(129,43): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(137,53): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(137,36): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(139,77): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(139,39): warning C4244: '인수': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(262,33): warning C4018: '<=': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(409,49): warning C4244: '인수': 'long'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(409,36): warning C4244: '인수': 'long'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(542,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(578,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(752,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(801,21): warning C4244: '인수': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(802,22): warning C4244: '인수': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(825,21): warning C4244: '인수': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\gameScene.cpp(826,22): warning C4244: '인수': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다.
+  0 of 4398 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  코드를 생성했습니다.
+  WindowAPI.vcxproj -> C:\Users\suhyeon\Desktop\포트폴리오\팀포폴\GITHUB\Release\GameFramework2D.exe

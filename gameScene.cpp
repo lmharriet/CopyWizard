@@ -64,6 +64,7 @@ HRESULT gameScene::init()
 	portal.isCol = false;
 	portal.rc = RectMakeCenter(portal.curPt.x, portal.curPt.y, 30, 60);
 	PORTAL->setCenterPortal(portal);
+	PORTAL->resetSceneWarp();
 
 	_chest = make_unique<chest>();
 	_chest->init("silverChest", { -1149,2047 }, 10);
@@ -713,7 +714,6 @@ void gameScene::attackChest()
 			_chest->damaged(_chest->getPos(), damage, _player->getDragon()->getSkillNum(), criCheck);
 
 		}
-
 	}
 
 	//ice Spear
