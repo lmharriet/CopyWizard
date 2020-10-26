@@ -96,7 +96,7 @@ void chest::update()
 					DROP->dropPointArcana(arcanaKeyName, rePos, arcanaName, arcanaCoolTime);
 
 					//Æ÷Å» »ý¼º
-					PORTAL->initWarp(-1149, 2247);
+					PORTAL->initWarp(pos.x, pos.y + 180);
 					EFFECT->setPortalEffect({ (long)PORTAL->getWarpSceneX(),(long)PORTAL->getWarpSceneY() - 30 });
 					SOUNDMANAGER->play("portalWarp", false);
 				}

@@ -67,7 +67,7 @@ HRESULT gameScene::init()
 	PORTAL->resetSceneWarp();
 
 	_chest = make_unique<chest>();
-	_chest->init("silverChest", { -1149,2047 }, 10);
+	_chest->init("silverChest", { -977,2416 }, 10);
 
 
 	warpDelay = 0;
@@ -766,9 +766,9 @@ void gameScene::gainArcana()
 
 void gameScene::viewText()
 {
-	//char str[126];
-	//sprintf(str, "%.f, %.f", _player->getX(), _player->getY());
-	//TextOut(getMemDC(), _ptMouse.x, _ptMouse.y, str, strlen(str));
+	char str[126];
+	sprintf(str, "%.f, %.f", _player->getX(), _player->getY());
+	TextOut(getMemDC(), _ptMouse.x, _ptMouse.y, str, strlen(str));
 }
 
 void gameScene::soundInit()
