@@ -112,4 +112,25 @@ public:
 	vector<tagDropItem> getItemVec() { return vItem; }
 	RECT getItemRect(int index) { return vItem[index].rc; }
 	void delItem(int index) { vItem.erase(vItem.begin() + index); }
+
+	/*
+	vector<tagHealBall> vHealBall;
+
+	vector<tagCoin> vCoin;
+	vector<infoTransfer> vTransfer;
+
+	vector<tagCoinView> coinView;
+	vector<tagCoinView> saveCoinView;
+
+	vector<tagDropArcana> vArcana;
+	vector<tagDropItem> vItem;
+	*/
+	void resetManager() 
+	{
+		vHealBall.clear();
+		vCoin.clear();
+		vTransfer.clear();
+		vArcana.clear();
+		vItem.clear();
+	}
 };

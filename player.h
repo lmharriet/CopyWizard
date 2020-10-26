@@ -106,6 +106,8 @@ private:
 	//sound
 	int walkCount;
 
+	//fix
+	bool isDungeonPotal;
 public:
 	HRESULT init();
 	void release();
@@ -170,6 +172,7 @@ public:
 	//Don't touch
 	void buttonDown();
 
+	void getDungeonPotal(bool _isDungeonPotal) { isDungeonPotal = _isDungeonPotal; }
 
 	//getter ,setter
 	float getX() { return posX; }

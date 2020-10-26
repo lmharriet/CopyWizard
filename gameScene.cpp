@@ -13,6 +13,7 @@ HRESULT gameScene::init()
 		_player = new player;
 
 	_player->init();
+
 	uiImg = IMAGEMANAGER->addImage("UI", "Images/gameUI.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 	playerImg = IMAGEMANAGER->findImage("playerFrame");
 
@@ -91,6 +92,7 @@ void gameScene::release()
 
 void gameScene::update()
 {
+	_player->getDungeonPotal(isWarp);
 	enemyCheckCol();
 	//portal
 	warp();
@@ -863,6 +865,9 @@ void gameScene::warp()
 		{
 			SOUNDMANAGER->stop("ingameBGM");
 			PLAYERDATA->setCurrentStage(STAGEKIND::MIDDLESTAGE);
+			
+			DROP->resetManager();
+
 			SCENEMANAGER->loadScene("로딩화면");
 		}
 	}

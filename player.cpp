@@ -2092,6 +2092,9 @@ void player::death()
 	{
 		isDead = true;
 		state = STATE::DIE;
+
+		PORTAL->resetSceneWarp();
+		DROP->resetManager();
 	}
 }
 //플레이어 피격 데미지

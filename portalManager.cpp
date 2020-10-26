@@ -23,6 +23,13 @@ HRESULT portalManager::initWarp(float x, float y)
 	return S_OK;
 }
 
+void portalManager::resetSceneWarp() 
+{
+	warpScene.x = 10000;
+	warpScene.y = 10000;
+	warpScene.rc = RectMakeCenter(10000, 10000, 0, 0);
+}
+
 void portalManager::setPortal(tagPortal one, tagPortal two, tagPortal three)
 {
 	tagPortal arr[] = { one,two,three };

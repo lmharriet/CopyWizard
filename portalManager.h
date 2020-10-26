@@ -33,6 +33,8 @@ public:
 	HRESULT init();
 	HRESULT initWarp(float x, float y);
 
+	void resetSceneWarp();
+
 	RECT getWarpScene() { return warpScene.rc; }
 
 	float getWarpSceneX() { return warpScene.x; }

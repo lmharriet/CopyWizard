@@ -35,5 +35,4 @@ public:
 	POINT getPos() { return pos; }
 	RECT getRc() { return rc; }
 	int getHp() { return hp; }
-
 };
