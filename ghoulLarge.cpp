@@ -315,7 +315,7 @@ void ghoulLarge::stateDIE()
         currentFrame = { frameIndexR[STATEIMAGE::DIE].x ,frameIndexR[STATEIMAGE::DIE].y };
     }
 
-    coinDrop(5, 40);
+    coinDrop(5, 20);
 }
 
 void ghoulLarge::stateWalk()
