@@ -49,9 +49,6 @@
     <Filter Include="MainGame\씬 모음\보스">
       <UniqueIdentifier>{1c9393d5-d725-4a02-9e76-885c481f1ffc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MainGame\씬 모음\인게임">
-      <UniqueIdentifier>{7adb36db-b0b5-45bd-a5aa-ba5886bb3f75}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MainGame\씬 모음\맵툴">
       <UniqueIdentifier>{83066701-2a05-43a2-b4e8-7fee2c51b528}</UniqueIdentifier>
     </Filter>
@@ -66,9 +63,6 @@
     </Filter>
     <Filter Include="GameFramework\매니져\저장">
       <UniqueIdentifier>{15582844-be6b-49b2-9fb2-f7037676cf8a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MainGame\인게임\monster">
-      <UniqueIdentifier>{9d1bf617-7f45-4e7a-9a9e-4392db16c51f}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameFramework\매니져\아이템">
       <UniqueIdentifier>{54bd0d0d-95d9-4959-bc59-b6eb9969c604}</UniqueIdentifier>
@@ -94,9 +88,6 @@
     <Filter Include="GameFramework\매니져\카메라">
       <UniqueIdentifier>{920c699c-f633-4045-aa60-009c95f7c075}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MainGame\인게임\player">
-      <UniqueIdentifier>{02b4edc7-93fd-4322-9f2b-16a2450902c2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MainGame\z-order">
       <UniqueIdentifier>{ff395590-248c-438b-b8e3-563c83b21ccd}</UniqueIdentifier>
     </Filter>
@@ -105,6 +96,21 @@
     </Filter>
     <Filter Include="GameFramework\매니져\포탈">
       <UniqueIdentifier>{4b24e3f4-ae46-414e-8820-edf0c25eaa93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\씬 모음\로비">
+      <UniqueIdentifier>{589ae319-f9b5-47f2-8364-e235bb35316e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\인게임\BOSS">
+      <UniqueIdentifier>{08e6373c-561c-428b-8f3e-a3390b76ef68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\인게임\MONSTER">
+      <UniqueIdentifier>{9d1bf617-7f45-4e7a-9a9e-4392db16c51f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\인게임\PLAYER">
+      <UniqueIdentifier>{02b4edc7-93fd-4322-9f2b-16a2450902c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\씬 모음\던전">
+      <UniqueIdentifier>{7adb36db-b0b5-45bd-a5aa-ba5886bb3f75}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -145,10 +151,10 @@
       <Filter>GameFramework\매니져\파티클</Filter>
     </ClCompile>
     <ClCompile Include="golem.cpp">
-      <Filter>MainGame\인게임\monster</Filter>
+      <Filter>MainGame\인게임\MONSTER</Filter>
     </ClCompile>
     <ClCompile Include="monster.cpp">
-      <Filter>MainGame\인게임\monster</Filter>
+      <Filter>MainGame\인게임\MONSTER</Filter>
     </ClCompile>
     <ClCompile Include="uiManager.cpp">
       <Filter>GameFramework\매니져\UI</Filter>
@@ -166,7 +172,7 @@
       <Filter>MainGame\씬 모음\보스</Filter>
     </ClCompile>
     <ClCompile Include="gameScene.cpp">
-      <Filter>MainGame\씬 모음\인게임</Filter>
+      <Filter>MainGame\씬 모음\던전</Filter>
     </ClCompile>
     <ClCompile Include="timeManager.cpp">
       <Filter>GameFramework\매니져\시간</Filter>
@@ -178,13 +184,13 @@
       <Filter>GameFramework\매니져\저장</Filter>
     </ClCompile>
     <ClCompile Include="summoner.cpp">
-      <Filter>MainGame\인게임\monster</Filter>
+      <Filter>MainGame\인게임\MONSTER</Filter>
     </ClCompile>
     <ClCompile Include="enemyManager.cpp">
       <Filter>MainGame\인게임</Filter>
     </ClCompile>
     <ClCompile Include="knight.cpp">
-      <Filter>MainGame\인게임\monster</Filter>
+      <Filter>MainGame\인게임\MONSTER</Filter>
     </ClCompile>
     <ClCompile Include="itemManager.cpp">
       <Filter>GameFramework\매니져\아이템</Filter>
@@ -195,14 +201,8 @@
     <ClCompile Include="damageManager.cpp">
       <Filter>GameFramework\매니져\데미지</Filter>
     </ClCompile>
-    <ClCompile Include="bossSkill.cpp">
-      <Filter>MainGame\씬 모음\보스</Filter>
-    </ClCompile>
     <ClCompile Include="bossManager.cpp">
       <Filter>MainGame\인게임</Filter>
-    </ClCompile>
-    <ClCompile Include="boss.cpp">
-      <Filter>MainGame\씬 모음\보스</Filter>
     </ClCompile>
     <ClCompile Include="loading.cpp">
       <Filter>GameFramework\매니져\로딩</Filter>
@@ -217,19 +217,19 @@
       <Filter>GameFramework\매니져\상점</Filter>
     </ClCompile>
     <ClCompile Include="ghoul.cpp">
-      <Filter>MainGame\인게임\monster</Filter>
+      <Filter>MainGame\인게임\MONSTER</Filter>
     </ClCompile>
     <ClCompile Include="cameraManager.cpp">
       <Filter>GameFramework\매니져\카메라</Filter>
     </ClCompile>
     <ClCompile Include="player.cpp">
-      <Filter>MainGame\인게임\player</Filter>
+      <Filter>MainGame\인게임\PLAYER</Filter>
     </ClCompile>
     <ClCompile Include="inventory.cpp">
-      <Filter>MainGame\인게임\player</Filter>
+      <Filter>MainGame\인게임\PLAYER</Filter>
     </ClCompile>
     <ClCompile Include="playerData.cpp">
-      <Filter>MainGame\인게임\player</Filter>
+      <Filter>MainGame\인게임\PLAYER</Filter>
     </ClCompile>
     <ClCompile Include="unit.cpp">
       <Filter>MainGame\z-order</Filter>
@@ -244,15 +244,24 @@
       <Filter>GameFramework\매니져\포탈</Filter>
     </ClCompile>
     <ClCompile Include="ghoulLarge.cpp">
-      <Filter>MainGame\인게임\monster</Filter>
-    </ClCompile>
-    <ClCompile Include="finalBoss.cpp">
-      <Filter>MainGame\씬 모음\보스</Filter>
+      <Filter>MainGame\인게임\MONSTER</Filter>
     </ClCompile>
     <ClCompile Include="finalBossScene.cpp">
       <Filter>MainGame\씬 모음\보스</Filter>
     </ClCompile>
     <ClCompile Include="chest.cpp" />
+    <ClCompile Include="lobbyScene.cpp">
+      <Filter>MainGame\씬 모음\로비</Filter>
+    </ClCompile>
+    <ClCompile Include="boss.cpp">
+      <Filter>MainGame\인게임\BOSS</Filter>
+    </ClCompile>
+    <ClCompile Include="bossSkill.cpp">
+      <Filter>MainGame\인게임\BOSS</Filter>
+    </ClCompile>
+    <ClCompile Include="finalBoss.cpp">
+      <Filter>MainGame\인게임\BOSS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameNode.h">
@@ -301,10 +310,10 @@
       <Filter>GameFramework\매니져\파티클</Filter>
     </ClInclude>
     <ClInclude Include="monster.h">
-      <Filter>MainGame\인게임\monster</Filter>
+      <Filter>MainGame\인게임\MONSTER</Filter>
     </ClInclude>
     <ClInclude Include="golem.h">
-      <Filter>MainGame\인게임\monster</Filter>
+      <Filter>MainGame\인게임\MONSTER</Filter>
     </ClInclude>
     <ClInclude Include="uiManager.h">
       <Filter>GameFramework\매니져\UI</Filter>
@@ -319,7 +328,7 @@
       <Filter>MainGame\씬 모음\보스</Filter>
     </ClInclude>
     <ClInclude Include="gameScene.h">
-      <Filter>MainGame\씬 모음\인게임</Filter>
+      <Filter>MainGame\씬 모음\던전</Filter>
     </ClInclude>
     <ClInclude Include="timeManager.h">
       <Filter>GameFramework\매니져\시간</Filter>
@@ -331,13 +340,13 @@
       <Filter>GameFramework\매니져\저장</Filter>
     </ClInclude>
     <ClInclude Include="summoner.h">
-      <Filter>MainGame\인게임\monster</Filter>
+      <Filter>MainGame\인게임\MONSTER</Filter>
     </ClInclude>
     <ClInclude Include="enemyManager.h">
       <Filter>MainGame\인게임</Filter>
     </ClInclude>
     <ClInclude Include="knight.h">
-      <Filter>MainGame\인게임\monster</Filter>
+      <Filter>MainGame\인게임\MONSTER</Filter>
     </ClInclude>
     <ClInclude Include="itemManager.h">
       <Filter>GameFramework\매니져\아이템</Filter>
@@ -348,14 +357,8 @@
     <ClInclude Include="damageManager.h">
       <Filter>GameFramework\매니져\데미지</Filter>
     </ClInclude>
-    <ClInclude Include="bossSkill.h">
-      <Filter>MainGame\씬 모음\보스</Filter>
-    </ClInclude>
     <ClInclude Include="bossManager.h">
       <Filter>MainGame\인게임</Filter>
-    </ClInclude>
-    <ClInclude Include="boss.h">
-      <Filter>MainGame\씬 모음\보스</Filter>
     </ClInclude>
     <ClInclude Include="startScene.h">
       <Filter>MainGame\씬 모음\시작</Filter>
@@ -373,19 +376,19 @@
       <Filter>GameFramework\매니져\상점</Filter>
     </ClInclude>
     <ClInclude Include="ghoul.h">
-      <Filter>MainGame\인게임\monster</Filter>
+      <Filter>MainGame\인게임\MONSTER</Filter>
     </ClInclude>
     <ClInclude Include="cameraManager.h">
       <Filter>GameFramework\매니져\카메라</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
-      <Filter>MainGame\인게임\player</Filter>
+      <Filter>MainGame\인게임\PLAYER</Filter>
     </ClInclude>
     <ClInclude Include="inventory.h">
-      <Filter>MainGame\인게임\player</Filter>
+      <Filter>MainGame\인게임\PLAYER</Filter>
     </ClInclude>
     <ClInclude Include="playerData.h">
-      <Filter>MainGame\인게임\player</Filter>
+      <Filter>MainGame\인게임\PLAYER</Filter>
     </ClInclude>
     <ClInclude Include="unit.h">
       <Filter>MainGame\z-order</Filter>
@@ -397,20 +400,29 @@
       <Filter>MainGame\인게임</Filter>
     </ClInclude>
     <ClInclude Include="unitNode.h">
-      <Filter>MainGame\인게임\player</Filter>
+      <Filter>MainGame\인게임\PLAYER</Filter>
     </ClInclude>
     <ClInclude Include="portalManager.h">
       <Filter>GameFramework\매니져\포탈</Filter>
     </ClInclude>
     <ClInclude Include="ghoulLarge.h">
-      <Filter>MainGame\인게임\monster</Filter>
-    </ClInclude>
-    <ClInclude Include="finalBoss.h">
-      <Filter>MainGame\씬 모음\보스</Filter>
+      <Filter>MainGame\인게임\MONSTER</Filter>
     </ClInclude>
     <ClInclude Include="finalBossScene.h">
       <Filter>MainGame\씬 모음\보스</Filter>
     </ClInclude>
     <ClInclude Include="chest.h" />
+    <ClInclude Include="lobbyScene.h">
+      <Filter>MainGame\씬 모음\로비</Filter>
+    </ClInclude>
+    <ClInclude Include="boss.h">
+      <Filter>MainGame\인게임\BOSS</Filter>
+    </ClInclude>
+    <ClInclude Include="bossSkill.h">
+      <Filter>MainGame\인게임\BOSS</Filter>
+    </ClInclude>
+    <ClInclude Include="finalBoss.h">
+      <Filter>MainGame\인게임\BOSS</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

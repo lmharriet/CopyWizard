@@ -65,7 +65,7 @@ private:
 	tagTile* wallTile;
 	vector<int> vWall;
 
-	//
+	//loading Stage
 	STAGEKIND currentStage;
 public:
 	HRESULT init();
@@ -79,6 +79,7 @@ public:
 	int getMaxHp() { return maxHp; }
 	int getHp() { return hp; }
 	int getCoin() { return coin; }
+	int getJam() { return iniData::getSingleton()->loadDataInteger("playerData", "playerData", "playerJam");}
 	float getX() { return _x; }
 	float getY() { return _y; }
 
@@ -92,6 +93,8 @@ public:
 
 	void setHp(int _hp) { hp = _hp; }
 	void setCoin(int _coin) { coin = _coin; }
+	void setJam(int _jam);
+
 	void setX(float x) { _x = x; }
 	void setY(float y) { _y = y; }
 
