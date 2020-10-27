@@ -416,6 +416,7 @@ void golem::stateDIE()
     if (isDelete)
     {
         // ¿©±â°¡ °ñ·½ Á×À»½Ã º¸¼® ¶³±¸´Â °÷À¸·Î ÇÏ¸é ‰Î.
+		DROP->gemDropPoint(pos);
     }
 }
 

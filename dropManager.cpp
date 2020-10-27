@@ -70,6 +70,28 @@ void dropManager::render(HDC hdc)
 
         if (vHealBall[i].currentFrameX == img->getMaxFrameX())vHealBall[i].currentFrameX = 0;
     }
+
+	//gem render
+	//image* img = IMAGEMANAGER->findImage("gem");
+
+	for (int i = 0; i < vGem.size(); i++) {
+		float angle = getAngle(vGem[i].pt.x, vGem[i].pt.y, PLAYERDATA->getX(), PLAYERDATA->getY());
+		vGem[i].pt.x += cosf(angle) * vGem[i].speed;
+		vGem[i].pt.y += -sinf(angle) * vGem[i].speed;
+
+		if (vGem[i].speed < 10.f) vGem[i].speed *= 1.06f;
+
+		vGem[i].rc = RectMakeCenter(vGem[i].pt.x, vGem[i].pt.y, 50, 50);
+
+		/*CAMERAMANAGER->FrameRender(hdc, img, vGem[i].pt.x - (vGem[i].rc.right - vGem[i].rc.left),
+			vGem[i].pt.y - (vGem[i].rc.bottom - vGem[i].rc.top),
+			vGem[i].currentFrameX, 0);*/
+		CAMERAMANAGER->Rectangle(hdc, vGem[i].rc);
+		if (dtime % 12 == 0) {
+			vGem[i].currentFrameX++;
+		}
+		//if (vGem[i].currentFrameX == )
+	}
 }
 
 void dropManager::cardRender(HDC hdc)
@@ -165,6 +187,17 @@ void dropManager::dropPoint(POINT pt, int minCoin, int maxCoin, float healBallpe
         ball.rc = RectMakeCenter(pt.x, pt.y, 50, 50);
         vHealBall.push_back(ball);
     }
+}
+
+void dropManager::gemDropPoint(POINT pt)
+{
+	tagGem gem;
+	gem.pt = pt;
+	gem.gemMoney = 1;
+	gem.speed = 0.2f;
+	gem.currentFrameX = 0;
+	gem.rc = RectMakeCenter(pt.x, pt.y, 50, 50);
+	vGem.push_back(gem);
 }
 
 void dropManager::dropPointArcana(string keyName, POINT pt, string arcanaName, int coolTime)
