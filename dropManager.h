@@ -21,6 +21,16 @@ struct tagHealBall
 	int currentFrameX;
 };
 
+struct tagGem
+{
+	POINT pt;
+	RECT rc;
+	int gemMoney;
+	float speed;
+
+	int currentFrameX;
+};
+
 struct infoTransfer
 {
 	int gCoin;
@@ -54,6 +64,15 @@ struct tagCoinView
 	float speed;
 };
 
+struct tagGemView
+{
+	POINT pt;
+
+	string keyName;
+	int curOpacity;
+	float speed;
+};
+
 struct tagDropItem
 {
 	tagItem item;
@@ -75,6 +94,10 @@ private:
 	vector<tagDropArcana> vArcana;
 	vector<tagDropItem> vItem;
 
+	vector<tagGem> vGem;
+	vector<tagGemView> gemView;
+	vector<tagGemView> saveGemView;;
+
 	int dtime;
 	int cTime;
 public:
@@ -84,6 +107,7 @@ public:
 	void cardRender(HDC hdc);
 	void coinEffectRender(HDC hdc);
 	void dropPoint(POINT pt, int minCoin, int maxCoin, float healBallpercentage = 0.f, POINT rangeX = { -20,20 }, POINT rangeY = { -10,10 });
+	void gemDropPoint(POINT pt);
 	void dropPointArcana(string keyName, POINT pt, string arcanaName, int coolTime);
 	void dropPointItem(tagDropItem _item);
 	bool checkPercentage(int persentage);
@@ -96,6 +120,10 @@ public:
 	vector<tagCoin> getCoinVec() { return vCoin; }
 	RECT getCoinRect(int index) { return vCoin[index].rc; }
 	void delCoin(int index) { vCoin.erase(vCoin.begin() + index); }
+
+	vector<tagGem> getGemVec() { return vGem; }
+	RECT getGemRect(int index) { return vGem[index].rc; }
+	void delGem(int index) { vGem.erase(vGem.begin() + index); }
 
 	POINT getCoinPt(int index) { return vCoin[index].pt; }
 	void setCoinPt(int index, int valueX, int valueY) { vCoin[index].pt.x += valueX, vCoin[index].pt.y += valueY; }
@@ -132,5 +160,6 @@ public:
 		vTransfer.clear();
 		vArcana.clear();
 		vItem.clear();
+		vGem.clear();
 	}
 };
