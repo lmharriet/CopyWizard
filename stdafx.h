@@ -37,6 +37,7 @@ using namespace std;
 #include "util.h"
 using namespace MY_UTIL;
 #include "itemManager.h"
+#include "iniData.h"
 #include "playerData.h"
 #include "sceneManager.h"
 #include "soundManager.h"
@@ -48,7 +49,6 @@ using namespace MY_UTIL;
 #include "dropManager.h"
 #include "bossManager.h"
 #include "damageManager.h"
-//#include "astarManager.h"
 #include "unit.h"
 #include "portalManager.h"
 
@@ -58,6 +58,7 @@ using namespace MY_UTIL;
 #define INPUT input::getSingleton() //세미콜론 찍으면 작동안함
 #define RANDOM random::getSingleton()
 #define IMAGEMANAGER imageManager::getSingleton()
+#define INIDATA iniData::getSingleton()
 #define PLAYERDATA playerData::getSingleton()
 #define SCENEMANAGER sceneManager::getSingleton()
 #define SOUNDMANAGER soundManager::getSingleton()
@@ -70,7 +71,6 @@ using namespace MY_UTIL;
 #define DROP dropManager::getSingleton()
 #define DAMAGE damageManager::getSingleton()
 #define BOSSMANAGER bossManager::getSingleton()
-//#define ASTAR astarManager::getSingleton()
 #define UNITRENDER unit::getSingleton()
 #define PORTAL portalManager::getSingleton()
 

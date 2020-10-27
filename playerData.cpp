@@ -112,6 +112,14 @@ void playerData::shroudRender(HDC hdc)
 	else gShroud.curSize = 0;
 }
 
+void playerData::setJam(int _jam)
+{
+	char cJam[60];
+	sprintf(cJam, "%d", _jam);
+	INIDATA->addData("playerData", "playerJam", cJam);
+	INIDATA->saveINI("playerData");
+}
+
 void playerData::setStat(string itemName)
 {
 	tagItem item = ITEM->getItem(itemName);
