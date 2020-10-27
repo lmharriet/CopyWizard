@@ -316,6 +316,10 @@ void ghoulLarge::stateDIE()
     }
 
     coinDrop(5, 20);
+    if (isDelete)
+    {
+        // 여기가 구울킹 죽을시 보석 떨구는 곳으로 하면 됌.
+    }
 }
 
 void ghoulLarge::stateWalk()

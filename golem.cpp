@@ -413,6 +413,10 @@ void golem::stateDIE()
     }
 
     coinDrop(5, 40);
+    if (isDelete)
+    {
+        // ¿©±â°¡ °ñ·½ Á×À»½Ã º¸¼® ¶³±¸´Â °÷À¸·Î ÇÏ¸é ‰Î.
+    }
 }
 
 void golem::stateWalk()
