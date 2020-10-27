@@ -636,6 +636,11 @@ void monster::coinDrop(int min, int max)
 {
 	if (isDelete)
 	{
+		if (PLAYERDATA->getStat().vampireBlood == true)
+		{
+			if (PLAYERDATA->getHp() < PLAYERDATA->getMaxHp())PLAYERDATA->setHp(PLAYERDATA->getHp() + 1);
+		}
+
 		DROP->dropPoint({ getCenterX(),getCenterY() }, min, max);
 	}
 }
@@ -644,7 +649,6 @@ void monster::die()
 {
 	if (hp <= 0)
 	{
-
 		isDie = true;
 		if (isIceState)
 			isIceState = false;
