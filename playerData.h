@@ -111,6 +111,7 @@ public:
 	//inven item
 	void pushInven(tagItem item) { vInven.push_back(item); }
 	vector<tagItem> getInven() { return vInven; }
+	void resetInven() { vInven.clear(); }
 	//inven arcana
 	void pushArcanaInfo(tagWizardArcana info) { vArcanaInfo.push_back(info); }
 	vector<tagWizardArcana> getAracaInfo() { return vArcanaInfo; }
