@@ -487,6 +487,7 @@ void monster::render()
 		}
 	}
 	// astar->render(getMemDC());
+	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	 //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
 	 //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
 }

@@ -29,7 +29,7 @@ void golem::update()
     {
         if (!isATK)
         {
-            RECT astarRC = RectMake(pos.x + 20, pos.y-30, img->getFrameWidth(), img->getFrameHeight());
+            astarRC = RectMakeCenter(pos.x + (img->getFrameWidth()>>1), pos.y+img->getFrameHeight()-40, 10, 10);
             astar->update(camRC, astarRC, playerRC, &angle);  // 에이스타에서 앵글 받아옴
             if (astar->getFirstTile() && !isDie) // 걸을 때
             {
@@ -83,7 +83,7 @@ void golem::update()
 
 void golem::addRender()
 {
-
+    CAMERAMANAGER->Rectangle(getMemDC(), astarRC);
     if (!isFxAppear && !isAtkImgCount) // 스킬이미지
     {
         smallSlashIndex = { -1,0 };

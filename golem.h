@@ -10,6 +10,7 @@ private:
 
 	bool isAtkImgCount;
 	int fxCount;
+	RECT astarRC;
 
 public:
 	void addInit()override;
