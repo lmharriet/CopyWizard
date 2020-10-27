@@ -13,6 +13,7 @@ HRESULT astarManager::init(tagTile* _tile)
 	startNode = NULL;
 	endNode = NULL;
 	curNode = NULL;
+	
 
 	//전체타일 노드 초기화
 	for (int y = 0; y < MAXTILE_HEIGHT; y++)
@@ -319,7 +320,7 @@ void astarManager::setNodeColor(tileNode* node, COLORREF color, HDC hdc)
 HRESULT monster::init(tagTile* tile, POINT _pos)
 {
 	addInit();
-
+	
 	if (kind == MONSTERKIND::SUMMONER)
 	{
 		isAstar = false;
@@ -365,7 +366,7 @@ void monster::release()
 void monster::commonUpdate()
 {
 	
-	
+	astarRC = RectMakeCenter(pos.x + (img->getFrameWidth() >> 1), pos.y + img->getFrameHeight() - 40, 10, 10);
 	rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
 	POINT position = { getCenterX(), getCenterY() };
@@ -622,7 +623,7 @@ bool monster::wallCol()
 		}
 		else
 		{
-			if (colCheck(rc, wall[PLAYERDATA->getWall()[i]].rc))
+			if (colCheck(astarRC, wall[PLAYERDATA->getWall()[i]].rc))
 			{
 				return true;
 			}

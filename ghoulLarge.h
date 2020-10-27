@@ -8,7 +8,7 @@ private:
 	bool isIdle;
 	bool isNoHit;
 	bool isDash;
-	RECT astarRC;
+	
 public:
 	void addInit()override;
 	void update() override;

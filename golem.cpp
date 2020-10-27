@@ -83,7 +83,7 @@ void golem::update()
 
 void golem::addRender()
 {
-    CAMERAMANAGER->Rectangle(getMemDC(), astarRC);
+    
     if (!isFxAppear && !isAtkImgCount) // 스킬이미지
     {
         smallSlashIndex = { -1,0 };

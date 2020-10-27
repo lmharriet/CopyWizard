@@ -153,6 +153,7 @@ protected:
 	RECT rc;
 	RECT playerRC;
 	RECT camRC;
+	RECT astarRC;
 
 	vector<tagHit1> vHit;
 public:
