@@ -366,7 +366,7 @@ void monster::release()
 void monster::commonUpdate()
 {
 	
-	astarRC = RectMakeCenter(pos.x + (img->getFrameWidth() >> 1), pos.y + img->getFrameHeight() - 40, 10, 10);
+	astarRC = RectMakeCenter(pos.x + (img->getFrameWidth() >> 1), pos.y + img->getFrameHeight() - 40, 15, 15);
 	rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
 	POINT position = { getCenterX(), getCenterY() };
