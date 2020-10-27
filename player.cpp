@@ -2142,6 +2142,8 @@ void player::death()
 
 		PORTAL->resetSceneWarp();
 		DROP->resetManager();
+		//아이템 초기화
+		PLAYERDATA->resetInven();
 	}
 }
 //플레이어 피격 데미지
