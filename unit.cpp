@@ -54,7 +54,7 @@ void unit::update()
 
     vUnit.push_back(player);
 
-    for(int i = 0; i < 3; i++) vUnit.push_back(npc[i]);
+    for(int i = 0; i < 2; i++) vUnit.push_back(npc[i]);
 
     vUnit.push_back(chest);
 

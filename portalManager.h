@@ -35,6 +35,8 @@ public:
 
 	void resetSceneWarp();
 
+	void setPortal(tagPortal one, tagPortal two);
+
 	RECT getWarpScene() { return warpScene.rc; }
 
 	float getWarpSceneX() { return warpScene.x; }
@@ -55,7 +57,6 @@ public:
 
 	void setCenterActive(bool check) { centerPortal.isActive = check; }
 
-	void setPortal(tagPortal one, tagPortal two, tagPortal three);
 	void backRender(HDC hdc);
 	void bossScene_backRender(HDC hdc);
 	bool getPortalCol(int index) { return portalPt[index].isCol; }

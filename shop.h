@@ -38,7 +38,7 @@ private:
 public:
 	HRESULT init();
 	void addImage();
-	void generate(POINT arr[3]);
+	void generate(POINT arr[4], POINT potal[4]);
 	void render();
 
 	void colRender();

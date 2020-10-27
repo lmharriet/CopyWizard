@@ -30,11 +30,11 @@ void portalManager::resetSceneWarp()
 	warpScene.rc = RectMakeCenter(10000, 10000, 0, 0);
 }
 
-void portalManager::setPortal(tagPortal one, tagPortal two, tagPortal three)
+void portalManager::setPortal(tagPortal one, tagPortal two)
 {
-	tagPortal arr[] = { one,two,three };
+	tagPortal arr[] = { one,two};
 	
-	for (int i = 0; i < 3; i++)portalPt[i] = arr[i];
+	for (int i = 0; i < 2; i++)portalPt[i] = arr[i];
 }
 
 void portalManager::backRender(HDC hdc)
@@ -46,7 +46,7 @@ void portalManager::backRender(HDC hdc)
 		warpScene.x - sceneStone->getWidth()/2,
 		warpScene.y - sceneStone->getHeight()/2);
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		CAMERAMANAGER->Render(hdc, stone,
 			portalPt[i].curPt.x - stone->getWidth() / 2,
@@ -75,7 +75,7 @@ void portalManager::render(HDC hdc)
 			centerPortal.colorIndex, 0, 120);
 	}
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		CAMERAMANAGER->AlphaFrameRender(hdc, img,
 			portalPt[i].curPt.x - img->getFrameWidth()/2,
@@ -94,7 +94,7 @@ void portalManager::update(RECT rc)
 		}
 	}
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		if (colCheck(rc, portalPt[i].rc)) portalPt[i].isCol = true;
 	}

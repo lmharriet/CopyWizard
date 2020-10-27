@@ -19,7 +19,7 @@ private:
 
 	shared_ptr<zObject> player;
 
-	shared_ptr<zObject> npc[3];
+	shared_ptr<zObject> npc[2];
 	//
 	shared_ptr<zObject> chest;
 

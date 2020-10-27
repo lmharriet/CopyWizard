@@ -3,7 +3,7 @@
 
 HRESULT shop::init()
 {
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 2; i++)
     {
         npc[i].keyName = "";
         npc[i].pt = { 0,0 };
@@ -120,15 +120,15 @@ HRESULT shop::init()
 
     addImage();
 
-    POINT ptArr[3] = { { -2030,-1588 },{ 2062,-68 },{ 1152,2116 } };
-    generate(ptArr);
+    POINT ptArr[5] = { {-1115,-761}, {2612,314},{1534,2270},{2614,2899},{514,2152} };
+    POINT ptPotalArea[5] = { {-906,-840},{2780,247},{1352,2178},{2780,2789},{674,2046} };
+    generate(ptArr, ptPotalArea);
     return S_OK;
 }
 
 void shop::addImage()
 {
     IMAGEMANAGER->addImage("Nox", "Images/npc/blackMarketNPC.bmp", 56, 100, true, RGB(255, 0, 255));
-    IMAGEMANAGER->addImage("Doki", "Images/npc/richNPC.bmp", 82, 112, true, RGB(255, 0, 255));
     IMAGEMANAGER->addImage("Andres", "Images/npc/shopNPC.bmp", 107, 129, true, RGB(255, 0, 255));
 
     IMAGEMANAGER->addImage("oldFabric", "Images/npc/oldFabric.bmp", 360, 126, true, RGB(255, 0, 255));
@@ -145,120 +145,172 @@ void shop::addImage()
     IMAGEMANAGER->addImage("warpStone", "Images/npc/portalStone.bmp", 88, 58, true, RGB(255, 0, 255));
 }
 
-void shop::generate(POINT arr[3])
+void shop::generate(POINT arr[5], POINT potal[5])
 {
-    string ranStr[3] = { "Nox","Doki","Andres" };
-    for (int i = 0; i < 100; i++)
-    {
-        string temp;
-        temp = ranStr[i % 3];
-        int ran = RANDOM->range(0, 2);
-        ranStr[i % 3] = ranStr[ran];
-        ranStr[ran] = temp;
-    }
+    string npcName[2] = { "Nox","Andres" };
 
     image* img = IMAGEMANAGER->findImage("itemFrame");
 
-    tagPortal portal[3];
+    tagPortal portal[2];
 
-    for (int i = 0; i < 3; i++)
+    //nox
+    npc[0].keyName = npcName[0];
+    int noxIndex = RANDOM->range(0, 4);
+    npc[0].pt = arr[noxIndex];
+
+    EFFECT->setAlwaysPoint("curseEffect", npc[0].pt);
+
+    EFFECT->SetCursePoint(
+        { npc[0].pt.x - 90, npc[0].pt.y + 120 },
+        { npc[0].pt.x + 0, npc[0].pt.y + 120 },
+        { npc[0].pt.x + 90, npc[0].pt.y + 120 });
+
+    for (int j = 0; j < 3; j++)
     {
-        npc[i].keyName = ranStr[i];
-        npc[i].pt = arr[i];
-
-        if (npc[i].keyName == "Nox")
-        {
-            EFFECT->setAlwaysPoint("curseEffect", npc[i].pt);
-
-            EFFECT->SetCursePoint(
-                { npc[i].pt.x - 90, npc[i].pt.y + 120 },
-                { npc[i].pt.x +  0, npc[i].pt.y + 120 },
-                { npc[i].pt.x + 90, npc[i].pt.y + 120 });
-
-            for (int j = 0; j < 3; j++)
-            {
-                NoxShop[j].pt = {
-                    npc[i].pt.x - 90 + (j * 90) - img->getFrameWidth() / 2,
-                    npc[i].pt.y + 130 - img->getFrameHeight() / 2 };
-            }
-
-            //Æ÷Å»
-            switch (i)
-            {
-            case 0:
-                portal[i].curPt = { -1932,-1714 };
-                break;
-            case 1:
-                portal[i].curPt = { 2216,-220 };
-                break;
-            case 2:
-                portal[i].curPt = { 1377,1996 };
-                break;
-            }
-            portal[i].endPt = { WINSIZEX / 2, WINSIZEY / 2 - 100 };
-            portal[i].isActive = true;
-            portal[i].isCol = false;
-            portal[i].rc = RectMakeCenter(portal[i].curPt.x, portal[i].curPt.y, 70, 100);
-            portal[i].colorIndex = 2;
-        }
-
-        else if (npc[i].keyName == "Andres")
-        {
-            for (int j = 0; j < 5; j++)
-            {
-                AndresShop[j].pt = {
-                    npc[i].pt.x - 154 + (j * 77) - img->getFrameWidth() / 2,
-                    npc[i].pt.y + 85 - img->getFrameHeight() / 2 };
-            }
-
-            //Æ÷Å»
-            switch (i)
-            {
-            case 0:
-                portal[i].curPt = { -1932,-1714 };
-                break;
-            case 1:
-                portal[i].curPt = { 2216,-220 };
-                break;
-            case 2:
-                portal[i].curPt = { 1377,1996 };
-                break;
-            }
-            portal[i].endPt = { WINSIZEX / 2, WINSIZEY / 2 - 100 };
-            portal[i].isActive = true;
-            portal[i].isCol = false;
-            portal[i].rc = RectMakeCenter(portal[i].curPt.x, portal[i].curPt.y, 70, 100);
-            portal[i].colorIndex = 1;
-        }
-
-        else
-        {
-            //Æ÷Å»
-            switch (i)
-            {
-            case 0:
-                portal[i].curPt = { -1932,-1714 };
-                break;
-            case 1:
-                portal[i].curPt = { 2216,-220 };
-                break;
-            case 2:
-                portal[i].curPt = { 1377,1996 };
-                break;
-            }
-            portal[i].endPt = { WINSIZEX / 2, WINSIZEY / 2 - 100 };
-            portal[i].isActive = true;
-            portal[i].isCol = false;
-            portal[i].rc = RectMakeCenter(portal[i].curPt.x, portal[i].curPt.y, 50, 30);
-            portal[i].colorIndex = 0;
-        }
-        PORTAL->setPortal(portal[0], portal[1], portal[2]);
-
-
-        UNITRENDER->addUnit(i, npc[i].keyName, "npc", { 0,0 }, npc[i].pt.x, npc[i].pt.y);
-
-        //cout << npc[i].keyName << " " << npc[i].pt.x << ", " << npc[i].pt.y << '\n';
+        NoxShop[j].pt = {
+            npc[0].pt.x - 90 + (j * 90) - img->getFrameWidth() / 2,
+            npc[0].pt.y + 130 - img->getFrameHeight() / 2 };
     }
+
+    portal[0].curPt = potal[noxIndex];
+    portal[0].endPt = { WINSIZEX / 2, WINSIZEY / 2 - 100 };
+    portal[0].isActive = true;
+    portal[0].isCol = false;
+    portal[0].rc = RectMakeCenter(portal[0].curPt.x, portal[0].curPt.y, 70, 100);
+    portal[0].colorIndex = 2;
+
+    //andres
+    npc[1].keyName = npcName[1];
+    int rIndex = 0;
+    while (true)
+    {
+        rIndex = RANDOM->range(0, 4);
+        if (rIndex != noxIndex)
+        {
+            npc[1].pt = arr[rIndex];
+            break;
+        }
+    }
+
+    for (int j = 0; j < 5; j++)
+    {
+        AndresShop[j].pt = {
+            npc[1].pt.x - 154 + (j * 77) - img->getFrameWidth() / 2,
+            npc[1].pt.y + 85 - img->getFrameHeight() / 2 };
+    }
+
+    portal[1].curPt = potal[rIndex];
+    portal[1].endPt = { WINSIZEX / 2, WINSIZEY / 2 - 100 };
+    portal[1].isActive = true;
+    portal[1].isCol = false;
+    portal[1].rc = RectMakeCenter(portal[1].curPt.x, portal[1].curPt.y, 70, 100);
+    portal[1].colorIndex = 1;
+
+    for (int i = 0; i < 2; i++)
+    {
+        UNITRENDER->addUnit(i, npc[i].keyName, "npc", { 0,0 }, npc[i].pt.x, npc[i].pt.y);
+    }
+
+    PORTAL->setPortal(portal[0], portal[1]);
+
+    //for (int i = 0; i < 2; i++)
+    //{
+    //    npc[i].keyName = npcName[i];
+    //    npc[i].pt = arr[i];
+
+    //    if (npc[i].keyName == "Nox")
+    //    {
+    //        EFFECT->setAlwaysPoint("curseEffect", npc[i].pt);
+
+    //        EFFECT->SetCursePoint(
+    //            { npc[i].pt.x - 90, npc[i].pt.y + 120 },
+    //            { npc[i].pt.x +  0, npc[i].pt.y + 120 },
+    //            { npc[i].pt.x + 90, npc[i].pt.y + 120 });
+
+    //        for (int j = 0; j < 3; j++)
+    //        {
+    //            NoxShop[j].pt = {
+    //                npc[i].pt.x - 90 + (j * 90) - img->getFrameWidth() / 2,
+    //                npc[i].pt.y + 130 - img->getFrameHeight() / 2 };
+    //        }
+
+    //        //Æ÷Å»
+    //        switch (i)
+    //        {
+    //        case 0:
+    //            portal[i].curPt = { -1932,-1714 };
+    //            break;
+    //        case 1:
+    //            portal[i].curPt = { 2216,-220 };
+    //            break;
+    //        case 2:
+    //            portal[i].curPt = { 1377,1996 };
+    //            break;
+    //        }
+    //        portal[i].endPt = { WINSIZEX / 2, WINSIZEY / 2 - 100 };
+    //        portal[i].isActive = true;
+    //        portal[i].isCol = false;
+    //        portal[i].rc = RectMakeCenter(portal[i].curPt.x, portal[i].curPt.y, 70, 100);
+    //        portal[i].colorIndex = 2;
+    //    }
+
+    //    else if (npc[i].keyName == "Andres")
+    //    {
+    //        for (int j = 0; j < 5; j++)
+    //        {
+    //            AndresShop[j].pt = {
+    //                npc[i].pt.x - 154 + (j * 77) - img->getFrameWidth() / 2,
+    //                npc[i].pt.y + 85 - img->getFrameHeight() / 2 };
+    //        }
+
+    //        //Æ÷Å»
+    //        switch (i)
+    //        {
+    //        case 0:
+    //            portal[i].curPt = { -1932,-1714 };
+    //            break;
+    //        case 1:
+    //            portal[i].curPt = { 2216,-220 };
+    //            break;
+    //        case 2:
+    //            portal[i].curPt = { 1377,1996 };
+    //            break;
+    //        }
+    //        portal[i].endPt = { WINSIZEX / 2, WINSIZEY / 2 - 100 };
+    //        portal[i].isActive = true;
+    //        portal[i].isCol = false;
+    //        portal[i].rc = RectMakeCenter(portal[i].curPt.x, portal[i].curPt.y, 70, 100);
+    //        portal[i].colorIndex = 1;
+    //    }
+
+    //    else
+    //    {
+    //        //Æ÷Å»
+    //        switch (i)
+    //        {
+    //        case 0:
+    //            portal[i].curPt = { -1932,-1714 };
+    //            break;
+    //        case 1:
+    //            portal[i].curPt = { 2216,-220 };
+    //            break;
+    //        case 2:
+    //            portal[i].curPt = { 1377,1996 };
+    //            break;
+    //        }
+    //        portal[i].endPt = { WINSIZEX / 2, WINSIZEY / 2 - 100 };
+    //        portal[i].isActive = true;
+    //        portal[i].isCol = false;
+    //        portal[i].rc = RectMakeCenter(portal[i].curPt.x, portal[i].curPt.y, 50, 30);
+    //        portal[i].colorIndex = 0;
+    //    }
+    //    PORTAL->setPortal(portal[0], portal[1], portal[2]);
+
+
+    //    UNITRENDER->addUnit(i, npc[i].keyName, "npc", { 0,0 }, npc[i].pt.x, npc[i].pt.y);
+
+    //    //cout << npc[i].keyName << " " << npc[i].pt.x << ", " << npc[i].pt.y << '\n';
+    //}
 }
 
 void shop::render()
