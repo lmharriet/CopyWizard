@@ -176,6 +176,7 @@
     <ClInclude Include="itemManager.h" />
     <ClInclude Include="loading.h" />
     <ClInclude Include="loadingScene.h" />
+    <ClInclude Include="lobbyScene.h" />
     <ClInclude Include="mainGame.h" />
     <ClInclude Include="mapToolScene.h" />
     <ClInclude Include="knight.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="itemManager.cpp" />
     <ClCompile Include="loading.cpp" />
     <ClCompile Include="loadingScene.cpp" />
+    <ClCompile Include="lobbyScene.cpp" />
     <ClCompile Include="mainGame.cpp" />
     <ClCompile Include="mapToolScene.cpp" />
     <ClCompile Include="knight.cpp" />

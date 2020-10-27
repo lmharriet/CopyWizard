@@ -19,6 +19,7 @@ HRESULT mainGame::init()
 
 	SCENEMANAGER->addScene("로딩화면", make_shared<loadingScene>());
 	SCENEMANAGER->addScene("시작화면", make_shared <startScene>());
+	SCENEMANAGER->addScene("로비화면", make_shared<lobbyScene>());
 	SCENEMANAGER->addScene("인게임", make_shared<gameScene>());
 	SCENEMANAGER->addScene("보스방", make_shared<bossScene>());
 	SCENEMANAGER->addScene("최종보스방", make_shared<finalBossScene>());
@@ -31,6 +32,7 @@ HRESULT mainGame::init()
 
 	//SCENEMANAGER->loadScene("인게임");
 	SCENEMANAGER->loadScene("시작화면");
+	//SCENEMANAGER->loadScene("로비화면");
 	//SCENEMANAGER->loadScene("맵툴제작");
 	//SCENEMANAGER->loadScene("보스방");
 	//SCENEMANAGER->loadScene("최종보스방");
@@ -183,6 +185,7 @@ void mainGame::soundInit()
 	SOUNDMANAGER->addSound("mapToolBGM", "Sound/MapToolBGM.mp3", true, true);
 	SOUNDMANAGER->addSound("ingameBGM", "Sound/IngameBGM.mp3", true, true);
 	SOUNDMANAGER->addSound("bossBGM", "Sound/BossBGM.mp3", true, true);
+	SOUNDMANAGER->addSound("lobbyBGM", "Sound/PlayerRoom.mp3", true, true);
 	
 	volume = 0.5f;
 	

@@ -66,7 +66,7 @@ void startScene::update()
 			case 0:
 				SOUNDMANAGER->stop("titleBGM");
 				
-				SCENEMANAGER->loadScene("로딩화면");
+				SCENEMANAGER->loadScene("로비화면");
 				break;
 			case 1:
 				SOUNDMANAGER->stop("titleBGM");
