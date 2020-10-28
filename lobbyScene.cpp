@@ -63,7 +63,7 @@ void lobbyScene::render()
 	_player->render(1);
 	PARTICLE->render(getMemDC());
 	UI->render(getMemDC(),50,50);
-	
+	_player->invenRender();
 
 	viewText();
 }
