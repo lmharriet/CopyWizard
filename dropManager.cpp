@@ -196,7 +196,7 @@ void dropManager::gemDropPoint(POINT pt)
 	gem.gemMoney = 1;
 	gem.speed = 0.2f;
 	gem.currentFrameX = 0;
-	gem.rc = RectMakeCenter(pt.x, pt.y, 50, 50);
+	gem.rc = RectMakeCenter(pt.x, pt.y, 30, 30);
 	vGem.push_back(gem);
 }
 
