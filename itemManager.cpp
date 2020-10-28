@@ -486,7 +486,12 @@ tagItem itemManager::getRandomItem(bool Normal)
 {
 	int ranNum = 0;
 
-	if (Normal) ranNum = RANDOM->range(1, 11); // normal
+	if (Normal)
+	{
+		ranNum = RANDOM->range(1, 11); // normal
+
+		while(ranNum == 2) ranNum = RANDOM->range(1, 11);
+	}
 
 	else ranNum = RANDOM->range(12, vItem.size() - 1); // curse
 
