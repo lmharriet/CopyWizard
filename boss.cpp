@@ -28,7 +28,7 @@ HRESULT boss::init(int _posX, int _posY)
 	boss.center.y = posY;
 	boss.rc = RectMakeCenter(boss.center.x, boss.center.y, 150, 150);
 	boss.angle = 0;
-	boss.bossHp = 2000;
+	boss.bossHp = 20;
 	boss.isHit = false;
 
 	posPlayer = 5;
@@ -1026,6 +1026,12 @@ void boss::bossPattern()
 			isFinalAttack = true;
 			SOUNDMANAGER->play("bossFinalATK_start", false,-0.3f);
 			pattern = 6;
+		}
+		if (pattern == 6) {
+			_player->setWarp(true);
+		}
+		else {
+			_player->setWarp(false);
 		}
 		patternStart = true;
 	}
