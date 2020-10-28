@@ -227,6 +227,7 @@ void gameScene::render()
 	}
 
 	DROP->coinEffectRender(getMemDC());
+	DROP->gemEffectRender(getMemDC());
 
 	_shop->colRender();
 

@@ -1118,6 +1118,7 @@ void player::takeGem()
 			PLAYERDATA->setGem(PLAYERDATA->getGem() + DROP->getGemVec()[i].gemMoney);
 			DROP->delGem(i);
 			SOUNDMANAGER->play("coinGet", false, 0.13f);
+			DROP->getGemEffect();
 		}
 	}
 }

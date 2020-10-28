@@ -105,6 +105,7 @@ public:
 	void update();
 	void render(HDC hdc);
 	void cardRender(HDC hdc);
+	void gemEffectRender(HDC hdc);
 	void coinEffectRender(HDC hdc);
 	void dropPoint(POINT pt, int minCoin, int maxCoin, float healBallpercentage = 0.f, POINT rangeX = { -20,20 }, POINT rangeY = { -10,10 });
 	void gemDropPoint(POINT pt);
@@ -114,6 +115,8 @@ public:
 	void coinGenerator();
 
 	void getCoinEffect(int money);
+
+	void getGemEffect();
 
 	void dropPoint_heal(POINT pt, POINT rangeNum, POINT rangeX, POINT rangeY);
 

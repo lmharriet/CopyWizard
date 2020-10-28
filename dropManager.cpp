@@ -125,6 +125,43 @@ void dropManager::cardRender(HDC hdc)
     }
 }
 
+void dropManager::gemEffectRender(HDC hdc)
+{
+    //하나씩 전달
+    if (saveGemView.size() > 0)
+    {
+        cTime++;
+
+        if (cTime % 10 == 0)
+        {
+            gemView.push_back(saveGemView[0]);
+            saveGemView.erase(saveGemView.begin());
+            cTime = 0;
+        }
+    }
+
+    //coin drop render
+    for (int i = 0; i < gemView.size();)
+    {
+        //렌더
+        image* img = IMAGEMANAGER->findImage(gemView[i].keyName);
+        img->alphaRender(hdc, gemView[i].pt.x, gemView[i].pt.y, gemView[i].curOpacity);
+
+        //이동
+        gemView[i].pt.y -= 2;
+
+        //투명도 변경
+        gemView[i].curOpacity -= 5;
+
+        //삭제
+        if (gemView[i].curOpacity == 0.f)
+        {
+            gemView.erase(gemView.begin() + i);
+        }
+        else i++;
+    }
+}
+
 void dropManager::coinEffectRender(HDC hdc)
 {
     //하나씩 전달
@@ -304,6 +341,18 @@ void dropManager::getCoinEffect(int money)
     }
 
     saveCoinView.push_back(cView);
+}
+
+void dropManager::getGemEffect()
+{
+    tagGemView gView;
+
+    gView.keyName = "vGem";
+    gView.curOpacity = 255;
+    gView.speed = 3.f;
+    gView.pt = { WINSIZEX / 2 - 22, WINSIZEY - 80 };
+
+    saveGemView.push_back(gView);
 }
 
 void dropManager::dropPoint_heal(POINT pt, POINT rangeNum, POINT rangeX, POINT rangeY)
