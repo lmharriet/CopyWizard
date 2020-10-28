@@ -79,7 +79,7 @@ public:
 	int getMaxHp() { return maxHp; }
 	int getHp() { return hp; }
 	int getCoin() { return coin; }
-	int getJam() { return iniData::getSingleton()->loadDataInteger("playerData", "playerData", "playerJam");}
+	int getGem() { return iniData::getSingleton()->loadDataInteger("playerData", "playerData", "playerGem");}
 	float getX() { return _x; }
 	float getY() { return _y; }
 
@@ -93,7 +93,7 @@ public:
 
 	void setHp(int _hp) { hp = _hp; }
 	void setCoin(int _coin) { coin = _coin; }
-	void setJam(int _jam);
+	void setGem(int _gem);
 
 	void setX(float x) { _x = x; }
 	void setY(float y) { _y = y; }

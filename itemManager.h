@@ -40,6 +40,7 @@ private:
 
 public:
 	HRESULT init();
+	void addStartItem();
 	void addImage();
 	void addItem(string keyName, float damage, float criDamage, float criChance, int maxHp,
 		float potionDropChance, float defenceChance, float burnChance, bool goldPig, int CoolTimeReduction,

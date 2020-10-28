@@ -139,6 +139,7 @@ public:
 
 
 	void takeCoin();
+	void takeGem();
 	void takeHealball();
 
 	//collision detection

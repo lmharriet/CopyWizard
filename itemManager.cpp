@@ -206,7 +206,6 @@ HRESULT itemManager::init()
 		"최대 체력이 100 감소하거나 증가하고, 공격력이 20% 감소하거나 증가 한다.",
 		{ 7,2 });
 
-	//구현 중 (monster.cpp)
 	addItem(
 		"흡혈의 카타나", 0, 0, 0, -200, 0, 0, 0, 
 		false, 0, false, 
@@ -216,8 +215,118 @@ HRESULT itemManager::init()
 		"최대 체력이 200 감소하지만 몬스터를 잡을 때 마다 일정 체력을 회복 한다.",
 		{ 8,2 });
 
+	//start scene item
+	addStartItem();
+
 	addImage();
 	return S_OK;
+}
+
+void itemManager::addStartItem()
+{
+	addItem("힘의 조각", 0.05f, 0, 0, 0, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"데미지가 5% 증가한다.",
+		{ 0,0 });
+
+	addItem("힘법사의 도끼", 0.1f, 0, 0, 0, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"데미지가 10% 증가한다.",
+		{ 0,0 });
+
+	addItem("오거파워건틀릿", 0.15f, 0, 0, 0, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"데미지가 15% 증가한다.",
+		{ 0,0 });
+
+	addItem("철갑옷", 0, 0, 0, 25, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"최대 체력이 25 증가한다.",
+		{ 0,0 });
+
+	addItem("뼈갑옷", 0, 0, 0, 50, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"최대 체력이 50 증가한다.",
+		{ 0,0 });
+
+	addItem("황금갑옷", 0, 0, 0, 100, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"최대 체력이 100 증가한다.",
+		{ 0,0 });
+
+	addItem("낡은 단검", 0, 0.05f, 0.25f, 0, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"크리티컬 확률이 25%, 크리티컬 데미지가 5% 증가한다.",
+		{ 0,0 });
+
+	addItem("마법사의 단검", 0, 0.1f, 0.05f, 0, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"크리티컬 확률이 15%, 크리티컬 데미지가 10% 증가한다.",
+		{ 0,0 });
+
+	addItem("황금 단검", 0, 0.15f, 0.05f, 0, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"크리티컬 확률이 5%, 크리티컬 데미지가 15% 증가한다.",
+		{ 0,0 });
+
+	addItem("저격수의 고글", 0, 0, 0.25f, 0, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"크리티컬 확률이 25% 증가한다.",
+		{ 0,0 });
+
+	addItem("톱니바퀴", 0, 0.15f, 0, 0, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"크리티컬 데미지가 15% 증가한다.",
+		{ 0,0 });
+
+	addItem("집중의 로브", 0, 0, 0, 0, 0, 0, 0,
+		false, 1, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"스킬 쿨타임을 1초 감소시킨다.",
+		{ 0,0 });
+
+	addItem("활력의 심장", 0, 0, 0, 0, 0.1f, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"포인 드랍률이 10% 증가한다.",
+		{ 0,0 });
 }
 
 void itemManager::addImage()

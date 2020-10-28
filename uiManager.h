@@ -63,6 +63,8 @@ public:
 
 	void coinRender(HDC hdc);
 
+	void GamRender(HDC hdc);
+
 	void skillRender(HDC hdc);
 
 	void setCoin(int num) { coin = num; }

@@ -112,11 +112,11 @@ void playerData::shroudRender(HDC hdc)
 	else gShroud.curSize = 0;
 }
 
-void playerData::setJam(int _jam)
+void playerData::setGem(int _gem)
 {
-	char cJam[60];
-	sprintf(cJam, "%d", _jam);
-	INIDATA->addData("playerData", "playerJam", cJam);
+	char cGem[60];
+	sprintf(cGem, "%d", _gem);
+	INIDATA->addData("playerData", "playerGem", cGem);
 	INIDATA->saveINI("playerData");
 }
 

@@ -8,6 +8,7 @@ HRESULT uiManager::init()
 	IMAGEMANAGER->addImage("skillGaugeBar", "Images/ui/gaugeBar.bmp", 184, 20);
 	IMAGEMANAGER->addImage("skillGaugeBar_ult", "Images/ui/gaugeBar_ult.bmp", 184, 20);
 	IMAGEMANAGER->addImage("uiCoin", "Images/ui/coin.bmp", 21, 17, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("uiGem", "Images/ui/gem.bmp", 15, 25, true, RGB(255, 0, 255));
 
 	IMAGEMANAGER->addFrameImage("pictureFrame", "Images/ui/pictureFrame.bmp", 96, 48, 2, 1);
 
@@ -175,6 +176,7 @@ void uiManager::render(HDC hdc, int destX, int destY)
 {
 	infoRender(hdc, destX, destY);
 	coinRender(hdc);
+	GamRender(hdc);
 	skillRender(hdc);
 
 	if (blackOpacity > 0)
@@ -275,6 +277,39 @@ void uiManager::coinRender(HDC hdc)
 		else
 		{
 			img->frameRender(hdc, WINSIZEX / 2 - 20 + (i * 17), WINSIZEY - 55, tmp[i + 2], 0);
+		}
+	}
+}
+
+void uiManager::GamRender(HDC hdc)
+{
+	image* img = IMAGEMANAGER->findImage("uiGem");
+	img->render(hdc, WINSIZEX / 2 - 48, WINSIZEY - 90);
+
+	int gemCount = PLAYERDATA->getGem();
+
+	int tmp[3] = { gemCount / 100, gemCount / 10 % 10, gemCount % 10 };
+
+	img = IMAGEMANAGER->findImage("numbers");
+
+	bool n100 = gemCount >= 100; // 세 자리 수 ?
+	bool n10 = gemCount >= 10;  // 두 자리 수 ?
+
+	int cycle = n100 + n10 + 1;
+
+	for (int i = 0; i < cycle; i++)
+	{
+		if (n100)
+		{
+			img->frameRender(hdc, WINSIZEX / 2 - 20 + (i * 17), WINSIZEY - 92, tmp[i], 0);
+		}
+		else if (n10)
+		{
+			img->frameRender(hdc, WINSIZEX / 2 - 20 + (i * 17), WINSIZEY - 92, tmp[i + 1], 0);
+		}
+		else
+		{
+			img->frameRender(hdc, WINSIZEX / 2 - 20 + (i * 17), WINSIZEY - 92, tmp[i + 2], 0);
 		}
 	}
 }
