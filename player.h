@@ -108,6 +108,7 @@ private:
 
 	//fix
 	bool isDungeonPotal;
+	bool notWarp;
 public:
 	HRESULT init();
 	void release();
@@ -201,6 +202,9 @@ public:
 	void setTileAd(tagTile* _tile) { tile = _tile; }
 	void setTileAd0(vector<int> _vTile) { vTile = _vTile; }
 	void setTileAd1(vector<int> _vWall) { vWall = _vWall; }
+
+	//
+	void setWarp(bool temp) { notWarp = temp; }
 
 	player() {}
 	~player() {}

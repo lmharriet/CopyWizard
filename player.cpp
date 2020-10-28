@@ -91,6 +91,8 @@ HRESULT player::init()
 	//sound
 	walkCount = 0;
 
+	notWarp = false;
+
 	return S_OK;
 }
 
@@ -2074,18 +2076,21 @@ void player::colorCheck(image* img)
 		}
 	}
 
-	int temp = 0;
-	for (int i = 0; i < 8; i++)
+	if (notWarp == false)
 	{
-		temp += tileCheck[i].isCol;
-		if (i < 4) temp += diagonalCheck[i].isCol;
-	}
+		int temp = 0;
+		for (int i = 0; i < 8; i++)
+		{
+			temp += tileCheck[i].isCol;
+			if (i < 4) temp += diagonalCheck[i].isCol;
+		}
 
-	if (temp < 7) return;
-	posX = img->getWidth() / 2;
-	posY = img->getHeight() / 2;
-	EFFECT->setBackEffect("portal0", {(long)posX,(long)posY}, 10);
-	SOUNDMANAGER->play("portalIN", false);
+		if (temp < 7) return;
+		posX = img->getWidth() / 2;
+		posY = img->getHeight() / 2;
+		EFFECT->setBackEffect("portal0", { (long)posX,(long)posY }, 10);
+		SOUNDMANAGER->play("portalIN", false);
+	}
 }
 
 void player::makeCol(int index, int destX, int destY, int rcSize)
