@@ -118,7 +118,12 @@ void finalBossScene::update()
 
 
 	//pixel collision
-	_player->colorCheck(IMAGEMANAGER->findImage("finalbackframe"));
+	if (!mapChange) {
+		_player->colorCheck(IMAGEMANAGER->findImage("finalframe"));
+	}
+	else {
+		_player->colorCheck(IMAGEMANAGER->findImage("finalbackframe"));
+	}
 
 	//cutScene check
 	bossCutScene();
