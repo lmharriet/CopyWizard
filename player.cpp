@@ -185,6 +185,7 @@ void player::update()
 	skillGaugeSetUp();
 
 	takeCoin();
+	takeGem();
 	takeHealball();
 
 	// camera가 따라가는 대상
@@ -199,7 +200,7 @@ void player::update()
 		{
 			PLAYERDATA->init();
 			restartCount = 0;
-			SCENEMANAGER->loadScene("시작화면");
+			SCENEMANAGER->loadScene("로비화면");
 
 		}
 	}
@@ -310,6 +311,7 @@ void player::other_update()
 
 
 	takeCoin();
+	takeGem();
 	takeHealball();
 
 	// camera가 따라가는 대상
@@ -323,7 +325,7 @@ void player::other_update()
 		{
 			PLAYERDATA->init();
 			restartCount = 0;
-			SCENEMANAGER->loadScene("시작화면");
+			SCENEMANAGER->loadScene("로비화면");
 		}
 	}
 
@@ -607,12 +609,13 @@ void player::skillInit()
 		//arcana[5].explanation = spear->getInfo().explanation; //"";
 		//arcana[5].coolTime = 0;//spear->getInfo().coolTime;//0;
 
-
 		for (int i = 0; i < ARCANA_SLOT; i++)
 		{
 			UI->setSkillSlot(arcana[i].skillName, arcana[i].coolTime);
 			PLAYERDATA->pushArcanaInfo(arcana[i]);
 		}
+
+		cout << PLAYERDATA->getAracaInfo().size() << '\n';
 	}
 }
 
@@ -1101,6 +1104,19 @@ void player::takeCoin()
 			if (PLAYERDATA->getStat().goldPig)PLAYERDATA->setCoin(PLAYERDATA->getCoin() + RANDOM->range(1, 2));
 
 			DROP->delCoin(i);
+			SOUNDMANAGER->play("coinGet", false, 0.13f);
+		}
+	}
+}
+
+void player::takeGem()
+{
+	for (int i = 0; i < DROP->getGemVec().size(); i++)
+	{
+		if (colCheck(rc, DROP->getGemRect(i)))
+		{
+			PLAYERDATA->setGem(PLAYERDATA->getGem() + DROP->getGemVec()[i].gemMoney);
+			DROP->delGem(i);
 			SOUNDMANAGER->play("coinGet", false, 0.13f);
 		}
 	}

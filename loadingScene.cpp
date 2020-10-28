@@ -5,11 +5,12 @@ HRESULT loadingScene::init()
 {
 
 	//로딩클래스 초기화
-	if (_loading[STARTSTAGE] == nullptr)
-	{
-		PLAYERDATA->init();
-		//currentLoading = STARTSTAGE;
-	}
+	//if (_loading[STARTSTAGE] == nullptr)
+	//{
+	//	cout << "init " << '\n';
+	//	PLAYERDATA->init();
+	//	//currentLoading = STARTSTAGE;
+	//}
 	currentLoading = PLAYERDATA->getCurrentStage();
 	switch (currentLoading)
 	{

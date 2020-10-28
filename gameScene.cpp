@@ -6,7 +6,7 @@ gameScene::gameScene() :
 
 HRESULT gameScene::init()
 {
-	UI->init();
+	//UI->init();
 	DROP->init();
 
 	if (_player == nullptr)

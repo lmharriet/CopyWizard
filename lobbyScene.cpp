@@ -4,6 +4,7 @@
 HRESULT lobbyScene::init()
 {
 	PLAYERDATA->init();
+
 	UI->init();
 	PARTICLE->init();
 	EFFECT->init();
@@ -14,13 +15,14 @@ HRESULT lobbyScene::init()
 	
 	_player = new player;
 	_player->init();
-	
+	_player->setX(1184);
+	_player->setY(1176);
 	image* img = IMAGEMANAGER->findImage("lobbyRoom");
 
 	CAMERAMANAGER->init(_player->getX(), _player->getY(), img->getWidth() * 2, img->getHeight() * 2,
 		-img->getWidth(), -img->getHeight(), WINSIZEX / 2, WINSIZEY / 2);
 
-	rc = RectMakeCenter(1184, 1400, 200, 200);
+	rc = RectMakeCenter(1184, 1400, 100, 100);
 
 	return S_OK;
 }
@@ -54,6 +56,7 @@ void lobbyScene::update()
 void lobbyScene::render()
 {
 	CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("lobbyRoom"),0,0);
+	CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	_player->attackCircleRender();
 	EFFECT->render(getMemDC());
 	_player->render(1);
@@ -61,7 +64,6 @@ void lobbyScene::render()
 	UI->render(getMemDC(),50,50);
 	
 
-	CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	viewText();
 }
 
