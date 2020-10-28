@@ -4,7 +4,7 @@
 HRESULT lobbyScene::init()
 {
 	PLAYERDATA->init();
-
+	PLAYERDATA->setHp(PLAYERDATA->getMaxHp());
 	UI->init();
 	PARTICLE->init();
 	EFFECT->init();
@@ -15,14 +15,14 @@ HRESULT lobbyScene::init()
 	
 	_player = new player;
 	_player->init();
-	_player->setX(1184);
-	_player->setY(1176);
+	_player->setX(2266);
+	_player->setY(2936);
 	image* img = IMAGEMANAGER->findImage("lobbyRoom");
 
 	CAMERAMANAGER->init(_player->getX(), _player->getY(), img->getWidth() * 2, img->getHeight() * 2,
 		-img->getWidth(), -img->getHeight(), WINSIZEX / 2, WINSIZEY / 2);
 
-	rc = RectMakeCenter(1184, 1400, 100, 100);
+	rc = RectMakeCenter(2266, 222, 100, 100);
 
 	return S_OK;
 }
@@ -44,7 +44,7 @@ void lobbyScene::update()
 		SCENEMANAGER->loadScene("로딩화면");
 	}
 	
-	image* img = IMAGEMANAGER->findImage("lobbyRoom");
+	image* img = IMAGEMANAGER->findImage("lobbyBack");
 	_player->colorCheck(img);
 
 	PARTICLE->explosionActive();
@@ -55,6 +55,7 @@ void lobbyScene::update()
 
 void lobbyScene::render()
 {
+	CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("lobbyBack"),0,0);
 	CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("lobbyRoom"),0,0);
 	CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	_player->attackCircleRender();
@@ -69,7 +70,8 @@ void lobbyScene::render()
 
 void lobbyScene::addImage()
 {
-	IMAGEMANAGER->addImage("lobbyRoom", "resource/lobby/dummy.bmp", 1181*2, 834*2, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("lobbyRoom", "resource/lobby/lobbyMap.bmp", 4500, 3150, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("lobbyBack", "resource/lobby/lobbyCol2.bmp", 4500, 3150, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerFrame_small1.bmp", 1000, 2500, 10, 25);
 	IMAGEMANAGER->addFrameImage("PlayerAttackCircle", "resource/player/PlayerAttackCircle1.bmp", 3600, 100, 36, 1);
 	IMAGEMANAGER->addFrameImage("meteor", "resource/player/meteor.bmp", 1200, 250, 6, 1);
@@ -77,7 +79,7 @@ void lobbyScene::addImage()
 	IMAGEMANAGER->addFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
 	IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerSpearFrame.bmp", 400, 400, 4, 4);
 	IMAGEMANAGER->addFrameImage("playerSpearFrame", "resource/player/playerSpearFrame.bmp", 400, 400, 4, 4);
-
+	
 }
 
 void lobbyScene::viewText()
