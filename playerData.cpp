@@ -116,8 +116,8 @@ void playerData::setGem(int _gem)
 {
 	char cGem[60];
 	sprintf(cGem, "%d", _gem);
-	INIDATA->addData("playerData", "playerGem", cGem);
-	INIDATA->saveINI("playerData");
+	INIDATA->addData("playerGem", "GEM", cGem);
+	INIDATA->saveINI("INI/PLAYERDATA");
 }
 
 void playerData::setStat(string itemName)

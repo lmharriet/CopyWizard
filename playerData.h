@@ -79,7 +79,7 @@ public:
 	int getMaxHp() { return maxHp; }
 	int getHp() { return hp; }
 	int getCoin() { return coin; }
-	int getGem() { return iniData::getSingleton()->loadDataInteger("playerData", "playerData", "playerGem");}
+	int getGem() { return iniData::getSingleton()->loadDataInteger("INI/PLAYERDATA", "playerGem", "GEM");}
 	float getX() { return _x; }
 	float getY() { return _y; }
 
