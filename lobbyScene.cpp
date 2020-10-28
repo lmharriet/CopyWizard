@@ -3,15 +3,15 @@
 
 HRESULT lobbyScene::init()
 {
+	PARTICLE->init();
+	UI->init();
 	PLAYERDATA->init();
 	PLAYERDATA->setHp(PLAYERDATA->getMaxHp());
-	UI->init();
-	PARTICLE->init();
-	EFFECT->init();
 	ITEM->init();
 	DAMAGE->init();
 
 	addImage();
+	EFFECT->init();
 	
 	_player = new player;
 	_player->init();

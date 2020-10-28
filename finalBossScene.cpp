@@ -200,6 +200,8 @@ void finalBossScene::render()
 
 	EFFECT->pRender(getMemDC());
 
+	PORTAL->render(getMemDC());
+
 	_player->attackCircleRender();
 
 	if(endCutTime == 0) _player->render(1);

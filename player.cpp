@@ -2033,6 +2033,7 @@ void player::tileCol()
 	}
 }
 
+
 void player::colorCheck(image* img)
 {
 	for (int i = 0; i < 8; i++)
@@ -2040,7 +2041,8 @@ void player::colorCheck(image* img)
 		tileCheck[i].isCol = false;
 		if (i < 4)diagonalCheck[i].isCol = false;
 	}
-
+	
+	
 	for (int i = 0; i < 8; i++)
 	{
 		int x = getRcCenterX(tileCheck[i].rc);
@@ -2070,6 +2072,18 @@ void player::colorCheck(image* img)
 			if (r == 255 && g == 0 && b == 255) diagonalCheck[i].isCol = true;
 		}
 	}
+
+	int temp = 0;
+	for (int i = 0; i < 8; i++)
+	{
+		temp += tileCheck[i].isCol;
+		if (i < 4) temp += diagonalCheck[i].isCol;
+	}
+
+	if (temp < 7) return;
+	posX = img->getWidth() / 2;
+	posY = img->getHeight() / 2;
+	EFFECT->setPortalEffect({ (LONG)posX,(LONG)posY });
 }
 
 void player::makeCol(int index, int destX, int destY, int rcSize)
