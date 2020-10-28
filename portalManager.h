@@ -26,7 +26,7 @@ class portalManager : public singletonBase <portalManager>
 {
 private:
 	tagPortal centerPortal;
-	tagPortal portalPt[3];
+	tagPortal portalPt[2];
 	
 	tagWarpScene warpScene;
 public:
@@ -62,7 +62,7 @@ public:
 	bool getPortalCol(int index) { return portalPt[index].isCol; }
 	POINT getPortalcurPt(int index) { return portalPt[index].curPt; }
 	POINT getPortalEndPt(int index) { return portalPt[index].endPt; }
-	void resetCol() { for (int i = 0; i < 3; i++)portalPt[i].isCol = false; }
+	void resetCol() { for (int i = 0; i < 2; i++)portalPt[i].isCol = false; }
 	int getPortalColor(int index) { return portalPt[index].colorIndex; }
 
 

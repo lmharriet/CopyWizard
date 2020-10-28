@@ -616,8 +616,6 @@ void player::skillInit()
 			UI->setSkillSlot(arcana[i].skillName, arcana[i].coolTime);
 			PLAYERDATA->pushArcanaInfo(arcana[i]);
 		}
-
-		cout << PLAYERDATA->getAracaInfo().size() << '\n';
 	}
 }
 

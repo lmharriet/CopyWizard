@@ -392,7 +392,7 @@ void itemManager::addStartItem()
 
 void itemManager::addImage()
 {
-	IMAGEMANAGER->addFrameImage("itemFrame", "Images/item/ItemSprite.bmp", 360, 120, 9, 6);
+	IMAGEMANAGER->addFrameImage("itemFrame", "Images/item/ItemSprite.bmp", 360, 240, 9, 6);
 	IMAGEMANAGER->addImage("glassEffect", "Images/item/brokenGlass.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 }
 

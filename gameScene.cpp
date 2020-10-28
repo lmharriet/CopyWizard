@@ -815,7 +815,7 @@ void gameScene::warp()
 		//cout << "Áß¾Ó->N" << name << '\n';
 	}
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		if (PORTAL->getPortalCol(i) == false)continue;
 		UI->fadeIn();
