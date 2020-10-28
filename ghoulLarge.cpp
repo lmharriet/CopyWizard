@@ -31,7 +31,7 @@ void ghoulLarge::update()
     {
         if (!isATK)
         {
-            astarRC = RectMake(pos.x + (img->getFrameWidth()>>1), pos.y+img->getFrameHeight()-40, 10,10);
+            astarRC = RectMake(pos.x + (img->getFrameWidth()>>1), pos.y+img->getFrameHeight()-40, 30,30);
             RECT playerAstarRC = RectMakeCenter(playerRC.left ,playerRC.top, 2, 10);
             astar->update(camRC, astarRC, playerRC, &angle);  // 에이스타에서 앵글 받아옴
             if (astar->getFirstTile() && !isDie) // 걸을 때
