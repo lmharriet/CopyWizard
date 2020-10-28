@@ -2083,7 +2083,8 @@ void player::colorCheck(image* img)
 	if (temp < 7) return;
 	posX = img->getWidth() / 2;
 	posY = img->getHeight() / 2;
-	EFFECT->setPortalEffect({ (LONG)posX,(LONG)posY });
+	EFFECT->setBackEffect("portal0", {(long)posX,(long)posY}, 10);
+	SOUNDMANAGER->play("portalIN", false);
 }
 
 void player::makeCol(int index, int destX, int destY, int rcSize)

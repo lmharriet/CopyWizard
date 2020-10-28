@@ -113,6 +113,9 @@ void loadingScene::loadingImage()
 		IMAGEMANAGER->addFrameImage("ghoulLarge", "resource/enemy/ghoulKing.bmp", 1050, 1500, 7, 10);
 		IMAGEMANAGER->addFrameImage("ghoulLargeHit", "resource/enemy/ghoulKingHit.bmp", 1050, 1500, 7, 10);
 		
+		//포탈이미지
+		IMAGEMANAGER->addImage("sceneWarpStone", "Images/object/sceneWarpStone.bmp", 136, 130, true, RGB(255, 0, 255));
+
 		//스킬 이미지
 		IMAGEMANAGER->addFrameImage("smallSlash", "resource/enemyEffect/smallSlash.bmp", 600, 1200, 3, 6);
 		IMAGEMANAGER->addFrameImage("knightSlashL", "resource/enemyEffect/knightSlashL.bmp", 246, 82, 3, 1);
