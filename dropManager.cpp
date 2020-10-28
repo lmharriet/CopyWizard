@@ -4,11 +4,14 @@
 HRESULT dropManager::init()
 {
     IMAGEMANAGER->addFrameImage("coin", "Images/item/coinV3.bmp", 80, 60, 4, 3);
+    IMAGEMANAGER->addFrameImage("gem", "Images/item/gem.bmp", 128, 26, 8, 1);
     IMAGEMANAGER->addFrameImage("healBall", "Images/item/healing ball.bmp", 300, 50, 6, 1);
 
     IMAGEMANAGER->addImage("bronzeCoin", "Images/effect/bronzeCoin.bmp", 21, 12, true, RGB(255, 0, 255));
     IMAGEMANAGER->addImage("silverCoin", "Images/effect/silverCoin.bmp", 21, 12, true, RGB(255, 0, 255));
     IMAGEMANAGER->addImage("goldCoin", "Images/effect/goldCoin.bmp", 21, 12, true, RGB(255, 0, 255));
+
+    IMAGEMANAGER->addImage("vGem", "Images/effect/gem.bmp", 20, 18, true, RGB(255, 0, 255));
 
     dtime = 0;
     cTime = 0;
@@ -72,9 +75,10 @@ void dropManager::render(HDC hdc)
     }
 
 	//gem render
-	//image* img = IMAGEMANAGER->findImage("gem");
+	img = IMAGEMANAGER->findImage("gem");
 
-	for (int i = 0; i < vGem.size(); i++) {
+	for (int i = 0; i < vGem.size(); i++) 
+    {
 		float angle = getAngle(vGem[i].pt.x, vGem[i].pt.y, PLAYERDATA->getX(), PLAYERDATA->getY());
 		vGem[i].pt.x += cosf(angle) * vGem[i].speed;
 		vGem[i].pt.y += -sinf(angle) * vGem[i].speed;
@@ -83,14 +87,17 @@ void dropManager::render(HDC hdc)
 
 		vGem[i].rc = RectMakeCenter(vGem[i].pt.x, vGem[i].pt.y, 50, 50);
 
-		/*CAMERAMANAGER->FrameRender(hdc, img, vGem[i].pt.x - (vGem[i].rc.right - vGem[i].rc.left),
+		CAMERAMANAGER->FrameRender(hdc, img, vGem[i].pt.x - (vGem[i].rc.right - vGem[i].rc.left),
 			vGem[i].pt.y - (vGem[i].rc.bottom - vGem[i].rc.top),
-			vGem[i].currentFrameX, 0);*/
-		CAMERAMANAGER->Rectangle(hdc, vGem[i].rc);
-		if (dtime % 12 == 0) {
-			vGem[i].currentFrameX++;
+			vGem[i].currentFrameX, 0);
+
+		//CAMERAMANAGER->Rectangle(hdc, vGem[i].rc);
+
+		if (dtime % 10 == 0) 
+        {
+            if (vGem[i].currentFrameX == img->getMaxFrameX()) vGem[i].currentFrameX = 0;
+            else vGem[i].currentFrameX++;
 		}
-		//if (vGem[i].currentFrameX == )
 	}
 }
 
