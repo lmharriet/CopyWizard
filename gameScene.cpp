@@ -291,7 +291,7 @@ void gameScene::playerAttack()
 			if (0 >= enemy->getMinion()[num]->getHp())continue;
 			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[num]->getRC()))
 			{
-				bool criCheck = `->criAppear();
+				bool criCheck = PLAYERDATA->criAppear();
 
 				int damage = PLAYERDATA->damageCul(_player->getBlaze()->getBullet()[i].atkPower + RANDOM->range(0, 3), criCheck);
 
