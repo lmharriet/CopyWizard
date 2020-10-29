@@ -43,6 +43,7 @@ public:
 	void itemInfo();
 
 	void buyStartingItem();
+	void startingItemPrice();
 
 };
 

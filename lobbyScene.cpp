@@ -162,6 +162,8 @@ void lobbyScene::render()
 
 	_player->invenRender();
 
+	startingItemPrice();
+
 	//viewText();
 }
 
@@ -176,7 +178,7 @@ void lobbyScene::addImage()
 	IMAGEMANAGER->addFrameImage("flameStrike", "resource/player/flameStrike1.bmp", 1707, 171, 10, 1);
 	IMAGEMANAGER->addFrameImage("playerFrame", "resource/player/playerSpearFrame.bmp", 400, 400, 4, 4);
 	IMAGEMANAGER->addFrameImage("playerSpearFrame", "resource/player/playerSpearFrame.bmp", 400, 400, 4, 4);
-
+	IMAGEMANAGER->addFrameImage("shopNumbers", "Images/npc/shopNumbers.bmp", 60, 10, 10, 1);
 }
 
 void lobbyScene::viewText()
@@ -268,17 +270,16 @@ void lobbyScene::buyStartingItem()
 
 		if (colCheck(_player->getRect(), startingItem[i].rc) && INPUT->GetKeyDown('F'))
 		{
-			if (startingItem[i].item.price > PLAYERDATA->getGem()) {
-				cout << startingItem[i].item.price << '\n';
-				cout << PLAYERDATA->getGem() << '\n';
-
-				cout << "젬부족" << endl;
-				return;
+			if (startingItem[i].isPurchased == false) {
+				if (startingItem[i].item.price > PLAYERDATA->getGem()) {
+					return;
+				}
+				else {
+					PLAYERDATA->setGem(PLAYERDATA->getGem() - startingItem[i].item.price);
+				}
 			}
-			shopActive[i / 3] = false;
 
-			//if (startingItem[i].isPurchased == true) cout << "이미 구매한 아이템 이라 무료입니다 !" << '\n';
-			//else cout << "처음 보는 아이템 입니다 !" << '\n';
+			shopActive[i / 3] = false;
 
 			//
 			//buy item
@@ -293,7 +294,7 @@ void lobbyScene::buyStartingItem()
 
 			//3. 아이템의 가격만큼 보석을 잃음
 			//
-			PLAYERDATA->setGem(PLAYERDATA->getGem() - startingItem[i].item.price);
+			
 			//
 
 			//item0,item1...
@@ -305,6 +306,23 @@ void lobbyScene::buyStartingItem()
 
 			INIDATA->addData("Purchased List", iniKeyName, "1");
 			INIDATA->saveINI("INI/START_ITEM");
+		}
+	}
+}
+
+void lobbyScene::startingItemPrice()
+{
+	for (int i = 0; i < 18; i++) {
+		if (shopActive[i / 3]) {
+			if (startingItem[i].item.price > 9) {
+				int one = startingItem[i].item.price % 10;
+				int ten = startingItem[i].item.price / 10;
+				CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("shopNumbers"), startingItem[i].rc.left + 25, startingItem[i].rc.top - 32, ten, 0);
+				CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("shopNumbers"), startingItem[i].rc.left + 35, startingItem[i].rc.top - 32, one, 0);
+			}
+			else {
+				CAMERAMANAGER->FrameRender(getMemDC(), IMAGEMANAGER->findImage("shopNumbers"), startingItem[i].rc.left + 35, startingItem[i].rc.top - 32, startingItem[i].item.price, 0);
+			}
 		}
 	}
 }
