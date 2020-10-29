@@ -95,7 +95,7 @@ void chest::update()
 					DROP->dropPoint(rePos, 80, 120, 0, { -100,100 }, { -80,80 });
 					DROP->dropPointArcana(arcanaKeyName, rePos, arcanaName, arcanaCoolTime);
 					for (int i = 0; i < 3; i++) {
-						DROP->gemDropPoint({ RANDOM->range(pos.x, pos.x + 20), RANDOM->range(pos.y, pos.y + 20) });
+						DROP->gemDropPoint({ RANDOM->range((int)pos.x, (int)pos.x + 20), RANDOM->range((int)pos.y, (int)pos.y + 20) });
 					}
 					//포탈 생성
 					PORTAL->initWarp(pos.x, pos.y + 180);
@@ -139,7 +139,8 @@ void chest::bossScene_update()
 					DROP->dropPointArcana(arcanaKeyName, rePos, arcanaName, arcanaCoolTime);
 					DROP->dropPoint_heal(rePos, { 1,4 }, { -30,30 }, { -10,10 });
 					for (int i = 0; i < 3; i++) {
-						DROP->gemDropPoint({ RANDOM->range(pos.x, pos.x + 20), RANDOM->range(pos.y, pos.y + 20) });
+						DROP->gemDropPoint({ RANDOM->range((int)pos.x, (int)pos.x + 20), RANDOM->range((int)pos.y, (int)pos.y + 20)});
+						
 					}
 					//아이템 생성
 					tagDropItem _item;
