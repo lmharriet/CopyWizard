@@ -28,24 +28,7 @@ HRESULT lobbyScene::init()
 	//포탈위치
 	rc = RectMakeCenter(2266, 222, 100, 100);
 
-
 	//아이템 저장용
-
-	//char cItem[60];
-	//sprintf(cItem, "%d", 0);
-	//INIDATA->addData("Purchased List", "test", cItem);
-	//INIDATA->saveINI("INI/START_ITEM");
-
-	//char test[60];
-	//for (int i = 0; i < 18; i++)
-	//{
-	//	char key[126] = "item";
-	//	sprintf(test, "%d", i);
-	//	
-	//	const char* output = strcat(key, test);
-
-	//	cout << INIDATA->loadDataInteger("INI/START_ITEM", "Purchased List", output) << '\n';
-	//}
 	string itemName[MAXSTARTITEM] = { "힘의 조각",
 		"힘법사의 도끼",
 		"오거파워건틀릿",
@@ -205,6 +188,22 @@ void lobbyScene::buyStartingItem()
 
 			//if (startingItem[i].isPurchased == true) cout << "이미 구매한 아이템 이라 무료입니다 !" << '\n';
 			//else cout << "처음 보는 아이템 입니다 !" << '\n';
+
+			//
+			//buy item
+
+			//1. 여기에 player stat을 조정
+			PLAYERDATA->setStat(startingItem[i].item.keyName);
+
+			//2. vector<string> vInven에 push_Back
+
+			tagItem _item = ITEM->getItem(startingItem[i].item.keyName);
+			PLAYERDATA->pushInven(_item);
+
+			//3. 아이템의 가격만큼 보석을 잃음
+			//
+
+			//
 
 			//item0,item1...
 
