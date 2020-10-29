@@ -221,22 +221,6 @@ void itemManager::addStartItem()
 		"데미지가 5% 증가한다.",
 		{ 0,3 });
 
-	addItem("힘법사의 도끼", 0.1f, 0, 0, 0, 0, 0, 0,
-		false, 0, false,
-
-		false, false, false, false, false, false, false,
-		9,
-		"데미지가 10% 증가한다.",
-		{ 1,3 });
-
-	addItem("오거파워건틀릿", 0.15f, 0, 0, 0, 0, 0, 0,
-		false, 0, false,
-
-		false, false, false, false, false, false, false,
-		9,
-		"데미지가 15% 증가한다.",
-		{ 2,3 });
-
 	addItem("철갑옷", 0, 0, 0, 25, 0, 0, 0,
 		false, 0, false,
 
@@ -244,22 +228,6 @@ void itemManager::addStartItem()
 		9,
 		"최대 체력이 25 증가한다.",
 		{ 3,3 });
-
-	addItem("뼈갑옷", 0, 0, 0, 50, 0, 0, 0,
-		false, 0, false,
-
-		false, false, false, false, false, false, false,
-		9,
-		"최대 체력이 50 증가한다.",
-		{ 4,3 });
-
-	addItem("황금갑옷", 0, 0, 0, 100, 0, 0, 0,
-		false, 0, false,
-
-		false, false, false, false, false, false, false,
-		9,
-		"최대 체력이 100 증가한다.",
-		{ 5,3 });
 
 	addItem("낡은 단검", 0, 0.05f, 0.25f, 0, 0, 0, 0,
 		false, 0, false,
@@ -269,6 +237,22 @@ void itemManager::addStartItem()
 		"크리티컬 확률이 25%, 크리티컬 데미지가 5% 증가한다.",
 		{ 6,3 });
 
+	addItem("힘법사의 도끼", 0.1f, 0, 0, 0, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"데미지가 10% 증가한다.",
+		{ 1,3 });
+
+	addItem("뼈갑옷", 0, 0, 0, 50, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"최대 체력이 50 증가한다.",
+		{ 4,3 });
+
 	addItem("마법사의 단검", 0, 0.1f, 0.05f, 0, 0, 0, 0,
 		false, 0, false,
 
@@ -276,6 +260,22 @@ void itemManager::addStartItem()
 		9,
 		"크리티컬 확률이 15%, 크리티컬 데미지가 10% 증가한다.",
 		{ 7,3 });
+
+	addItem("오거파워건틀릿", 0.15f, 0, 0, 0, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"데미지가 15% 증가한다.",
+		{ 2,3 });
+
+	addItem("황금갑옷", 0, 0, 0, 100, 0, 0, 0,
+		false, 0, false,
+
+		false, false, false, false, false, false, false,
+		9,
+		"최대 체력이 100 증가한다.",
+		{ 5,3 });
 
 	addItem("황금 단검", 0, 0.15f, 0.05f, 0, 0, 0, 0,
 		false, 0, false,
