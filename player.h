@@ -175,7 +175,7 @@ public:
 	//Don't touch
 	void buttonDown();
 
-	void getDungeonPotal(bool _isDungeonPotal) { isDungeonPotal = _isDungeonPotal; }
+	void setDungeonPotal(bool _isDungeonPotal) { isDungeonPotal = _isDungeonPotal; }
 
 	//getter ,setter
 	float getX() { return posX; }
