@@ -356,7 +356,7 @@ void itemManager::addStartItem()
 		false, false, false, false, false, false, false,
 		true, 0, 0, 0, 0,
 		6,
-		"코인 획득 시 50 % 확률로 추가 코인을 획득한다.",
+		"코인 획득 시 50% 확률로 추가 코인을 획득한다.",
 		{ 4,4 });
 
 	addItem("에메랄드", 0, 0, 0, 0, 0, 0, 0,
