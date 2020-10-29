@@ -158,11 +158,11 @@ void lobbyScene::render()
 	EFFECT->portalRender(getMemDC());
 	UI->render(getMemDC(), 50, 50);
 
+	startingItemPrice();
+
 	itemInfo();
 
 	_player->invenRender();
-
-	startingItemPrice();
 
 	//viewText();
 }
