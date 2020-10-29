@@ -22,7 +22,7 @@ void knight::update()
     rc = RectMake(pos.x-10, pos.y+30, img->getFrameWidth(), img->getFrameHeight());
     if (isFindWayOn && !isIceState) //±æÃ£±â on
     {
-       RECT astarRC = RectMake(pos.x+10, pos.y+30, img->getFrameWidth(), img->getFrameHeight());
+        astarRC = RectMakeCenter(pos.x + (img->getFrameWidth() >> 1), pos.y + img->getFrameHeight(), 26, 26);
         astar->update(camRC, astarRC, playerRC, &angle);
         if (!isATK&&!isHit && !isDie)
         {
@@ -82,7 +82,7 @@ void knight::addRender()
 {
     if (isIceState)
         CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x, pos.y+30, 160);
-    //CAMERAMANAGER->Rectangle(getMemDC(), rc);
+    //CAMERAMANAGER->Rectangle(getMemDC(), astarRC);
     //CAMERAMANAGER->Rectangle(getMemDC(), playerRC);
 }
 

@@ -27,11 +27,14 @@ void summoner::addInit()
 
 void summoner::update()
 {
+    astarRC = RectMakeCenter(pos.x + (img->getFrameWidth() >> 1), pos.y + img->getFrameHeight()-30, 26, 26);
+
     if (isIceState)
-        atkTime = 0;
-    if (isFindWayOn && !isIceState)
+        atkTime = 1;
+    else 
     {
-        atkTime++;
+        if(isFindWayOn)
+          atkTime++;
         if (!isATK && !isHit && !isDie)
         {
             state = STATEIMAGE::IDLE;
@@ -57,7 +60,7 @@ void summoner::update()
                 atkDirection[MONSTER_DOWN] = false;
             }
         }
-
+      
         if ( atkTime % randomTime == 0 && !isATK && !isHit&&!isDie)
         {
             state = STATEIMAGE::ATK;
@@ -67,21 +70,23 @@ void summoner::update()
 
         }
     }
+  
     
         
-    if (isATK && !isFxAppear && !isHit)
+    if (isATK && !isFxAppear && !isHit&&!isDie)
     {
         fireCount++;
         
         if (fireCount % (randomTime+70)==0)
         {
             randomTime = RANDOM->range(90, 150);
-            atkTime = 0;
+            atkTime = 1;
             fireCount =0;
             isFxAppear = true; // 불렛 발사 시점.
             
         }
     }
+    
 }
 
 void summoner::addRender()
@@ -127,7 +132,7 @@ void summoner::stateImageRender()
     case STATEIMAGE::HIT:
         stateHIT({ 4,7 }, { 0,7 });
         imgSize = 0.f;
-        atkTime = 0;
+        atkTime = 1;
         break;
 
     }

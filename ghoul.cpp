@@ -45,9 +45,10 @@ void ghoul::update()
     //rc = RectMake(pos.x - 10, pos.y + 50, img->getFrameWidth(), img->getFrameHeight());
     if (isFindWayOn && !isIceState) //±æÃ£±â on
     {
+        astarRC = RectMakeCenter(pos.x + (img->getFrameWidth() >> 1), pos.y + img->getFrameHeight()-40, 26, 26);
         if (!isATK)
         {
-            RECT astarRC = RectMake(pos.x + 10, pos.y - 30, img->getFrameWidth(), img->getFrameHeight());
+            //RECT astarRC = RectMake(pos.x + 10, pos.y - 30, img->getFrameWidth(), img->getFrameHeight());
             astar->update(camRC, astarRC, playerRC, &angle);
             if (getCenterX() < playerRC.left)
             {

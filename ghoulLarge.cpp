@@ -29,11 +29,12 @@ void ghoulLarge::update()
 {
     if (isFindWayOn && !isIceState) //길찾기 on
     {
+        astarRC = RectMakeCenter(pos.x + (img->getFrameWidth() >> 1), pos.y + img->getFrameHeight() - 50, 26, 26);
         if (!isATK)
         {
-            astarRC = RectMake(pos.x + (img->getFrameWidth()>>1), pos.y+img->getFrameHeight()-40, 30,30);
+           // astarRC = RectMakeCenter(pos.x + (img->getFrameWidth()>>1), pos.y+img->getFrameHeight()-50, 30,30);
             RECT playerAstarRC = RectMakeCenter(playerRC.left ,playerRC.top, 2, 10);
-            astar->update(camRC, astarRC, playerRC, &angle);  // 에이스타에서 앵글 받아옴
+            astar->update(camRC, astarRC, playerAstarRC, &angle);  // 에이스타에서 앵글 받아옴
             if (astar->getFirstTile() && !isDie) // 걸을 때
             {
                 state = STATEIMAGE::WALK;
@@ -97,7 +98,8 @@ void ghoulLarge::addRender()
     if (isIceState)
         CAMERAMANAGER->AlphaRender(getMemDC(), IMAGEMANAGER->findImage("IceState"), pos.x+20, pos.y-30, 160);
 
-   
+    //astar->render(getMemDC());
+    
 }
 
 void ghoulLarge::stateImageRender()

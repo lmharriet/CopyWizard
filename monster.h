@@ -39,6 +39,7 @@ private:
 	bool isEnd;
 	int monsterPosX;
 	int monsterPosY;
+	MONSTERKIND kind;
 
 	RECT temp;
 	tagPlayer monsterMove;
@@ -51,7 +52,7 @@ private:
 	RECT cam;
 
 public:
-	HRESULT init(tagTile* _tile);
+	HRESULT init(tagTile* _tile, MONSTERKIND _kind);
 	void release();
 	void update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* angle);
 	void render(HDC hdc);
@@ -60,7 +61,8 @@ public:
 	//길찾기 함수
 	void pathFinding();
 	//오픈리스트 추가
-	void addOpenList(int idx, int idy);
+	void addOpenList(int idx, int idy, bool bigSize=false);
+	void addOpenListSet(int index);
 	//오픈리스트 삭제
 	void delOpenList(int index);
 

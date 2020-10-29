@@ -6,9 +6,10 @@
 //=============================================
 //에이스타 관련 함수
 //=============================================
-HRESULT astarManager::init(tagTile* _tile)
+HRESULT astarManager::init(tagTile* _tile, MONSTERKIND _kind)
 {
 	tile = _tile;
+	kind = _kind;
 	//노드 초기화
 	startNode = NULL;
 	endNode = NULL;
@@ -243,29 +244,32 @@ void astarManager::pathFinding()
 
 		if(curNode != nullptr)
 		{
-			addOpenList(curNode->idx + 1, curNode->idy + 1);	//우하
-			addOpenList(curNode->idx - 1, curNode->idy + 1);	//좌하
-			addOpenList(curNode->idx - 1, curNode->idy - 1);	//좌상
-			addOpenList(curNode->idx + 1, curNode->idy - 1);	//우상
-			addOpenList(curNode->idx, curNode->idy - 1);		//상
-			addOpenList(curNode->idx, curNode->idy + 1);		//하
-			addOpenList(curNode->idx - 1, curNode->idy);		//좌
-			addOpenList(curNode->idx + 1, curNode->idy);		//우
+			addOpenListSet(1);
 		}
 	}
 
 }
 
-void astarManager::addOpenList(int idx, int idy)
+void astarManager::addOpenList(int idx, int idy, bool bigSize)
 {
 	//예외처리 인덱스 범위안에서 추가할 수 있어야 한다
-
 	if (idx < monsterMove.x - 30 || idx >= monsterMove.x + 30 || idy < monsterMove.y - 20 || idy >= monsterMove.y + 20) return;
 
-	if (totalNode[curNode->idx][idy]->kind == TERRAIN::WALL && totalNode[idx][curNode->idy]->kind == TERRAIN::WALL) return;
-	if (totalNode[curNode->idx][idy]->kind == TERRAIN::NONE && totalNode[idx][curNode->idy]->kind == TERRAIN::NONE) return;
-	if (totalNode[curNode->idx][idy]->kind == TERRAIN::WALL || totalNode[idx][curNode->idy]->kind == TERRAIN::WALL) return;
-	if (totalNode[curNode->idx][idy]->kind == TERRAIN::NONE || totalNode[idx][curNode->idy]->kind == TERRAIN::NONE) return;
+	if (!bigSize)
+	{
+		if (totalNode[curNode->idx][idy]->kind == TERRAIN::WALL && totalNode[idx][curNode->idy]->kind == TERRAIN::WALL) return;
+		if (totalNode[curNode->idx][idy]->kind == TERRAIN::NONE && totalNode[idx][curNode->idy]->kind == TERRAIN::NONE) return;
+		if (totalNode[curNode->idx][idy]->kind == TERRAIN::WALL || totalNode[idx][curNode->idy]->kind == TERRAIN::WALL) return;
+		if (totalNode[curNode->idx][idy]->kind == TERRAIN::NONE || totalNode[idx][curNode->idy]->kind == TERRAIN::NONE) return;
+	}
+	else
+	{
+		if (totalNode[curNode->idx][idy+1]->kind == TERRAIN::WALL && totalNode[idx+1][curNode->idy]->kind == TERRAIN::WALL) return;
+		if (totalNode[curNode->idx][idy+1]->kind == TERRAIN::NONE && totalNode[idx+1][curNode->idy]->kind == TERRAIN::NONE) return;
+		if (totalNode[curNode->idx][idy+1]->kind == TERRAIN::WALL || totalNode[idx+1][curNode->idy]->kind == TERRAIN::WALL) return;
+		if (totalNode[curNode->idx][idy+1]->kind == TERRAIN::NONE || totalNode[idx+1][curNode->idy]->kind == TERRAIN::NONE) return;
+	}
+
 
 
 	//벽은 오픈리스트에 담을 수 없다
@@ -293,6 +297,18 @@ void astarManager::addOpenList(int idx, int idy)
 	neighborNode->F = neighborNode->G + neighborNode->H;
 	neighborNode->parentNode = curNode;
 	openList.push_back(neighborNode);
+}
+
+void astarManager::addOpenListSet(int index)
+{
+	addOpenList(curNode->idx + index, curNode->idy + index);	//우하
+	addOpenList(curNode->idx - index, curNode->idy + index);	//좌하
+	addOpenList(curNode->idx - index, curNode->idy - index);	//좌상
+	addOpenList(curNode->idx + index, curNode->idy - index);	//우상
+	addOpenList(curNode->idx, curNode->idy - index);		//상
+	addOpenList(curNode->idx, curNode->idy + index);		//하
+	addOpenList(curNode->idx - index, curNode->idy);		//좌
+	addOpenList(curNode->idx + index, curNode->idy);		//우
 }
 
 void astarManager::delOpenList(int index)
@@ -329,7 +345,7 @@ HRESULT monster::init(tagTile* tile, POINT _pos)
 	{
 		isAstar = true;
 		astar = make_unique< astarManager>();
-		astar->init(tile);
+		astar->init(tile, kind);
 	}
 
 	wall = tile;
@@ -366,7 +382,7 @@ void monster::release()
 void monster::commonUpdate()
 {
 	
-	astarRC = RectMakeCenter(pos.x + (img->getFrameWidth() >> 1), pos.y + img->getFrameHeight() - 40, 15, 15);
+	
 	rc = RectMake(pos.x, pos.y, img->getFrameWidth(), img->getFrameHeight());
 
 	POINT position = { getCenterX(), getCenterY() };
@@ -491,6 +507,7 @@ void monster::render()
 	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	 //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
 	 //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
+	//CAMERAMANAGER->Rectangle(getMemDC(), astarRC);
 }
 
 
@@ -613,21 +630,43 @@ bool monster::wallCol()
 	int rangeSize = PLAYERDATA->getWall().size();
 	for (int i = 0; i < rangeSize; i++)
 	{
-		if (kind == MONSTERKIND::GHOULLARGE)
+		if (colCheck(astarRC, wall[PLAYERDATA->getWall()[i]].rc))
 		{
-			RECT ghoulDashRC = RectMakeCenter(this->getCenterX(), this->getCenterY(), 50, 50);
-			if (colCheck(ghoulDashRC, wall[PLAYERDATA->getWall()[i]].rc))
+			return true;
+		/*switch (kind)
+		{
+		case MONSTERKIND::GOLEM:
+			{
+			if (colCheck(astarRC, wall[PLAYERDATA->getWall()[i]].rc))
+				return true;
+			}
+			break;
+		case MONSTERKIND::KNIGHT:
+			{
+			if (colCheck(astarRC, wall[PLAYERDATA->getWall()[i]].rc))
+				return true;
+			}
+			break;
+		case MONSTERKIND::SUMMONER:
+			if (colCheck(rc, wall[PLAYERDATA->getWall()[i]].rc))
 			{
 				return true;
 			}
-		}
-		else
-		{
+			break;
+		case MONSTERKIND::GHOUL:
 			if (colCheck(astarRC, wall[PLAYERDATA->getWall()[i]].rc))
 			{
 				return true;
 			}
+			break;
+		case MONSTERKIND::GHOULLARGE:
+			if (colCheck(astarRC, wall[PLAYERDATA->getWall()[i]].rc))
+			{
+				return true;
+			}
+			break;*/
 		}
+		
 	}
 	return false;
 }
