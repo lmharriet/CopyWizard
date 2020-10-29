@@ -236,7 +236,7 @@ void gameScene::render()
 	UI->render(getMemDC(), 50, 50);
 	_player->invenRender();
 
-	viewText();
+	//viewText();
 
 }
 
