@@ -35,6 +35,13 @@ HRESULT playerData::init()
 	stat.halfFace = false;
 	stat.bloodGold = false;
 
+	//start
+	stat.midasHand = false;
+	stat.gemDropPersent = 0.f;
+	stat.resurrection;
+	stat.invincibility;
+	stat.magicStone;
+
 	gShroud.currentTime = 0;
 	gShroud.curSize = 0;
 	gShroud.endSize = 1.f;
@@ -133,6 +140,9 @@ void playerData::setStat(string itemName)
 	stat.defenceChance += item.defenceChance;
 	stat.burnChance += item.burnChance;
 
+	//
+	stat.gemDropPersent += item.gemDropPersent;
+
 	//noraml
 	if (item.goldPig)stat.goldPig = true;
 
@@ -158,6 +168,13 @@ void playerData::setStat(string itemName)
 	else if (item.halfFace)stat.halfFace = true;
 
 	else if (item.bloodGold)stat.bloodGold = true;
+
+
+	else if (item.midasHand)stat.midasHand = true;
+
+	else if (item.resurrection)stat.resurrection = true;
+
+	else if (item.magicStone)stat.magicStone = true;
 
 	if (itemName == "수상한 알약")hp = maxHp;
 }
