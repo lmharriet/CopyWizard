@@ -190,6 +190,8 @@ void finalBossScene::endCutScene()
 	{
 		UI->fadeOut();
 	}
+
+	if (endCutTime == 300)SCENEMANAGER->loadScene("시작화면");
 }
 
 void finalBossScene::render()
