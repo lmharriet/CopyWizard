@@ -15,6 +15,7 @@ HRESULT lobbyScene::init()
 
 	_player = new player;
 	_player->init();
+	_player->setDungeonPotal(false);
 	//리스폰위치
 	_player->setX(2266);
 	_player->setY(2936);
@@ -147,7 +148,8 @@ void lobbyScene::render()
 
 		//CAMERAMANAGER->Rectangle(getMemDC(), startingItem[i].rc);
 	}
-
+	EFFECT->dRender(getMemDC());
+	EFFECT->pRender(getMemDC());
 	_player->attackCircleRender();
 	EFFECT->render(getMemDC());
 	_player->render(1);

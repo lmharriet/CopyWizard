@@ -93,7 +93,7 @@ void gameScene::release()
 
 void gameScene::update()
 {
-	_player->getDungeonPotal(isWarp);
+	_player->setDungeonPotal(isWarp);
 	enemyCheckCol();
 	//portal
 	warp();
