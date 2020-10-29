@@ -416,7 +416,10 @@ void golem::stateDIE()
     if (isDelete)
     {
         // ¿©±â°¡ °ñ·½ Á×À»½Ã º¸¼® ¶³±¸´Â °÷À¸·Î ÇÏ¸é ‰Î.
-        DROP->gemDropPoint({ getRcCenterX(astarRC),getRcCenterY(astarRC) });
+		int rnd = RANDOM->range(5);
+		if (rnd == 0) {
+			DROP->gemDropPoint({ getRcCenterX(astarRC),getRcCenterY(astarRC) });
+		}
     }
 }
 

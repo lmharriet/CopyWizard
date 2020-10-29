@@ -217,7 +217,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		2,
 		"데미지가 5% 증가한다.",
 		{ 0,3 });
 
@@ -225,7 +225,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		1,
 		"최대 체력이 25 증가한다.",
 		{ 3,3 });
 
@@ -233,7 +233,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		5,
 		"크리티컬 확률이 25%, 크리티컬 데미지가 5% 증가한다.",
 		{ 6,3 });
 
@@ -241,7 +241,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		5,
 		"데미지가 10% 증가한다.",
 		{ 1,3 });
 
@@ -249,7 +249,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		4,
 		"최대 체력이 50 증가한다.",
 		{ 4,3 });
 
@@ -257,7 +257,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		6,
 		"크리티컬 확률이 15%, 크리티컬 데미지가 10% 증가한다.",
 		{ 7,3 });
 
@@ -265,7 +265,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		8,
 		"데미지가 15% 증가한다.",
 		{ 2,3 });
 
@@ -273,7 +273,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		7,
 		"최대 체력이 100 증가한다.",
 		{ 5,3 });
 
@@ -281,7 +281,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		4,
 		"크리티컬 확률이 5%, 크리티컬 데미지가 15% 증가한다.",
 		{ 8,3 });
 
@@ -289,7 +289,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		4,
 		"크리티컬 확률이 25% 증가한다.",
 		{ 0,4 });
 
@@ -297,7 +297,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		5,
 		"크리티컬 데미지가 15% 증가한다.",
 		{ 1,4 });
 
@@ -305,7 +305,7 @@ void itemManager::addStartItem()
 		false, 1, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		7,
 		"스킬 쿨타임을 1초 감소시킨다.",
 		{ 2,4 });
 
@@ -313,7 +313,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		4,
 		"포인 드랍률이 10% 증가한다.",
 		{ 3,4 });
 	//
@@ -321,7 +321,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		6,
 		"코인 획득 시 50 % 확률로 추가 코인을 획득한다.",
 		{ 4,4 });
 
@@ -329,7 +329,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		8,
 		"??? 드랍율이 20% 증가한다.",
 		{ 5,4 });
 
@@ -337,7 +337,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		8,
 		"1회에 한해 부활을 한다.",
 		{ 6,4 });
 
@@ -345,7 +345,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		10,
 		"5초마다 1초간 데미지를 입지 않는다.",
 		{ 7,4 });
 
@@ -353,7 +353,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		3,
 		"마력게이지의 충전량이 증가한다.",
 		{ 8,4 });
 
@@ -361,7 +361,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		0,
 		"치명타 확률이 50% 감소하지만 치명타 발동 시 일정 체력을 회복한다.",
 		{ 0,5 });
 
@@ -369,7 +369,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		0,
 		"최대 체력이 250 감소하지만 무조건 치명타 공격이 발동된다.",
 		{ 1,5 });
 
@@ -377,7 +377,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		0,
 		"더 이상 마력 게이지가 차지 않지만, 일정확률로 같은 스킬을 반복 사용한다.",
 		{ 2,5 });
 
@@ -385,7 +385,7 @@ void itemManager::addStartItem()
 		false, 0, false,
 
 		false, false, false, false, false, false, false,
-		9,
+		0,
 		"입는 데미지가 2배가 되지만 5초 동안 데미지를 입지 않으면 데미지가 2배가 된다.",
 		{ 3,5 });
 }
@@ -484,16 +484,14 @@ tagItem itemManager::getItem(string keyName)
 
 tagItem itemManager::getRandomItem(bool Normal)
 {
-	int ranNum = 0;
+    int ranNum = 0;
 
-	if (Normal)
-	{
-		ranNum = RANDOM->range(1, 11); // normal
+    if (Normal)
+    {
+        ranNum = RANDOM->range(1, 10); // normal
+    }
 
-		while(ranNum == 2) ranNum = RANDOM->range(1, 11);
-	}
+    else ranNum = RANDOM->range(11, 19); // curse
 
-	else ranNum = RANDOM->range(12, vItem.size() - 1); // curse
-
-	return vItem[ranNum];
+    return vItem[ranNum];
 }

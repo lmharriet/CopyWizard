@@ -321,7 +321,10 @@ void ghoulLarge::stateDIE()
     if (isDelete)
     {
         // 여기가 구울킹 죽을시 보석 떨구는 곳으로 하면 됌.
-        DROP->gemDropPoint({ getRcCenterX(astarRC),getRcCenterY(astarRC) });
+		int rnd = RANDOM->range(5);
+		if (rnd == 0) {
+			DROP->gemDropPoint({ getRcCenterX(astarRC),getRcCenterY(astarRC) });
+		}
     }
 }
 
