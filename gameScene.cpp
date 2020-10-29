@@ -328,8 +328,6 @@ void gameScene::playerAttack()
 			if (0 >= enemy->getMinion()[num]->getHp())continue;
 			if (colCheck(_player->getMeteor()->getColRect(i), enemy->getMinion()[num]->getRC()))
 			{
-				cout << num << "  hp : " <<enemy->getMinion()[num]->getHp() << '\n';
-
 				//크리티컬?
 				bool criCheck = PLAYERDATA->criAppear();
 
