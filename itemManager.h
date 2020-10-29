@@ -28,6 +28,12 @@ struct tagItem
 	bool halfFace;			//체력이 50% 이하일 때 공격력 증가 유무
 	bool bloodGold;			//보유 코인에 따라 공격력 증가 유무
 
+	bool midasHand;
+	float gemDropPersent;
+	bool resurrection;
+	bool invincibility;
+	bool magicStone;
+
 	int price;				//가격
 	string Explanation;		//아이템 설명
 	POINT frame;			//프레임 번호
@@ -42,10 +48,13 @@ public:
 	HRESULT init();
 	void addStartItem();
 	void addImage();
-	void addItem(string keyName, float damage, float criDamage, float criChance, int maxHp,
-		float potionDropChance, float defenceChance, float burnChance, bool goldPig, int CoolTimeReduction,
-		bool glassMirror, bool vampireBlood, bool doubleDamage, bool ManaRejection, bool criRejection,
-		bool reducedVisibility, bool halfFace, bool bloodGold, int price, string Explanation, POINT frame);
+	void addItem(string keyName, float damage, float criDamage, float criChance,
+		int maxHp, float potionDropChance, float defenceChance, float burnChance,
+		bool goldPig, int CoolTimeReduction, bool glassMirror, bool vampireBlood,
+		bool doubleDamage, bool ManaRejection, bool criRejection, bool reducedVisibility,
+		bool halfFace, bool bloodGold, bool midasHand, float gemDropPersent, bool resurrection,
+		bool invincibility, bool magicStone, int price, string Explanation, POINT frame);
+
 
 
 	tagItem getItem(string keyName);
