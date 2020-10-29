@@ -124,7 +124,7 @@ void lobbyScene::render()
 {
 	CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("lobbyBack"), 0, 0);
 	CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("lobbyRoom"), 0, 0);
-	CAMERAMANAGER->Rectangle(getMemDC(), rc);
+	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
 
 	//sceneWarpStone
 	image* img = IMAGEMANAGER->findImage("sceneWarpStone");
