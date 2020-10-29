@@ -17,7 +17,7 @@ HRESULT gameScene::init()
 	uiImg = IMAGEMANAGER->addImage("UI", "Images/gameUI.bmp", WINSIZEX, WINSIZEY, true, RGB(255, 0, 255));
 	playerImg = IMAGEMANAGER->findImage("playerFrame");
 
-	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX + 15, WINSIZEY + 15);
+	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX + 15, WINSIZEY + 80);
 
 	checkArea = RectMakeCenter(WINSIZEX / 2, WINSIZEY / 2, 100, 100);
 	CAMERAMANAGER->init(_player->getX(), _player->getY(), MAXTILE, MAXTILE, -MAXTILE, -MAXTILE, WINSIZEX / 2, WINSIZEY / 2);
@@ -134,7 +134,7 @@ void gameScene::update()
 	enemyUnitRenderInit(); // 무조건 UNITERENDER->enemyClear와 UNITRENDER->update() 사이에 있어야함.
 	UNITRENDER->update();
 
-	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX + 15, WINSIZEY + 15);
+	cam = RectMakeCenter(_player->getX(), _player->getY(), WINSIZEX + 15, WINSIZEY + 80);
 
 	checkArea = RectMake(_player->getX() - 100, _player->getY() - WINSIZEY / 2 + 420, 200, 500);
 
@@ -274,6 +274,8 @@ void gameScene::checkEnemDie()
 
 void gameScene::playerAttack()
 {
+
+
 	int sizeA = _player->getBlaze()->getBullet().size();
 	checkEnemDie();
 	int sizeB = camInEnemy.size();
@@ -285,6 +287,7 @@ void gameScene::playerAttack()
 		{
 			num = camInEnemy[j];
 
+			if (!enemy->getMinion()[num]->getAppear()) continue;
 			if (0 >= enemy->getMinion()[num]->getHp())continue;
 			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[num]->getRC()))
 			{
@@ -321,9 +324,12 @@ void gameScene::playerAttack()
 		{
 			num = camInEnemy[j];
 
+			if (!enemy->getMinion()[num]->getAppear()) continue;
 			if (0 >= enemy->getMinion()[num]->getHp())continue;
 			if (colCheck(_player->getMeteor()->getColRect(i), enemy->getMinion()[num]->getRC()))
 			{
+				cout << num << "  hp : " <<enemy->getMinion()[num]->getHp() << '\n';
+
 				//크리티컬?
 				bool criCheck = PLAYERDATA->criAppear();
 
@@ -354,6 +360,7 @@ void gameScene::playerAttack()
 		{
 			int num = camInEnemy[j];
 
+			if (!enemy->getMinion()[num]->getAppear()) continue;
 			if (0 >= enemy->getMinion()[num]->getHp())continue;
 			if (colCheck(_player->getDashFire()->getRect(i), enemy->getMinion()[num]->getRC()))
 			{
@@ -382,6 +389,7 @@ void gameScene::playerAttack()
 		long enemyX = enemy->getMinion()[num]->getPos().x;
 		long enemyY = enemy->getMinion()[num]->getPos().y;
 
+		if (!enemy->getMinion()[num]->getAppear()) continue;
 		if (0 >= enemy->getMinion()[num]->getHp())continue;
 		if (colCheck(_player->getInferno()->getInf().rc, enemy->getMinion()[num]->getRC()))
 		{
@@ -425,6 +433,7 @@ void gameScene::playerAttack()
 	//dragonArc
 	if (!_player->getDragon()->getUpgrade())
 	{
+
 		sizeA = _player->getDragon()->getSize();
 		checkEnemDie();
 		sizeB = camInEnemy.size();
@@ -433,7 +442,8 @@ void gameScene::playerAttack()
 			for (int j = 0; j < sizeB; j++)
 			{
 				num = camInEnemy[j];
-
+				if (!enemy->getMinion()[num]->getAppear()) continue;
+				if (0 >= enemy->getMinion()[num]->getHp())continue;
 				if (colCheck(_player->getDragon()->getDragonRC(i), enemy->getMinion()[num]->getRC()))
 				{
 					bool criCheck = PLAYERDATA->criAppear();
@@ -460,7 +470,8 @@ void gameScene::playerAttack()
 		for (int j = 0; j < sizeB; j++)
 		{
 			num = camInEnemy[j];
-
+			if (!enemy->getMinion()[num]->getAppear()) continue;
+			if (0 >= enemy->getMinion()[num]->getHp())continue;
 			if (colCheck(_player->getDragon()->getColRc(i), enemy->getMinion()[num]->getRC()))
 			{
 				bool criCheck = PLAYERDATA->criAppear();
@@ -488,6 +499,8 @@ void gameScene::playerAttack()
 		{
 			num = camInEnemy[j];
 
+			if (!enemy->getMinion()[num]->getAppear()) continue;
+			if (0 >= enemy->getMinion()[num]->getHp())continue;
 			if (colCheck(_player->getSpear()->getSpearRc(i), enemy->getMinion()[num]->getRC()))
 			{
 				//enemy->getMinion()[j]->setPt(_player->getSpear()->getSpearRc(i).left, _player->getSpear()->getSpearRc(i).top);
@@ -517,7 +530,8 @@ void gameScene::playerAttack()
 		for (int j = 0; j < sizeB; j++)
 		{
 			num = camInEnemy[j];
-
+			if (!enemy->getMinion()[num]->getAppear()) continue;
+			if (0 >= enemy->getMinion()[num]->getHp())continue;
 			if (colCheck(_player->getSpear()->getUpgradeRC(i), enemy->getMinion()[num]->getRC()))
 			{
 				bool criCheck = PLAYERDATA->criAppear();

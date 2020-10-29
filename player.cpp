@@ -591,25 +591,25 @@ void player::skillInit()
 		arcana[3].explanation = Meteor->getInfo().explanation;
 		arcana[3].coolTime = Meteor->getInfo().coolTime;
 
-		arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		arcana[4].skillName = "nonSkill";
-		arcana[4].explanation = "";
-		arcana[4].coolTime = 0;
-
-		arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		arcana[5].skillName = "nonSkill";
-		arcana[5].explanation = "";
-		arcana[5].coolTime = 0;
-
 		//arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		//arcana[4].skillName = dragon->getInfo().keyName;//"nonSkill";
-		//arcana[4].explanation = dragon->getInfo().explanation;// "";
-		//arcana[4].coolTime = dragon->getInfo().coolTime;//0;
+		//arcana[4].skillName = "nonSkill";
+		//arcana[4].explanation = "";
+		//arcana[4].coolTime = 0;
 
 		//arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
-		//arcana[5].skillName = spear->getInfo().keyName;//"nonSkill";
-		//arcana[5].explanation = spear->getInfo().explanation; //"";
-		//arcana[5].coolTime = 0;//spear->getInfo().coolTime;//0;
+		//arcana[5].skillName = "nonSkill";
+		//arcana[5].explanation = "";
+		//arcana[5].coolTime = 0;
+
+		arcana[4].type = ARCANA_TYPE::TYPE_SIGNATURE;
+		arcana[4].skillName = dragon->getInfo().keyName;//"nonSkill";
+		arcana[4].explanation = dragon->getInfo().explanation;// "";
+		arcana[4].coolTime = dragon->getInfo().coolTime;//0;
+
+		arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
+		arcana[5].skillName = spear->getInfo().keyName;//"nonSkill";
+		arcana[5].explanation = spear->getInfo().explanation; //"";
+		arcana[5].coolTime = 0;//spear->getInfo().coolTime;//0;
 
 		for (int i = 0; i < ARCANA_SLOT; i++)
 		{
@@ -875,8 +875,6 @@ void player::signatureSetUp()
 				}
 
 			}
-
-
 		}
 	}
 }
@@ -891,7 +889,6 @@ void player::signatureSetUpE()
 	if (INPUT->GetKeyDown('E') && !isDead && !spear->getCool() && frozenTime == 0 && !isGrabbed && !inferno->getGauging() && speed == 0
 		&& spearStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0)
 	{
-
 		signatureE = true;
 	}
 
@@ -951,7 +948,6 @@ void player::signatureSetUpE()
 				{
 					dragonStateCool = 30;
 					dragon->fire(posX, posY, attackAngle);
-
 				}
 				if (dragonStateCool > 0)
 				{

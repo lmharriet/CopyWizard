@@ -217,7 +217,7 @@ float bomb::getRange(float angle, float x, float y)
 {
 	float tmpIndex = 10;
 
-	for (int i = 1; i < 10; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		//32마다 비교
 		float posX = x + cosf(angle) * (32 * i);
@@ -1616,7 +1616,7 @@ float iceSpear::rangeCul(float maxRange, float x, float y, float angle)
 	tagTile* tile = PLAYERDATA->_getTile();
 	vector<int> iWall = PLAYERDATA->getWall();
 
-	for (int i = 32; i < maxRange; i += 60)
+	for (int i = 0; i < maxRange; i += 32)
 	{
 		int destX = x + cosf(angle) * imgRadius;
 		int destY = y - sinf(angle) * imgRadius;
@@ -1656,7 +1656,7 @@ void iceSpear::fire(float x, float y, float angle)
 	spear.y = spear.fireY = y;
 	spear.angle = angle;
 
-	spear.speed = 25.f;
+	spear.speed = 35.f;
 	spear.atkPower = 30.f;
 
 	spear.range = rangeCul(500, x, y, angle);
