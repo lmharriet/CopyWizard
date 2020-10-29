@@ -112,6 +112,9 @@
     <Filter Include="MainGame\씬 모음\던전">
       <UniqueIdentifier>{7adb36db-b0b5-45bd-a5aa-ba5886bb3f75}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\hello">
+      <UniqueIdentifier>{ce04aa00-b741-49eb-878b-9b064b1a7934}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winMain.cpp">
