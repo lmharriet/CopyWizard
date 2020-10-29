@@ -222,7 +222,7 @@ void bossScene::render()
 	CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("frontFrame"), 0, 0);
 	PARTICLE->render(getMemDC());
 
-	if (isBattle) {
+	if (isBattle && _boss->getBoss().bossHp > 0) {
 		char str[128];
 		wsprintf(str, "EARTH LOAD ATLAS");
 		_boss->bossHpInfo(getMemDC(), WINSIZEX / 2 - 226, 100);
