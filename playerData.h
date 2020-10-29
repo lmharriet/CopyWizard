@@ -27,6 +27,13 @@ struct tagStat
 	bool reducedVisibility;	//시야 감소
 	bool halfFace;			//체력이 50% 이하일 때 공격력 증가 유무
 	bool bloodGold;			//보유 코인에 따라 공격력 증가 유무
+
+	//start item
+	bool midasHand;
+	float gemDropPersent;
+	bool resurrection;
+	bool invincibility;
+	bool magicStone;
 };
 struct tagGlass
 {
