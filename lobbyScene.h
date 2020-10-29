@@ -1,6 +1,7 @@
 #pragma once
 #include "gameNode.h"
 #include "player.h"
+#include "shop.h"
 #define MAXSTARTITEM 18
 
 struct tagStartItem
@@ -14,7 +15,7 @@ class lobbyScene :  public gameNode
 {
 private:
 	player* _player;
-
+	shop* _shop;
 private:
 
 	RECT rc;
@@ -23,10 +24,9 @@ private:
 	//18/3 = 6
 	bool shopActive[MAXSTARTITEM / 3];
 
-
-	//del
-
-	bool temp;
+	//warp
+	bool sceneWarp;
+	int sceneCount;
 public:
 
 	HRESULT init();
@@ -39,6 +39,8 @@ public:
 	void viewText();
 
 	void warpToGameScene();
+
+	void itemInfo();
 
 	void buyStartingItem();
 

@@ -9,9 +9,12 @@ HRESULT lobbyScene::init()
 	PLAYERDATA->setHp(PLAYERDATA->getMaxHp());
 	ITEM->init();
 	DAMAGE->init();
-
+	PORTAL->init();
 	addImage();
 	EFFECT->init();
+
+	_shop = new shop;
+	_shop->addImage();
 
 	_player = new player;
 	_player->init();
@@ -80,6 +83,13 @@ HRESULT lobbyScene::init()
 	//
 	memset(shopActive, 1, sizeof(shopActive));
 
+	UI->fadeIn();
+
+	EFFECT->setPortalEffect({ (LONG)_player->getX(), (LONG)_player->getY() });
+
+	//setting
+	sceneWarp = false;
+	sceneCount = 0;
 	return S_OK;
 }
 
@@ -116,7 +126,13 @@ void lobbyScene::render()
 	CAMERAMANAGER->Render(getMemDC(), IMAGEMANAGER->findImage("lobbyRoom"), 0, 0);
 	CAMERAMANAGER->Rectangle(getMemDC(), rc);
 
-	image* img;
+	//sceneWarpStone
+	image* img = IMAGEMANAGER->findImage("sceneWarpStone");
+	CAMERAMANAGER->Render(getMemDC(), img,
+		2266 - img->getWidth() / 2,
+		240 - img->getHeight() / 2);
+	//
+
 	for (int i = 0; i < MAXSTARTITEM; i++)
 	{
 		img = IMAGEMANAGER->findImage("itemFrame");
@@ -137,10 +153,14 @@ void lobbyScene::render()
 	EFFECT->render(getMemDC());
 	_player->render(1);
 	PARTICLE->render(getMemDC());
+	EFFECT->portalRender(getMemDC());
 	UI->render(getMemDC(), 50, 50);
+
+	itemInfo();
+
 	_player->invenRender();
 
-	viewText();
+	//viewText();
 }
 
 void lobbyScene::addImage()
@@ -162,14 +182,76 @@ void lobbyScene::viewText()
 	char str[126];
 	sprintf(str, "%.f, %.f", _player->getX(), _player->getY());
 	TextOut(getMemDC(), _ptMouse.x, _ptMouse.y, str, strlen(str));
-
 }
 
 void lobbyScene::warpToGameScene()
 {
-	if (colCheck(_player->getRect(), rc) && INPUT->GetKeyDown('F'))
+	if (colCheck(_player->getRect(), rc) && INPUT->GetKeyDown('F') && !sceneWarp)
 	{
-		SCENEMANAGER->loadScene("로딩화면");
+		sceneWarp = true;
+
+		image* img = IMAGEMANAGER->findImage("sceneWarpStone");
+
+		EFFECT->setPortalEffect({ 2266, 217 });
+	}
+
+	if (sceneWarp)
+	{
+		sceneCount++;
+
+		if (sceneCount == 17)
+		{
+			SCENEMANAGER->loadScene("로딩화면");
+			sceneCount = 0;
+		}
+	}
+}
+
+void lobbyScene::itemInfo()
+{
+	image* back = IMAGEMANAGER->findImage("itemBackBoardFrame");
+	RECT rt;
+	int frameX = 0;
+	for (int j = 0; j < MAXSTARTITEM; j++)
+	{
+		//정보 출력
+		if (colCheck(startingItem[j].rc, _player->getRect()) && shopActive[j / 3])
+		{
+			int centerX = getRcCenterX(startingItem[j].rc);
+			int centerY = getRcCenterY(startingItem[j].rc);
+
+			rt = RectMakeCenter(
+				CAMERAMANAGER->GetRelativeX(centerX),
+				CAMERAMANAGER->GetRelativeY(centerY),
+				280, 70);
+
+			int exLength = startingItem[j].item.Explanation.size();
+
+			//==========================================================
+			if (exLength > 69) frameX = 2;
+
+			else if (exLength > 34) frameX = 1;
+
+			CAMERAMANAGER->AlphaFrameRender(getMemDC(), back,
+				centerX - back->getFrameWidth() / 2,
+				centerY - 10 - back->getFrameHeight() / 2,
+				frameX, 0, 130);
+			//==========================================================
+
+			UI->setActiveButton2(true);
+			UI->FbuttonRender2(getMemDC(),
+				{ centerX,
+				centerY + 13 });
+
+			TextOut(getMemDC(), CAMERAMANAGER->GetRelativeX(centerX) - 40,
+				CAMERAMANAGER->GetRelativeY(centerY) - 70,
+				startingItem[j].item.keyName.c_str(), startingItem[j].item.keyName.length());
+
+			const char* ch = startingItem[j].item.Explanation.c_str();
+
+			DrawText(getMemDC(), ch, -1, &rt, DT_CENTER | DT_WORDBREAK);
+		}
+
 	}
 }
 
