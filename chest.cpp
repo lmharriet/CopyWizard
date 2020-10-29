@@ -94,7 +94,7 @@ void chest::update()
 					//아이템, 동전 생성
 					DROP->dropPoint(rePos, 80, 120, 0, { -100,100 }, { -80,80 });
 					DROP->dropPointArcana(arcanaKeyName, rePos, arcanaName, arcanaCoolTime);
-					for (int i = 0; i < 3; i++) {
+					for (int i = 0; i < 2; i++) {
 						DROP->gemDropPoint({ RANDOM->range((int)pos.x, (int)pos.x + 20), RANDOM->range((int)pos.y, (int)pos.y + 20) });
 					}
 					//포탈 생성
@@ -138,7 +138,7 @@ void chest::bossScene_update()
 					DROP->dropPoint(rePos, 80, 120, 0, { -100,100 }, { -80,80 });
 					DROP->dropPointArcana(arcanaKeyName, rePos, arcanaName, arcanaCoolTime);
 					DROP->dropPoint_heal(rePos, { 1,4 }, { -30,30 }, { -10,10 });
-					for (int i = 0; i < 3; i++) {
+					for (int i = 0; i < 2; i++) {
 						DROP->gemDropPoint({ RANDOM->range((int)pos.x, (int)pos.x + 20), RANDOM->range((int)pos.y, (int)pos.y + 20)});
 						
 					}

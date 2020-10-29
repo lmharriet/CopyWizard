@@ -23,6 +23,8 @@ HRESULT lobbyScene::init()
 	_player->setX(2266);
 	_player->setY(2936);
 
+	PLAYERDATA->getHp();
+
 	image* img = IMAGEMANAGER->findImage("lobbyRoom");
 
 	CAMERAMANAGER->init(_player->getX(), _player->getY(), img->getWidth() * 2, img->getHeight() * 2,
@@ -266,6 +268,13 @@ void lobbyScene::buyStartingItem()
 
 		if (colCheck(_player->getRect(), startingItem[i].rc) && INPUT->GetKeyDown('F'))
 		{
+			if (startingItem[i].item.price > PLAYERDATA->getGem()) {
+				cout << startingItem[i].item.price << '\n';
+				cout << PLAYERDATA->getGem() << '\n';
+
+				cout << "젬부족" << endl;
+				return;
+			}
 			shopActive[i / 3] = false;
 
 			//if (startingItem[i].isPurchased == true) cout << "이미 구매한 아이템 이라 무료입니다 !" << '\n';
@@ -284,7 +293,7 @@ void lobbyScene::buyStartingItem()
 
 			//3. 아이템의 가격만큼 보석을 잃음
 			//
-
+			PLAYERDATA->setGem(PLAYERDATA->getGem() - startingItem[i].item.price);
 			//
 
 			//item0,item1...
