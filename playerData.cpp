@@ -38,9 +38,9 @@ HRESULT playerData::init()
 	//start
 	stat.midasHand = false;
 	stat.gemDropPersent = 0.f;
-	stat.resurrection;
-	stat.invincibility;
-	stat.magicStone;
+	stat.resurrection = false;
+	stat.invincibility = false;
+	stat.magicStone = false;
 
 	gShroud.currentTime = 0;
 	gShroud.curSize = 0;
