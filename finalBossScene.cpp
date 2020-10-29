@@ -97,8 +97,6 @@ void finalBossScene::update()
 
 	_player->getBlaze()->setBossScene(true);
 
-	PLAYERDATA->update();
-
 	//camera update
 	CAMERAMANAGER->update();
 

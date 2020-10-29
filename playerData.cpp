@@ -55,6 +55,9 @@ HRESULT playerData::init()
 
 	//cout << "PLAYERDATA INIT" << '\n';
 	vArcanaInfo.clear();
+
+	isInvincibility = false;
+	inviCount = 0;
 	return S_OK;
 }
 
@@ -89,6 +92,32 @@ void playerData::update()
 		}
 	}
 
+
+	if (stat.invincibility)
+	{
+		inviCount++;
+
+		if (isInvincibility == false)
+		{
+			if (inviCount == 300)
+			{
+				isInvincibility = true;
+				inviCount = 0;
+			}
+		}
+
+		else // true
+		{
+			cout << "¹«Àû" << '\n';
+
+			if (inviCount == 60)
+			{
+				isInvincibility = false;
+				inviCount = 0;
+			}
+		}
+
+	}
 }
 
 void playerData::shroudRender(HDC hdc)
@@ -171,6 +200,8 @@ void playerData::setStat(string itemName)
 
 
 	else if (item.midasHand)stat.midasHand = true;
+
+	else if (item.invincibility)stat.invincibility = true;
 
 	else if (item.resurrection)stat.resurrection = true;
 

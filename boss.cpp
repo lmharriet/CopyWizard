@@ -1076,14 +1076,18 @@ void boss::collCheck()
 						float _jumpAngle = getAngle(boss.center.x, boss.center.y, _player->getX(), _player->getY());
 						int damage = RANDOM->range(75, 91);
 
-						if (PLAYERDATA->getStat().doubleDamage)
-						{
-							_player->damage(damage * 2, _jumpAngle, 10);
-						}
 
-						else
+						if (PLAYERDATA->getInvincibility() == false)
 						{
-							_player->damage(damage, _jumpAngle, 10);
+							if (PLAYERDATA->getStat().doubleDamage)
+							{
+								_player->damage(damage * 2, _jumpAngle, 10);
+							}
+
+							else
+							{
+								_player->damage(damage, _jumpAngle, 10);
+							}
 						}
 					}
 
@@ -1119,15 +1123,19 @@ void boss::collCheck()
 
 							else
 							{
-								if (PLAYERDATA->getStat().doubleDamage)
+								if (PLAYERDATA->getInvincibility() == false)
 								{
-									_player->damage(damage * 2, _niddelAngle, 3);
+									if (PLAYERDATA->getStat().doubleDamage)
+									{
+										_player->damage(damage * 2, _niddelAngle, 3);
+									}
+
+									else
+									{
+										_player->damage(damage, _niddelAngle, 3);
+									}
 								}
 
-								else
-								{
-									_player->damage(damage, _niddelAngle, 3);
-								}
 							}
 							
 
@@ -1151,14 +1159,18 @@ void boss::collCheck()
 						float _wallAngle = getAngle(BOSSMANAGER->getVector()[i]->getRect().left, BOSSMANAGER->getVector()[i]->getRect().top, _player->getRect().left, _player->getRect().top);
 						int damage = RANDOM->range(8, 13);
 
-						if (PLAYERDATA->getStat().doubleDamage)
-						{
-							_player->damage(damage * 2, _wallAngle, 8);
-						}
 
-						else
+						if (PLAYERDATA->getInvincibility() == false)
 						{
-							_player->damage(damage, _wallAngle, 8);
+							if (PLAYERDATA->getStat().doubleDamage)
+							{
+								_player->damage(damage * 2, _wallAngle, 8);
+							}
+
+							else
+							{
+								_player->damage(damage, _wallAngle, 8);
+							}
 						}
 					}
 
@@ -1186,15 +1198,19 @@ void boss::collCheck()
 					float _punchAngle = getAngle(punchBlock[i]->rc.left, punchBlock[i]->rc.top, _player->getRect().left, _player->getRect().top);
 					int damage = RANDOM->range(10, 20);
 
-					if (PLAYERDATA->getStat().doubleDamage)
+					if (PLAYERDATA->getInvincibility() == false)
 					{
-						_player->damage(damage * 2, _punchAngle, 6);
+						if (PLAYERDATA->getStat().doubleDamage)
+						{
+							_player->damage(damage * 2, _punchAngle, 6);
+						}
+
+						else
+						{
+							_player->damage(damage, _punchAngle, 6);
+						}
 					}
 
-					else
-					{
-						_player->damage(damage, _punchAngle, 6);
-					}
 				}
 
 				PARTICLE->crashRockParticlePlay(punchBlock[i]->rc.left + 50, punchBlock[i]->rc.top + 50);
@@ -1218,14 +1234,17 @@ void boss::collCheck()
 				float _drillBlock = getAngle(drillBlock.rc.left, drillBlock.rc.top, _player->getRect().left, _player->getRect().top);
 				int damage = RANDOM->range(1, 5);
 
-				if (PLAYERDATA->getStat().doubleDamage)
+				if (PLAYERDATA->getInvincibility() == false)
 				{
-					_player->damage(damage * 2, _drillBlock, 10);
-				}
+					if (PLAYERDATA->getStat().doubleDamage)
+					{
+						_player->damage(damage * 2, _drillBlock, 10);
+					}
 
-				else
-				{
-					_player->damage(damage, _drillBlock, 10);
+					else
+					{
+						_player->damage(damage, _drillBlock, 10);
+					}
 				}
 			}
 			
@@ -1451,7 +1470,8 @@ void boss::bossFinalAttack(int patternType)
 				if (count < 90) {
 					if (!isHit) {
 						int damage = RANDOM->range(5, 8);
-						_player->finalAttackDamaged(damage, 40,90);
+						if(PLAYERDATA->getInvincibility() == false) _player->finalAttackDamaged(damage, 40,90);
+
 						SOUNDMANAGER->play("bossPunchSFX02", false, -0.25f);
 						isHit = true;
 					}
@@ -1472,7 +1492,7 @@ void boss::bossFinalAttack(int patternType)
 				else {
 					if (!isHit) {
 						int damage = RANDOM->range(2, 5);
-						_player->finalAttackDamaged(damage, 100,90);
+						if (PLAYERDATA->getInvincibility() == false) _player->finalAttackDamaged(damage, 100,90);
 						SOUNDMANAGER->play("bossPunchSFX02", false, -0.25f);
 						isHit = true;
 					}
@@ -1532,7 +1552,7 @@ void boss::bossFinalAttack(int patternType)
 					if (!isHit) {
 						
 						int damage = RANDOM->range(2, 6);
-						_player->finalAttackDamaged(damage, 10,90);
+						if (PLAYERDATA->getInvincibility() == false) _player->finalAttackDamaged(damage, 10,90);
 						isHit = true;
 					}
 					if (isHit) {

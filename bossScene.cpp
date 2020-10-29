@@ -76,7 +76,7 @@ void bossScene::update()
 	_player->getBlaze()->setBossScene(true);
 
 
-	PLAYERDATA->update();
+	//PLAYERDATA->update();
 	PLAYERDATA->setX(_player->getX());
 	PLAYERDATA->setY(_player->getY());
 	//sound 

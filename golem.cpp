@@ -416,10 +416,15 @@ void golem::stateDIE()
     if (isDelete)
     {
         // ¿©±â°¡ °ñ·½ Á×À»½Ã º¸¼® ¶³±¸´Â °÷À¸·Î ÇÏ¸é ‰Î.
-		int rnd = RANDOM->range(5);
-		if (rnd == 0) {
-			DROP->gemDropPoint({ getRcCenterX(astarRC),getRcCenterY(astarRC) });
-		}
+        float persent = 0.2f + PLAYERDATA->getStat().gemDropPersent;
+
+        int cul = persent * 10;
+
+        int rnd = RANDOM->range(1, 10);
+
+        if (rnd <= cul) {
+            DROP->gemDropPoint({ getRcCenterX(astarRC),getRcCenterY(astarRC) });
+        }
     }
 }
 

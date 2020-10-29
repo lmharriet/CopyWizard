@@ -54,6 +54,11 @@ private:
 	bool upgradeReady;
 
 	tagStat stat;
+
+
+	//
+	bool isInvincibility;
+	int inviCount;
 	////////
 	int coin;
 	float _x, _y;
@@ -78,6 +83,10 @@ public:
 	HRESULT init();
 	void release();
 	void update();
+
+
+	bool getInvincibility() { return isInvincibility; }
+	//
 
 	void shroudRender(HDC hdc);
 	void setShroud(bool check) { gShroud.isActives = check; }
