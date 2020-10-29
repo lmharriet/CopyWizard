@@ -87,6 +87,8 @@ HRESULT player::init()
 	upgradeReady = false;
 
 	restartCount = 0;
+	resurrectionCount = 0;
+
 
 	//sound
 	walkCount = 0;
@@ -143,8 +145,8 @@ void player::update()
 
 
 	//플레이어 컨트롤 조건
-	if (speed == 0 && basicStateCool == 0 && meteorStateCool == 0 && frozenTime == 0
-		&& !isDead && !inferno->getGauging() && idleDelay == 0)
+	if (speed == 0 && basicStateCool == 0 && meteorStateCool == 0 && spearStateCool == 0 && dragonStateCool == 0 && !inferno->getGauging()
+		&& frozenTime == 0 && !isDead && !inferno->getGauging()  && idleDelay == 0)
 	{
 		controller();
 	}
@@ -194,18 +196,7 @@ void player::update()
 	CAMERAMANAGER->MovePivot(posX, posY);
 	death();
 
-
-	if (isDead)
-	{
-		restartCount++;
-		if (restartCount == 300)
-		{
-			PLAYERDATA->init();
-			restartCount = 0;
-			SCENEMANAGER->loadScene("로비화면");
-
-		}
-	}
+	respawnSetUp();
 	//cout << restartCount << '\n';
 	//don't touch!
 	buttonDown();
@@ -271,8 +262,8 @@ void player::other_update()
 	angleTenth = (int)(saveAngle * (18 / PI));
 
 
-	if (speed == 0 && basicStateCool == 0 && meteorStateCool == 0 && frozenTime == 0
-		&& !isDead && !inferno->getGauging() && !isGrabbed && idleDelay == 0)
+	if (speed == 0 && basicStateCool == 0 && meteorStateCool == 0 && spearStateCool==0 &&dragonStateCool==0&& !inferno->getGauging()
+		&&frozenTime == 0 && !isDead && !inferno->getGauging() && !isGrabbed && idleDelay == 0)
 	{
 		controller();
 	}
@@ -320,20 +311,12 @@ void player::other_update()
 	CAMERAMANAGER->MovePivot(posX, posY);
 	death();
 
-	if (isDead)
-	{
-		restartCount++;
-		if (restartCount == 300)
-		{
-			PLAYERDATA->init();
-			restartCount = 0;
-			SCENEMANAGER->loadScene("로비화면");
-		}
-	}
+	respawnSetUp();
+
 
 	//don't touch!
 	buttonDown();
-	
+
 	// knockBack lerp
 	if (isDamaged)
 	{
@@ -353,7 +336,7 @@ void player::other_update()
 		for (int i = 0; i < vWall.size(); i++)
 		{
 			int num = vWall[i];
-			
+
 			if (PtInRect(&tile[num].rc, check))
 			{
 				knockBack.speed = 0;
@@ -609,7 +592,7 @@ void player::skillInit()
 		arcana[5].type = ARCANA_TYPE::TYPE_SIGNATURE;
 		arcana[5].skillName = spear->getInfo().keyName;//"nonSkill";
 		arcana[5].explanation = spear->getInfo().explanation; //"";
-		arcana[5].coolTime = 0;//spear->getInfo().coolTime;//0;
+		arcana[5].coolTime = spear->getInfo().coolTime;//0;
 
 		for (int i = 0; i < ARCANA_SLOT; i++)
 		{
@@ -886,20 +869,17 @@ void player::signatureSetUpE()
 	// arcana[4] , key -> E
 
 
-	if (INPUT->GetKeyDown('E') && !isDead && !spear->getCool() && frozenTime == 0 && !isGrabbed && !inferno->getGauging() && speed == 0
-		&& spearStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0)
+	if (arcana[4].skillName == spear->getInfo().keyName)
 	{
-		signatureE = true;
-	}
+		if (INPUT->GetKeyDown('E') && !isDead && !spear->getCool() && basicStateCool == 0 && speed == 0 && !inferno->getGauging()
+			&& meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0 && !isGrabbed && frozenTime == 0)
+			signatureE = true;
 
 
-	if (signatureE)
-	{
-		if (arcana[4].skillName == spear->getInfo().keyName)
+		if (signatureE)
 		{
 			if (!upgradeReady)
 			{
-
 				if (spearStateCool == 0)
 				{
 					spearStateCool = 20;
@@ -938,9 +918,16 @@ void player::signatureSetUpE()
 						signatureE = false;
 				}
 			}
-
 		}
-		else if (arcana[4].skillName == dragon->getInfo().keyName)
+	}
+
+	else if (arcana[4].skillName == dragon->getInfo().keyName)
+	{
+		if (INPUT->GetKeyDown('E') && !isDead && !dragon->getCool() && basicStateCool == 0 && speed == 0 && !inferno->getGauging()
+			&& meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0 && !isGrabbed && frozenTime == 0)
+			signatureE = true;
+
+		if (signatureE)
 		{
 			if (!upgradeReady)
 			{
@@ -955,12 +942,9 @@ void player::signatureSetUpE()
 					dragonStateCool--;
 				}
 				if (dragonStateCool == 0) signatureE = false;
-
 			}
-
 			else
-			{
-				/*TIME->setTest(12.f);
+			{/*TIME->setTest(12.f);
 				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);*/
 
 
@@ -980,10 +964,8 @@ void player::signatureSetUpE()
 
 
 			}
-
 		}
 	}
-
 }
 
 void player::signatureSetUpR()
@@ -992,24 +974,22 @@ void player::signatureSetUpR()
 	if (arcana[5].skillName == "nonSkill")return;
 
 
-	if (INPUT->GetKeyDown('R') && !isDead && !inferno->getGauging() && frozenTime == 0 && !spear->getCool() && frozenTime == 0 && speed == 0
-		&& basicStateCool == 0 && meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0)
-	{
-		signatureR = true;
-	}
 
-	if (signatureR)
+	if (arcana[5].skillName == spear->getInfo().keyName)
 	{
-		if (arcana[5].skillName == spear->getInfo().keyName)
+		if (INPUT->GetKeyDown('R') && !isDead && !spear->getCool() && basicStateCool == 0 && speed == 0 &&!inferno->getGauging() 
+			&& meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool == 0 && !isGrabbed && frozenTime == 0)
+			signatureR = true;
+
+
+		if (signatureR)
 		{
 			if (!upgradeReady)
 			{
-
 				if (spearStateCool == 0)
 				{
 					spearStateCool = 20;
 					spear->fire(posX, posY, attackAngle);
-
 				}
 
 				if (spearStateCool > 0)
@@ -1020,10 +1000,12 @@ void player::signatureSetUpR()
 					if (spearStateCool == 0)
 						signatureR = false;
 				}
-
 			}
 			else
 			{
+				/*TIME->setTest(12.f);
+				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);*/
+
 				if (spearStateCool == 0)
 				{
 					spearStateCool = 20;
@@ -1039,12 +1021,17 @@ void player::signatureSetUpR()
 					if (spearStateCool == 0)
 						signatureR = false;
 				}
-
-
 			}
 		}
+	}
 
-		else if (arcana[5].skillName == dragon->getInfo().keyName)
+	else if (arcana[5].skillName == dragon->getInfo().keyName)
+	{
+		if (INPUT->GetKeyDown('R') && !isDead && !dragon->getCool() && basicStateCool == 0 && speed == 0 && !inferno->getGauging()
+			&& meteorStateCool == 0 && dragonStateCool == 0 && spearStateCool==0 && !isGrabbed && frozenTime == 0)
+			signatureR = true;
+
+		if (signatureR)
 		{
 			if (!upgradeReady)
 			{
@@ -1052,20 +1039,16 @@ void player::signatureSetUpR()
 				{
 					dragonStateCool = 30;
 					dragon->fire(posX, posY, attackAngle);
-
 				}
 				if (dragonStateCool > 0)
 				{
-					state = STATE::SIGNATURE;
+					state = STATE::DRAGON;
 					dragonStateCool--;
 				}
 				if (dragonStateCool == 0) signatureR = false;
-
 			}
-
 			else
-			{
-			/*	TIME->setTest(12.f);
+			{/*TIME->setTest(12.f);
 				EFFECT->ultEftPlay({ (long)posX,(long)posY }, 10);*/
 
 
@@ -1077,14 +1060,14 @@ void player::signatureSetUpR()
 				}
 				if (dragonStateCool >= 0)
 				{
-					state = STATE::SIGNATURE;
+					state = STATE::DRAGON;
 					dragonStateCool--;
 					if (dragonStateCool == 0) signatureR = false;
 
 				}
 
-			}
 
+			}
 		}
 	}
 }
@@ -2038,8 +2021,8 @@ void player::colorCheck(image* img)
 		tileCheck[i].isCol = false;
 		if (i < 4)diagonalCheck[i].isCol = false;
 	}
-	
-	
+
+
 	for (int i = 0; i < 8; i++)
 	{
 		int x = getRcCenterX(tileCheck[i].rc);
@@ -2164,19 +2147,6 @@ void player::changeState()
 }
 
 
-void player::death()
-{
-	if (PLAYERDATA->getHp() <= 0)
-	{
-		isDead = true;
-		state = STATE::DIE;
-
-		PORTAL->resetSceneWarp();
-		DROP->resetManager();
-		//아이템 초기화
-		PLAYERDATA->resetInven();
-	}
-}
 //플레이어 피격 데미지
 void player::damage(int damage, float attackAngle, float knockBackSpeed)
 {
@@ -2309,6 +2279,56 @@ void player::skillGaugeSetUp()
 
 	PLAYERDATA->setSkillGauge(skillGauge);
 	PLAYERDATA->setUpgradeReady(upgradeReady);
+}
+
+
+void player::death()
+{
+	if (PLAYERDATA->getHp() <= 0)
+	{
+		isDead = true;
+		state = STATE::DIE;
+
+		PORTAL->resetSceneWarp();
+		DROP->resetManager();
+		//아이템 초기화
+		PLAYERDATA->resetInven();
+	}
+}
+
+void player::respawnSetUp()
+{
+	if (isDead)
+	{
+		if (PLAYERDATA->getStat().resurrection)
+		{
+			resurrectionCount++;
+
+			if (resurrectionCount == 50)
+			{
+				PLAYERDATA->setHp(PLAYERDATA->getMaxHp() * 0.5);
+			}
+
+			else if (resurrectionCount == 100)
+			{
+				resurrectionCount = 0;
+				isDead = false;
+				PLAYERDATA->setResurrection();
+			}
+		}
+		else
+		{
+			restartCount++;
+			if (restartCount == 300)
+			{
+				PLAYERDATA->init();
+				restartCount = 0;
+				SCENEMANAGER->loadScene("로비화면");
+			}
+		}
+	}
+
+
 }
 
 void player::buttonDown()
