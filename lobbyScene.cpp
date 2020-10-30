@@ -5,6 +5,7 @@ HRESULT lobbyScene::init()
 {
 	PARTICLE->init();
 	UI->init();
+	PLAYERDATA->resetInven();
 	PLAYERDATA->init();
 	PLAYERDATA->setHp(PLAYERDATA->getMaxHp());
 	ITEM->init();
