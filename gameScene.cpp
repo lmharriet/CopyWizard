@@ -245,10 +245,10 @@ void gameScene::enemyCheckCol()
 	camInEnemy.clear();
 	camInEnemy.shrink_to_fit();
 
-	int size = enemy->getMinion().size();
+	int size = enemy->getMonster().size();
 	for (int i = 0; i < size; i++)
 	{
-		if (colCheck(cam, enemy->getMinion()[i]->getRC()))
+		if (colCheck(cam, enemy->getMonster()[i]->getRC()))
 		{
 			camInEnemy.push_back(i);
 		}
@@ -262,9 +262,9 @@ void gameScene::checkEnemDie()
 	{
 		int num = camInEnemy[i];
 
-		if (enemy->getMinion().size() <= num || enemy->getMinion()[num]->getHp() <= 0)
+		if (enemy->getMonster().size() <= num || enemy->getMonster()[num]->getHp() <= 0)
 		{
-			//cout << enemy->getMinion().size() << " / " << num << '\n';
+			//cout << enemy->getMonster().size() << " / " << num << '\n';
 			camInEnemy.erase(camInEnemy.begin() + i);
 			size = camInEnemy.size();
 		}
@@ -287,9 +287,9 @@ void gameScene::playerAttack()
 		{
 			num = camInEnemy[j];
 
-			if (!enemy->getMinion()[num]->getAppear()) continue;
-			if (0 >= enemy->getMinion()[num]->getHp())continue;
-			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMinion()[num]->getRC()))
+			if (!enemy->getMonster()[num]->getAppear()) continue;
+			if (0 >= enemy->getMonster()[num]->getHp())continue;
+			if (colCheck(_player->getBlaze()->getBullet()[i].rc, enemy->getMonster()[num]->getRC()))
 			{
 				bool criCheck = PLAYERDATA->criAppear();
 
@@ -305,7 +305,7 @@ void gameScene::playerAttack()
 				SOUNDMANAGER->play("blazeExp", false);
 				PARTICLE->explosionGenerate("explosionParticle", _player->getBlaze()->getBullet()[i].x + 20,
 					_player->getBlaze()->getBullet()[i].y + 20, 12, 50, 2.f, 1, true);
-				enemy->getMinion()[num]->hit(damage, _player->getBlaze()->getBullet()[i].angle, 20.f, 0, criCheck);
+				enemy->getMonster()[num]->hit(damage, _player->getBlaze()->getBullet()[i].angle, 20.f, 0, criCheck);
 
 				_player->getBlaze()->setCol(i, true);
 
@@ -324,9 +324,9 @@ void gameScene::playerAttack()
 		{
 			num = camInEnemy[j];
 
-			if (!enemy->getMinion()[num]->getAppear()) continue;
-			if (0 >= enemy->getMinion()[num]->getHp())continue;
-			if (colCheck(_player->getMeteor()->getColRect(i), enemy->getMinion()[num]->getRC()))
+			if (!enemy->getMonster()[num]->getAppear()) continue;
+			if (0 >= enemy->getMonster()[num]->getHp())continue;
+			if (colCheck(_player->getMeteor()->getColRect(i), enemy->getMonster()[num]->getRC()))
 			{
 				//크리티컬?
 				bool criCheck = PLAYERDATA->criAppear();
@@ -340,7 +340,7 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(damage, _player->getMeteor()->getSkillNum());
 				}
 
-				enemy->getMinion()[num]->hit(damage, _player->getMeteor()->getAngle(i),
+				enemy->getMonster()[num]->hit(damage, _player->getMeteor()->getAngle(i),
 					30.f, _player->getMeteor()->getSkillNum(), criCheck);
 
 				break;
@@ -358,9 +358,9 @@ void gameScene::playerAttack()
 		{
 			int num = camInEnemy[j];
 
-			if (!enemy->getMinion()[num]->getAppear()) continue;
-			if (0 >= enemy->getMinion()[num]->getHp())continue;
-			if (colCheck(_player->getDashFire()->getRect(i), enemy->getMinion()[num]->getRC()))
+			if (!enemy->getMonster()[num]->getAppear()) continue;
+			if (0 >= enemy->getMonster()[num]->getHp())continue;
+			if (colCheck(_player->getDashFire()->getRect(i), enemy->getMonster()[num]->getRC()))
 			{
 				bool criCheck = PLAYERDATA->criAppear();
 
@@ -372,7 +372,7 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(damage, _player->getDashFire()->getSkillNum());
 				}
 
-				enemy->getMinion()[num]->hit(damage, 70.f, 20.f, _player->getDashFire()->getSkillNum(), criCheck);
+				enemy->getMonster()[num]->hit(damage, 70.f, 20.f, _player->getDashFire()->getSkillNum(), criCheck);
 			}
 		}
 	}//end of for
@@ -384,15 +384,15 @@ void gameScene::playerAttack()
 	{
 		num = camInEnemy[i];
 
-		long enemyX = enemy->getMinion()[num]->getPos().x;
-		long enemyY = enemy->getMinion()[num]->getPos().y;
+		long enemyX = enemy->getMonster()[num]->getPos().x;
+		long enemyY = enemy->getMonster()[num]->getPos().y;
 
-		if (!enemy->getMinion()[num]->getAppear()) continue;
-		if (0 >= enemy->getMinion()[num]->getHp())continue;
-		if (colCheck(_player->getInferno()->getInf().rc, enemy->getMinion()[num]->getRC()))
+		if (!enemy->getMonster()[num]->getAppear()) continue;
+		if (0 >= enemy->getMonster()[num]->getHp())continue;
+		if (colCheck(_player->getInferno()->getInf().rc, enemy->getMonster()[num]->getRC()))
 		{
 			//게이징 + 무브 상태가 아닐 때 inferno와 몬스터 충돌 체크
-			if (!_player->getInferno()->getActive() && _player->getInferno()->CheckCollision(enemy->getMinion()[num]->getRC()))
+			if (!_player->getInferno()->getActive() && _player->getInferno()->CheckCollision(enemy->getMonster()[num]->getRC()))
 			{
 				//충돌되면 그 자리에서 공격
 				if (PLAYERDATA->getGaugeTime() < 50)
@@ -413,7 +413,7 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(damage, 3);
 				}
 
-				if (enemy->getMinion()[num]->getMonsterKind() != MONSTERKIND::GOLEM && enemy->getMinion()[num]->getMonsterKind() != MONSTERKIND::GHOULLARGE)
+				if (enemy->getMonster()[num]->getMonsterKind() != MONSTERKIND::GOLEM && enemy->getMonster()[num]->getMonsterKind() != MONSTERKIND::GHOULLARGE)
 				{
 					float angle = getAngle(enemyX + 40, enemyY + 40,
 						_player->getInferno()->getInf().x, _player->getInferno()->getInf().y);
@@ -421,9 +421,9 @@ void gameScene::playerAttack()
 					float x = enemyX + cosf(angle) * 4.5f;
 					float y = enemyY - sinf(angle) * 4.5f;
 
-					enemy->getMinion()[num]->setPt(x, y);
+					enemy->getMonster()[num]->setPt(x, y);
 				}
-				enemy->getMinion()[num]->hit(damage, 0, 0.f, 3, criCheck);
+				enemy->getMonster()[num]->hit(damage, 0, 0.f, 3, criCheck);
 			}
 		}
 	}//end of for
@@ -440,9 +440,9 @@ void gameScene::playerAttack()
 			for (int j = 0; j < sizeB; j++)
 			{
 				num = camInEnemy[j];
-				if (!enemy->getMinion()[num]->getAppear()) continue;
-				if (0 >= enemy->getMinion()[num]->getHp())continue;
-				if (colCheck(_player->getDragon()->getDragonRC(i), enemy->getMinion()[num]->getRC()))
+				if (!enemy->getMonster()[num]->getAppear()) continue;
+				if (0 >= enemy->getMonster()[num]->getHp())continue;
+				if (colCheck(_player->getDragon()->getDragonRC(i), enemy->getMonster()[num]->getRC()))
 				{
 					bool criCheck = PLAYERDATA->criAppear();
 
@@ -453,7 +453,7 @@ void gameScene::playerAttack()
 					{
 						_player->chargeSkillGauge(damage, 4);
 					}
-					enemy->getMinion()[num]->hit(damage, _player->getDragon()->getDragonAngle(i), 10.f, 4, criCheck);
+					enemy->getMonster()[num]->hit(damage, _player->getDragon()->getDragonAngle(i), 10.f, 4, criCheck);
 				}
 			}
 		}
@@ -468,9 +468,9 @@ void gameScene::playerAttack()
 		for (int j = 0; j < sizeB; j++)
 		{
 			num = camInEnemy[j];
-			if (!enemy->getMinion()[num]->getAppear()) continue;
-			if (0 >= enemy->getMinion()[num]->getHp())continue;
-			if (colCheck(_player->getDragon()->getColRc(i), enemy->getMinion()[num]->getRC()))
+			if (!enemy->getMonster()[num]->getAppear()) continue;
+			if (0 >= enemy->getMonster()[num]->getHp())continue;
+			if (colCheck(_player->getDragon()->getColRc(i), enemy->getMonster()[num]->getRC()))
 			{
 				bool criCheck = PLAYERDATA->criAppear();
 
@@ -481,7 +481,7 @@ void gameScene::playerAttack()
 				{
 					_player->chargeSkillGauge(damage, 4);
 				}
-				enemy->getMinion()[num]->hit(damage, _player->getDragon()->getHeadAngle(i), 10.f, 4, criCheck);
+				enemy->getMonster()[num]->hit(damage, _player->getDragon()->getHeadAngle(i), 10.f, 4, criCheck);
 			}
 
 		}
@@ -497,11 +497,11 @@ void gameScene::playerAttack()
 		{
 			num = camInEnemy[j];
 
-			if (!enemy->getMinion()[num]->getAppear()) continue;
-			if (0 >= enemy->getMinion()[num]->getHp())continue;
-			if (colCheck(_player->getSpear()->getSpearRc(i), enemy->getMinion()[num]->getRC()))
+			if (!enemy->getMonster()[num]->getAppear()) continue;
+			if (0 >= enemy->getMonster()[num]->getHp())continue;
+			if (colCheck(_player->getSpear()->getSpearRc(i), enemy->getMonster()[num]->getRC()))
 			{
-				//enemy->getMinion()[j]->setPt(_player->getSpear()->getSpearRc(i).left, _player->getSpear()->getSpearRc(i).top);
+				//enemy->getMonster()[j]->setPt(_player->getSpear()->getSpearRc(i).left, _player->getSpear()->getSpearRc(i).top);
 
 				bool criCheck = PLAYERDATA->criAppear();
 
@@ -512,7 +512,7 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(damage, 5);
 				}
 
-				enemy->getMinion()[num]->hit(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, criCheck, true);
+				enemy->getMonster()[num]->hit(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, criCheck, true);
 
 				_player->getSpear()->setCol(i, true);
 			}
@@ -528,9 +528,9 @@ void gameScene::playerAttack()
 		for (int j = 0; j < sizeB; j++)
 		{
 			num = camInEnemy[j];
-			if (!enemy->getMinion()[num]->getAppear()) continue;
-			if (0 >= enemy->getMinion()[num]->getHp())continue;
-			if (colCheck(_player->getSpear()->getUpgradeRC(i), enemy->getMinion()[num]->getRC()))
+			if (!enemy->getMonster()[num]->getAppear()) continue;
+			if (0 >= enemy->getMonster()[num]->getHp())continue;
+			if (colCheck(_player->getSpear()->getUpgradeRC(i), enemy->getMonster()[num]->getRC()))
 			{
 				bool criCheck = PLAYERDATA->criAppear();
 
@@ -541,7 +541,7 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(damage, 5);
 				}
 
-				enemy->getMinion()[num]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 30.f, 5, criCheck, true);
+				enemy->getMonster()[num]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 30.f, 5, criCheck, true);
 
 				_player->getSpear()->setUpgradeCol(i, true);
 			}
@@ -555,32 +555,32 @@ void gameScene::enemyAttack()
 	if (PLAYERDATA->getHp() <= 0)return;
 	if (PLAYERDATA->getInvincibility()) return;
 
-	for (int i = 0; i < enemy->getBullet()->getBullet().size(); )
+	for (int i = 0; i < enemy->getAttack()->getAttack().size(); )
 	{
-		if (colCheck(enemy->getBullet()->getRect(i), _player->getRect()))
+		if (colCheck(enemy->getAttack()->getRect(i), _player->getRect()))
 		{
 			if (PLAYERDATA->getShroud() == false)
 			{
-				int damage = enemy->getBullet()->getBullet()[i].atkPower;
+				int damage = enemy->getAttack()->getAttack()[i].atkPower;
 
 				if (PLAYERDATA->getStat().doubleDamage)
 				{
-					_player->damage(damage * 2, enemy->getBullet()->getBullet()[i].angle, 4.f);
+					_player->damage(damage * 2, enemy->getAttack()->getAttack()[i].angle, 4.f);
 				}
 
 				else
 				{
-					_player->damage(damage, enemy->getBullet()->getBullet()[i].angle, 4.f);
+					_player->damage(damage, enemy->getAttack()->getAttack()[i].angle, 4.f);
 				}
 			}
 			else { PLAYERDATA->setShroud(false); SOUNDMANAGER->play("shieldOFF", false, 1.0f); }
 
-			if (enemy->getBullet()->getBullet()[i].kind == MONSTERKIND::SUMMONER)
+			if (enemy->getAttack()->getAttack()[i].kind == MONSTERKIND::SUMMONER)
 			{
 				PARTICLE->crashRockParticlePlay(_player->getX(), _player->getY());
 				SOUNDMANAGER->play("summonerAtk", false, -0.18f);
 			}
-			enemy->getBullet()->removeBullet(i);
+			enemy->getAttack()->removeAttack(i);
 		}
 		else
 		{
@@ -591,15 +591,15 @@ void gameScene::enemyAttack()
 
 void gameScene::enemyUnitRenderInit()
 {
-	for (int i = 0; i < enemy->getMinion().size(); i++)
+	for (int i = 0; i < enemy->getMonster().size(); i++)
 	{
-		if (!enemy->getMinion()[i]->getAppear()) continue;
-		POINT currentFrame = enemy->getMinion()[i]->getCurrentFrame();
-		POINT monsterPos = enemy->getMinion()[i]->getPos();
-		switch (enemy->getMinion()[i]->getMonsterKind())
+		if (!enemy->getMonster()[i]->getAppear()) continue;
+		POINT currentFrame = enemy->getMonster()[i]->getCurrentFrame();
+		POINT monsterPos = enemy->getMonster()[i]->getPos();
+		switch (enemy->getMonster()[i]->getMonsterKind())
 		{
 		case MONSTERKIND::GOLEM:
-			if (enemy->getMinion()[i]->getHit() && !enemy->getMinion()[i]->getDie())
+			if (enemy->getMonster()[i]->getHit() && !enemy->getMonster()[i]->getDie())
 				UNITRENDER->enemyInit(4, currentFrame, monsterPos);//골렘히트시
 			else
 				UNITRENDER->enemyInit(0, currentFrame, monsterPos);
@@ -614,7 +614,7 @@ void gameScene::enemyUnitRenderInit()
 			UNITRENDER->enemyInit(3, currentFrame, monsterPos);
 			break;
 		case MONSTERKIND::GHOULLARGE:
-			if (enemy->getMinion()[i]->getHit() && !enemy->getMinion()[i]->getDie())
+			if (enemy->getMonster()[i]->getHit() && !enemy->getMonster()[i]->getDie())
 				UNITRENDER->enemyInit(6, currentFrame, monsterPos); // ghoulLarge hit
 			else
 				UNITRENDER->enemyInit(5, currentFrame, monsterPos);

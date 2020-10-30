@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "bullet.h"
 //=============================================================
-//	## bullet ## (공용총알)
+//	## attack ## (공용총알)
 //=============================================================
 
-HRESULT bullet::init(const char* imageName, int bulletMax, float range, float ghoulLargeRange, bool isFrameImg)
+HRESULT attack::init(const char* imageName, int bulletMax, float range, float ghoulLargeRange, bool isFrameImg)
 {
 	//총알 이미지 초기화
 	_imageName = imageName;
@@ -18,124 +18,124 @@ HRESULT bullet::init(const char* imageName, int bulletMax, float range, float gh
 	return S_OK;
 }
 
-void bullet::release()
+void attack::release()
 {
 }
 
-void bullet::update()
+void attack::update()
 {
 	this->move();
 }
 
-void bullet::render()
+void attack::render()
 {
-	int size = _vBullet.size();
+	int size = _vAttack.size();
 	for (int i = 0; i < size; i++)
 	{
-		//CAMERAMANAGER->Rectangle(getMemDC(), _vBullet[i].rc);
-		if (_vBullet[i].bulletImage)
-			CAMERAMANAGER->FrameRender(getMemDC(), _vBullet[i].bulletImage,
-				_vBullet[i].x - (_vBullet[i].bulletImage->getFrameWidth() >> 1),
-				_vBullet[i].y - (_vBullet[i].bulletImage->getFrameHeight() >> 1),
-				_vBullet[i].FrameX, _vBullet[i].FrameY);
+		//CAMERAMANAGER->Rectangle(getMemDC(), _vAttack[i].rc);
+		if (_vAttack[i].bulletImage)
+			CAMERAMANAGER->FrameRender(getMemDC(), _vAttack[i].bulletImage,
+				_vAttack[i].x - (_vAttack[i].bulletImage->getFrameWidth() >> 1),
+				_vAttack[i].y - (_vAttack[i].bulletImage->getFrameHeight() >> 1),
+				_vAttack[i].FrameX, _vAttack[i].FrameY);
 	}
 }
 
-void bullet::fire(float x, float y, float angle, float speed, int damage, MONSTERKIND kind)
+void attack::fire(float x, float y, float angle, float speed, int damage, MONSTERKIND kind)
 {
 	//총알 벡터에 담는것을 제한한다
-	//if (_bulletMax < _vBullet.size() + 1) return;
+	//if (_bulletMax < _vAttack.size() + 1) return;
 
 	//총알 구조체 선언
-	tagBullet bullet;
+	tagBullet attack;
 	//총알 구조체 초기화
 	//제로메모리, 멤셋
 	//구조체 변수들의 값을 한번에 0으로 초기화 시켜준다
-	//ZeroMemory(&bullet, sizeof(tagBullet));
-	//bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
+	//ZeroMemory(&attack, sizeof(tagBullet));
+	//attack.bulletImage = IMAGEMANAGER->findImage(_imageName);
 	if (kind == MONSTERKIND::SUMMONER)
 	{
-		bullet.bulletImage = IMAGEMANAGER->findImage(_imageName);
+		attack.bulletImage = IMAGEMANAGER->findImage(_imageName);
 	}
 	else
 	{
-		bullet.bulletImage = NULL;
+		attack.bulletImage = NULL;
 	}
-	bullet.kind = kind;
-	bullet.speed = speed;
-	bullet.angle = angle;
-	bullet.x = bullet.fireX = x;
-	bullet.y = bullet.fireY = y;
-	bullet.radius = 36;
-	bullet.atkPower = damage;
-	bullet.count = 0;
-	bullet.FrameX = 0;
-	bullet.FrameY = 0;
+	attack.kind = kind;
+	attack.speed = speed;
+	attack.angle = angle;
+	attack.x = attack.fireX = x;
+	attack.y = attack.fireY = y;
+	attack.radius = 36;
+	attack.atkPower = damage;
+	attack.count = 0;
+	attack.FrameX = 0;
+	attack.FrameY = 0;
 
 
 	//벡터에 담기
-	_vBullet.push_back(bullet);
+	_vAttack.push_back(attack);
 }
 
-void bullet::move()
+void attack::move()
 {
-	int size = _vBullet.size();
+	int size = _vAttack.size();
 	for (int i = 0; i < size; i++)
 	{
-		_vBullet[i].FrameX = 1;
-		_vBullet[i].x += cosf(_vBullet[i].angle) * _vBullet[i].speed;
-		_vBullet[i].y += -sinf(_vBullet[i].angle) * _vBullet[i].speed;
+		_vAttack[i].FrameX = 1;
+		_vAttack[i].x += cosf(_vAttack[i].angle) * _vAttack[i].speed;
+		_vAttack[i].y += -sinf(_vAttack[i].angle) * _vAttack[i].speed;
 
-		switch (_vBullet[i].kind)
+		switch (_vAttack[i].kind)
 		{
 		case MONSTERKIND::GOLEM:
-			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 130, 200);
-			_vBullet[i].count++;
-			if (_vBullet[i].count >= 10)
+			_vAttack[i].rc = RectMake(_vAttack[i].x, _vAttack[i].y, 130, 200);
+			_vAttack[i].count++;
+			if (_vAttack[i].count >= 10)
 			{
-				_vBullet.erase(_vBullet.begin() + i);
-				size = _vBullet.size();
+				_vAttack.erase(_vAttack.begin() + i);
+				size = _vAttack.size();
 			}
 			break;
 		case MONSTERKIND::KNIGHT:
-			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 110, 150);
-			_vBullet[i].count++;
-			if (_vBullet[i].count >= 5)
+			_vAttack[i].rc = RectMake(_vAttack[i].x, _vAttack[i].y, 110, 150);
+			_vAttack[i].count++;
+			if (_vAttack[i].count >= 5)
 			{
-				_vBullet.erase(_vBullet.begin() + i);
-				size = _vBullet.size();
+				_vAttack.erase(_vAttack.begin() + i);
+				size = _vAttack.size();
 			}
 			break;
 		case MONSTERKIND::SUMMONER:
 		{
-			_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 30, 30);
-			float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
-				_vBullet[i].x, _vBullet[i].y);
+			_vAttack[i].rc = RectMakeCenter(_vAttack[i].x, _vAttack[i].y, 30, 30);
+			float distance = getDistance(_vAttack[i].fireX, _vAttack[i].fireY,
+				_vAttack[i].x, _vAttack[i].y);
 			if (_range < distance)//총알이 사거리 보다 커졌을때
 			{
-				_vBullet.erase(_vBullet.begin() + i);
-				size = _vBullet.size();
+				_vAttack.erase(_vAttack.begin() + i);
+				size = _vAttack.size();
 			}
 		}
 		break;
 		case MONSTERKIND::GHOUL:
-			_vBullet[i].rc = RectMake(_vBullet[i].x, _vBullet[i].y, 90, 130);
-			_vBullet[i].count++;
-			if (_vBullet[i].count >= 5)
+			_vAttack[i].rc = RectMake(_vAttack[i].x, _vAttack[i].y, 90, 130);
+			_vAttack[i].count++;
+			if (_vAttack[i].count >= 5)
 			{
-				_vBullet.erase(_vBullet.begin() + i);
-				size = _vBullet.size();
+				_vAttack.erase(_vAttack.begin() + i);
+				size = _vAttack.size();
 			}
 			break;
 		case MONSTERKIND::GHOULLARGE:
-			_vBullet[i].rc = RectMakeCenter(_vBullet[i].x, _vBullet[i].y, 120, 140);
-			_vBullet[i].count++;
-			float distance = getDistance(_vBullet[i].fireX, _vBullet[i].fireY,
-				_vBullet[i].x, _vBullet[i].y);
+			_vAttack[i].rc = RectMakeCenter(_vAttack[i].x, _vAttack[i].y, 120, 140);
+			_vAttack[i].count++;
+			float distance = getDistance(_vAttack[i].fireX, _vAttack[i].fireY,
+				_vAttack[i].x, _vAttack[i].y);
 			if (_ghoulLargeRange < distance)//총알이 사거리 보다 커졌을때
 			{
-				_vBullet.erase(_vBullet.begin() + i);
-				size = _vBullet.size();
+				_vAttack.erase(_vAttack.begin() + i);
+				size = _vAttack.size();
 			}
 			break;
 		}
@@ -144,9 +144,9 @@ void bullet::move()
 }
 
 //총알삭제
-void bullet::removeBullet(int index)
+void attack::removeAttack(int index)
 {
-	_vBullet.erase(_vBullet.begin() + index);
+	_vAttack.erase(_vAttack.begin() + index);
 }
 //수정 중(player flame strike)
 //=============================================================

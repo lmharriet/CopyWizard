@@ -11,14 +11,14 @@ class enemyManager : public gameNode
 {
 	
 private:
-	vector<shared_ptr<monster>> _vMinion;
-	vector<shared_ptr<monster>>::iterator _viMinion;
+	vector<shared_ptr<monster>> _vMonster;
+	vector<shared_ptr<monster>>::iterator _viMonster;
 	tagTile* tile;
 	RECT playerRC;
 	//vector<enemy*> _vBoss;
 	
 
-	bullet* _bullet; //공용총알
+	attack* _attack; //공용총알
 public:
 	HRESULT init(tagTile* _tile, tagTile* _subTile, POINT _monPt);
 	void release();
@@ -28,27 +28,27 @@ public:
 
 
 	//미니언 세팅 => 초기화에 넣는다
-	void setMinion(tagTile* _subTile, POINT _monPt);
+	void setMonster(tagTile* _subTile, POINT _monPt);
 	//void setBoss();
 	//미니언 총알발사
-	void minionBulletFire(float aimX, float aimY);
+	void monsterAttackFire(float aimX, float aimY);
 	//미니언 삭제
-	void removeMinion(int index);
+	void removeMonster(int index);
 
 	//플레이어 렉트 가져오기
 	void setPlayerRC(RECT _playerRC) { playerRC = _playerRC; }
 	//미니언 벡터 가져오기
-	vector<shared_ptr<monster>> getMinion() { return _vMinion; }
+	vector<shared_ptr<monster>> getMonster() { return _vMonster; }
 
 	//충돌처리 (미니언들의 총알, 플레이어)
 	//void collision(RECT player);
 
-	//bullet 
-	bullet* getBullet() { return _bullet; }
-	void golemBullet(float angle);
-	void knightBullet(float angle);
-	void summonerBullet(float angle);
-	void ghoulLargeBullet(float angle);
+	//attack 
+	attack* getAttack() { return _attack; }
+	void golemAttack(float angle);
+	void knightAttack(float angle);
+	void summonerAttack(float angle);
+	void ghoulLargeAttack(float angle);
 
 	
 	enemyManager();
