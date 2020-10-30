@@ -437,7 +437,7 @@ void bossScene::attackBoss()
 	{
 		if (colCheck(_player->getSpear()->getSpearRc(i), _boss->getBossRect()))
 		{
-			//enemy->getMinion()[j]->setPt(_player->getSpear()->getSpearRc(i).left, _player->getSpear()->getSpearRc(i).top);
+			//enemy->getMonster()[j]->setPt(_player->getSpear()->getSpearRc(i).left, _player->getSpear()->getSpearRc(i).top);
 
 			bool isCri = PLAYERDATA->criAppear();
 

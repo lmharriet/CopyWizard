@@ -120,10 +120,14 @@ public:
 	//inferno용
 	void setGauging(bool temp) { isGauging = temp; }
 	void setGaugeTime(int time) { _gaugeTime = time; }
-
+	
 
 	tagStat getStat() { return stat; }
 	void setStat(string itemName);
+
+	//1회 부활 아이템 사용후 인벤토리에서 삭제하기 위한 용도 
+	void setResurrection();
+
 
 	int damageCul(int damage, bool isCritical);
 

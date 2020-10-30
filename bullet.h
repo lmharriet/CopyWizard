@@ -90,14 +90,14 @@ struct tagDragon
 };
 
 //=============================================================
-//    ## bullet ## (공용총알)
+//    ## attack ## (공용총알)
 //=============================================================
-class bullet : public gameNode
+class attack : public gameNode
 {
 private:
 	//총알 구조체를 담을 벡터선언
-	vector<tagBullet> _vBullet;
-	vector<tagBullet>::iterator _viBullet;
+	vector<tagBullet> _vAttack;
+	vector<tagBullet>::iterator _viAttack;
 private:
 	const char* _imageName;    //총알 이미지 이름
 	float _range;            //총알 사거리
@@ -117,15 +117,15 @@ public:
 	//총알무브
 	void move();
 	//총알 비어있는지 확인
-	bool bulletEmpty() { if (_vBullet.empty())return true; else return false; }
+	bool attackEmpty() { if (_vAttack.empty())return true; else return false; }
 
 	//총알삭제
-	void removeBullet(int index);
+	void removeAttack(int index);
 
 	//공용총알 벡터 가져오기
-	vector<tagBullet> getBullet() { return _vBullet; }
+	vector<tagBullet> getAttack() { return _vAttack; }
 	//공용총알 렉트 가져오기
-	RECT getRect(int index) { return _vBullet[index].rc; }
+	RECT getRect(int index) { return _vAttack[index].rc; }
 
 };
 

@@ -210,6 +210,19 @@ void playerData::setStat(string itemName)
 	if (itemName == "수상한 알약")hp = maxHp;
 }
 
+void playerData::setResurrection()
+{
+	stat.resurrection = false;
+
+	for (int i = 0; i < vInven.size(); i++)
+	{
+		if (vInven[i].keyName == "보험증서")
+		{
+			vInven.erase(vInven.begin() + i);
+		}
+	}
+}
+
 int playerData::damageCul(int damage, bool isCritical)
 {
 	//cri check -> bloodGold -> halfFace

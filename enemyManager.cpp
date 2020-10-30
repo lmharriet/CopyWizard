@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "enemyManager.h"
 
-enemyManager::enemyManager():_bullet(nullptr){}
+enemyManager::enemyManager():_attack(nullptr){}
 
 
 HRESULT enemyManager::init(tagTile* _tile, tagTile* _subTile, POINT _monPt)
@@ -10,13 +10,13 @@ HRESULT enemyManager::init(tagTile* _tile, tagTile* _subTile, POINT _monPt)
 	
 	
 	tile = _tile;
-	//미니언 생성
-	this->setMinion(_subTile, _monPt);
+	//몬스터 생성
+	this->setMonster(_subTile, _monPt);
 
 	//공용총알 클래스 초기화
-	if(_bullet==nullptr)
-		_bullet = new bullet;
-	_bullet->init("stoneFly", 15, 500,110);
+	if(_attack==nullptr)
+		_attack = new attack;
+	_attack->init("stoneFly", 15, 500,110);
 
 	return S_OK;
 }
@@ -24,11 +24,11 @@ HRESULT enemyManager::init(tagTile* _tile, tagTile* _subTile, POINT _monPt)
 void enemyManager::release()
 {
 	//공용총알 클래스 삭제
-	_bullet->release();
-	SAFE_DELETE(_bullet);
-	/*for (int i = 0; i < _vMinion.size(); i++)
+	_attack->release();
+	SAFE_DELETE(_attack);
+	/*for (int i = 0; i < _vMonster.size(); i++)
 	{
-		SAFE_DELETE(_vMinion[i]);
+		SAFE_DELETE(_vMonster[i]);
 	}*/
 }
 
@@ -36,17 +36,17 @@ void enemyManager::update()
 {
 	//공용총알 업데이트
 	
-	_bullet->update(); 
+	_attack->update(); 
 
-	//벡터에 담긴 미니언들 업데이트
-	for (int i = 0; i < _vMinion.size();  )
+	//벡터에 담긴 몬스터들 업데이트
+	for (int i = 0; i < _vMonster.size();  )
 	{
-		_vMinion[i]->setPlayerRC(playerRC);
-		_vMinion[i]->commonUpdate();
+		_vMonster[i]->setPlayerRC(playerRC);
+		_vMonster[i]->commonUpdate();
 
-		if (_vMinion[i]->getDelete())
+		if (_vMonster[i]->getDelete())
 		{
-			removeMinion(i);
+			removeMonster(i);
 		}
 		else
 		{
@@ -55,8 +55,8 @@ void enemyManager::update()
 		
 	}
 	
-	//미니언 총알발사
-	this->minionBulletFire(CAMERAMANAGER->GetRelativeX(playerRC.left), CAMERAMANAGER->GetRelativeY(playerRC.top));
+	//몬스터 총알발사
+	this->monsterAttackFire(CAMERAMANAGER->GetRelativeX(playerRC.left), CAMERAMANAGER->GetRelativeY(playerRC.top));
 
 	
 }
@@ -64,24 +64,24 @@ void enemyManager::update()
 void enemyManager::render()
 {
 	//공용총알 렌더
-	_bullet->render();
-	int sizeRange = _vMinion.size();
+	_attack->render();
+	int sizeRange = _vMonster.size();
 	for (int i = 0; i < sizeRange; i++)
 	{
-		_vMinion[i]->render();
+		_vMonster[i]->render();
 	}
 
 
 }
 
-void enemyManager::setMinion(tagTile* _subTile, POINT _monPt)
+void enemyManager::setMonster(tagTile* _subTile, POINT _monPt)
 {
-	int sizeRange = _vMinion.size();
+	int sizeRange = _vMonster.size();
 	for (int i = 0; i < sizeRange; i++)
 	{
-		_vMinion[i]->release();
+		_vMonster[i]->release();
 	}
-		_vMinion.clear();
+		_vMonster.clear();
 
 	for (int i = 0; i < MAXTILE; i++)
 	{
@@ -91,28 +91,28 @@ void enemyManager::setMinion(tagTile* _subTile, POINT _monPt)
 		case UNIT_KIND::KNIGHT:
 		{shared_ptr<monster> _knight = make_shared<knight>();
 		_knight->init(tile, pos);
-		_vMinion.push_back(_knight); }
+		_vMonster.push_back(_knight); }
 			break;
 
 		case UNIT_KIND::MAGE:
 		{shared_ptr<monster> _summoner = make_shared <summoner>();
 		_summoner->init(tile, pos);
-		_vMinion.push_back(_summoner); }
+		_vMonster.push_back(_summoner); }
 			break;
 		case UNIT_KIND::GOLEM:
 		{shared_ptr<monster> _golem = make_shared <golem>();
 		_golem->init(tile, pos);
-		_vMinion.push_back(_golem); }
+		_vMonster.push_back(_golem); }
 			break;
 		case UNIT_KIND::GHOUL:
 		{shared_ptr<monster> _ghoul = make_shared <ghoul>();
 		_ghoul->init(tile, pos);
-		_vMinion.push_back(_ghoul); }
+		_vMonster.push_back(_ghoul); }
 			break;
 		case UNIT_KIND::GHOULLARGE:
 		{shared_ptr<monster> _ghoulLarge = make_shared <ghoulLarge>();
 		_ghoulLarge->init(tile, pos);
-		_vMinion.push_back(_ghoulLarge); }
+		_vMonster.push_back(_ghoulLarge); }
 			break;
 		
 		}
@@ -123,135 +123,135 @@ void enemyManager::setMinion(tagTile* _subTile, POINT _monPt)
 	
 }
 
-void enemyManager::minionBulletFire(float aimX, float aimY)
+void enemyManager::monsterAttackFire(float aimX, float aimY)
 {
-	_viMinion = _vMinion.begin();
-	for (_viMinion; _viMinion != _vMinion.end(); ++_viMinion)
+	_viMonster = _vMonster.begin();
+	for (_viMonster; _viMonster != _vMonster.end(); ++_viMonster)
 	{
-		if ((*_viMinion)->getFx() == false)continue;
+		if ((*_viMonster)->getFx() == false)continue;
 		
-		float angle = getAngle((float)(*_viMinion)->getCulCenterX(), (float)(*_viMinion)->getCulCenterY(), (float)aimX, (float)aimY);
-		switch ((*_viMinion)->getMonsterKind())
+		float angle = getAngle((float)(*_viMonster)->getCulCenterX(), (float)(*_viMonster)->getCulCenterY(), (float)aimX, (float)aimY);
+		switch ((*_viMonster)->getMonsterKind())
 		{
 		case MONSTERKIND::GOLEM:
-			golemBullet( angle);
+			golemAttack( angle);
 			break;
 		case MONSTERKIND::KNIGHT:
-			angle = getAngle((float)(*_viMinion)->getCulCenterX(), (float)(*_viMinion)->getCulCenterY()+50, (float)aimX, (float)aimY);
-			knightBullet(angle);
+			angle = getAngle((float)(*_viMonster)->getCulCenterX(), (float)(*_viMonster)->getCulCenterY()+50, (float)aimX, (float)aimY);
+			knightAttack(angle);
 			break;
 		case MONSTERKIND::SUMMONER:
-			angle = getAngle((float)(*_viMinion)->getCulPos().x+50, (float)(*_viMinion)->getCulPos().y-52, 
+			angle = getAngle((float)(*_viMonster)->getCulPos().x+50, (float)(*_viMonster)->getCulPos().y-52, 
 				(float)aimX, (float)aimY);
-			summonerBullet(angle);
+			summonerAttack(angle);
 			SOUNDMANAGER->play("summonerFire", false,-0.3f);
-			(*_viMinion)->setFx(false);
+			(*_viMonster)->setFx(false);
 			break;
 		case MONSTERKIND::GHOUL:
-			angle = getAngle((float)(*_viMinion)->getCulCenterX(), (float)(*_viMinion)->getCulCenterY() + 50, (float)aimX, (float)aimY);
-			knightBullet(angle);
+			angle = getAngle((float)(*_viMonster)->getCulCenterX(), (float)(*_viMonster)->getCulCenterY() + 50, (float)aimX, (float)aimY);
+			knightAttack(angle);
 			break;
 		case MONSTERKIND::GHOULLARGE:
-			ghoulLargeBullet((*_viMinion)->getAngle());
+			ghoulLargeAttack((*_viMonster)->getAngle());
 			break;
 		}
 		
 	}
 }
 
-void enemyManager::removeMinion(int index)
+void enemyManager::removeMonster(int index)
 {
-	_vMinion.erase(_vMinion.begin() + index);
+	_vMonster.erase(_vMonster.begin() + index);
 }
 
-void enemyManager::golemBullet(float angle)
+void enemyManager::golemAttack(float angle)
 {
-	switch ((*_viMinion)->getBulletDirection())
+	switch ((*_viMonster)->getBulletDirection())
 	{
 	case MONSTER_UP:
-		_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y - 72,
-			angle, 0.f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-		(*_viMinion)->setFx(false);
+		_attack->fire((float)(*_viMonster)->getPos().x + 20, (float)(*_viMonster)->getPos().y - 72,
+			angle, 0.f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+		(*_viMonster)->setFx(false);
 		break;
 	case MONSTER_DOWN:
-		_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y + 72,
-			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-		(*_viMinion)->setFx(false);
+		_attack->fire((float)(*_viMonster)->getPos().x + 20, (float)(*_viMonster)->getPos().y + 72,
+			angle, 0.0f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+		(*_viMonster)->setFx(false);
 		break;
 	case MONSTER_LEFT:
-		_bullet->fire((float)(*_viMinion)->getPos().x - 20, (float)(*_viMinion)->getPos().y,
-			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-		(*_viMinion)->setFx(false);
+		_attack->fire((float)(*_viMonster)->getPos().x - 20, (float)(*_viMonster)->getPos().y,
+			angle, 0.0f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+		(*_viMonster)->setFx(false);
 		break;
 	case MONSTER_RIGHT:
-		_bullet->fire((float)(*_viMinion)->getPos().x + 100, (float)(*_viMinion)->getPos().y + 50,
-			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-		(*_viMinion)->setFx(false);
+		_attack->fire((float)(*_viMonster)->getPos().x + 100, (float)(*_viMonster)->getPos().y + 50,
+			angle, 0.0f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+		(*_viMonster)->setFx(false);
 		break;
 	}
 }
 
-void enemyManager::knightBullet(float angle)
+void enemyManager::knightAttack(float angle)
 {
-	switch ((*_viMinion)->getBulletDirection())
+	switch ((*_viMonster)->getBulletDirection())
 	{
 	case MONSTER_UP:
-		_bullet->fire((float)(*_viMinion)->getPos().x , (float)(*_viMinion)->getPos().y - 40,
-			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-		(*_viMinion)->setFx(false);
+		_attack->fire((float)(*_viMonster)->getPos().x , (float)(*_viMonster)->getPos().y - 40,
+			angle, 0.0f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+		(*_viMonster)->setFx(false);
 		break;
 	case MONSTER_DOWN:
-		_bullet->fire((float)(*_viMinion)->getPos().x + 20, (float)(*_viMinion)->getPos().y + 72,
-			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-		(*_viMinion)->setFx(false);
+		_attack->fire((float)(*_viMonster)->getPos().x + 20, (float)(*_viMonster)->getPos().y + 72,
+			angle, 0.0f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+		(*_viMonster)->setFx(false);
 		break;
 	case MONSTER_LEFT:
-		_bullet->fire((float)(*_viMinion)->getPos().x - 20, (float)(*_viMinion)->getPos().y + 30,
-			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-		(*_viMinion)->setFx(false);
+		_attack->fire((float)(*_viMonster)->getPos().x - 20, (float)(*_viMonster)->getPos().y + 30,
+			angle, 0.0f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+		(*_viMonster)->setFx(false);
 		break;
 	case MONSTER_RIGHT:
-		_bullet->fire((float)(*_viMinion)->getPos().x + 80, (float)(*_viMinion)->getPos().y + 70,
-			angle, 0.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-		(*_viMinion)->setFx(false);
+		_attack->fire((float)(*_viMonster)->getPos().x + 80, (float)(*_viMonster)->getPos().y + 70,
+			angle, 0.0f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+		(*_viMonster)->setFx(false);
 		break;
 	}
 }
 
-void enemyManager::summonerBullet(float angle)
+void enemyManager::summonerAttack(float angle)
 {
-	_bullet->fire((float)(*_viMinion)->getPos().x + 50, (float)(*_viMinion)->getPos().y - 52,
-		angle, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-	_bullet->fire((float)(*_viMinion)->getPos().x + 50, (float)(*_viMinion)->getPos().y - 52,
-		angle + PI / 4, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-	_bullet->fire((float)(*_viMinion)->getPos().x + 50, (float)(*_viMinion)->getPos().y - 52,
-		angle - PI / 4, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-	(*_viMinion)->setFx(false);
+	_attack->fire((float)(*_viMonster)->getPos().x + 50, (float)(*_viMonster)->getPos().y - 52,
+		angle, 9.0f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+	_attack->fire((float)(*_viMonster)->getPos().x + 50, (float)(*_viMonster)->getPos().y - 52,
+		angle + PI / 4, 9.0f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+	_attack->fire((float)(*_viMonster)->getPos().x + 50, (float)(*_viMonster)->getPos().y - 52,
+		angle - PI / 4, 9.0f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+	(*_viMonster)->setFx(false);
 }
 
-void enemyManager::ghoulLargeBullet(float angle)
+void enemyManager::ghoulLargeAttack(float angle)
 {
-	switch ((*_viMinion)->getBulletDirection())
+	switch ((*_viMonster)->getBulletDirection())
 	{
 	case MONSTER_UP:
-		_bullet->fire((float)(*_viMinion)->getCenterX(), (float)(*_viMinion)->getCenterY(),
-			angle, 9.f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-		(*_viMinion)->setFx(false);
+		_attack->fire((float)(*_viMonster)->getCenterX(), (float)(*_viMonster)->getCenterY(),
+			angle, 9.f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+		(*_viMonster)->setFx(false);
 		break;
 	case MONSTER_DOWN:
-		_bullet->fire((float)(*_viMinion)->getCenterX(), (float)(*_viMinion)->getCenterY(),
-			angle, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-		(*_viMinion)->setFx(false);
+		_attack->fire((float)(*_viMonster)->getCenterX(), (float)(*_viMonster)->getCenterY(),
+			angle, 9.0f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+		(*_viMonster)->setFx(false);
 		break;
 	case MONSTER_LEFT:
-		_bullet->fire((float)(*_viMinion)->getCenterX(), (float)(*_viMinion)->getCenterY(),
-			angle, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-		(*_viMinion)->setFx(false);
+		_attack->fire((float)(*_viMonster)->getCenterX(), (float)(*_viMonster)->getCenterY(),
+			angle, 9.0f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+		(*_viMonster)->setFx(false);
 		break;
 	case MONSTER_RIGHT:
-		_bullet->fire((float)(*_viMinion)->getCenterX(), (float)(*_viMinion)->getCenterY(),
-			angle, 9.0f, (*_viMinion)->getAttack(), (*_viMinion)->getMonsterKind());
-		(*_viMinion)->setFx(false);
+		_attack->fire((float)(*_viMonster)->getCenterX(), (float)(*_viMonster)->getCenterY(),
+			angle, 9.0f, (*_viMonster)->getAttack(), (*_viMonster)->getMonsterKind());
+		(*_viMonster)->setFx(false);
 		break;
 	}
 }

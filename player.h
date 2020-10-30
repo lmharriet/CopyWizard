@@ -102,6 +102,7 @@ private:
 
 	bool isDead;
 	int restartCount;
+	int resurrectionCount;
 
 	//sound
 	int walkCount;
@@ -157,8 +158,7 @@ public:
 	void changeState();
 
 
-	//»ç¸Á ÆÇÁ¤
-	void death();
+	
 
 	void damage(int damage, float attackAngle, float knockBackSpeed);
 
@@ -171,6 +171,12 @@ public:
 	void chargeSkillGauge(int atkPower, int skillNum);
 
 	void skillGaugeSetUp();
+
+	//»ç¸Á ÆÇÁ¤
+	void death();
+
+	void respawnSetUp();
+
 
 	//Don't touch
 	void buttonDown();
