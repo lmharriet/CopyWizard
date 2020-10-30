@@ -14,8 +14,8 @@ using namespace FMOD;
 class soundManager : public singletonBase <soundManager>
 {
 private:
-	typedef map<string, Sound**> arrSound;
-	typedef map<string, Sound**>::iterator arrSoundIter;
+	typedef unordered_map<string, Sound**> arrSound;
+	typedef unordered_map<string, Sound**>::iterator arrSoundIter;
 
 private:
 	System* _system;		//시스템 클래스
