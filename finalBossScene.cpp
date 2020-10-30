@@ -210,9 +210,9 @@ void finalBossScene::render()
 
 	//
 
-	PORTAL->backRender(getMemDC());
+	//PORTAL->backRender(getMemDC());
 
-	PORTAL->render(getMemDC());
+	//PORTAL->render(getMemDC());
 
 
 
