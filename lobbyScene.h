@@ -27,6 +27,10 @@ private:
 	//warp
 	bool sceneWarp;
 	int sceneCount;
+
+	//»ç¿îµå
+	bool isLobbyBGM;
+	float fadeIn;
 public:
 
 	HRESULT init();
@@ -44,6 +48,7 @@ public:
 
 	void buyStartingItem();
 	void startingItemPrice();
+	void soundInit();
 
 };
 

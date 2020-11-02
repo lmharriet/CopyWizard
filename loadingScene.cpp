@@ -234,42 +234,12 @@ void loadingScene::loadingSound()
 	switch (currentLoading)
 	{
 	case STARTSTAGE:
-		//플레이어 사운드
-		SOUNDMANAGER->addSound("playerHit", "Sound/player/hit.mp3");
-		SOUNDMANAGER->addSound("playerNomalDash", "Sound/player/nomalDash.mp3");
-		SOUNDMANAGER->addSound("playerfireDash", "Sound/player/fireDash.mp3");
-		SOUNDMANAGER->addSound("playerFoot", "Sound/player/footstep.mp3");
-		SOUNDMANAGER->addSound("blazeFire", "Sound/player/blaze_fire.mp3");
-		SOUNDMANAGER->addSound("blazeExp", "Sound/player/blaze_exp.mp3");
-		SOUNDMANAGER->addSound("RagingInfernoExp", "Sound/player/RagingInferno_exp.mp3");
-		SOUNDMANAGER->addSound("RagingInfernoExpBoss", "Sound/player/RagingInferno_exp_boss.mp3");
-		SOUNDMANAGER->addSound("RagingInfernoFire", "Sound/player/RagingInferno_fire.mp3");
-		SOUNDMANAGER->addSound("meteoFire0", "Sound/player/meteo_fire0.mp3");
-		SOUNDMANAGER->addSound("meteoFire1", "Sound/player/meteo_fire1.mp3");
-		SOUNDMANAGER->addSound("meteoFire2", "Sound/player/meteo_fire2.mp3");
-		SOUNDMANAGER->addSound("meteoFire3", "Sound/player/meteo_fire3.mp3");
-		SOUNDMANAGER->addSound("meteoExp0", "Sound/player/meteo_full0.mp3");
-		SOUNDMANAGER->addSound("meteoExp1", "Sound/player/meteo_full1.mp3");
-		SOUNDMANAGER->addSound("meteoExp2", "Sound/player/meteo_full2.mp3");
-		SOUNDMANAGER->addSound("meteoExp3", "Sound/player/meteo_full3.mp3");
-		SOUNDMANAGER->addSound("fireDragon", "Sound/player/fireDragon.mp3");
-		SOUNDMANAGER->addSound("fireDragonUpgrade", "Sound/player/fireDragonUpgrade.mp3");
-		SOUNDMANAGER->addSound("iceSpearATK", "Sound/player/iceSpearATK.mp3");
-		SOUNDMANAGER->addSound("iceSpearFire", "Sound/player/iceSpearFire.mp3");
-		SOUNDMANAGER->addSound("iceSpearBreak", "Sound/player/iceSpearBreak.mp3");
-		SOUNDMANAGER->addSound("iceSpearHit", "Sound/player/iceSpearHit.mp3");
+		
 		
 		//UI
 		SOUNDMANAGER->addSound("healBall", "Sound/healBall.mp3");
-		SOUNDMANAGER->addSound("portalWarp", "Sound/portalWarp.mp3");
 		SOUNDMANAGER->addSound("coinGet", "Sound/coinGet.mp3");
-		SOUNDMANAGER->addSound("invenOpen", "Sound/UI/inventoryON.mp3");
-		SOUNDMANAGER->addSound("invenClose", "Sound/UI/inventoryOFF.mp3");
 		SOUNDMANAGER->addSound("npcBuyFirst", "Sound/UI/npcBuy.mp3");
-		SOUNDMANAGER->addSound("npcBuy", "Sound/UI/npcBuy02.mp3");
-		SOUNDMANAGER->addSound("invenClose", "Sound/UI/inventoryOFF.mp3");
-		SOUNDMANAGER->addSound("shieldON", "Sound/UI/shieldON.mp3");
-		SOUNDMANAGER->addSound("shieldOFF", "Sound/UI/shieldOFF.mp3");
 		SOUNDMANAGER->addSound("npcNox", "Sound/UI/npc_nox.mp3");
 		SOUNDMANAGER->addSound("BOX_appear", "Sound/UI/BOX_appear.mp3");
 		SOUNDMANAGER->addSound("portalIN", "Sound/UI/portalIN.mp3");

@@ -38,3 +38,13 @@ enum STAGEKIND {
     FINALSTAGE,
     STAGEMAX
 };
+
+enum class PLAYERSKILL {
+    BLAZE,
+    METEOR,
+    DASHFIRE,
+    INFERNO,
+    DRAGONARC,
+    ICESPEAR,
+
+};

@@ -260,7 +260,7 @@ public:
 	tagInfo getInfo() { return info; }
 
 	bool getCool() { return isCoolTime; }
-	int getSkillNum() { return 1; }
+	int getSkillNum() { return (int)PLAYERSKILL::METEOR; }
 	//생성된 메테오용
 	vector<tagMeteor> getMeteorVec() { return vMeteor; }
 	//충돌 + 데미지용
@@ -308,7 +308,7 @@ public:
 	RECT getRect(int index) { return vDash[index].rc; }
 	int getSize() { return vDash.size(); }
 	int getAtk(int index) { return vDash[index].atkPower; }
-	int getSkillNum() { return 2; }
+	int getSkillNum() { return (int)PLAYERSKILL::DASHFIRE; }
 	float getY(int index) { return vDash[index].y; }
 
 	bool getIsCoolTime() { return isCoolTime; }
@@ -380,7 +380,7 @@ public:
 	bool getCool() { return isCoolTime; }
 
 
-	int getSkillNum() { return 3; }
+	int getSkillNum() { return (int)PLAYERSKILL::INFERNO;}
 	tagArcana getInf() { return inferno; }
 
 
@@ -449,7 +449,7 @@ public:
 	RECT getDragonRC(int index) { return vDragon[index].rc; }
 	float getDragonAngle(int index) { return vDragon[index].angle; }
 	int getAtkPower(int index) { return vDragon[index].atkPower; }
-	int getSkillNum() { return 4; }
+	int getSkillNum() { return (int)PLAYERSKILL::DRAGONARC;}
 	int getSize() { return vDragon.size(); }
 
 	//upgrade
@@ -556,7 +556,7 @@ public:
 	RECT getSpearRc(int index) { return vSpear[index].rc; }
 	int getAtkPower(int index) { return vSpear[index].atkPower; }
 	float getSpearAngle(int index) { return vSpear[index].angle; }
-	int getSkillNum() { return 5; }
+	int getSkillNum() { return (int)PLAYERSKILL::ICESPEAR;}
 	
 	void setCol(int index, bool col) { vSpear[index].collision = col; }
 

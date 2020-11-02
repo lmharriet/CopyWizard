@@ -93,6 +93,9 @@ HRESULT lobbyScene::init()
 	//setting
 	sceneWarp = false;
 	sceneCount = 0;
+
+	//사운드
+	soundInit();
 	return S_OK;
 }
 
@@ -104,12 +107,23 @@ void lobbyScene::release()
 
 void lobbyScene::update()
 {
+
+	//사운드
+	if (isLobbyBGM)
+	{
+		SOUNDMANAGER->fadeIn("lobbyBGM", fadeIn);
+		fadeIn += 0.002f;
+		if (fadeIn >= SOUNDMANAGER->getVolumeBGM())
+			isLobbyBGM = false;
+	}
+
 	UI->update();
 	CAMERAMANAGER->update();
 	PLAYERDATA->update();
 	_player->other_update();
 	if (INPUT->GetKeyDown('J'))
 	{
+		SOUNDMANAGER->stop("lobbyBGM");
 		SCENEMANAGER->loadScene("로딩화면");
 	}
 
@@ -206,6 +220,7 @@ void lobbyScene::warpToGameScene()
 
 		if (sceneCount == 17)
 		{
+			SOUNDMANAGER->stop("lobbyBGM");
 			SCENEMANAGER->loadScene("로딩화면");
 			sceneCount = 0;
 		}
@@ -271,6 +286,7 @@ void lobbyScene::buyStartingItem()
 
 		if (colCheck(_player->getRect(), startingItem[i].rc) && INPUT->GetKeyDown('F'))
 		{
+			SOUNDMANAGER->play("npcBuy", false);
 			if (startingItem[i].isPurchased == false) {
 				if (startingItem[i].item.price > PLAYERDATA->getGem()) {
 					return;
@@ -326,4 +342,47 @@ void lobbyScene::startingItemPrice()
 			}
 		}
 	}
+}
+
+void lobbyScene::soundInit()
+{
+
+	//플레이어 사운드
+	SOUNDMANAGER->addSound("playerHit", "Sound/player/hit.mp3");
+	SOUNDMANAGER->addSound("playerNomalDash", "Sound/player/nomalDash.mp3");
+	SOUNDMANAGER->addSound("playerfireDash", "Sound/player/fireDash.mp3");
+	SOUNDMANAGER->addSound("playerFoot", "Sound/player/footstep.mp3");
+	SOUNDMANAGER->addSound("blazeFire", "Sound/player/blaze_fire.mp3");
+	SOUNDMANAGER->addSound("blazeExp", "Sound/player/blaze_exp.mp3");
+	SOUNDMANAGER->addSound("RagingInfernoExp", "Sound/player/RagingInferno_exp.mp3");
+	SOUNDMANAGER->addSound("RagingInfernoExpBoss", "Sound/player/RagingInferno_exp_boss.mp3");
+	SOUNDMANAGER->addSound("RagingInfernoFire", "Sound/player/RagingInferno_fire.mp3");
+	SOUNDMANAGER->addSound("meteoFire0", "Sound/player/meteo_fire0.mp3");
+	SOUNDMANAGER->addSound("meteoFire1", "Sound/player/meteo_fire1.mp3");
+	SOUNDMANAGER->addSound("meteoFire2", "Sound/player/meteo_fire2.mp3");
+	SOUNDMANAGER->addSound("meteoFire3", "Sound/player/meteo_fire3.mp3");
+	SOUNDMANAGER->addSound("meteoExp0", "Sound/player/meteo_full0.mp3");
+	SOUNDMANAGER->addSound("meteoExp1", "Sound/player/meteo_full1.mp3");
+	SOUNDMANAGER->addSound("meteoExp2", "Sound/player/meteo_full2.mp3");
+	SOUNDMANAGER->addSound("meteoExp3", "Sound/player/meteo_full3.mp3");
+	SOUNDMANAGER->addSound("fireDragon", "Sound/player/fireDragon.mp3");
+	SOUNDMANAGER->addSound("fireDragonUpgrade", "Sound/player/fireDragonUpgrade.mp3");
+	SOUNDMANAGER->addSound("iceSpearATK", "Sound/player/iceSpearATK.mp3");
+	SOUNDMANAGER->addSound("iceSpearFire", "Sound/player/iceSpearFire.mp3");
+	SOUNDMANAGER->addSound("iceSpearBreak", "Sound/player/iceSpearBreak.mp3");
+	SOUNDMANAGER->addSound("iceSpearHit", "Sound/player/iceSpearHit.mp3");
+
+	SOUNDMANAGER->addSound("invenOpen", "Sound/UI/inventoryON.mp3");
+	SOUNDMANAGER->addSound("invenClose", "Sound/UI/inventoryOFF.mp3");
+	SOUNDMANAGER->addSound("portalWarp", "Sound/portalWarp.mp3");
+	SOUNDMANAGER->addSound("shieldON", "Sound/UI/shieldON.mp3");
+	SOUNDMANAGER->addSound("shieldOFF", "Sound/UI/shieldOFF.mp3");
+	SOUNDMANAGER->addSound("npcBuy", "Sound/UI/npcBuy02.mp3");
+
+	isLobbyBGM = true;
+	fadeIn = 0;
+
+	SOUNDMANAGER->stop("titleBGM");
+	SOUNDMANAGER->play("lobbyBGM",true);
+
 }

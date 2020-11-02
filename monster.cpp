@@ -134,7 +134,25 @@ void astarManager::update(RECT _camRC, RECT _monsterRC, RECT _playerRC, float* a
 
 void astarManager::render(HDC hdc)
 {
-	char str[128];
+	//char str[128];if(
+
+	if (isFind)
+	{
+		for (int i = 0; i < finalList.size(); i++)
+		{
+			if (i == 0)
+			{
+				setNodeColor(finalList[i], RGB(255, 255, 0), hdc);
+			}
+			else
+			{
+				setNodeColor(finalList[i], RGB(255, 255, 255), hdc);
+			}
+		}
+	}
+
+	if(isFind)
+	{
 	for (int y = 0; y < MAXTILE_HEIGHT; y++)
 	{
 		for (int x = 0; x < MAXTILE_WIDTH; x++)
@@ -144,7 +162,7 @@ void astarManager::render(HDC hdc)
 			//  현재렉트만 보여주기
 			if (colCheck(cam, totalNode[x][y]->rc) == false || totalNode[x][y]->keyName == "") continue;
 
-			if (totalNode[x][y]->kind == TERRAIN::WALL) setNodeColor(totalNode[x][y], RGB(250, 150, 0), hdc);
+			//if (totalNode[x][y]->kind == TERRAIN::WALL) setNodeColor(totalNode[x][y], RGB(250, 150, 0), hdc);
 			//else FrameRect(hdc, totalNode[x][y]->rc, RGB(0, 0, 0));
 
 
@@ -161,33 +179,20 @@ void astarManager::render(HDC hdc)
 				textOut(hdc, endNode->rc.left, endNode->rc.top + 20, "[END]");
 			}
 			//벽노드 보여주기
-			if (totalNode[x][y]->nodeState == NODESTATE::NODE_WALL)
-			{
-				setNodeColor(totalNode[x][y], RGB(200, 150, 100), hdc);
-				textOut(hdc, totalNode[x][y]->rc.left + 100, totalNode[x][y]->rc.top + 10, "[WALL]");
-			}
+			//if (totalNode[x][y]->nodeState == NODESTATE::NODE_WALL)
+			//{
+			//	setNodeColor(totalNode[x][y], RGB(200, 150, 100), hdc);
+			//	//textOut(hdc, totalNode[x][y]->rc.left + 100, totalNode[x][y]->rc.top + 10, "[WALL]");
+			//}
 
 		}
 	}
-
+	}
 	//길찾았을때 보여주기
-	if (isFind)
-	{
-		for (int i = 0; i < finalList.size(); i++)
-		{
-			if (i == 0)
-			{
-				setNodeColor(finalList[i], RGB(255, 255, 0), hdc);
-			}
-			else
-			{
-				setNodeColor(finalList[i], RGB(255, 255, 255), hdc);
-			}
-		}
-	}
+	
 
-	FrameRect(hdc, playerMove.rc, RGB(0, 0, 255));
-	FrameRect(hdc, monsterMove.rc, RGB(0, 0, 255));
+	//FrameRect(hdc, playerMove.rc, RGB(0, 0, 255));
+	//FrameRect(hdc, monsterMove.rc, RGB(0, 0, 255));
 }
 
 void astarManager::pathFinding()
@@ -503,7 +508,8 @@ void monster::render()
 			}
 		}
 	}
-	// astar->render(getMemDC());
+	/*if(isAstar)
+	 astar->render(getMemDC());*/
 	//CAMERAMANAGER->Rectangle(getMemDC(), rc);
 	 //FrameRect(getMemDC(), playerRC, RGB(255, 255, 255));
 	 //FrameRect(getMemDC(), rc, RGB(255, 255, 255));
@@ -517,8 +523,15 @@ void monster::setPt(float x, float y)
 		pos = { (long)x, (long)y };
 }
 
-void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical, bool isIceSTATE)
+void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical)
 {
+	if (isIceState)
+	{
+		isIceState = false;
+		iceBreakCount = 0;
+		EFFECT->iceBreakPlay({ getCenterX(), getCenterY() }, 10);
+		SOUNDMANAGER->play("iceSpearBreak", false, -0.2f);
+	}
 	if (hitCheck(skillNum) == false)return;
 
 	POINT pt = { getCenterX(), getCenterY() };
@@ -548,24 +561,22 @@ void monster::hit(int damage, float _hitAngle, float _knockBack, int skillNum, b
 	{
 	case MONSTERKIND::GOLEM:
 		SOUNDMANAGER->play("golemHit", false, -0.28f);
+		isIceState = false;
 		break;
 	case MONSTERKIND::KNIGHT:
 		SOUNDMANAGER->play(knight, false, -0.28f);
 		state = STATEIMAGE::HIT;
-		isIceState = isIceSTATE;
 		break;
 	case MONSTERKIND::SUMMONER:
 		SOUNDMANAGER->play("golemHit", false, -0.28f);
 		state = STATEIMAGE::HIT;
-		isIceState = isIceSTATE;
 		break;
 	case MONSTERKIND::GHOUL:
 		SOUNDMANAGER->play(ghoul, false,-0.28f );
 		state = STATEIMAGE::HIT;
-		isIceState = isIceSTATE;
+		break;
 	case MONSTERKIND::GHOULLARGE:
 		SOUNDMANAGER->play(ghoul, false, -0.28f);
-		isIceState = isIceSTATE;
 		break;
 
 	}
@@ -583,23 +594,24 @@ bool monster::hitCheck(int skillNum)
 	hit.currentTime = 0;
 	switch (hit.skillNum)
 	{
-	case 0:
+	case (int)PLAYERSKILL::BLAZE:
 		hit.endTime = 2;
 		break;
-	case 1:
+	case (int)PLAYERSKILL::METEOR:
 		hit.endTime = 10;
 		break;
-	case 2:
+	case (int)PLAYERSKILL::DASHFIRE:
 		hit.endTime = 15;
 		break;
-	case 3:
+	case (int)PLAYERSKILL::INFERNO:
 		hit.endTime = 20;
 		break;
-	case 4:
+	case (int)PLAYERSKILL::DRAGONARC:
 		hit.endTime = 7;
 		break;
-	case 5:
+	case (int)PLAYERSKILL::ICESPEAR:
 		hit.endTime = 15;
+		isIceState = true;
 		break;
 	}
 	vHit.push_back(hit);
@@ -633,38 +645,7 @@ bool monster::wallCol()
 		if (colCheck(astarRC, wall[PLAYERDATA->getWall()[i]].rc))
 		{
 			return true;
-		/*switch (kind)
-		{
-		case MONSTERKIND::GOLEM:
-			{
-			if (colCheck(astarRC, wall[PLAYERDATA->getWall()[i]].rc))
-				return true;
-			}
-			break;
-		case MONSTERKIND::KNIGHT:
-			{
-			if (colCheck(astarRC, wall[PLAYERDATA->getWall()[i]].rc))
-				return true;
-			}
-			break;
-		case MONSTERKIND::SUMMONER:
-			if (colCheck(rc, wall[PLAYERDATA->getWall()[i]].rc))
-			{
-				return true;
-			}
-			break;
-		case MONSTERKIND::GHOUL:
-			if (colCheck(astarRC, wall[PLAYERDATA->getWall()[i]].rc))
-			{
-				return true;
-			}
-			break;
-		case MONSTERKIND::GHOULLARGE:
-			if (colCheck(astarRC, wall[PLAYERDATA->getWall()[i]].rc))
-			{
-				return true;
-			}
-			break;*/
+		
 		}
 		
 	}

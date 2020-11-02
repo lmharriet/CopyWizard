@@ -512,7 +512,7 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(damage, 5);
 				}
 
-				enemy->getMonster()[num]->hit(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, criCheck, true);
+				enemy->getMonster()[num]->hit(damage, _player->getSpear()->getSpearAngle(i), 20.f, 5, criCheck);
 
 				_player->getSpear()->setCol(i, true);
 			}
@@ -541,7 +541,7 @@ void gameScene::playerAttack()
 					_player->chargeSkillGauge(damage, 5);
 				}
 
-				enemy->getMonster()[num]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 30.f, 5, criCheck, true);
+				enemy->getMonster()[num]->hit(damage, _player->getSpear()->getUpgradeAngle(i), 30.f, 5, criCheck);
 
 				_player->getSpear()->setUpgradeCol(i, true);
 			}
@@ -797,6 +797,7 @@ void gameScene::soundInit()
 	SOUNDMANAGER->stop("mapToolBGM");
 	SOUNDMANAGER->stop("titleBGM");
 	SOUNDMANAGER->stop("bossBGM");
+	SOUNDMANAGER->stop("lobbyBGM");
 	SOUNDMANAGER->play("ingameBGM", true);
 }
 

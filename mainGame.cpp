@@ -125,6 +125,7 @@ void mainGame::volumeControl()
 			SOUNDMANAGER->setBackGroundVolume("mapToolBGM", volume);
 			SOUNDMANAGER->setBackGroundVolume("ingameBGM", volume);
 			SOUNDMANAGER->setBackGroundVolume("bossBGM", volume);
+			SOUNDMANAGER->setBackGroundVolume("lobbyBGM", volume);
 		}
 	}
 	if (INPUT->GetKeyDown(VK_SUBTRACT) || INPUT->GetKeyDown(VK_OEM_MINUS))
@@ -136,6 +137,7 @@ void mainGame::volumeControl()
 			SOUNDMANAGER->setBackGroundVolume("mapToolBGM", volume);
 			SOUNDMANAGER->setBackGroundVolume("ingameBGM", volume);
 			SOUNDMANAGER->setBackGroundVolume("bossBGM", volume);
+			SOUNDMANAGER->setBackGroundVolume("lobbyBGM", volume);
 		}
 	}
 
@@ -161,6 +163,8 @@ void mainGame::volumeControl()
 			SOUNDMANAGER->setBackGroundVolume("mapToolBGM", -1.0f);
 			SOUNDMANAGER->setBackGroundVolume("ingameBGM", -1.0f);
 			SOUNDMANAGER->setBackGroundVolume("bossBGM", -1.0f);
+			SOUNDMANAGER->setBackGroundVolume("lobbyBGM", -1.f);
+			
 			isMute = true;
 		}
 		else
@@ -170,6 +174,8 @@ void mainGame::volumeControl()
 			SOUNDMANAGER->setBackGroundVolume("mapToolBGM", volume);
 			SOUNDMANAGER->setBackGroundVolume("ingameBGM", volume);
 			SOUNDMANAGER->setBackGroundVolume("bossBGM", volume);
+			SOUNDMANAGER->setBackGroundVolume("lobbyBGM", volume);
+			
 			isMute = false;
 		}
 

@@ -208,7 +208,7 @@ public:
 	void setFx(bool Fx) { isFxAppear = Fx; }
 	void setBulletFire(bool isFire) { isBulletFire = isFire; }
 
-	void hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical = false, bool isIceSTATE = false);
+	void hit(int damage, float _hitAngle, float _knockBack, int skillNum, bool isCritical = false);
 	bool hitCheck(int skillNum);
 
 	void hitCul();
