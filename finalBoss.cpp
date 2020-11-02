@@ -16,7 +16,7 @@ HRESULT finalBoss::init(int _posX, int _posY)
 
 	boss.center = { _posX, _posY };
 	boss.angle = 0;
-	boss.bossHp = 4000;
+	boss.bossHp = 3000;
 	boss.isHit = false;
 	boss.isCol = false;
 	boss.dashDintance = 400;
