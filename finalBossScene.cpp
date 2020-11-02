@@ -308,6 +308,9 @@ void finalBossScene::bossCutScene()
 
 void finalBossScene::attackSura()
 {
+
+	if (!mapChange) return;
+
 	if (_finalBoss->getFinalBoss().bossHp <= 0) return;
 	//blaze
 	for (int i = 0; i < _player->getBlaze()->getSize(); i++)

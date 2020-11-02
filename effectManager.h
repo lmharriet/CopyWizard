@@ -193,4 +193,6 @@ public:
 	void AfterimageRender(HDC hdc);
 	void ultEftPlay(POINT pt, int delay);
 	void iceBreakPlay(POINT pt, int delay);
+
+	void clearAfterEft() { vAfterEft.clear(); }
 };

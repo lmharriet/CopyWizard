@@ -16,6 +16,7 @@ HRESULT gameNode::init()
 	TIME->init();						//타임매니져 초기화
 	
 	EFFECT->init();
+	EFFECT->clearAfterEft();
 	ITEM->init();
 	DAMAGE->init();
 	PORTAL->init();
